@@ -5,7 +5,7 @@ import json
 import datetime
 
 
-def get_index(request):
+def get_render_index(request):
     response = requests.get(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
     menu_list = json.loads(response.text)
@@ -25,3 +25,11 @@ def get_index(request):
     }
 
     return render(request, 'index.html', context)
+
+
+def get_render_loading(request):
+    return render(request, 'other/loading.html')
+
+#request: {tableid}
+def get_render_content_records_view(request):
+    return render(request, 'content/records_view.html')

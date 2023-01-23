@@ -47,7 +47,7 @@
 
         });
 
-        function ajax_get_searchrecords(tableid) {
+        function getRenderRecordsView(tableid) {
             var serialized_data = [];
             $("#bixdata_results_container").load('http://localhost:8000/loading/');
             serialized_data.push({ name: 'table', value: tableid });
@@ -55,7 +55,7 @@
             $.ajax({
                 type: "POST",
                 crossDomain: true,
-                url: "{% url 'searchrecords' %}",
+                url: "{% url 'records_view' %}",
                 data: serialized_data,
                 success: function (response) {
                     $("#bixdata_results_container").html(response);
@@ -67,92 +67,7 @@
             });
         }
 
-        function open_test_content() {
-            var serialized_data = [];
-            $.ajax({
-                type: "POST",
-                url: controller_url + 'ajax_get_test_content',
-                data: serialized_data,
-                success: function (response) {
-                    $("#bixdata_results_container").html(response);
-                },
-                error: function () {
-                    $("#bixdata_results_container").html(response);
-                }
-            });
-        }
 
-        function open_planner() {
-            var serialized_data = [];
-            $.ajax({
-                type: "POST",
-                url: controller_url + 'ajax_get_planner',
-                data: serialized_data,
-                success: function (response) {
-                    $("#bixdata_results_container").html(response);
-                },
-                error: function () {
-                    $("#bixdata_results_container").html(response);
-                }
-            });
-        }
-
-        function open_calendar() {
-            var serialized_data = [];
-            $.ajax({
-                type: "POST",
-                url: "{% url 'calendar' %}",
-                data: serialized_data,
-                success: function (response) {
-                    $("#bixdata_results_container").html(response);
-                },
-                error: function () {
-                    $("#bixdata_results_container").html(response);
-                }
-            });
-        }
-
-        function open_gantt() {
-            var serialized_data = [];
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "http://localhost:8000/gantt/",
-                data: serialized_data,
-                success: function (response) {
-                    $("#bixdata_results_container").html(response);
-
-                },
-                error: function () {
-                    $("#bixdata_results_container").html(response);
-                }
-            });
-
-        }
-
-        function open_kanban() {
-            var serialized_data = [];
-            $.ajax({
-                type: "POST",
-                url: controller_url + 'ajax_get_kanban',
-                data: serialized_data,
-                success: function (response) {
-                    $("#bixdata_results_container").html(response);
-                },
-                error: function () {
-                    $("#bixdata_results_container").html(response);
-                }
-            });
-        }
-
-
-
-
-
-
-        function sidebarmenu_toggle(el) {
-
-        }
     </script>
 
     <div id="bixdata2" style="height: 100%;">

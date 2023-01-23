@@ -18,6 +18,8 @@ from django.urls import path
 from bixdata_app import views
 
 urlpatterns = [
-    path('', views.get_index, name='index'),
-    path('index/', views.get_index, name='index'),
+    path('', views.get_render_index, name='index'),
+    path('index/', views.get_render_index, name='index'),
+    path('loading/', views.get_render_loading, name='loading'),
+    path('records_view/', views.get_render_content_records_view, name='records_view'),
 ]
