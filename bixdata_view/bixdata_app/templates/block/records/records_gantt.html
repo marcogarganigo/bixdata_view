@@ -1,0 +1,58 @@
+<script type="text/javascript">
+
+    //alert si apre con il doppio click sulla task
+        $("#gantt").ready(function() {
+            $(function(){
+                var tasks = '{{records_json|safe}}'
+                tasks=jQuery.parseJSON(tasks)
+                // Get the Gantt task elements
+                var gantt = new Gantt('#tasks-gantt',tasks, {
+                    //Add click event listener to tasks
+                    on_click: function(task) {
+                        alert("Task: " + task.name);
+                    }
+                });
+            });
+        });
+        
+    </script>
+    
+        <style>
+            .gantt-container {
+                width: 100%;
+                overflow-x: hidden;
+            }
+        </style>
+    
+        <div id="gantt" class="container-fluid" style="width: 200%">
+    
+            <!-- start page title -->
+            <!-- end page title -->
+    
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+    
+                        <!-- gantt view -->
+                        <div class="col-xxl-9 mt-4 mt-xl-0 col-lg-8">
+                            <div class="ps-xl-3">
+                                <div class="row">
+    
+                                    </div>
+                                </div>
+    
+                                <div class="row">
+                                    <div class="col mt-3">
+                                        <svg id="tasks-gantt"></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end gantt view -->
+                    </div>
+                </div>
+            </div>
+    
+        </div> <!-- container -->
+    
+    

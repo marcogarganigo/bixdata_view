@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from bixdata_app import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', views.get_index, name='index'),
+    path('index/', views.get_index, name='index'),
 ]
