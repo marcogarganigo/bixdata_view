@@ -49,7 +49,7 @@
 
         function getRenderRecordsView(tableid) {
             var serialized_data = [];
-            $("#bixdata_results_container").load('http://localhost:8000/loading/');
+            //$("#bixdata_results_container").load('http://localhost:8000/loading/');
             serialized_data.push({ name: 'table', value: tableid });
             serialized_data.push({ name: 'searchTerm', value: '' });
             $.ajax({
@@ -514,7 +514,7 @@
                                 <ul class="side-nav-second-level">
 
                                     {% for value in menu_list_value %}
-                                    <li onclick="ajax_get_searchrecords('{{value.id}}')">
+                                    <li onclick="getRenderRecordsView('{{value.id}}')">
                                         <a class="side-nav-txt">{{value.id}}</a>
                                     </li>
                                     {% endfor %}
