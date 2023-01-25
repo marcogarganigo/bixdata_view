@@ -1,0 +1,14 @@
+@media screen and (max-width: 1500px) {
+    .content-page {
+        min-height: 1px !important;
+        height: 10px;
+    }
+
+    html[data-sidenav-size=condensed]:not(.authentication-bg) {
+        min-height: 0px !important;
+    }
+
+    .wrapper {
+        min-height: 0px !important;
+    }
+}

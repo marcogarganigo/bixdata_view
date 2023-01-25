@@ -1,0 +1,66 @@
+@media screen and (max-width: 1920px) {
+    #content-card {
+        padding: 10px;
+    }
+
+    #results {
+        margin-top: -2%
+    }
+
+    table {
+        font-size: 10pt;
+    }
+
+    .board {
+        font-size: 10pt;
+    }
+
+    .task-header {
+        font-size: 10pt;
+    }
+
+    /*calendar */
+
+    .small-header .fc-header {
+        font-size: 12px;
+        width: 10px;
+    }
+
+    .small-header .fc-header-title h2 {
+        font-size: 14px;
+    }
+
+    .small-header .fc-header-left {
+        font-size: 10px;
+    }
+
+    .small-header .fc-header-right {
+        font-size: 10px;
+    }
+
+    #card-menu .btn {
+        font-size: small;
+        margin-top: 10px;
+    }
+
+    .btn .mdi:before {
+        font-size: small;
+    }
+
+    #card-menu {
+        margin-bottom: 15px
+    }
+
+    .span-pc {
+        font-size: 13px;
+    }
+
+    .tabs-icon {
+        font-size: 13pt;
+    }
+
+    #results {
+        font-size: 10pt;
+    }
+
+}
