@@ -33,8 +33,8 @@ def get_render_loading(request):
     return render(request, 'other/loading.html')
 
 #request: {tableid}
-def get_render_content_records_view(request):
-    return render(request, 'content/records_view.html')
+def get_render_content_records(request):
+    return render(request, 'content/records.html')
 
 
 def ajax_get_searchrecords(request):

@@ -21,5 +21,5 @@ urlpatterns = [
     path('', views.get_render_index, name='index'),
     path('index/', views.get_render_index, name='index'),
     path('loading/', views.get_render_loading, name='loading'),
-    path('records_view/', views.get_render_content_records_view, name='records_view'),
+    path('records/', views.get_render_content_records, name='records_view'),
 ]
