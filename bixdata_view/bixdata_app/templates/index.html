@@ -58,11 +58,11 @@
                 url: "{% url 'records_view' %}",
                 data: serialized_data,
                 success: function (response) {
-                    $("#bixdata_results_container").html(response);
+                    $("#content_container").html(response);
                     $('[data-toggle="tooltip"]').tooltip();
                 },
                 error: function () {
-                    $("#bixdata_results_container").html(response);
+                    $("#content_container").html(response);
                 }
             });
         }
@@ -587,11 +587,10 @@
         <div class="content-page" style="min-height: 90%;height: 90%">
             <!-- Start Content-->
             <div class="row" style="height: 100%;">
-                <div id="bixdata_results_container" class="col-xl-8 col-md-8 mb-4"
-                    style="height: 100%; margin-bottom: 0px">
+                <div id="content_container" style="height: 100%;">
+
                 </div>
-                <div id="bixdata_recordcard_container" class="col-xl-4 col-md-4 mb-4" style="height: 100%">
-                </div>
+                
             </div>
         </div>
 
