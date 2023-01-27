@@ -67,12 +67,28 @@
             });
         }
 
+        function getRenderChartsView() {
+            var serialized_data = [];
+            //$("#bixdata_results_container").load('http://localhost:8000/loading/');
+            $.ajax({
+                type: "POST",
+                crossDomain: true,
+                url: "{% url 'charts_view' %}",
+                data: serialized_data,
+                success: function (response) {
+                    $("#content_container").html(response);
+                    $('[data-toggle="tooltip"]').tooltip();
+                },
+                error: function () {
+                    $("#content_container").html(response);
+                }
+            });
+        }
 
     </script>
 
     <div id="bixdata2" style="height: 100%;">
         <!-- ========== Topbar Start ========== -->
-        <div class="shadow-lg p-3 mb-5 bg-body rounded">
             <div class="navbar-custom topnav-navbar">
                 <div class="container-fluid detached-nav">
 
@@ -416,7 +432,6 @@
                     </div>
                 </div>
             </div>
-        </div>
         <!-- ========== Topbar End ========== -->
 
         <!-- ========== Left Sidebar Start ========== -->
@@ -552,7 +567,7 @@
                             </a>
                         </li>
                         <li class="side-nav-item">
-                            <a data-bs-toggle="collapse" onclick="open_calendar(this)" aria-expanded="false"
+                            <a data-bs-toggle="collapse" onclick="getRenderChartsView()" aria-expanded="false"
                                 aria-controls="sidebarSettings" class="side-nav-link">
                                 <i class="uil-calendar-alt"></i>
                                 <span> Calendar </span>
@@ -575,6 +590,7 @@
 
 
                         <div class="clearfix"></div>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -589,8 +605,8 @@
             <div class="row" style="height: 100%;">
                 <div id="content_container" style="height: 100%;">
 
+
                 </div>
-                
             </div>
         </div>
 

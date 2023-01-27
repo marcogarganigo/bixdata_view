@@ -22,4 +22,5 @@ urlpatterns = [
     path('index/', views.get_render_index, name='index'),
     path('loading/', views.get_render_loading, name='loading'),
     path('records/', views.get_render_content_records, name='records_view'),
+    path('charts/', views.get_render_content_charts, name='charts_view'),
 ]

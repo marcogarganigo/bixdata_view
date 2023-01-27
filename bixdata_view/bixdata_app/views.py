@@ -36,6 +36,9 @@ def get_render_loading(request):
 def get_render_content_records(request):
     return render(request, 'content/records.html')
 
+def get_render_content_charts(request):
+    return render(request, 'content/charts.html')
+
 
 def ajax_get_searchrecords(request):
     context = dict()
