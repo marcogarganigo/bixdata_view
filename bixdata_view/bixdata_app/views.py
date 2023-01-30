@@ -46,7 +46,8 @@ def get_render_content_records(request):
 def get_render_content_charts(request):
     return render(request, 'content/charts.html')
 
-
+def get_test(request):
+    return render(request, 'test.html')
 
 
 def get_block_records_table(request):
