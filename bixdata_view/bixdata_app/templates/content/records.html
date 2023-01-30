@@ -1,13 +1,462 @@
-<div id="#content_records" style="height: 100%;width: 100%;background-color: #9b9393;overflow: scroll;">
-    <div style="width: 400px;height:2000px;background-color:grey; margin: 100px;;">
+<script type="text/javascript">
+    $("#tables").ready(function() {
 
+
+
+
+        $('[data-bs-toggle="popover"]').popover();
+
+
+        $('button[data-bs-toggle="tab"]').each(function(i){
+            if($(this).attr("id")=='gantt-tab')
+            {
+                $(this)[0].addEventListener('shown.bs.tab', function (event) {
+                    searchGantt()
+                })
+            }
+            if($(this).attr("id")=='kanban-tab')
+            {
+                $(this)[0].addEventListener('shown.bs.tab', function (event) {
+                    searchKanban()
+                })
+            }
+            if($(this).attr("id")=='calendar-tab')
+            {
+                $(this)[0].addEventListener('shown.bs.tab', function (event) {
+                    searchCalendar()
+                })
+            }
+        })
+        
+        
+
+
+
+    })
+
+
+
+
+
+    $(function() {
+        $('#calendar-tab a:last').tab('show');
+    });
+
+
+    function searchGantt(){
+        var serialized_data = [];
+        serialized_data.push({
+            name: 'table',
+            value: ''
+        });
+        serialized_data.push({
+            name: 'searchTerm',
+            value: $("#searchTerm").val()
+        });
+        
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_records_gantt' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#gantt-tab-pane").html(response);
+            },
+            error: function() {
+                $("#gantt-tab-pane").html(response);
+            }
+        });
+    }
+
+    function searchKanban(){
+        var serialized_data = [];
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_records_kanban' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#kanban-tab-pane").html(response);
+            },
+            error: function() {
+                $("#kanban-tab-pane").html(response);
+            }
+        });
+    }
+
+    function searchCalendar() {
+        var serialized_data = [];
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_records_calendar' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#calendar-tab-pane").html(response);
+            },
+            error: function() {
+                $("#calendar-tab-pane").html(response);
+            }
+        });
+    }
+
+    function search() {
+        var serialized_data = [];
+        serialized_data.push({
+            name: 'table',
+            value: ''
+        });
+        serialized_data.push({
+            name: 'searchTerm',
+            value: $("#searchTerm").val()
+        });
+        
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_records_table' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#records_table_container").html(response);
+            },
+            error: function() {
+                $("#records_table_container").html(response);
+            }
+        });
+    }
+
+    $("#searchTerm").ready(function() {
+        $("input").keypress(function() {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                var serialized_data = [];
+                serialized_data.push({
+                    name: 'table',
+                    value: '{{tableid}}'
+                });
+                serialized_data.push({
+                    name: 'searchTerm',
+                    value: $("#searchTerm").val()
+                });
+                serialized_data.push({
+                    name: 'viewid',
+                    value: null
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'block_records_table' %}",
+                    data: serialized_data,
+                    success: function(response) {
+                        $("#records_table_container").html(response);
+                    },
+                    error: function() {
+                        $("#records_table_container").html(response);
+                    }
+                });
+            }
+        });
+    });
+
+
+    
+    function checkWidth(response) {
+        if (screen.width > min_width) {
+            $("#bixdata_recordcard_container").html(response);
+        } else {
+            $("#fullwidth_modal").html(response);
+        }
+    }
+
+    function newRecord() {
+        var tableid='task'
+        $('#exampleModal').modal('show');
+        var serialized_data = [];
+        serialized_data.push({name: 'tableid',value: tableid});
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_record' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#fullwidth_modal").html(response);
+                
+            },
+            error: function() {
+                $("#bixdata_recordcard_container").html(response);
+            }
+        });
+
+        
+    }
+
+
+    function open_record(tableid,recordid) {
+        //$("#bixdata_recordcard_container").load('http://localhost:8000/loading/');
+        var serialized_data = [];
+        serialized_data.push({name: 'tableid',value: tableid});
+        serialized_data.push({name: 'recordid',value: recordid});
+        if (screen.width <= min_width) {
+            $('#exampleModal').modal('show');
+        }
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_record' %}",
+            data: serialized_data,
+            success: function(response) {
+                checkWidth(response);
+            },
+            error: function() {
+                $("#bixdata_recordcard_container").html(response);
+            }
+        });
+
+    }
+
+    function closeCard(vrbl) {
+        if (screen.width > min_width) {
+            $(vrbl).closest("#RecordCard").slideToggle(200, function() {
+                $('#bixdata_recordcard_container').html('');
+            });
+        } else {
+            $("#exampleModal").modal("hide");
+        
+    }
+}
+
+    function open_kanban() {
+        var serialized_data = [];
+        $.ajax({
+            type: "POST",
+            url: controller_url + 'ajax_get_kanban',
+            data: serialized_data,
+            success: function(response) {
+                $("#bixdata_results_container").html(response);
+            },
+            error: function() {
+                $("#bixdata_results_container").html(response);
+            }
+        });
+    }
+</script>
+<div id="#content_records" style="height: 100%;width: 100%;background-color: #9b9393;overflow: scroll;">
+    
+    
+    <!--Content tables start-->
+    
+    <div id="content-table" class="card shadow mb-4" style="height: 100%;"> <!--card-->
+        <div id="content-card" class="card-body" style="height: 100%;"> <!--card-body-->
+            <!-- Views -->
+            <div id="searchrecords_views" style="margin-bottom: 10px;">
+                <button type="button" class="btn btn-soft-secondary">{{tableid}}</button>
+                {%for view in views%}
+                    <button type="button" class="btn btn-soft-secondary" data-viewid="{{view.id}}">{{view.name}}</button>
+                {%endfor%}
+                <button type="button" class="btn btn-soft-primary">Primary</button>
+                <button type="button" class="btn btn-soft-secondary">Secondary</button>
+                <button type="button" class="btn btn-soft-success">Success</button>
+                <button type="button" class="btn btn-soft-danger">Danger</button>
+                <button type="button" class="btn btn-soft-warning">Warning</button>
+                <button type="button" class="btn btn-soft-info">Info</button>
+                <button type="button" class="btn btn-soft-dark">Dark</button>
+            </div>
+            <!-- Views end -->
+            <!-- Filters start-->
+            <div id="filters">
+                <div class="text-center">
+                    <div class="row">
+                        <div class="col filter-column">
+    
+                            <div class="d-grid gap-2 d-md-block">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="width: 50%;" id="searchTerm" autocomplete="off">
+                                <button class="btn btn-outline-danger" type="submit" style="margin-top: -65px; margin-left: 90px;" onclick="search()">Search</button>
+                            </div>
+    
+                            <button type="button" class="btn btn-outline-secondary" style="margin-top: -113px; margin-left: 250px;" onclick="$('#hiddenCard').toggle(100);">Filters</button>
+    
+                        </div>
+                        <div class="col filter-column">
+    
+    
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
+                                <button class="btn btn-outline-danger me-md-2" type="button">Refresh</button>
+                                <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()">New</button>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary me md-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Export
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Esporta dati excel</a></li>
+                                        <li><a class="dropdown-item" href="#">Esporta elenco</a></li>
+                                        <li><a class="dropdown-item" href="#">Esporta migrazione</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+    
+                        </div>
+                    </div>
+                </div>
+    
+    
+    
+                <div id="hiddenCard" style="display: none;">
+                    <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="margin-left: 30px;margin-right: 30px;">
+                        <p class="card-text">
+    
+                        <div class="container text-center">
+                            <div class="row">
+                                <div class="col">
+    
+                                    <div>
+                                        <form class=" d-flex" role="search">
+                                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                    </div>
+                                    </form>
+    
+                                </div>
+                                <div class="col">
+    
+                                    <div>
+                                        <form class="d-flex" role="search">
+                                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                    </div>
+                                    </form>
+    
+                                </div>
+                                <div class="col">
+    
+                                    <div>
+                                        <form class="d-flex" role="search">
+                                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                    </div>
+                                    </form>
+    
+                                </div>
+                                <div class="col">
+    
+                                    <div>
+                                        <form class="d-flex" role="search">
+                                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                    </div>
+                                    </form>
+    
+                                </div>
+    
+                                <div class="col">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="$('#hiddenCardAF').toggle(100);">Advanced filters</button>
+                                    </br>
+                                </div>
+    
+    
+    
+                            </div>
+                        </div>
+    
+                        </p>
+                    </div>
+    
+                    <div id="hiddenCardAF" style="display: none; margin-top: -40px">
+                        <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="margin-left: 30px;margin-right: 30px;">
+                            <div class="card-body">
+    
+                                <div class="container text-center">
+                                    <div class="row">
+                                        <div class="col">
+    
+                                            <label for="birthday">inserisci una data</label>
+                                            <input type="date" id="birthday" name="birthday">
+    
+                                        </div>
+                                        <div class="col">
+    
+                                            <div class="input-group mb-3">
+                                                <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                                                <select class="form-select" id="inputGroupSelect01">
+                                                    <option selected>Choose...</option>
+                                                    <option value="1">One</option>
+                                                    <option value="2">Two</option>
+                                                    <option value="3">Three</option>
+                                                </select>
+                                            </div>
+    
+                                        </div>
+                                    </div>
+                                </div>
+    
+                            </div>
+                        </div>
+                    </div>
+    
+    
+    
+    
+    
+    
+                </div>
+    
+    
+    
+            </div>
+            <!-- Filters end-->
+    
+            
+            
+            <!-- Results start-->
+            <div id="result-tabs" style="height: 80%">
+                <!-- Nav menu start -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab" data-bs-target="#records_table_container" type="button" role="tab" aria-controls="records_table_container" aria-selected="true">Table</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="report-tab" data-bs-toggle="tab" data-bs-target="#report-tab-pane" type="button" role="tab" aria-controls="report-tab-pane" aria-selected="false">Chart</button>
+                    </li>
+                    <li id="nav-calendar" class="nav-item" role="presentation">
+                        <button class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane" type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar" aria-selected="false">Calendar</button>
+                    </li>
+                    <li id="nav-kanban" class="nav-item" role="presentation">
+                        <button class="nav-link" id="kanban-tab" data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab" aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban</button>
+                    </li>
+                    <li id="nav-gantt" class="nav-item" role="presentation">
+                        <button class="nav-link" id="gantt-tab" data-bs-toggle="tab" data-bs-target="#gantt-tab-pane" type="button" role="tab" aria-controls="gantt-tab-pane" href="#gantt" aria-selected="false">Gantt</button>
+                    </li>
+                </ul>
+                <!-- Nav menu end -->
+                <!-- Nav content start-->
+                <div class="tab-content" id="myTabContent" style="height: 100%">
+                    <div class="tab-pane fade show active" id="records_table_container" role="tabpanel" aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
+                        {{records_table}}
+                    </div>
+    
+                    <div class="tab-pane fade" id="report-tab-pane" style="height: 100%; width: 100%" role="tabpanel" aria-labelledby="report-tab" tabindex="0">
+    
+    
+    
+    
+                    </div>
+    
+                    <div class="tab-pane fade " id="calendar-tab-pane" role="tabpanel" aria-labelledby="calendar-tab" tabindex="0" style="overflow: hidden">
+    
+    
+    
+    
+    
+    
+                    </div>
+    
+                    <div class="tab-pane fade" id="kanban-tab-pane" role="tabpanel" aria-labelledby="kanban-tab" tabindex="0">
+    
+                    </div>
+    
+                    <div class="tab-pane fade" id="gantt-tab-pane" role="tabpanel" aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow-x: scroll; overflow-y: scroll">
+                        
+                    </div>
+    
+    
+                </div>
+            </div>
+            <!-- nav content end-->
+        </div>
+        <!-- Results end-->
+    
     </div>
-    <!--
-    <div id="bixdata_results_container" class="col-xl-8 col-md-8 mb-4"
-        style="height: 100%; margin-bottom: 0px">
+    
+    
+    
     </div>
-    <div id="bixdata_recordcard_container" class="col-xl-4 col-md-4 mb-4" style="height: 100%">
-    </div>
-    -->
     
 </div>

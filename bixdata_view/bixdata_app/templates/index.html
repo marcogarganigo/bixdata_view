@@ -47,7 +47,7 @@
 
         });
 
-        function getRenderRecordsView(tableid) {
+        function getContentRecords(tableid) {
             var serialized_data = [];
             //$("#bixdata_results_container").load('http://localhost:8000/loading/');
             serialized_data.push({ name: 'table', value: tableid });
@@ -529,7 +529,7 @@
                                 <ul class="side-nav-second-level">
 
                                     {% for value in menu_list_value %}
-                                    <li onclick="getRenderRecordsView('{{value.id}}')">
+                                    <li onclick="getContentRecords('{{value.id}}')">
                                         <a class="side-nav-txt">{{value.id}}</a>
                                     </li>
                                     {% endfor %}
