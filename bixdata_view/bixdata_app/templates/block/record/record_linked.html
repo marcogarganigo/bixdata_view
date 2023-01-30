@@ -1,3 +1,10 @@
-<div id="#content_record_linked" style="height: 50%;width: 50%;background-color: red;">
-    Content record_linked
-    </div>
+<div id="block_record_linked" style="height: 50%;width: 50%;background-color: red;">
+    {% for key,label in labels.items %}
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="{{key}}" aria-expanded="false" aria-controls="{{key}}" style="background-color: #ff5b5b; border: #ff5b5b" onclick="">{{label.description}}</button>
+        <div class="collapse" id="{{key}}">
+            <div class="card card-body">
+                <?= $label['description'] ?>
+            </div>
+        </div>
+    {% endfor %}
+</div>

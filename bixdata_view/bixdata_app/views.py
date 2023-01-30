@@ -219,3 +219,42 @@ def get_block_record(request):
     records_table = render_to_string(
         'block/records_table.html', context, request=request)
     return records_table
+
+
+def get_block_record_card(request):
+    context = dict()
+    context['recordcard_preview'] = get_block_record_badge(request)
+    context['record_linked_labels']= get_block_record_linked(request)
+    returned = render_to_string('block/record/record_card.html', context, request=request)
+    return HttpResponse(returned)
+
+def get_block_record_badge(request):
+    context = dict()
+    tableid = request.POST.get('tableid')
+    recordid = request.POST.get('recordid')
+    post = {
+        'tableid': tableid,
+        'recordid': recordid,
+    }
+    response = requests.post(
+        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_fissi", data=post)
+    print(response)
+    response_dict = json.loads(response.text)
+    context['fields'] = response_dict
+    records_table = render_to_string('block/record/record_badge.html', context, request=request)
+    return records_table
+
+
+def get_block_record_linked(request):
+    
+    context = dict()
+    post = {
+        'tableid': 'company',
+        'recordid': '1234',
+    }
+    response = requests.post(
+        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_labels", data=post)
+    response_dict = json.loads(response.text)
+    context['labels'] = response_dict
+    record_linked_labels = render_to_string('block/record/record_linked.html', context, request=request)
+    return record_linked_labels
