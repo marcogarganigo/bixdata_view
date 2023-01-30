@@ -237,6 +237,12 @@
     }
 </script>
 
+<style>
+    .filter-column {
+        height: 50px;
+    }
+</style>
+
 <div id="content-records"  style="height: 100%">
     <div class="row" style="width: 100%; height: 99%; margin-top: 1%">
         
@@ -245,19 +251,6 @@
             <div id="content-table" class="card shadow mb-4" style="height: 100%;"> <!--card-->
                 <div id="content-card" class="card-body" style="height: 100%;"> <!--card-body-->
                     <!-- Views -->
-                    <div id="searchrecords_views" style="margin-bottom: 10px;">
-                        <button type="button" class="btn btn-soft-secondary">{{tableid}}</button>
-                        {%for view in views%}
-                            <button type="button" class="btn btn-soft-secondary" data-viewid="{{view.id}}">{{view.name}}</button>
-                        {%endfor%}
-                        <button type="button" class="btn btn-soft-primary">Primary</button>
-                        <button type="button" class="btn btn-soft-secondary">Secondary</button>
-                        <button type="button" class="btn btn-soft-success">Success</button>
-                        <button type="button" class="btn btn-soft-danger">Danger</button>
-                        <button type="button" class="btn btn-soft-warning">Warning</button>
-                        <button type="button" class="btn btn-soft-info">Info</button>
-                        <button type="button" class="btn btn-soft-dark">Dark</button>
-                    </div>
                     <!-- Views end -->
                     <!-- Filters start-->
                     <div id="filters">

@@ -81,6 +81,24 @@
             });
         }
 
+        function getTestPage()
+        {
+            var serialized_data = [];
+            //$("#bixdata_results_container").load('http://localhost:8000/loading/');
+            $.ajax({
+                type: "POST",
+                crossDomain: true,
+                url: "{% url 'test_page' %}",
+                data: serialized_data,
+                success: function (response) {
+                    $("#content_container").html(response);
+                    $('[data-toggle="tooltip"]').tooltip();
+                },
+                error: function () {
+                    $("#content_container").html(response);
+                }
+            });
+        }
     </script>
 
     <div id="bixdata2" style="height: 100%;">
@@ -556,10 +574,10 @@
                             </a>
                         </li>
                         <li class="side-nav-item">
-                            <a data-bs-toggle="collapse" onclick="open_planner(this)" aria-expanded="false"
+                            <a data-bs-toggle="collapse" onclick="getTestPage()" aria-expanded="false"
                                 aria-controls="sidebarSettings" class="side-nav-link">
                                 <i class="uil-calendar-alt"></i>
-                                <span> Planner </span>
+                                <span> test page </span>
                             </a>
                         </li>
                         <li class="side-nav-item">

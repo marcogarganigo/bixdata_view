@@ -32,31 +32,38 @@ def get_render_index(request):
 def get_render_loading(request):
     return render(request, 'other/loading.html')
 
-#request: {tableid}
+
+# request: {tableid}
 def get_render_content_records(request):
     context = dict()
     records_table = get_block_records_table(request)
     context['records_table'] = records_table
-    tableid=request.POST.get('table')
-    context['table']= tableid.upper()
-    context['tableid']= tableid
-    context['views']=dict()
-    return render(request, 'content/records.html',context)
+    tableid = request.POST.get('table')
+    context['table'] = tableid.upper()
+    context['tableid'] = tableid
+    context['views'] = dict()
+    return render(request, 'content/records.html', context)
+
 
 def get_render_content_charts(request):
     return render(request, 'content/charts.html')
 
 
+def get_test_page(request):
+    return render(request, 'content/test_page.html')
+
+def get_test(request):
+    return render(request, 'content/test.html')
 
 
 def get_block_records_table(request):
     table = request.POST.get('table')
     searchTerm = request.POST.get('searchTerm')
-    viewid= request.POST.get('viewid')
+    viewid = request.POST.get('viewid')
     post = {
         'table': table,
         'searchTerm': searchTerm,
-        'viewid':viewid,
+        'viewid': viewid,
     }
     response = requests.post(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
@@ -86,11 +93,11 @@ def get_block_records_table(request):
 def get_block_records_gantt(request):
     table = request.POST.get('table')
     searchTerm = request.POST.get('searchTerm')
-    viewid= request.POST.get('viewid')
+    viewid = request.POST.get('viewid')
     post = {
         'table': table,
         'searchTerm': searchTerm,
-        'viewid':viewid,
+        'viewid': viewid,
     }
     response = requests.post(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
@@ -116,15 +123,16 @@ def get_block_records_gantt(request):
     records_table = render_to_string(
         'block/records_table.html', context, request=request)
     return records_table
+
 
 def get_block_records_kanban(request):
     table = request.POST.get('table')
     searchTerm = request.POST.get('searchTerm')
-    viewid= request.POST.get('viewid')
+    viewid = request.POST.get('viewid')
     post = {
         'table': table,
         'searchTerm': searchTerm,
-        'viewid':viewid,
+        'viewid': viewid,
     }
     response = requests.post(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
@@ -151,14 +159,15 @@ def get_block_records_kanban(request):
         'block/records_table.html', context, request=request)
     return records_table
 
+
 def get_block_records_calendar(request):
     table = request.POST.get('table')
     searchTerm = request.POST.get('searchTerm')
-    viewid= request.POST.get('viewid')
+    viewid = request.POST.get('viewid')
     post = {
         'table': table,
         'searchTerm': searchTerm,
-        'viewid':viewid,
+        'viewid': viewid,
     }
     response = requests.post(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
@@ -189,11 +198,11 @@ def get_block_records_calendar(request):
 def get_block_record(request):
     table = request.POST.get('table')
     searchTerm = request.POST.get('searchTerm')
-    viewid= request.POST.get('viewid')
+    viewid = request.POST.get('viewid')
     post = {
         'table': table,
         'searchTerm': searchTerm,
-        'viewid':viewid,
+        'viewid': viewid,
     }
     response = requests.post(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
@@ -224,9 +233,10 @@ def get_block_record(request):
 def get_block_record_card(request):
     context = dict()
     context['recordcard_preview'] = get_block_record_badge(request)
-    context['record_linked_labels']= get_block_record_linked(request)
+    context['record_linked_labels'] = get_block_record_linked(request)
     returned = render_to_string('block/record/record_card.html', context, request=request)
     return HttpResponse(returned)
+
 
 def get_block_record_badge(request):
     context = dict()
@@ -246,7 +256,6 @@ def get_block_record_badge(request):
 
 
 def get_block_record_linked(request):
-    
     context = dict()
     post = {
         'tableid': 'company',
