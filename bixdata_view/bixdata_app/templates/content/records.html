@@ -236,240 +236,234 @@
         });
     }
 </script>
-<div class="row" style="width: 100%; height: 100%">
 
-<div id="content-records" class="col-xl-8 col-md-8 mb-4" style="height: 100%;background-color: #9b9393;">
-    
-    
-    <!--Content tables start-->
-    <div id="block-records-search-container" >
-        <div id="content-table" class="card shadow mb-4" style="height: 100%;"> <!--card-->
-            <div id="content-card" class="card-body" style="height: 100%;"> <!--card-body-->
-                <!-- Views -->
-                <div id="searchrecords_views" style="margin-bottom: 10px;">
-                    <button type="button" class="btn btn-soft-secondary">{{tableid}}</button>
-                    {%for view in views%}
-                        <button type="button" class="btn btn-soft-secondary" data-viewid="{{view.id}}">{{view.name}}</button>
-                    {%endfor%}
-                    <button type="button" class="btn btn-soft-primary">Primary</button>
-                    <button type="button" class="btn btn-soft-secondary">Secondary</button>
-                    <button type="button" class="btn btn-soft-success">Success</button>
-                    <button type="button" class="btn btn-soft-danger">Danger</button>
-                    <button type="button" class="btn btn-soft-warning">Warning</button>
-                    <button type="button" class="btn btn-soft-info">Info</button>
-                    <button type="button" class="btn btn-soft-dark">Dark</button>
-                </div>
-                <!-- Views end -->
-                <!-- Filters start-->
-                <div id="filters">
-                    <div class="text-center">
-                        <div class="row">
-                            <div class="col filter-column">
+<div id="content-records"  style="height: 100%;background-color: #9b9393;">
+    <div class="row" style="width: 100%; height: 100%">
         
-                                <div class="d-grid gap-2 d-md-block">
-                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="width: 50%;" id="searchTerm" autocomplete="off">
-                                    <button class="btn btn-outline-danger" type="submit" style="margin-top: -65px; margin-left: 90px;" onclick="search()">Search</button>
-                                </div>
-        
-                                <button type="button" class="btn btn-outline-secondary" style="margin-top: -113px; margin-left: 250px;" onclick="$('#hiddenCard').toggle(100);">Filters</button>
-        
-                            </div>
-                            <div class="col filter-column">
-        
-        
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
-                                    <button class="btn btn-outline-danger me-md-2" type="button">Refresh</button>
-                                    <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()">New</button>
-                                    <div class="dropdown">
-                                        <button class="btn btn-outline-secondary me md-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Export
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Esporta dati excel</a></li>
-                                            <li><a class="dropdown-item" href="#">Esporta elenco</a></li>
-                                            <li><a class="dropdown-item" href="#">Esporta migrazione</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-        
-                            </div>
-                        </div>
+        <!--Content tables start-->
+        <div id="block-records-search-container" class="col-xl-8 col-md-8 mb-4" >
+            <div id="content-table" class="card shadow mb-4" style="height: 100%;"> <!--card-->
+                <div id="content-card" class="card-body" style="height: 100%;"> <!--card-body-->
+                    <!-- Views -->
+                    <div id="searchrecords_views" style="margin-bottom: 10px;">
+                        <button type="button" class="btn btn-soft-secondary">{{tableid}}</button>
+                        {%for view in views%}
+                            <button type="button" class="btn btn-soft-secondary" data-viewid="{{view.id}}">{{view.name}}</button>
+                        {%endfor%}
+                        <button type="button" class="btn btn-soft-primary">Primary</button>
+                        <button type="button" class="btn btn-soft-secondary">Secondary</button>
+                        <button type="button" class="btn btn-soft-success">Success</button>
+                        <button type="button" class="btn btn-soft-danger">Danger</button>
+                        <button type="button" class="btn btn-soft-warning">Warning</button>
+                        <button type="button" class="btn btn-soft-info">Info</button>
+                        <button type="button" class="btn btn-soft-dark">Dark</button>
                     </div>
-        
-        
-        
-                    <div id="hiddenCard" style="display: none;">
-                        <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="margin-left: 30px;margin-right: 30px;">
-                            <p class="card-text">
-        
-                            <div class="container text-center">
-                                <div class="row">
-                                    <div class="col">
-        
-                                        <div>
-                                            <form class=" d-flex" role="search">
-                                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <!-- Views end -->
+                    <!-- Filters start-->
+                    <div id="filters">
+                        <div class="text-center">
+                            <div class="row">
+                                <div class="col filter-column">
+            
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="width: 50%;" id="searchTerm" autocomplete="off">
+                                        <button class="btn btn-outline-danger" type="submit" style="margin-top: -65px; margin-left: 90px;" onclick="search()">Search</button>
+                                    </div>
+            
+                                    <button type="button" class="btn btn-outline-secondary" style="margin-top: -113px; margin-left: 250px;" onclick="$('#hiddenCard').toggle(100);">Filters</button>
+            
+                                </div>
+                                <div class="col filter-column">
+            
+            
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
+                                        <button class="btn btn-outline-danger me-md-2" type="button">Refresh</button>
+                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()">New</button>
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary me md-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Export
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Esporta dati excel</a></li>
+                                                <li><a class="dropdown-item" href="#">Esporta elenco</a></li>
+                                                <li><a class="dropdown-item" href="#">Esporta migrazione</a></li>
+                                            </ul>
                                         </div>
-                                        </form>
-        
                                     </div>
-                                    <div class="col">
-        
-                                        <div>
-                                            <form class="d-flex" role="search">
-                                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                                        </div>
-                                        </form>
-        
-                                    </div>
-                                    <div class="col">
-        
-                                        <div>
-                                            <form class="d-flex" role="search">
-                                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                                        </div>
-                                        </form>
-        
-                                    </div>
-                                    <div class="col">
-        
-                                        <div>
-                                            <form class="d-flex" role="search">
-                                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                                        </div>
-                                        </form>
-        
-                                    </div>
-        
-                                    <div class="col">
-                                        <button type="button" class="btn btn-outline-secondary" onclick="$('#hiddenCardAF').toggle(100);">Advanced filters</button>
-                                        </br>
-                                    </div>
-        
-        
-        
+            
                                 </div>
                             </div>
-        
-                            </p>
                         </div>
-        
-                        <div id="hiddenCardAF" style="display: none; margin-top: -40px">
+            
+            
+            
+                        <div id="hiddenCard" style="display: none;">
                             <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="margin-left: 30px;margin-right: 30px;">
-                                <div class="card-body">
-        
-                                    <div class="container text-center">
-                                        <div class="row">
-                                            <div class="col">
-        
-                                                <label for="birthday">inserisci una data</label>
-                                                <input type="date" id="birthday" name="birthday">
-        
+                                <p class="card-text">
+            
+                                <div class="container text-center">
+                                    <div class="row">
+                                        <div class="col">
+            
+                                            <div>
+                                                <form class=" d-flex" role="search">
+                                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                                             </div>
-                                            <div class="col">
-        
-                                                <div class="input-group mb-3">
-                                                    <label class="input-group-text" for="inputGroupSelect01">Options</label>
-                                                    <select class="form-select" id="inputGroupSelect01">
-                                                        <option selected>Choose...</option>
-                                                        <option value="1">One</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option>
-                                                    </select>
+                                            </form>
+            
+                                        </div>
+                                        <div class="col">
+            
+                                            <div>
+                                                <form class="d-flex" role="search">
+                                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                            </div>
+                                            </form>
+            
+                                        </div>
+                                        <div class="col">
+            
+                                            <div>
+                                                <form class="d-flex" role="search">
+                                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                            </div>
+                                            </form>
+            
+                                        </div>
+                                        <div class="col">
+            
+                                            <div>
+                                                <form class="d-flex" role="search">
+                                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                            </div>
+                                            </form>
+            
+                                        </div>
+            
+                                        <div class="col">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="$('#hiddenCardAF').toggle(100);">Advanced filters</button>
+                                            </br>
+                                        </div>
+            
+            
+            
+                                    </div>
+                                </div>
+            
+                                </p>
+                            </div>
+            
+                            <div id="hiddenCardAF" style="display: none; margin-top: -40px">
+                                <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="margin-left: 30px;margin-right: 30px;">
+                                    <div class="card-body">
+            
+                                        <div class="container text-center">
+                                            <div class="row">
+                                                <div class="col">
+            
+                                                    <label for="birthday">inserisci una data</label>
+                                                    <input type="date" id="birthday" name="birthday">
+            
                                                 </div>
-        
+                                                <div class="col">
+            
+                                                    <div class="input-group mb-3">
+                                                        <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                                                        <select class="form-select" id="inputGroupSelect01">
+                                                            <option selected>Choose...</option>
+                                                            <option value="1">One</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                                    </div>
+            
+                                                </div>
                                             </div>
                                         </div>
+            
                                     </div>
-        
                                 </div>
                             </div>
+            
+            
+            
+            
+            
+            
                         </div>
-        
-        
-        
-        
-        
-        
+            
+            
+            
                     </div>
-        
-        
-        
-                </div>
-                <!-- Filters end-->
-        
-                
-                
-                <!-- Results start-->
-                <div id="result-tabs" style="height: 80%">
-                    <!-- Nav menu start -->
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab" data-bs-target="#records_table_container" type="button" role="tab" aria-controls="records_table_container" aria-selected="true">Table</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="report-tab" data-bs-toggle="tab" data-bs-target="#report-tab-pane" type="button" role="tab" aria-controls="report-tab-pane" aria-selected="false">Chart</button>
-                        </li>
-                        <li id="nav-calendar" class="nav-item" role="presentation">
-                            <button class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane" type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar" aria-selected="false">Calendar</button>
-                        </li>
-                        <li id="nav-kanban" class="nav-item" role="presentation">
-                            <button class="nav-link" id="kanban-tab" data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab" aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban</button>
-                        </li>
-                        <li id="nav-gantt" class="nav-item" role="presentation">
-                            <button class="nav-link" id="gantt-tab" data-bs-toggle="tab" data-bs-target="#gantt-tab-pane" type="button" role="tab" aria-controls="gantt-tab-pane" href="#gantt" aria-selected="false">Gantt</button>
-                        </li>
-                    </ul>
-                    <!-- Nav menu end -->
-                    <!-- Nav content start-->
-                    <div class="tab-content" id="myTabContent" style="height: 100%">
-                        <div class="tab-pane fade show active" id="records_table_container" role="tabpanel" aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
-                            {{records_table}}
+                    <!-- Filters end-->
+            
+                    
+                    
+                    <!-- Results start-->
+                    <div id="result-tabs" style="height: 80%">
+                        <!-- Nav menu start -->
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab" data-bs-target="#records_table_container" type="button" role="tab" aria-controls="records_table_container" aria-selected="true">Table</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="report-tab" data-bs-toggle="tab" data-bs-target="#report-tab-pane" type="button" role="tab" aria-controls="report-tab-pane" aria-selected="false">Chart</button>
+                            </li>
+                            <li id="nav-calendar" class="nav-item" role="presentation">
+                                <button class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane" type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar" aria-selected="false">Calendar</button>
+                            </li>
+                            <li id="nav-kanban" class="nav-item" role="presentation">
+                                <button class="nav-link" id="kanban-tab" data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab" aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban</button>
+                            </li>
+                            <li id="nav-gantt" class="nav-item" role="presentation">
+                                <button class="nav-link" id="gantt-tab" data-bs-toggle="tab" data-bs-target="#gantt-tab-pane" type="button" role="tab" aria-controls="gantt-tab-pane" href="#gantt" aria-selected="false">Gantt</button>
+                            </li>
+                        </ul>
+                        <!-- Nav menu end -->
+                        <!-- Nav content start-->
+                        <div class="tab-content" id="myTabContent" style="height: 100%">
+                            <div class="tab-pane fade show active" id="records_table_container" role="tabpanel" aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
+                                {{records_table}}
+                            </div>
+            
+                            <div class="tab-pane fade" id="report-tab-pane" style="height: 100%; width: 100%" role="tabpanel" aria-labelledby="report-tab" tabindex="0">
+            
+            
+            
+            
+                            </div>
+            
+                            <div class="tab-pane fade " id="calendar-tab-pane" role="tabpanel" aria-labelledby="calendar-tab" tabindex="0" style="overflow: hidden">
+            
+            
+            
+            
+            
+            
+                            </div>
+            
+                            <div class="tab-pane fade" id="kanban-tab-pane" role="tabpanel" aria-labelledby="kanban-tab" tabindex="0">
+            
+                            </div>
+            
+                            <div class="tab-pane fade" id="gantt-tab-pane" role="tabpanel" aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow-x: scroll; overflow-y: scroll">
+                                
+                            </div>
+            
+            
                         </div>
-        
-                        <div class="tab-pane fade" id="report-tab-pane" style="height: 100%; width: 100%" role="tabpanel" aria-labelledby="report-tab" tabindex="0">
-        
-        
-        
-        
-                        </div>
-        
-                        <div class="tab-pane fade " id="calendar-tab-pane" role="tabpanel" aria-labelledby="calendar-tab" tabindex="0" style="overflow: hidden">
-        
-        
-        
-        
-        
-        
-                        </div>
-        
-                        <div class="tab-pane fade" id="kanban-tab-pane" role="tabpanel" aria-labelledby="kanban-tab" tabindex="0">
-        
-                        </div>
-        
-                        <div class="tab-pane fade" id="gantt-tab-pane" role="tabpanel" aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow-x: scroll; overflow-y: scroll">
-                            
-                        </div>
-        
-        
                     </div>
+                    <!-- nav content end-->
                 </div>
-                <!-- nav content end-->
+                <!-- Results end-->
+            
             </div>
-            <!-- Results end-->
-        
         </div>
+
+        <div id="block-record-card-container" class="col-xl-4 col-md-4 mb-4" style="height: 100%;background-color: red;">
+
+        </div>
+        
     </div>
-
-    
-    
-    
-
-    </div>
-<div id="block-record-card-container" class="col-xl-4 col-md-4 mb-4" style="height: 100%;background-color: red;">
-
-</div>
-</div>
 </div>
     
-</div>
