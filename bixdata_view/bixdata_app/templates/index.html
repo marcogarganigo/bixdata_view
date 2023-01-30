@@ -46,12 +46,12 @@
         function getContentRecords(tableid) {
             var serialized_data = [];
             //$("#bixdata_results_container").load('http://localhost:8000/loading/');
-            serialized_data.push({ name: 'table', value: tableid });
+            serialized_data.push({ name: 'tableid', value: tableid });
             serialized_data.push({ name: 'searchTerm', value: '' });
             $.ajax({
                 type: "POST",
                 crossDomain: true,
-                url: "{% url 'records_view' %}",
+                url: "{% url 'content_records' %}",
                 data: serialized_data,
                 success: function (response) {
                     $("#content_container").html(response);
@@ -81,24 +81,7 @@
             });
         }
 
-        function getTestPage()
-        {
-            var serialized_data = [];
-            //$("#bixdata_results_container").load('http://localhost:8000/loading/');
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'test_page' %}",
-                data: serialized_data,
-                success: function (response) {
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
-                error: function () {
-                    $("#content_container").html(response);
-                }
-            });
-        }
+
     </script>
 
     <div id="bixdata2" style="height: 100%;">

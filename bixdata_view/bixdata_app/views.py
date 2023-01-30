@@ -33,29 +33,29 @@ def get_render_loading(request):
     return render(request, 'other/loading.html')
 
 #request: {tableid}
-def get_render_content_records(request):
+def get_content_records(request):
     context = dict()
-    records_table = 'records table';
+    records_table = get_block_records_table(request);
     context['records_table'] = records_table
-    tableid=request.POST.get('table')
+    tableid=request.POST.get('tableid')
     context['table']= tableid.upper()
     context['tableid']= tableid
     context['views']=dict()
-    return render(request, 'content/records.html')
+    return render(request, 'content/records.html', context)
 
 def get_render_content_charts(request):
     return render(request, 'content/charts.html')
 
 def get_test(request):
-    return render(request, 'test.html')
+    return render(request, 'content/test.html')
 
 
 def get_block_records_table(request):
-    table = request.POST.get('table')
+    tableid = request.POST.get('tableid')
     searchTerm = request.POST.get('searchTerm')
     viewid= request.POST.get('viewid')
     post = {
-        'table': table,
+        'tableid': tableid,
         'searchTerm': searchTerm,
         'viewid':viewid,
     }
@@ -67,7 +67,7 @@ def get_block_records_table(request):
     context = {
         'records': records,
         'columns': columns,
-        'tableid': table,
+        'tableid': tableid,
     }
 
     for records_index, record in enumerate(records):
@@ -153,11 +153,11 @@ def get_block_records_kanban(request):
     return records_table
 
 def get_block_records_calendar(request):
-    table = request.POST.get('table')
+    tableid = request.POST.get('tableid')
     searchTerm = request.POST.get('searchTerm')
     viewid= request.POST.get('viewid')
     post = {
-        'table': table,
+        'tableid': tableid,
         'searchTerm': searchTerm,
         'viewid':viewid,
     }
@@ -169,7 +169,7 @@ def get_block_records_calendar(request):
     context = {
         'records': records,
         'columns': columns,
-        'tableid': table,
+        'tableid': tableid,
     }
 
     for records_index, record in enumerate(records):
@@ -182,9 +182,8 @@ def get_block_records_calendar(request):
                 record[record_index] = value
         records[records_index] = record
 
-    records_table = render_to_string(
-        'block/records_table.html', context, request=request)
-    return records_table
+    records_table = render_to_string('block/records/records_calendar.html', context, request=request)
+    return HttpResponse(records_table)
 
 
 def get_block_record(request):
