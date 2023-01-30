@@ -35,13 +35,13 @@ def get_render_loading(request):
 #request: {tableid}
 def get_render_content_records(request):
     context = dict()
-    records_table = 'records table';
+    records_table = get_block_records_table(request)
     context['records_table'] = records_table
     tableid=request.POST.get('table')
     context['table']= tableid.upper()
     context['tableid']= tableid
     context['views']=dict()
-    return render(request, 'content/records.html')
+    return render(request, 'content/records.html',context)
 
 def get_render_content_charts(request):
     return render(request, 'content/charts.html')
