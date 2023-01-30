@@ -28,5 +28,6 @@ urlpatterns = [
     path('block_records_kanban/', views.get_block_records_kanban, name='block_records_kanban'),
     path('block_records_calendar/', views.get_block_records_calendar, name='block_records_calendar'),
     path('block_record/', views.get_block_record, name='block_record'),
+    path('block_record_card/', views.get_block_record_card, name='block_record_card'),
     path('test/', views.get_test, name='test'),
 ]

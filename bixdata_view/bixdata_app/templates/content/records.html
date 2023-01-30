@@ -192,7 +192,6 @@
 
 
     function open_record(tableid,recordid) {
-        //$("#bixdata_recordcard_container").load('http://localhost:8000/loading/');
         var serialized_data = [];
         serialized_data.push({name: 'tableid',value: tableid});
         serialized_data.push({name: 'recordid',value: recordid});
@@ -201,10 +200,14 @@
         }
         $.ajax({
             type: "POST",
-            url: "{% url 'block_record' %}",
+            url: "{% url 'block_record_card' %}",
             data: serialized_data,
             success: function(response) {
-                checkWidth(response);
+                if (screen.width > min_width) {
+                    $("#block-record-card-container").html(response);
+                } else {
+                    $("#fullwidth_modal").html(response);
+                }
             },
             error: function() {
                 $("#bixdata_recordcard_container").html(response);
