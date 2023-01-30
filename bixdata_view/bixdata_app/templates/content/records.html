@@ -28,7 +28,10 @@
             }
         })
         
-        
+        if (screen.width <= min_width) {
+                $("#").css('display', 'none');
+                $('#content-table').css('width', '100%');
+            }
 
 
 
@@ -233,7 +236,7 @@
         });
     }
 </script>
-<div id="#content_records" style="height: 100%;width: 100%;background-color: #9b9393;overflow: scroll;">
+<div id="#content_records" style="height: 100%;width: 100%;background-color: #9b9393;">
     
     
     <!--Content tables start-->

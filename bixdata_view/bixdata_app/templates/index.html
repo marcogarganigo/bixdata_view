@@ -34,15 +34,7 @@
 
             });
 
-            if (screen.width <= min_width) {
 
-                $("html").attr("data-sidenav-size", "condensed");
-                $(".tabs-title").attr("display", "none");
-                $(".tabs-icon").attr("display", "visible");
-                $(".card-body").attr("display", "none");
-                $("#bixdata_recordcard_container").css('display', 'none');
-                $('#bixdata_results_container').css('width', '100%');
-            }
 
 
         });
@@ -89,6 +81,7 @@
 
     <div id="bixdata2" style="height: 100%;">
         <!-- ========== Topbar Start ========== -->
+        <div class="shadow-lg p-2 mb-5 bg-body rounded"></div>
             <div class="navbar-custom topnav-navbar">
                 <div class="container-fluid detached-nav">
 
@@ -600,10 +593,10 @@
         <!-- ============================================================== -->
 
         <!--test content-->
-        <div class="content-page" style="min-height: 90%;height: 90%">
+        <div class="content-page" style="min-height: 90%;height: 100%">
             <!-- Start Content-->
-            <div class="row" style="height: 100%;">
-                <div id="content_container" style="height: 100%;">
+            <div class="row" style="height: 90%;">
+                <div id="content_container" style="height: 90%">
 
 
                 </div>
