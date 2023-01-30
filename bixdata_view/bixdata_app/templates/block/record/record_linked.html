@@ -1,10 +1,23 @@
-<div id="block_record_linked" style="height: 50%;width: 50%;background-color: red;">
+<script>
+    function triggerCollapse(id) {
+        var collapse = document.getElementById(id);
+        if (collapse.classList.contains('show')) {
+            collapse.classList.remove('hide');
+        } else {
+            collapse.classList.add('hide');
+        }
+    }
+</script>
+
+<div id="block_record_linked">
     {% for key,label in labels.items %}
-        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="{{key}}" aria-expanded="false" aria-controls="{{key}}" style="background-color: #ff5b5b; border: #ff5b5b" onclick="">{{label.description}}</button>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{key}}" aria-expanded="false" aria-controls="{{key}}" style="background-color: grey; border: grey; width: 100%; margin-top: 2%" onclick="triggerCollapse('{{key}}')">{{label.description}}</button>
         <div class="collapse" id="{{key}}">
             <div class="card card-body">
-                <?= $label['description'] ?>
+                {{label.description}}
             </div>
         </div>
     {% endfor %}
 </div>
+
+
