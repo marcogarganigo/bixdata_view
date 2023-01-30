@@ -30,7 +30,7 @@
         
         if (screen.width <= min_width) {
                 $("#block-record-card-container").css('display', 'none');
-                $('#block-records-search-container').css('width', '100%');
+                $("#content-records").css('background-color', 'green');
             }
 
 
@@ -236,11 +236,13 @@
         });
     }
 </script>
-<div id="#content-records" style="height: 100%;width: 100%;background-color: #9b9393;">
+<div class="row" style="width: 100%; height: 100%">
+
+<div id="#content-records" class="col-xl-8 col-md-8 mb-4" style="height: 100%;background-color: #9b9393;">
     
     
     <!--Content tables start-->
-    <div id="block-records-search-container">
+    <div id="block-records-search-container" >
         <div id="content-table" class="card shadow mb-4" style="height: 100%;"> <!--card-->
             <div id="content-card" class="card-body" style="height: 100%;"> <!--card-body-->
                 <!-- Views -->
@@ -458,13 +460,16 @@
         
         </div>
     </div>
-    <div id="block-record-card-container">
+
+    
+    
+    
 
     </div>
-    
-    
-    
-    
-    </div>
+<div id="block-record-card-container" class="col-xl-4 col-md-4 mb-4" style="height: 100%;background-color: red;">
+
+</div>
+</div>
+</div>
     
 </div>
