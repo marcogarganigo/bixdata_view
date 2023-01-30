@@ -23,7 +23,6 @@ urlpatterns = [
     path('loading/', views.get_render_loading, name='loading'),
     path('records/', views.get_render_content_records, name='records_view'),
     path('charts/', views.get_render_content_charts, name='charts_view'),
-    path('test_page/', views.get_test_page, name='test_page'),
     path('block_records_table/', views.get_block_records_table, name='block_records_table'),
     path('block_records_gantt/', views.get_block_records_gantt, name='block_records_gantt'),
     path('block_records_kanban/', views.get_block_records_kanban, name='block_records_kanban'),

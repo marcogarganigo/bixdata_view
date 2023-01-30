@@ -87,12 +87,16 @@
 
     function searchCalendar() {
         var serialized_data = [];
+        serialized_data.push(
+            {name: 'tableid',value: 'test'}
+        );
         $.ajax({
             type: "POST",
             url: "{% url 'block_records_calendar' %}",
             data: serialized_data,
             success: function(response) {
-                $("#calendar-tab-pane").html(response);
+                alert('test');
+                $("#calendar-tab-pane").html('test');
             },
             error: function() {
                 $("#calendar-tab-pane").html(response);
