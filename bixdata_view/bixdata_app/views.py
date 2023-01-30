@@ -79,8 +79,7 @@ def get_block_records_table(request):
                 record[record_index] = value
         records[records_index] = record
 
-    records_table = render_to_string(
-        'block/records_table.html', context, request=request)
+    records_table = render_to_string('block/records/records_table.html', context, request=request)
     return records_table
 
 

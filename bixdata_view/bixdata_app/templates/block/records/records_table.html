@@ -1,3 +1,84 @@
-<div id="#content_records_table" style="height: 50%;width: 50%;background-color: red;">
-    Content records_table
+<style>
+    #results-body {
+        overflow-y: scroll;
+        max-height: 100%;
+    }
+
+    #results-head,
+    #results-body, #results-row {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    #results-head {
+        width: calc(100% - 1em);
+    }
+
+    #results-table {
+        width: 100%;
+        height: 100%;
+    }
+
+
+
+</style>
+
+<script>
+    const myModalEl = document.getElementById('myModal')
+myModalEl.addEventListener('hidden.bs.modal', event => {
+    
+})
+
+
+    function modalShow() {
+        $("results-row").click(function(){
+            if (screen.width <= min_width) {
+              $("#exampleModal").modal("show");
+            }
+          });
+    }
+    
+</script>
+
+<div id="#block_records_table" style="height: 50%;width: 50%;background-color: red;">
+    <div class="col s12 m6 l6" style="height: 100%; overflow-y:scroll;">
+        <table id="results-table">
+            <thead id="results-head">
+                <tr id="results-row">
+                    {% for column in columns %}
+                        {% if column.desc != 'recordid_' and column.desc != 'recordstatus_' and column.desc != 'recordcss_' %}
+                            <th>{{column.desc}}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>            
+            </thead id="results-head">
+            <tbody id="results-body">
+                {% for record in records %}
+                    <tr id="results-row">
+                        {% for column_value in record %}
+                            {% if forloop.counter0 > 2 %}
+                                <td onclick="open_record('{{tableid}}','{{record.0}}')">
+                                    {{column_value}}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+    
+    
+    
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%;">
+        <div class="modal-dialog modal-xl" style="width: 100%;">
+            <div class="modal-content" style="width: 100%">
+                <div class="modal-body" style="width: 100%">
+                    <div id="fullwidth_modal" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">   
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
