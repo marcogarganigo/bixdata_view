@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -35,6 +39,75 @@
 
 
 
+
+    <script type="text/javascript">
+
+    //alert si apre con il doppio click sulla task
+        $("#gantt").ready(function() {
+            $(function(){
+                var tasks = '{{records_json|safe}}'
+                tasks=jQuery.parseJSON(tasks)
+                // Get the Gantt task elements
+                var gantt = new Gantt('#tasks-gantt',tasks, {
+                    //Add click event listener to tasks
+                    on_click: function(task) {
+                        alert("Task: " + task.name);
+                    }
+                });
+            });
+        });
+
+    </script>
+
+        <style>
+            .gantt-container {
+                width: 100%;
+                overflow-x: hidden;
+            }
+        </style>
+
+    <div id="#content_records_gantt" style="height: 100%;width: 100%;">
+
+        <div id="gantt" class="container-fluid" style="width: 100%">
+
+            <!-- start page title -->
+            <!-- end page title -->
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+
+                        <!-- gantt view -->
+                        <div class="col-xxl-9 mt-4 mt-xl-0 col-lg-8">
+                            <div class="ps-xl-3">
+                                <div class="row">
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col mt-3">
+                                        <svg id="tasks-gantt"></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end gantt view -->
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- container -->
+    </div>
+
+
+
+
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
   </body>
 </html>
+
+{% endblock %}
