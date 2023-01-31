@@ -45,8 +45,13 @@ def get_content_records(request):
     return render(request, 'content/records.html', context)
 
 
-def get_render_content_charts(request):
-    return render(request, 'content/charts.html')
+def get_render_content_chart(request):
+    return render(request, 'records/records_chart.html')
+
+def get_block_records_chart(request):
+    records_table = render_to_string(
+        'block/records/records_chart.html', request=request)
+    return HttpResponse(records_table)
 
 
 def get_test(request):

@@ -27,6 +27,12 @@
                     searchCalendar()
                 })
             }
+            if($(this).attr("id")=='chart-tab')
+            {
+                $(this)[0].addEventListener('shown.bs.tab', function (event) {
+                    searchChart()
+                })
+            }
         })
         
         if (screen.width <= min_width) {
@@ -103,6 +109,31 @@
             }
         });
     }
+
+    function searchChart() {
+        var serialized_data = [];
+        serialized_data.push({
+            name: 'table',
+            value: ''
+        });
+        serialized_data.push({
+            name: 'searchTerm',
+            value: $("#searchTerm").val()
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_records_chart' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#chart-tab-pane").html(response);
+            },
+            error: function() {
+                $("#chart-tab-pane").html(response);
+            }
+        });
+    }
+
 
     function search() {
         var serialized_data = [];
@@ -407,7 +438,7 @@
                                 <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab" data-bs-target="#records_table_container" type="button" role="tab" aria-controls="records_table_container" aria-selected="true">Table</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="report-tab" data-bs-toggle="tab" data-bs-target="#report-tab-pane" type="button" role="tab" aria-controls="report-tab-pane" aria-selected="false">Chart</button>
+                                <button class="nav-link" id="chart-tab" data-bs-toggle="tab" data-bs-target="#chart-tab-pane" type="button" role="tab" aria-controls="chart-tab-pane" href="chart" aria-selected="false">Chart</button>
                             </li>
                             <li id="nav-calendar" class="nav-item" role="presentation">
                                 <button class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane" type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar" aria-selected="false">Calendar</button>
@@ -431,6 +462,15 @@
             
             
             
+                            </div>
+
+                            <div class="tab-pane fade " id="chart-tab-pane" role="tabpanel" aria-labelledby="chart-tab" tabindex="0" style="overflow: hidden">
+
+
+
+
+
+
                             </div>
             
                             <div class="tab-pane fade " id="calendar-tab-pane" role="tabpanel" aria-labelledby="calendar-tab" tabindex="0" style="overflow: hidden">
