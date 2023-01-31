@@ -1,24 +1,13 @@
-
-
 <script type="text/javascript">
 
     //alert si apre con il doppio click sulla task
-        $("#gantt").ready(function() {
+        $("#content_records_gantt").ready(function() {
 
 
             $(function(){
-                //var tasks = '{{records_json|safe}}'
-                var tasks = [
-                {
-                    id: 'Task 1',
-                    name: 'Redesign website',
-                    start: '2016-12-28',
-                    end: '2016-12-31',
-                    progress: 20,
-                    dependencies: 'Task 2, Task 3'
-                }
-                ]
-                tasks=jQuery.parseJSON(tasks)
+                var tasks = '{{records_json|safe}}';
+                tasks=jQuery.parseJSON(tasks);
+                               
                 // Get the Gantt task elements
                 var gantt = new Gantt('#tasks-gantt',tasks, {
                     //Add click event listener to tasks
@@ -71,7 +60,6 @@
     
         </div> <!-- container -->
     </div>
-
 
 
 

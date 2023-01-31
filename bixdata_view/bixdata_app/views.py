@@ -88,9 +88,36 @@ def get_block_records_table(request):
 
 
 def get_block_records_gantt(request):
+    context = dict()
+    table = request.POST.get('table')
+    post = {
+        'table': 'task',
+        'searchTerm': '',
+    }
 
-    records_table = render_to_string(
-        'block/records/records_gantt.html', request=request)
+    response = requests.post(
+        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
+    response_dict = json.loads(response.text)
+
+    records = response_dict['records']
+    # print(records)
+    records_gantt = []
+    for record in records:
+        new_record = dict()
+        new_record['id'] = record[1]
+        new_record['name'] = record[2]
+        new_record['start'] = record[3]
+        new_record['end'] = record[4]
+        new_record['progress'] = 100
+
+        records_gantt.append(new_record)
+    records_json = json.dumps(records_gantt)
+    
+    context = {
+        'records': records,
+        'records_json': records_json,
+    }
+    records_table = render_to_string('block/records/records_gantt.html',context, request=request)
     return HttpResponse(records_table)
 
 
@@ -212,41 +239,3 @@ def get_block_record_linked(request):
     return record_linked_labels
 
 
-def ajax_get_records_gantt(request):
-    records_gantt = get_records_gantt(request)
-    return HttpResponse(records_gantt)
-
-def get_records_gantt(request):
-    context = dict()
-    table = request.POST.get('table')
-    post = {
-        'table': 'task',
-        'searchTerm': '',
-    }
-
-    response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
-    response_dict = json.loads(response.text)
-
-    records = response_dict['records']
-    # print(records)
-    records_gantt = []
-    for record in records:
-        new_record = dict()
-        new_record['id'] = record[1]
-        new_record['name'] = record[2]
-        new_record['start'] = record[3]
-        new_record['end'] = record[4]
-        new_record['progress'] = 100
-
-        records_gantt.append(new_record)
-    records_json = json.dumps(records_gantt)
-    # records_json = records_json.replace("\n", "")
-    # records_json = records_json.replace("\r", "")
-    # print(records_json);
-    context = {
-        'records': records,
-        'records_json': records_json,
-    }
-    returned = render_to_string('gantt.html', context, request=request)
-    return returned
