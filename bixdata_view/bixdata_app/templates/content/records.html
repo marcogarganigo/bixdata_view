@@ -84,6 +84,7 @@
             url: "{% url 'block_records_kanban' %}",
             data: serialized_data,
             success: function(response) {
+                console.info(response)
                 $("#kanban-tab-pane").html(response);
             },
             error: function() {

@@ -134,11 +134,10 @@ def get_block_records_kanban(request):
         'searchTerm': '',
     }
 
-    response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
-    response_dict = json.loads(response.text)
+    #response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
+    #response_dict = json.loads(response.text)
 
-    records = response_dict['records']
+    #records = response_dict['records']
     # print(records)
     groups = []
     #for record in records:
@@ -152,9 +151,9 @@ def get_block_records_kanban(request):
 
     group=dict()
     group['description']='TODO test'
-    group_records=dict()
+    group_records=[]
     record=dict()
-    record['recordid']='123456789';
+    record['recordid']='123456789'
     record['title']='title'
     record['tag']='tag'
     record['date']='date'
@@ -163,14 +162,15 @@ def get_block_records_kanban(request):
     record['field2']='field2'
     record['field3']='field3'
     record['field4']='field4'
-    group_records.append(record);
+    group_records.append(record)
     group['records']=group_records
+    groups.append(group);
 
     group=dict()
     group['description']='IN PROGRESS'
-    group_records=dict()
+    group_records=[]
     record=dict()
-    record['recordid']='2222344453';
+    record['recordid']='2222344453'
     record['title']='title2'
     record['tag']='tag2'
     record['date']='date2'
@@ -181,15 +181,13 @@ def get_block_records_kanban(request):
     record['field4']='field42'
     group_records.append(record);
     group['records']=group_records
-
-
     groups.append(group);
     
     
     context = {
         'groups': groups,
     }
-    records_table = render_to_string('block/records/records_gantt.html',context, request=request)
+    records_table = render_to_string('block/records/records_kanban.html',context, request=request)
     return HttpResponse(records_table)
 
 
