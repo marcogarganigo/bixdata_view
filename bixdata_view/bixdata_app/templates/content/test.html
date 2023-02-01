@@ -10,11 +10,17 @@
 
 {% block body %}
 
+
 <div>
   <canvas id="myChart"></canvas>
 </div>
 
+<div>
+  <canvas id="myChart2"></canvas>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 <script>
   const ctx = document.getElementById('myChart');
@@ -22,7 +28,7 @@
   new Chart(ctx, {
     type: 'line',
     data: {
-      labels: labels,
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
       datasets: [{
         label: 'My First Dataset',
         data: [65, 59, 80, 81, 56, 55, 40],
@@ -42,12 +48,7 @@
 </script>
 
 
-    <div>
-        <canvas id="myChart2"></canvas>
-    </div>
-
-    <script>
-        const ctx = document.getElementById('myChart2');
+    <script>const ctx = document.getElementById('myChart2');
 
   new Chart(ctx, {
     type: 'pie',
@@ -58,7 +59,7 @@
     'Yellow'
   ],
   datasets: [{
-    label: 'My First Dataset',
+    label: ['Red', 'Blue', 'Yellow'],
     data: [300, 50, 100],
     backgroundColor: [
       'rgb(255, 99, 132)',
