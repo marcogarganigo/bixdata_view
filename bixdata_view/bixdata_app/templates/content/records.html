@@ -299,21 +299,21 @@
             
                                     <div class="d-grid gap-2 d-md-block">
                                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="width: 50%;" id="searchTerm" autocomplete="off">
-                                        <button class="btn btn-outline-danger" type="submit" style="margin-top: -65px; margin-left: 90px;" onclick="search()">Search</button>
+                                        <button class="btn btn-outline-danger" type="submit" style="margin-top: -65px; margin-left: 90px;" onclick="search()">Cerca</button>
                                     </div>
             
-                                    <button type="button" class="btn btn-outline-secondary" style="margin-top: -113px; margin-left: 250px;" onclick="$('#hiddenCard').toggle(100);">Filters</button>
+                                    <button type="button" class="btn btn-outline-secondary" style="margin-top: -113px; margin-left: 250px;" onclick="$('#hiddenCard').toggle(100);">Filtri</button>
             
                                 </div>
                                 <div class="col filter-column">
             
             
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
-                                        <button class="btn btn-outline-danger me-md-2" type="button">Refresh</button>
-                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()">New</button>
+                                        <button class="btn btn-outline-danger me-md-2" type="button">Ricarica</button>
+                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()">Nuovo</button>
                                         <div class="dropdown">
                                             <button class="btn btn-outline-secondary me md-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Export
+                                                Esporta
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="#">Esporta dati excel</a></li>
@@ -373,7 +373,7 @@
                                         </div>
             
                                         <div class="col">
-                                            <button type="button" class="btn btn-outline-secondary" onclick="$('#hiddenCardAF').toggle(100);">Advanced filters</button>
+                                            <button type="button" class="btn btn-outline-secondary" onclick="$('#hiddenCardAF').toggle(100);">Filtri Avanzati</button>
                                             </br>
                                         </div>
             
@@ -436,13 +436,13 @@
                         <!-- Nav menu start -->
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab" data-bs-target="#records_table_container" type="button" role="tab" aria-controls="records_table_container" aria-selected="true">Table</button>
+                                <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab" data-bs-target="#records_table_container" type="button" role="tab" aria-controls="records_table_container" aria-selected="true">Tabella</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="chart-tab" data-bs-toggle="tab" data-bs-target="#chart-tab-pane" type="button" role="tab" aria-controls="chart-tab-pane" href="chart" aria-selected="false">Chart</button>
+                                <button class="nav-link" id="chart-tab" data-bs-toggle="tab" data-bs-target="#chart-tab-pane" type="button" role="tab" aria-controls="chart-tab-pane" href="chart" aria-selected="false">Grafico</button>
                             </li>
                             <li id="nav-calendar" class="nav-item" role="presentation">
-                                <button class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane" type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar" aria-selected="false">Calendar</button>
+                                <button class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane" type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar" aria-selected="false">Calendario</button>
                             </li>
                             <li id="nav-kanban" class="nav-item" role="presentation">
                                 <button class="nav-link" id="kanban-tab" data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab" aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban</button>

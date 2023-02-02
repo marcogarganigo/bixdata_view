@@ -63,20 +63,20 @@
     
             <div id="card-menu">
     
-                <button type="button" id="close-button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="close" onclick="closeCard(this)"><i class="mdi mdi-close"></i> </button>
+                <button type="button" id="close-button" class="btn-close button-recordcard" data-bs-dismiss="modal" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="chiudi" onclick="closeCard(this)"></button>
+
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="fissa"><i class="mdi mdi-pin-outline"></i> </button>
     
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="pin"><i class="mdi mdi-pin-outline"></i> </button>
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="permessi"><i class="mdi mdi-lock-outline"></i> </button>
     
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="permissions"><i class="mdi mdi-lock-outline"></i> </button>
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="elimina" style="color: red"><i class=" mdi mdi-delete-outline"></i> </button>
     
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="delete" style="color: red"><i class=" mdi mdi-delete-outline"></i> </button>
-    
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="copy"><i class="mdi mdi-content-copy"></i> </button>
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="copia"><i class="mdi mdi-content-copy"></i> </button>
     
     
                 <div class="dropdown">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Prints
+                        Stampe
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Stampa scheda</a></li>
@@ -86,7 +86,7 @@
     
                 <div class="dropdown">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Functions
+                        Funzioni
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Action</a></li>
@@ -113,7 +113,7 @@
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <button class="nav-link active" id="fields-tab" data-bs-toggle="tab" data-bs-target="#fields-tab-pane" type="button" role="tab" aria-controls="fields-tab-pane" aria-selected="true">
     
-                        <p class="tabs-title">Fields</p>
+                        <p class="tabs-title">Campi</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="fields">
                             text_fields
                         </span>
@@ -121,7 +121,7 @@
                     </button>
                     <button class="nav-link" id="linked-tab" data-bs-toggle="tab" data-bs-target="#linked-tab-pane" type="button" role="tab" aria-controls="linked-tab-pane" aria-selected="false">
     
-                        <p class="tabs-title">Linked</p>
+                        <p class="tabs-title">Collegato</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="linked">
                             link
                         </span>
@@ -129,21 +129,21 @@
                     </button>
                     <button class="nav-link" id="attachment-tab" data-bs-toggle="tab" data-bs-target="#attachment-tab-pane" type="button" role="tab" aria-controls="attachment-tab-pane" aria-selected="false">
     
-                        <p class="tabs-title">Attachment</p>
+                        <p class="tabs-title">Attaccamento</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="attachment">
                             attachment
                         </span>
                     </button>
                     <button class="nav-link" id="statistics-tab" data-bs-toggle="tab" data-bs-target="#statistics-tab-pane" type="button" role="tab" aria-controls="statistics-tab-pane" aria-selected="false">
     
-                        <p class="tabs-title">Analytics</p>
+                        <p class="tabs-title">Analitica</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="analytics">
                             analytics
                         </span>
                     </button>
                     <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-tab-pane" type="button" role="tab" aria-controls="history-tab-pane" aria-selected="false">
     
-                        <p class="tabs-title">History</p>
+                        <p class="tabs-title">Storico</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="history">
                             history
                         </span>
@@ -151,7 +151,7 @@
                     </button>
                     <button class="nav-link" id="workflow-tab" data-bs-toggle="tab" data-bs-target="#workflow-tab-pane" type="button" role="tab" aria-controls="workflow-tab-pane" aria-selected="false">
     
-                        <p class="tabs-title">Workflow</p>
+                        <p class="tabs-title">Flusso di lavoro</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="workflow">
                             rebase
                         </span>
