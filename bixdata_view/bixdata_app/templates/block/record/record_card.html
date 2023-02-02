@@ -53,6 +53,71 @@
         $(".tabs-icon").css("display", "none");
     }
 
+    function copyFunc() {
+        var serialized_data = [];
+        $.ajax({
+            type: "POST",
+            url: "{% url 'record_card_copy' %}",
+            data: serialized_data,
+            success: function(response) {
+                //$("#bixdata_recordcard_container").html(response);
+                alert('copy')
+            },
+            error: function() {
+                alert('copy')
+            }
+        });
+    }
+
+    function deleteFunc() {
+        var serialized_data = [];
+        $.ajax({
+            type: "POST",
+            url: "{% url 'record_card_delete' %}",
+            data: serialized_data,
+            success: function(response) {
+                //$("#bixdata_recordcard_container").html(response);
+                alert('delete')
+            },
+            error: function() {
+                alert('delete')
+            }
+        });
+    }
+
+    function permissionsFunc()
+    {
+        var serialized_data = [];
+        $.ajax({
+            type: "POST",
+            url: "{% url 'record_card_permissions' %}",
+            data: serialized_data,
+            success: function(response) {
+                //$("#bixdata_recordcard_container").html(response);
+                alert('permissions')
+            },
+            error: function() {
+                alert('permissions')
+            }
+        });
+    }
+
+    function pinFunc() {
+        var serialized_data = [];
+        $.ajax({
+            type: "POST",
+            url: "{% url 'record_card_pin' %}",
+            data: serialized_data,
+            success: function(response) {
+                //$("#bixdata_recordcard_container").html(response);
+                alert('pin')
+            },
+            error: function() {
+                alert('pin')
+            }
+        });
+    }
+
     
 </script>
 
@@ -65,16 +130,16 @@
     
                 <button type="button" id="close-button" class="btn-close button-recordcard" data-bs-dismiss="modal" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="chiudi" onclick="closeCard(this)"></button>
 
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="fissa"><i class="mdi mdi-pin-outline"></i> </button>
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="fissa"onclick="pinFunc()"><i class="mdi mdi-pin-outline"></i> </button>
     
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="permessi"><i class="mdi mdi-lock-outline"></i> </button>
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="permessi" onclick="permissionsFunc()"><i class="mdi mdi-lock-outline"></i> </button>
     
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="elimina" style="color: red"><i class=" mdi mdi-delete-outline"></i> </button>
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="elimina" style="color: red"onclick="deleteFunc()"><i class=" mdi mdi-delete-outline"></i> </button>
     
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="copia"><i class="mdi mdi-content-copy"></i> </button>
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="copia" onclick="copyFunc()"><i class="mdi mdi-content-copy"></i> </button>
     
     
-                <div class="dropdown">
+                <div class="dropdown" style="margin-top: -2.6%">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Stampe
                     </button>

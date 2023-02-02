@@ -29,6 +29,13 @@ urlpatterns = [
     path('block_records_calendar/', views.get_block_records_calendar, name='block_records_calendar'),
     path('block_records_chart/', views.get_block_records_chart, name='block_records_chart'),
     path('block_record/', views.get_block_record, name='block_record'),
+    path('block_reload/', views.get_block_reload, name='block_reload'),
     path('block_record_card/', views.get_block_record_card, name='block_record_card'),
     path('test/', views.get_test, name='test'),
+    path('dashboard/', views.get_render_content_dashboard, name='dashboard'),
+    path('record_card_copy/', views.get_record_card_copy, name='record_card_copy'),
+    path('record_card_delete/', views.get_record_card_delete, name='record_card_delete'),
+    path('record_card_permissions/', views.get_record_card_permissions, name='record_card_permissions'),
+    path('record_card_pin/', views.get_record_card_pin, name='record_card_pin'),
+    path('login/', views.get_render_login, name='login'),
 ]

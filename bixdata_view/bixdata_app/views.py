@@ -1,10 +1,16 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.models import User
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse
 from django.template.loader import render_to_string
 import requests
 import json
 import datetime
+
+from .forms import LoginForm
+from .models import Login
 
 
 def get_render_index(request):
@@ -48,6 +54,7 @@ def get_content_records(request):
 def get_render_content_chart(request):
     return render(request, 'records/records_chart.html')
 
+
 def get_block_records_chart(request):
     records_table = render_to_string(
         'block/records/records_chart.html', request=request)
@@ -56,6 +63,47 @@ def get_block_records_chart(request):
 
 def get_test(request):
     return render(request, 'content/test.html')
+
+
+def get_block_reload(request):
+    return render(request)
+
+
+def get_render_content_dashboard(request):
+    return render(request, 'content/dashboard.html')
+
+
+def get_record_card_copy(request):
+    return render(request)
+
+
+def get_record_card_delete(request):
+    return render(request)
+
+
+def get_record_card_permissions(request):
+    return render(request)
+
+
+def get_record_card_pin(request):
+    return render(request)
+
+
+def get_render_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            else:
+                form.add_error(None, "Invalid username or password")
+    else:
+        form = LoginForm()
+    return render(request, 'other/login.html', {'form': form})
 
 
 def get_block_records_table(request):
@@ -117,12 +165,12 @@ def get_block_records_gantt(request):
 
         records_gantt.append(new_record)
     records_json = json.dumps(records_gantt)
-    
+
     context = {
         'records': records,
         'records_json': records_json,
     }
-    records_table = render_to_string('block/records/records_gantt.html',context, request=request)
+    records_table = render_to_string('block/records/records_gantt.html', context, request=request)
     return HttpResponse(records_table)
 
 
@@ -134,60 +182,59 @@ def get_block_records_kanban(request):
         'searchTerm': '',
     }
 
-    #response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
-    #response_dict = json.loads(response.text)
+    # response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
+    # response_dict = json.loads(response.text)
 
-    #records = response_dict['records']
+    # records = response_dict['records']
     # print(records)
     groups = []
-    #for record in records:
-     #   new_record = dict()
-      #  new_record['id'] = record[1]
-       # new_record['name'] = record[2]
-        #new_record['start'] = record[3]
-       # new_record['end'] = record[4]
-       # new_record['progress'] = 100
+    # for record in records:
+    #   new_record = dict()
+    #  new_record['id'] = record[1]
+    # new_record['name'] = record[2]
+    # new_record['start'] = record[3]
+    # new_record['end'] = record[4]
+    # new_record['progress'] = 100
     #    records_kanban.append(new_record)
 
-    group=dict()
-    group['description']='TODO test'
-    group_records=[]
-    record=dict()
-    record['recordid']='123456789'
-    record['title']='title'
-    record['tag']='tag'
-    record['date']='date'
-    record['user']='user'
-    record['field1']='field1'
-    record['field2']='field2'
-    record['field3']='field3'
-    record['field4']='field4'
+    group = dict()
+    group['description'] = 'TODO test'
+    group_records = []
+    record = dict()
+    record['recordid'] = '123456789'
+    record['title'] = 'title'
+    record['tag'] = 'tag'
+    record['date'] = 'date'
+    record['user'] = 'user'
+    record['field1'] = 'field1'
+    record['field2'] = 'field2'
+    record['field3'] = 'field3'
+    record['field4'] = 'field4'
     group_records.append(record)
-    group['records']=group_records
+    group['records'] = group_records
     groups.append(group);
 
-    group=dict()
-    group['description']='IN PROGRESS'
-    group_records=[]
-    record=dict()
-    record['recordid']='2222344453'
-    record['title']='title2'
-    record['tag']='tag2'
-    record['date']='date2'
-    record['user']='user2'
-    record['field1']='field12'
-    record['field2']='field22'
-    record['field3']='field32'
-    record['field4']='field42'
+    group = dict()
+    group['description'] = 'IN PROGRESS'
+    group_records = []
+    record = dict()
+    record['recordid'] = '2222344453'
+    record['title'] = 'title2'
+    record['tag'] = 'tag2'
+    record['date'] = 'date2'
+    record['user'] = 'user2'
+    record['field1'] = 'field12'
+    record['field2'] = 'field22'
+    record['field3'] = 'field32'
+    record['field4'] = 'field42'
     group_records.append(record);
-    group['records']=group_records
+    group['records'] = group_records
     groups.append(group);
-    
-    
+
     context = {
         'groups': groups,
     }
-    records_table = render_to_string('block/records/records_kanban.html',context, request=request)
+    records_table = render_to_string('block/records/records_kanban.html', context, request=request)
     return HttpResponse(records_table)
 
 
@@ -299,5 +346,3 @@ def get_block_record_linked(request):
     context['labels'] = response_dict
     record_linked_labels = render_to_string('block/record/record_linked.html', context, request=request)
     return record_linked_labels
-
-

@@ -223,6 +223,27 @@
         
     }
 
+    function reloadFunc()
+    {
+        var serialized_data = [];
+        serialized_data.push({
+            name: 'table',
+            value: ''
+        });
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_reload' %}",
+            data: serialized_data,
+            success: function(response) {
+                alert('reload')
+            },
+            error: function() {
+                alert('reload')
+            }
+        })
+    }
+
+
 
     function open_record(tableid,recordid) {
         var serialized_data = [];
@@ -309,7 +330,7 @@
             
             
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
-                                        <button class="btn btn-outline-danger me-md-2" type="button">Ricarica</button>
+                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="reloadFunc()">Ricarica</button>
                                         <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()">Nuovo</button>
                                         <div class="dropdown">
                                             <button class="btn btn-outline-secondary me md-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
