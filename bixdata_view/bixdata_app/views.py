@@ -8,15 +8,21 @@ from django.template.loader import render_to_string
 import requests
 import json
 import datetime
+from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm
-#from .models import Login
 
 
+# from .models import Login
+
+
+@login_required(login_url='/login/')
 def get_render_index(request):
     response = requests.get(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
     menu_list = json.loads(response.text)
+
+    username = request.user
 
     print(menu_list.items())
     print(type(menu_list))
@@ -29,17 +35,20 @@ def get_render_index(request):
     context = {
         'menu_list': menu_list,
         'date': datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
+        'username': username,
 
     }
 
     return render(request, 'index.html', context)
 
 
+@login_required(login_url='/login/')
 def get_render_loading(request):
     return render(request, 'other/loading.html')
 
 
 # request: {tableid}
+@login_required(login_url='/login/')
 def get_content_records(request):
     context = dict()
     records_table = get_block_records_table(request);
@@ -51,44 +60,55 @@ def get_content_records(request):
     return render(request, 'content/records.html', context)
 
 
+@login_required(login_url='/login/')
 def get_render_content_chart(request):
     return render(request, 'records/records_chart.html')
 
 
+@login_required(login_url='/login/')
 def get_block_records_chart(request):
     records_table = render_to_string(
         'block/records/records_chart.html', request=request)
     return HttpResponse(records_table)
 
 
+@login_required(login_url='/login/')
 def get_test(request):
     return render(request, 'content/test.html')
 
 
+@login_required(login_url='/login/')
 def get_block_reload(request):
     return render(request)
 
 
+@login_required(login_url='/login/')
 def get_render_content_dashboard(request):
     return render(request, 'content/dashboard.html')
 
 
+@login_required(login_url='/login/')
 def get_record_card_copy(request):
     return render(request)
 
 
+@login_required(login_url='/login/')
 def get_record_card_delete(request):
     return render(request)
 
 
+@login_required(login_url='/login/')
 def get_record_card_permissions(request):
     return render(request)
 
 
+@login_required(login_url='/login/')
 def get_record_card_pin(request):
     return render(request)
 
-#https://openclassrooms.com/en/courses/7107341-intermediate-django/7263317-create-a-login-page-with-a-function-based-view
+
+# https://openclassrooms.com/en/courses/7107341-intermediate-django/7263317-create-a-login-page-with-a-function-based-view
+
 
 def get_render_login(request):
     if request.method == 'POST':
@@ -97,25 +117,33 @@ def get_render_login(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(request, username=username, password=password)
-            """if user is not None:
+            if user is not None:
+                request.session['message'] = 'You are now logged in'
                 login(request, user)
-                return redirect('template/index.html')
+                return redirect('index')
             else:
-                form.add_error(None, "Invalid username or password")"""
+                request.session['message'] = 'Invalid username or password'
+                form.add_error(None, "Invalid username or password")
 
-            if username == 'admin' and password == 'admin':
+            """if username == 'admin' and password == 'admin':
 
                 return redirect('index')
             else:
-                form.add_error(None, "Invalid username or password")
+                form.add_error(None, "Invalid username or password")"""
+
+
     else:
         form = LoginForm()
-    return render(request, 'other/login.html', {'form': form})
+    return render(request, 'other/login.html', {'form': form}, )
 
 
+@login_required(login_url='/login/')
+def get_render_logout(request):
+    logout(request)
+    return render(request, 'other/login.html')
 
 
-
+@login_required(login_url='/login/')
 def get_block_records_table(request):
     tableid = request.POST.get('tableid')
     searchTerm = request.POST.get('searchTerm')
@@ -150,6 +178,7 @@ def get_block_records_table(request):
     return records_table
 
 
+@login_required(login_url='/login/')
 def get_block_records_gantt(request):
     context = dict()
     tableid = request.POST.get('tableid')
@@ -184,6 +213,7 @@ def get_block_records_gantt(request):
     return HttpResponse(records_table)
 
 
+@login_required(login_url='/login/')
 def get_block_records_kanban(request):
     context = dict()
     tableid = request.POST.get('tableid')
@@ -248,6 +278,7 @@ def get_block_records_kanban(request):
     return HttpResponse(records_table)
 
 
+@login_required(login_url='/login/')
 def get_block_records_calendar(request):
     tableid = request.POST.get('tableid')
     searchTerm = request.POST.get('searchTerm')
@@ -282,6 +313,7 @@ def get_block_records_calendar(request):
     return HttpResponse(records_table)
 
 
+@login_required(login_url='/login/')
 def get_block_record(request):
     table = request.POST.get('table')
     searchTerm = request.POST.get('searchTerm')
@@ -317,6 +349,7 @@ def get_block_record(request):
     return records_table
 
 
+@login_required(login_url='/login/')
 def get_block_record_card(request):
     context = dict()
     context['recordcard_preview'] = get_block_record_badge(request)
@@ -325,6 +358,7 @@ def get_block_record_card(request):
     return HttpResponse(returned)
 
 
+@login_required(login_url='/login/')
 def get_block_record_badge(request):
     context = dict()
     tableid = request.POST.get('tableid')
@@ -342,6 +376,7 @@ def get_block_record_badge(request):
     return records_table
 
 
+@login_required(login_url='/login/')
 def get_block_record_linked(request):
     context = dict()
     tableid = request.POST.get('tableid')

@@ -100,6 +100,9 @@
             });
         }
 
+
+
+
     </script>
 
     <div id="bixdata2" style="height: 100%;">
@@ -111,7 +114,6 @@
                     <div class="logo-topbar">
                         <!-- Logo light -->
                         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-
 
                             <p class="shadow-sm p-0 mb-0 bg-white rounded"
                                 style="width: 50px; color: red; margin-right: 1px;"><b>BIX</b></p>
@@ -327,7 +329,7 @@
                                 </span>
                                 <span>
                                     <span class="user-hover">
-                                        <span class="account-user-name">Dominic Keller</span>
+                                        <span class="account-user-name">{{ username }}</span>
                                         <span class="account-position">Founder</span>
                                     </span>
                                 </span>
@@ -366,7 +368,7 @@
                                 </a>
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <a href="{% url 'logout' %}" class="dropdown-item notify-item">
                                     <i class="mdi mdi-logout me-1"></i>
                                     <span>Logout</span>
                                 </a>

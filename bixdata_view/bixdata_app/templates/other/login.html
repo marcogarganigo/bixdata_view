@@ -3,10 +3,35 @@
 
 {% block body %}
 
+    <script>
+    function submitForm() {
+        document.getElementById("frm").submit();
+        show_alert();
+    }
+
+    function show_alert() {
+        $(document).ready(function () {
+            var message = "{{ request.session.message }}";
+
+            if (message === 'Invalid username or password') {
+                $("#alert-message").show();
+            }
+        })
+    }
+
+
+
+
+
+    </script>
+
+
+
+
  <div style="width: 100%; height: 100%; background-color: #6c6565">
   <div class="login-box">
     <h2>Login</h2>
-    <form action="{% url 'login' %}" method="post">
+    <form action="{% url 'login' %}" method="post" id="frm">
       {% csrf_token %}
       <div class="user-box">
         <input class="txt-inp" type="text" name="username" required="">
@@ -16,17 +41,25 @@
         <input class="txt-inp" type="password" name="password" required="">
         <label>Password</label>
       </div>
-      <a>
+      <a type="submit" value="Login" onclick="submitForm()">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
-        <input type="submit" value="Login">
+
           Login
       </a>
+                 <div class="alert alert-danger" id="alert-message" role="alert" style="display: none; width: 100%; margin: auto">
+        {{ request.session.message }}
+    </div>
+
+
+
     </form>
   </div>
 </div>
+
+
 
 
 
@@ -48,6 +81,28 @@
   box-shadow: 0 15px 25px rgba(0,0,0,.6);
   border-radius: 10px;
 }
+
+    /* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: transparent;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+
+input::-ms-reveal {
+  display: none;
+}
+
+
 
 
 
