@@ -10,7 +10,7 @@ import json
 import datetime
 
 from .forms import LoginForm
-from .models import Login
+#from .models import Login
 
 
 def get_render_index(request):
@@ -88,6 +88,7 @@ def get_record_card_permissions(request):
 def get_record_card_pin(request):
     return render(request)
 
+#https://openclassrooms.com/en/courses/7107341-intermediate-django/7263317-create-a-login-page-with-a-function-based-view
 
 def get_render_login(request):
     if request.method == 'POST':
@@ -96,14 +97,23 @@ def get_render_login(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(request, username=username, password=password)
-            if user is not None:
+            """if user is not None:
                 login(request, user)
-                return redirect('home')
+                return redirect('template/index.html')
+            else:
+                form.add_error(None, "Invalid username or password")"""
+
+            if username == 'admin' and password == 'admin':
+
+                return redirect('index')
             else:
                 form.add_error(None, "Invalid username or password")
     else:
         form = LoginForm()
     return render(request, 'other/login.html', {'form': form})
+
+
+
 
 
 def get_block_records_table(request):

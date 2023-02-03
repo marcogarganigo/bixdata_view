@@ -9,20 +9,20 @@
     <form action="{% url 'login' %}" method="post">
       {% csrf_token %}
       <div class="user-box">
-        <input type="text" name="username" required="">
+        <input class="txt-inp" type="text" name="username" required="">
         <label>Username</label>
       </div>
       <div class="user-box">
-        <input type="password" name="password" required="">
+        <input class="txt-inp" type="password" name="password" required="">
         <label>Password</label>
       </div>
-        <input type="submit" value="Login" >
       <a>
         <span></span>
         <span></span>
         <span></span>
         <span></span>
-
+        <input type="submit" value="Login">
+          Login
       </a>
     </form>
   </div>
@@ -48,6 +48,8 @@
   box-shadow: 0 15px 25px rgba(0,0,0,.6);
   border-radius: 10px;
 }
+
+
 
 .login-box h2 {
   margin: 0 0 30px;
