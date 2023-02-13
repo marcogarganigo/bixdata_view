@@ -11,6 +11,8 @@ import datetime
 from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib import messages
 
 
 # from .models import Login
@@ -118,12 +120,11 @@ def get_render_login(request):
             password = form.cleaned_data.get('password')
             user = authenticate(request, username=username, password=password)
             if user is not None:
-                request.session['message'] = 'You are now logged in'
                 login(request, user)
                 return redirect('index')
+
             else:
-                request.session['message'] = 'Invalid username or password'
-                form.add_error(None, "Invalid username or password")
+                messages.error(request, 'Invalid username or password')
 
             """if username == 'admin' and password == 'admin':
 
@@ -131,10 +132,17 @@ def get_render_login(request):
             else:
                 form.add_error(None, "Invalid username or password")"""
 
+            #request.session['message'] = 'Invalid username or password'
+
+
 
     else:
         form = LoginForm()
     return render(request, 'other/login.html', {'form': form}, )
+
+@user_passes_test(lambda u: u.is_superuser)
+def get_render_gestione_utenti(request):
+    return render(request, 'other/gestione_utenti.html')
 
 
 @login_required(login_url='/login/')
