@@ -82,10 +82,10 @@ WSGI_APPLICATION = 'bixdata_view.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_db',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
+        'NAME': 'bixdata',
+        'USER': 'vtenext',
+        'PASSWORD': 'Jbt$5qNbJXg',
+        'HOST': '10.0.0.23',
         'PORT': '3306',
     }
 }

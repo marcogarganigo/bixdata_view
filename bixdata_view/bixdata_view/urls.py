@@ -39,5 +39,8 @@ urlpatterns = [
     path('record_card_pin/', views.get_record_card_pin, name='record_card_pin'),
     path('login/', views.get_render_login, name='login'),
     path('logout/', views.get_render_logout, name='logout'),
+    path('test_query/', views.get_test_query, name='test_query'),
     path('admin/', admin.site.urls),
+
+
 ]

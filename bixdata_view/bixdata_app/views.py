@@ -13,9 +13,26 @@ from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
+from django.db import connection
 
 
 # from .models import Login
+
+def get_test_query(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT dealuser FROM user_deal")
+        users = cursor.fetchall()
+
+        cursor.execute("SELECT sum(expectedmargin) FROM user_deal GROUP BY dealuser")
+        margins = cursor.fetchall()
+
+        data = {
+            'users': users,
+            'margins': margins
+        }
+
+    return render(request, 'other/test_query.html', {'data': data})
+
 
 
 @login_required(login_url='/login/')
@@ -64,7 +81,20 @@ def get_content_records(request):
 
 @login_required(login_url='/login/')
 def get_render_content_chart(request):
-    return render(request, 'records/records_chart.html')
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT dealuser FROM user_deal")
+        users = cursor.fetchall()
+
+        cursor.execute("SELECT sum(expectedmargin) FROM user_deal GROUP BY dealuser")
+        margins = cursor.fetchall()
+
+        data = {
+            'users': users,
+            'margins': margins
+        }
+
+
+    return render(request, 'records/records_chart.html', {'data': data})
 
 
 @login_required(login_url='/login/')
@@ -132,13 +162,14 @@ def get_render_login(request):
             else:
                 form.add_error(None, "Invalid username or password")"""
 
-            #request.session['message'] = 'Invalid username or password'
+            # request.session['message'] = 'Invalid username or password'
 
 
 
     else:
         form = LoginForm()
     return render(request, 'other/login.html', {'form': form}, )
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def get_render_gestione_utenti(request):
