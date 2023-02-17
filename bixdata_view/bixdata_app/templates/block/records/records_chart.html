@@ -6,14 +6,19 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  const ctx = document.getElementById('myChart');
+  var labels = '{{labels|safe}}';
+  labels=jQuery.parseJSON(labels);
 
+  var data = '{{data|safe}}';
+  data=jQuery.parseJSON(data);
+
+  const ctx = document.getElementById('myChart');
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      labels: labels,
       datasets: [{
-        label: '# of Votes',
+        label: '{{label}}',
         data: [12, 19, 3, 5, 2, 3],
         borderWidth: 1
       }]
