@@ -99,8 +99,29 @@ def get_render_content_chart(request):
 
 @login_required(login_url='/login/')
 def get_block_records_chart(request):
-    records_table = render_to_string(
-        'block/records/records_chart.html', request=request)
+    context = dict()
+    tableid = request.POST.get('tableid')
+    post = {
+        'table': 'deal',
+        'searchTerm': '',
+    }
+    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_chart", data=post)
+    response_dict = json.loads(response.text)
+    label=response_dict['label'];
+    
+
+    label='# of test'
+    labels=['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
+    labels = json.dumps(labels)
+    data=[12, 19, 3, 5, 2, 3]
+    data = json.dumps(data)
+    
+    context = {
+        'label' : label,
+        'labels': labels,
+        'data': data,
+    }
+    records_table = render_to_string('block/records/records_chart.html', context, request=request)
     return HttpResponse(records_table)
 
 
