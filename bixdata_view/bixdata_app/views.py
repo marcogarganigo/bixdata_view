@@ -9,27 +9,46 @@ import requests
 import json
 import datetime
 from django.contrib.auth.decorators import login_required
-
+import time
 from .forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db import connection
+from django.http import JsonResponse
 
 
 # from .models import Login
 
-def get_test_query(request):
+def get_test_query(request, name=None):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT dealuser FROM user_deal")
-        users = cursor.fetchall()
-
-        cursor.execute("SELECT sum(expectedmargin) FROM user_deal GROUP BY dealuser")
-        margins = cursor.fetchall()
+        cursor.execute(
+            "SELECT dealuser, SUM(effectivemargin), sum(expectedmargin) FROM user_deal WHERE dealuser is not null GROUP BY dealuser ")
+        rows = cursor.fetchall()
+        users = [row[0] for row in rows]
+        effective_margins = [row[1] for row in rows]
+        expected_margins = [row[2] for row in rows]
 
         data = {
             'users': users,
-            'margins': margins
+            'effective_margins': effective_margins,
+            'expected_margins': expected_margins
         }
+
+    if request.method == 'POST':
+        name = request.POST.get('value')
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "select dealname, expectedmargin, effectivemargin from user_deal where dealuser = %s", [name])
+            rows = cursor.fetchall()
+            dealname = [row[0] for row in rows]
+            expectedmargin = [row[1] for row in rows]
+            effectivemargin = [row[2] for row in rows]
+
+            data = {
+                'dealname': dealname,
+                'expectedmargin': expectedmargin,
+                'effectivemargin': effectivemargin
+            }
 
     return render(request, 'other/test_query.html', {'data': data})
 
@@ -82,17 +101,17 @@ def get_content_records(request):
 @login_required(login_url='/login/')
 def get_render_content_chart(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT dealuser FROM user_deal")
-        users = cursor.fetchall()
-
-        cursor.execute("SELECT sum(expectedmargin) FROM user_deal GROUP BY dealuser")
-        margins = cursor.fetchall()
+        cursor.execute("SELECT dealuser, SUM(effectivemargin), sum(expectedmargin) FROM user_deal WHERE dealuser is not null GROUP BY dealuser")
+        rows = cursor.fetchall()
+        users = [row[0] for row in rows]
+        effective_margins = [row[1] for row in rows]
+        expected_margins = [row[2] for row in rows]
 
         data = {
             'users': users,
-            'margins': margins
+            'effective_margins': effective_margins,
+            'expected_margins': expected_margins,
         }
-
 
     return render(request, 'records/records_chart.html', {'data': data})
 
@@ -107,17 +126,16 @@ def get_block_records_chart(request):
     }
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_chart", data=post)
     response_dict = json.loads(response.text)
-    label=response_dict['label'];
-    
+    label = response_dict['label'];
 
-    label='# of test'
-    labels=['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
+    label = '# of test'
+    labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
     labels = json.dumps(labels)
-    data=[12, 19, 3, 5, 2, 3]
+    data = [12, 19, 3, 5, 2, 3]
     data = json.dumps(data)
-    
+
     context = {
-        'label' : label,
+        'label': label,
         'labels': labels,
         'data': data,
     }
