@@ -30,7 +30,7 @@ def get_test_query(request):
             'users': users,
             'margins': margins
         }
-
+    print(margins)
     return render(request, 'other/test_query.html', {'data': data})
 
 
