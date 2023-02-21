@@ -34,23 +34,33 @@ def get_test_query(request, name=None):
             'expected_margins': expected_margins
         }
 
+
+
+    return render(request, 'other/test_query.html', {'data': data}, print(data))
+
+
+def get_full_data(request):
     if request.method == 'POST':
-        name = request.POST.get('value')
+        name = request.POST.get('name')
+        print(name)
         with connection.cursor() as cursor:
             cursor.execute(
-                "select dealname, expectedmargin, effectivemargin from user_deal where dealuser = %s", [name])
+                # "select dealname, expectedmargin, effectivemargin from user_deal where dealuser = %s", [name])
+                "select dealname, expectedmargin, effectivemargin from user_deal where dealuser = 'Donato' ")
             rows = cursor.fetchall()
             dealname = [row[0] for row in rows]
             expectedmargin = [row[1] for row in rows]
             effectivemargin = [row[2] for row in rows]
 
-            data = {
+            data2 = {
                 'dealname': dealname,
                 'expectedmargin': expectedmargin,
                 'effectivemargin': effectivemargin
             }
+            # print(data)
 
-    return render(request, 'other/test_query.html', {'data': data})
+    return render(request, 'other/test_query.html', {'data2': data2}, print(data2['dealname']))
+
 
 
 

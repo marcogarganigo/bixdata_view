@@ -11,6 +11,8 @@
             </div>
             <div onclick="trigger()" id="chart_div" style="width: 400px; height: 2000px;"></div>
 
+                     <p id='testt'>1</p>
+
 
             <script>
 
@@ -70,15 +72,18 @@ const dataset_name = myChart.data.datasets[selectedElement.datasetIndex].label;
 
   // Make AJAX request to server
   $.ajax({
-    url: {% url 'test_query' %},
+    url: {% url 'get_full_data' %},
     type: 'POST',
     success: function(data) {
-      // Display data in modal
-      document.getElementById("content").innerHTML = 'dealuser: ' + label + ' ' + dataset_name + ': ' + dataset + ' ' + 'dealname: ' + data.dealname + ' ' + 'expectedmargin: ' + data.expectedmargin + ' ' + 'effectivemargin: ' + data.effectivemargin;
-      $('#exampleModal').modal('show');
-    }
+        // Display data in modal
+        document.getElementById("content").innerHTML = 'dealuser: ' + label + ' ' + dataset_name + ': ' + dataset + ' ' + 'dealname: ' + {{ data2.dealname }} +' ' + 'expectedmargin: ' + {{ data2.expectedmargin }} +' ' + 'effectivemargin: ' + {{ data2.effectivemargin }}
+            $('#exampleModal').modal('show');
+        //document.getElementById('testt').innerText = data;
+
+    },
   });
 }
+
 
 
     function openModal(selectedElements) {
@@ -87,6 +92,8 @@ const dataset_name = myChart.data.datasets[selectedElement.datasetIndex].label;
         const dataset = myChart.data.datasets[selectedElement.datasetIndex].data[selectedElement.index];
         const dataset_name = myChart.data.datasets[selectedElement.datasetIndex].label;
 
+        //set the modal title
+        document.getElementById("exampleModalLabel").innerHTML = label + ' ' + dataset_name ;
         //alert(label + " " + dataset);
         document.getElementById("content").innerHTML = 'dealuser: ' + label + ' ' + dataset_name + ': ' + dataset;
         $('#exampleModal').modal('show');
@@ -95,10 +102,11 @@ const dataset_name = myChart.data.datasets[selectedElement.datasetIndex].label;
 
             </script>
 
-            <form action="{% url 'test_query' %}" method="POST" id="frm">
+            <form action="{% url 'get_full_data' %}" method="POST" id="frm">
                 {% csrf_token %}
                 <input type="hidden" name="data-req" id="submit-inp">
             </form>
+
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
