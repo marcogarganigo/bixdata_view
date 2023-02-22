@@ -20,6 +20,7 @@ from django.http import JsonResponse
 # from .models import Login
 
 def get_test_query(request, name=None):
+
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT dealuser, SUM(effectivemargin), sum(expectedmargin) FROM user_deal WHERE dealuser is not null GROUP BY dealuser ")
@@ -60,7 +61,7 @@ def get_full_data(request):
             }
             # print(data)
 
-    return render(request, 'other/test_query.html', {'data2': data2}, print(data2))
+    return JsonResponse(data2)
 
 
 
