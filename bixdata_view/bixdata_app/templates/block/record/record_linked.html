@@ -1,17 +1,33 @@
 <script>
-    function triggerCollapse(id) {
+    function triggerCollapse(id, label) {
         var collapse = document.getElementById(id);
         if (collapse.classList.contains('show')) {
             collapse.classList.remove('hide');
         } else {
             collapse.classList.add('hide');
         }
+        $.ajax({
+            url: {% url 'get_linked' %},
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'name': label
+            },
+            success: function (response) {
+                alert(response);
+                console.log(response);
+            }, error: function (response) {
+                alert(response);
+                console.log(response);
+            }
+        });
     }
+
 </script>
 
 <div id="block_record_linked">
     {% for key,label in labels.items %}
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{key}}" aria-expanded="false" aria-controls="{{key}}" style="background-color: #074048; border: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse('{{key}}')"> <span class="badge bg-danger" style="float: left; color: white; background-color: red; border-radius: 7.5%">5</span> {{label.description}}</button>
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{key}}" aria-expanded="false" aria-controls="{{key}}" style="background-color: #074048; border: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse('{{key}}', '{{ label.description }}')"> <span class="badge bg-danger" style="float: left; color: white; background-color: red; border-radius: 7.5%">5</span> {{label.description}}</button>
         <div class="collapse" id="{{key}}">
             <div class="card card-body">
                 {{label.description}}

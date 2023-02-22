@@ -480,3 +480,11 @@ def get_block_record_linked(request):
     context['labels'] = response_dict
     record_linked_labels = render_to_string('block/record/record_linked.html', context, request=request)
     return record_linked_labels
+
+
+@login_required(login_url='/login/')
+def get_linked(request):
+    name = ''
+    if request.method == 'POST':
+        name = request.POST.get('name')
+    return JsonResponse(name)
