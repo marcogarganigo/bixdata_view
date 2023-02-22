@@ -27,8 +27,10 @@
 
 
         $("#bixdata2").ready(function () {
+            //alert("ready");
 
             $("#toggle-menu").click(function () {
+                //$("#content-container").load('http://127.0.0.1:8000/loading/');
                 var current_sidenav_size = $("html").attr("data-sidenav-size");
                 if (current_sidenav_size == 'default') {
                     $("html").attr("data-sidenav-size", "condensed");
@@ -45,7 +47,7 @@
 
         function getContentRecords(tableid) {
             var serialized_data = [];
-            //$("#bixdata_results_container").load('http://localhost:8000/loading/');
+            $("#content-container").load('http://127.0.0.1:8000/loading/');
             serialized_data.push({ name: 'tableid', value: tableid });
             serialized_data.push({ name: 'searchTerm', value: '' });
             $.ajax({
@@ -65,18 +67,20 @@
 
         function getRenderChartsView() {
             var serialized_data = [];
-            //$("#bixdata_results_container").load('http://localhost:8000/loading/');
+
             $.ajax({
                 type: "POST",
                 crossDomain: true,
                 url: "{% url 'charts_view' %}",
                 data: serialized_data,
                 success: function (response) {
+                    $("#content-container").load('http://127.0.0.1:8000/loading/');
                     $("#content_container").html(response);
                     $('[data-toggle="tooltip"]').tooltip();
                 },
                 error: function () {
-                    $("#content_container").html(response);
+                    $("#content-container").load('http://127.0.0.1:8000/loading/');
+                    $("#content_container") .html(response);
                 }
             });
         }
@@ -84,7 +88,7 @@
         function getDashboard()
         {
             var serialized_data = [];
-            //$("#bixdata_results_container").load('http://localhost:8000/loading/');
+            $("#content-container").load('http://127.0.0.1:8000/loading/');
             $.ajax({
                 type: "POST",
                 crossDomain: true,
@@ -569,14 +573,7 @@
 
         <!--test content-->
         <div class="content-page" style="min-height:0px; margin-top:70px;">
-            superuser = marco.garganigo
-            <br>
-            password = superuser
-            <br>
-            <br>
-            user = test
-            <br>
-            password = 1234
+
             <!-- Start Content-->
             <div class="row" style="height: 100%;">
                 <div id="content_container" style="height: 100%">
