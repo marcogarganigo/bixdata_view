@@ -92,7 +92,6 @@ def get_render_index(request):
     return render(request, 'index.html', context)
 
 
-@login_required(login_url='/login/')
 def get_render_loading(request):
     return render(request, 'other/loading.html')
 

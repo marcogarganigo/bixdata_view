@@ -253,7 +253,10 @@
         serialized_data.push({name: 'recordid',value: recordid});
         if (screen.width <= min_width) {
             $('#exampleModal').modal('show');
+            $("#fullwidth_modal").load('http://127.0.0.1:8000/loading/');
         }
+        //$("#block-record-card-container").html('caricamento');
+        $("#block-record-card-container").load('http://127.0.0.1:8000/loading/');
         $.ajax({
             type: "POST",
             url: "{% url 'block_record_card' %}",
