@@ -41,6 +41,7 @@ urlpatterns = [
     path('logout/', views.get_render_logout, name='logout'),
     path('test_query/', views.get_test_query, name='test_query'),
     path('get_full_data/', views.get_full_data, name='get_full_data'),
+    path('get_linked/', views.get_linked, name='get_linked'),
     path('admin/', admin.site.urls),
 
 

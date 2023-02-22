@@ -21,6 +21,11 @@
         $("#exampleModal").modal("hide");
     }
 
+    //appena la card carica aprire collegato di default
+    $(document).ready(function() {
+        document.getElementById("linked-tab").click();
+    });
+
     
 
 
@@ -56,6 +61,7 @@
     function copyFunc() {
         var serialized_data = [];
         $.ajax({
+            type: "POST",
             type: "POST",
             url: "{% url 'record_card_copy' %}",
             data: serialized_data,
