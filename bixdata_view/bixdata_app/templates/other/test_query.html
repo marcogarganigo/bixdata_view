@@ -87,9 +87,11 @@ document.getElementById("submit-inp").value = label;
       csrfmiddlewaretoken: '{{ csrf_token }}'
     },
     success: function(response) {
+        console.log(response);
 
 
-        openModal(selectedElements);
+
+        openModal(response);
 
     },
   });
@@ -97,16 +99,13 @@ document.getElementById("submit-inp").value = label;
 
 
 
-    function openModal(selectedElements) {
-        const selectedElement = selectedElements[0];
-        const label = myChart.data.labels[selectedElement.index];
-        const dataset = myChart.data.datasets[selectedElement.datasetIndex].data[selectedElement.index];
-        const dataset_name = myChart.data.datasets[selectedElement.datasetIndex].label;
+    function openModal(response) {
+
 
         //set the modal title
-        document.getElementById("exampleModalLabel").innerHTML = label + ' ' + dataset_name ;
+
                 // Display data in modal
-        document.getElementById("content").innerHTML = 'dealuser: ' + label + ' ' + dataset_name + ': ' + dataset + ' ' + ' dealname: ' + {{ data2.dealname }} + ' ' + ' expectedmargin: ' + {{ data2.expectedmargin }} +' ' + ' effectivemargin: ' + {{ data2.effectivemargin }}
+        document.getElementById("content").innerHTML =  ' dealname: ' + response.dealname + ' ' + ' expectedmargin: ' + response.expectedmargin +' ' + ' effectivemargin: ' + response.effectivemargin
             $('#exampleModal').modal('show');
         //document.getElementById('testt').innerText = data;
 }
