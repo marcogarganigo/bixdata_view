@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load humanize %}
 
 {% block body %}
 
@@ -99,15 +98,32 @@ document.getElementById("submit-inp").value = label;
 
 
 
-    function openModal(response) {
-
-
-        //set the modal title
-
-                // Display data in modal
-        document.getElementById("content").innerHTML =  ' dealname: ' + response.dealname + ' ' + ' expectedmargin: ' + response.expectedmargin +' ' + ' effectivemargin: ' + response.effectivemargin
-            $('#exampleModal').modal('show');
-        //document.getElementById('testt').innerText = data;
+function openModal(response) {
+    // get the table body
+    let tbody = document.getElementById("table-body");
+    // clear any existing rows
+    tbody.innerHTML = "";
+    // loop through the data and add a row for each item
+    for (let i = 0; i < response.dealname.length; i++) {
+        let row = document.createElement("tr");
+        let numberCell = document.createElement("td");
+        numberCell.innerText = i + 1;
+        row.appendChild(numberCell);
+        let dealnameCell = document.createElement("td");
+        dealnameCell.innerText = response.dealname[i]
+        row.appendChild(dealnameCell);
+        let expectedMarginCell = document.createElement("td");
+        expectedMarginCell.innerText = response.expectedmargin[i];
+        row.appendChild(expectedMarginCell);
+        let effectiveMarginCell = document.createElement("td");
+        effectiveMarginCell.innerText = response.effectivemargin[i];
+        row.appendChild(effectiveMarginCell);
+        tbody.appendChild(row);
+    }
+    //change modal title
+    document.getElementById("exampleModalLabel").innerText = response.name +" reports";
+    // show the modal
+    $('#exampleModal').modal('show');
 }
 
             </script>
@@ -119,7 +135,7 @@ document.getElementById("submit-inp").value = label;
 
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
@@ -127,6 +143,18 @@ document.getElementById("submit-inp").value = label;
       </div>
       <div class="modal-body">
         <div id="content">
+
+<table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Deal Name</th>
+                <th scope="col">Expected Margin</th>
+                <th scope="col">Effective Margin</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
 
         </div>
       </div>

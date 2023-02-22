@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+    <div id="content_chart" style="height: 100%;width: 100%;overflow: scroll;">
+        <div>
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Chart colortheme
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" onclick="redTheme()" href="#">Red</a></li>
+                <li><a class="dropdown-item" onclick="blueTheme()" href="#">Blue</a></li>
+              </ul>
+            </div>
+
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Chart visual
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" onclick="dashed()" href="#">Dashed</a></li>
+                <li><a class="dropdown-item" onclick="filled()" href="#">Filled</a></li>
+                <li><a class="dropdown-item" onclick="line()" href="#">Normal non-filled</a></li>
+              </ul>
+            </div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+
+    //dashed = no fill
+    function dashed() {
+        const myChart = Chart.instances[0];
+        myChart.data.datasets[0].borderDash = [5, 5];
+        myChart.data.datasets[0].fill = false;
+        myChart.update();
+    }
+
+    function filled() {
+        const myChart = Chart.instances[0];
+        myChart.data.datasets[0].borderDash = [];
+        myChart.data.datasets[0].fill = true;
+        myChart.update();
+    }
+
+    function line() {
+        const myChart = Chart.instances[0];
+        myChart.data.datasets[0].borderDash = [];
+        myChart.data.datasets[0].fill = false;
+        myChart.update();
+    }
+
+
+        Chart.defaults.backgroundColor = '#ffc4ca';
+        Chart.defaults.pointBackgroundColor = 'red';
+        Chart.defaults.pointBorderColor = '#fff';
+        Chart.defaults.pointHoverBackgroundColor = '#fff';
+        Chart.defaults.pointHoverBorderColor = 'red';
+
+    /*
+    if (localStorage.getItem('theme') === 'red') {
+        redTheme();
+    } else if (localStorage.getItem('theme') === 'blue') {
+        blueTheme();
+    }*/
+
+ function redTheme() {
+        Chart.defaults.color = '#000000';
+        Chart.defaults.borderColor = '#000000';
+        Chart.defaults.backgroundColor = '#ffc4ca';
+        Chart.defaults.pointBackgroundColor = 'red';
+        Chart.defaults.pointBorderColor = '#fff';
+        Chart.defaults.pointHoverBackgroundColor = '#fff';
+        Chart.defaults.pointHoverBorderColor = 'red';
+
+        const myChart = Chart.instances[0];
+        myChart.data.datasets[0].backgroundColor = '#ffb6b9';
+        myChart.data.datasets[0].borderColor = '#e17055';
+        myChart.update();
+        localStorage.setItem('theme', 'red');
+    }
+
+    function blueTheme() {
+        Chart.defaults.color = '#000000';
+        Chart.defaults.borderColor = '#000000';
+        Chart.defaults.backgroundColor = '#b3c6ff';
+        Chart.defaults.pointBackgroundColor = 'blue';
+        Chart.defaults.pointBorderColor = '#fff';
+        Chart.defaults.pointHoverBackgroundColor = '#fff';
+        Chart.defaults.pointHoverBorderColor = 'blue';
+
+        const myChart = Chart.instances[0];
+        myChart.data.datasets[0].backgroundColor = '#a0c1ee';
+        myChart.data.datasets[0].borderColor = '#4d73b3';
+        myChart.update();
+        localStorage.setItem('theme', 'blue');
+    }
+    </script>
+
+
+    <script>
+     const ctx = document.getElementById('myChart');
+
+const myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {{ data.months|safe }},
+      datasets: [{
+        label: 'Margine effettivo',
+        data: {{ data.effective_margins|safe }},
+        borderWidth: 1,
+        fill: true, // set fill property to true
+        backgroundColor: '#ffc4ca', // set fill color
+        borderColor: '#f35a67',
+        //pointBackgroundColor: 'red',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        //pointHoverBorderColor: 'red'
+      }]
+    },
+    options: {
+      onClick: function clickHandler (evt) {
+        const selectedElements = myChart.getElementsAtEventForMode(evt, "nearest", { intersect: true });
+
+        submit(selectedElements)
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+});
+
+
+  function submit(selectedElements) {
+    const selectedMonth = selectedElements[0];
+    const label = myChart.data.labels[selectedMonth.index];
+
+    // AJAX request
+      $.ajax ({
+          url: {% url 'get_full_data2' %},
+        type: 'POST',
+        data: {
+          'date': label,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(response) {
+
+
+
+            openModal(response);
+
+        },
+      })
+  }
+
+
+function openModal(response) {
+    var total = 0;
+    // get the table body
+    let tbody = document.getElementById("table-body");
+    // clear any existing rows
+    tbody.innerHTML = "";
+    // loop through the data and add a row for each item
+    for (let i = 0; i < response.dealname.length; i++) {
+        let row = document.createElement("tr");
+        let numberCell = document.createElement("td");
+        numberCell.innerText = i + 1;
+        row.appendChild(numberCell);
+        let dealnameCell = document.createElement("td");
+        dealnameCell.innerText = response.dealname[i]
+        row.appendChild(dealnameCell);
+        let effectiveMarginCell = document.createElement("td");
+        effectiveMarginCell.innerText = response.effectivemargin[i];
+        row.appendChild(effectiveMarginCell);
+        tbody.appendChild(row);
+
+
+    }
+    //set modal title
+    document.getElementById("exampleModalLabel").innerText = response.date + " reports"
+    // show the modal
+    $('#exampleModal').modal('show');
+}
+    </script>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div id="content">
+                <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Deal Name</th>
+                <th scope="col">Effective Margin</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -53,12 +53,73 @@ def get_full_data(request):
             expectedmargin = [row[1] for row in rows]
             effectivemargin = [row[2] for row in rows]
 
+            dealname = str(dealname)
+            dealname = dealname.split(',')
+
+            expectedmargin = str(expectedmargin)
+            expectedmargin = expectedmargin.split(',')
+
+            effectivemargin = str(effectivemargin)
+            effectivemargin = effectivemargin.split(',')
+
             data2 = {
                 'dealname': dealname,
                 'expectedmargin': expectedmargin,
                 'effectivemargin': effectivemargin,
-                'nome': name
+                'name': name
             }
+            # print(data)
+
+    return JsonResponse(data2)
+
+
+def get_test_query2(request):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT sum(effectivemargin), DATE_FORMAT(closedate, '%Y-%m') AS month FROM user_deal GROUP BY DATE_FORMAT(closedate, '%Y-%m')")
+        rows = cursor.fetchall()
+        effective_margins = [row[0] for row in rows]
+        months = [row[1] for row in rows]
+
+        months = months[1::]
+        effective_margins = effective_margins[1::]
+
+        for i in range(len(effective_margins)):
+            if effective_margins[i] == None:
+                effective_margins[i] = 0
+
+        data = {
+            'effective_margins': effective_margins,
+            'months': months
+        }
+
+    return render(request, 'other/test_query2.html', {'data': data}, print(data))
+
+
+def get_full_data2(request):
+    if request.method == 'POST':
+        date = request.POST.get('date')
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT dealname, effectivemargin FROM user_deal WHERE closedate LIKE %s",[f"{date}-%"]
+            )
+
+            rows = cursor.fetchall()
+            dealname = [row[0] for row in rows]
+            effectivemargin = [row[1] for row in rows]
+
+            dealname = str(dealname)
+            dealname = dealname.split(',')
+
+            effectivemargin = str(effectivemargin)
+            effectivemargin = effectivemargin.split(',')
+
+            data2 = {
+                'dealname': dealname,
+                'effectivemargin': effectivemargin,
+                'date': date
+            }
+
             # print(data)
 
     return JsonResponse(data2)
