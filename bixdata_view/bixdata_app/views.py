@@ -45,8 +45,8 @@ def get_full_data(request):
         print(name)
         with connection.cursor() as cursor:
             cursor.execute(
-                # "select dealname, expectedmargin, effectivemargin from user_deal where dealuser = %s", [name])
-                "select dealname, expectedmargin, effectivemargin from user_deal where dealuser = 'Donato' ")
+                "select dealname, expectedmargin, effectivemargin from user_deal where dealuser = %s", [name])
+                #"select dealname, expectedmargin, effectivemargin from user_deal where dealuser = 'Donato' ")
             rows = cursor.fetchall()
             dealname = [row[0] for row in rows]
             expectedmargin = [row[1] for row in rows]
@@ -55,11 +55,12 @@ def get_full_data(request):
             data2 = {
                 'dealname': dealname,
                 'expectedmargin': expectedmargin,
-                'effectivemargin': effectivemargin
+                'effectivemargin': effectivemargin,
+                'nome': name
             }
             # print(data)
 
-    return render(request, 'other/test_query.html', {'data2': data2}, print(data2['dealname']))
+    return render(request, 'other/test_query.html', {'data2': data2}, print(data2))
 
 
 

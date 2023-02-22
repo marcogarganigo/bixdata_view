@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block body %}
 
@@ -19,6 +20,8 @@
 </script>
 
             <script>
+
+
           const ctx = document.getElementById('myChart');
 
   const myChart = new Chart(ctx, {
@@ -51,7 +54,7 @@
             const label = selectedDataset.label;*/
 
             submit(selectedElements);
-            openModal(selectedElements);
+            //openModal(selectedElements);
 
 
 
@@ -64,21 +67,29 @@
     }
   });
 
+
+
 function submit(selectedElements) {
 const selectedElement = selectedElements[0];
 const label = myChart.data.labels[selectedElement.index];
 const dataset = myChart.data.datasets[selectedElement.datasetIndex].data[selectedElement.index];
 const dataset_name = myChart.data.datasets[selectedElement.datasetIndex].label;
 
+document.getElementById("submit-inp").value = label;
+//document.getElementById("frm").submit();
+
   // Make AJAX request to server
   $.ajax({
     url: {% url 'get_full_data' %},
     type: 'POST',
-    success: function(data) {
-        // Display data in modal
-        document.getElementById("content").innerHTML = 'dealuser: ' + label + ' ' + dataset_name + ': ' + dataset + ' ' + 'dealname: ' + {{ data2.dealname }} +' ' + 'expectedmargin: ' + {{ data2.expectedmargin }} +' ' + 'effectivemargin: ' + {{ data2.effectivemargin }}
-            $('#exampleModal').modal('show');
-        //document.getElementById('testt').innerText = data;
+    data: {
+      'name': label,
+      csrfmiddlewaretoken: '{{ csrf_token }}'
+    },
+    success: function(response) {
+
+
+        openModal(selectedElements);
 
     },
   });
@@ -94,15 +105,15 @@ const dataset_name = myChart.data.datasets[selectedElement.datasetIndex].label;
 
         //set the modal title
         document.getElementById("exampleModalLabel").innerHTML = label + ' ' + dataset_name ;
-        //alert(label + " " + dataset);
-        document.getElementById("content").innerHTML = 'dealuser: ' + label + ' ' + dataset_name + ': ' + dataset;
-        $('#exampleModal').modal('show');
-    // Display a modal with information about the selected chart element
+                // Display data in modal
+        document.getElementById("content").innerHTML = 'dealuser: ' + label + ' ' + dataset_name + ': ' + dataset + ' ' + ' dealname: ' + {{ data2.dealname }} + ' ' + ' expectedmargin: ' + {{ data2.expectedmargin }} +' ' + ' effectivemargin: ' + {{ data2.effectivemargin }}
+            $('#exampleModal').modal('show');
+        //document.getElementById('testt').innerText = data;
 }
 
             </script>
 
-            <form action="{% url 'get_full_data' %}" method="POST" id="frm">
+            <form onsubmit="return false" action="{% url 'get_full_data' %}" method="POST" id="frm">
                 {% csrf_token %}
                 <input type="hidden" name="data-req" id="submit-inp">
             </form>
@@ -132,5 +143,3 @@ const dataset_name = myChart.data.datasets[selectedElement.datasetIndex].label;
     </div>
 
 {% endblock %}
-
-
