@@ -1,17 +1,12 @@
-{% extends 'base.html' %}
-{% load static %}
 
-{% block body %}
-
-
+<!--ho tolto extend, loads ecc. per riuscire a visualizzarli sulla dashboard-->
     <div id="content_chart" style="height: 100%;width: 100%;overflow: scroll;">
         <div style="">
             <div>
-                <canvas id="myChart"></canvas>
+                <canvas id="myChart1"></canvas>
             </div>
-            <div onclick="trigger()" id="chart_div" style="width: 400px; height: 2000px;"></div>
 
-                     <p id='testt'>1</p>
+
 
 
             <script>
@@ -21,7 +16,7 @@
             <script>
 
 
-          const ctx = document.getElementById('myChart');
+          const ctx = document.getElementById('myChart1');
 
   const myChart = new Chart(ctx, {
     type: 'bar',
@@ -144,7 +139,7 @@ function openModal(response) {
       <div class="modal-body">
         <div id="content">
 
-<table class="table">
+<table class="table" id="table">
         <thead>
             <tr>
                 <th scope="col">#</th>
@@ -169,4 +164,4 @@ function openModal(response) {
         </div>
     </div>
 
-{% endblock %}
+

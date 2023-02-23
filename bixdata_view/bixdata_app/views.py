@@ -20,78 +20,94 @@ from django.http import JsonResponse
 # from .models import Login
 
 def get_test_query(request, name=None):
+    with connection.cursor() as cursor1:
+        cursor1.execute(
+            "SELECT query_conditions FROM sys_view WHERE id = 9"
+        )
+        query = cursor1.fetchone()[0]
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT dealuser, SUM(effectivemargin), sum(expectedmargin) FROM user_deal WHERE dealuser is not null GROUP BY dealuser ")
-        rows = cursor.fetchall()
-        users = [row[0] for row in rows]
-        effective_margins = [row[1] for row in rows]
-        expected_margins = [row[2] for row in rows]
+        with connection.cursor() as cursor2:
+            cursor2.execute(query)
+            rows = cursor2.fetchall()
 
-        data = {
-            'users': users,
-            'effective_margins': effective_margins,
-            'expected_margins': expected_margins
-        }
+            users = [row[0] for row in rows]
+            effective_margins = [row[1] for row in rows]
+            expected_margins = [row[2] for row in rows]
 
+            data = {
+                'users': users,
+                'effective_margins': effective_margins,
+                'expected_margins': expected_margins
+            }
 
-
-    return render(request, 'other/test_query.html', {'data': data}, print(data))
+    return render(request, 'other/test_query.html', {'data': data})
 
 
 def get_full_data(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         print(name)
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "select dealname, expectedmargin, effectivemargin from user_deal where dealuser = %s", [name])
-                #"select dealname, expectedmargin, effectivemargin from user_deal where dealuser = 'Donato' ")
-            rows = cursor.fetchall()
-            dealname = [row[0] for row in rows]
-            expectedmargin = [row[1] for row in rows]
-            effectivemargin = [row[2] for row in rows]
+        with connection.cursor() as cursor1:
+            cursor1.execute(
+                "SELECT query_conditions FROM sys_view WHERE id = 10"
+            )
+            query = cursor1.fetchone()[0]
+            #query = query.replace('namee', name)
+            with connection.cursor() as cursor2:
+                cursor2.execute(
+                    #"select dealname, expectedmargin, effectivemargin from user_deal where dealuser = %s", [name]
+                    query
+                )
+                rows = cursor2.fetchall()
+                dealname = [row[0] for row in rows]
+                expectedmargin = [row[1] for row in rows]
+                effectivemargin = [row[2] for row in rows]
 
-            dealname = str(dealname)
-            dealname = dealname.split(',')
+                dealname = str(dealname)
+                dealname = dealname.split(',')
 
-            expectedmargin = str(expectedmargin)
-            expectedmargin = expectedmargin.split(',')
+                expectedmargin = str(expectedmargin)
+                expectedmargin = expectedmargin.split(',')
 
-            effectivemargin = str(effectivemargin)
-            effectivemargin = effectivemargin.split(',')
+                effectivemargin = str(effectivemargin)
+                effectivemargin = effectivemargin.split(',')
 
-            data2 = {
-                'dealname': dealname,
-                'expectedmargin': expectedmargin,
-                'effectivemargin': effectivemargin,
-                'name': name
-            }
-            # print(data)
+                data2 = {
+                    'dealname': dealname,
+                    'expectedmargin': expectedmargin,
+                    'effectivemargin': effectivemargin,
+                    'name': name
+                }
+                # print(data)
 
     return JsonResponse(data2)
 
 
 def get_test_query2(request):
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT sum(effectivemargin), DATE_FORMAT(closedate, '%Y-%m') AS month FROM user_deal GROUP BY DATE_FORMAT(closedate, '%Y-%m')")
-        rows = cursor.fetchall()
-        effective_margins = [row[0] for row in rows]
-        months = [row[1] for row in rows]
+    with connection.cursor() as cursor1:
+        cursor1.execute(
+            "SELECT query_conditions FROM sys_view WHERE id = 11"
+        )
+        query = cursor1.fetchone()[0]
+        with connection.cursor() as cursor2:
+            cursor2.execute(
+                query
+            )
+            rows = cursor2.fetchall()
+            effective_margins = [row[0] for row in rows]
+            months = [row[1] for row in rows]
 
-        months = months[1::]
-        effective_margins = effective_margins[1::]
+            months = months[1::]
+            effective_margins = effective_margins[1::]
 
-        for i in range(len(effective_margins)):
-            if effective_margins[i] == None:
-                effective_margins[i] = 0
+            for i in range(len(effective_margins)):
+                if effective_margins[i] == None:
+                    effective_margins[i] = 0
 
-        data = {
-            'effective_margins': effective_margins,
-            'months': months
-        }
+            data = {
+                'effective_margins': effective_margins,
+                'months': months
+            }
 
     return render(request, 'other/test_query2.html', {'data': data}, print(data))
 
@@ -99,32 +115,36 @@ def get_test_query2(request):
 def get_full_data2(request):
     if request.method == 'POST':
         date = request.POST.get('date')
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT dealname, effectivemargin FROM user_deal WHERE closedate LIKE %s",[f"{date}-%"]
+        with connection.cursor() as cursor1:
+            cursor1.execute(
+                "SELECT query_conditions FROM sys_view WHERE id = 12"
             )
+            query = cursor1.fetchone()[0]
+            with connection.cursor() as cursor2:
+                cursor2.execute(
+                    #"SELECT dealname, effectivemargin FROM user_deal WHERE closedate LIKE %s", [f"{date}-%"]
+                    query
+                )
 
-            rows = cursor.fetchall()
-            dealname = [row[0] for row in rows]
-            effectivemargin = [row[1] for row in rows]
+                rows = cursor2.fetchall()
+                dealname = [row[0] for row in rows]
+                effectivemargin = [row[1] for row in rows]
 
-            dealname = str(dealname)
-            dealname = dealname.split(',')
+                dealname = str(dealname)
+                dealname = dealname.split(',')
 
-            effectivemargin = str(effectivemargin)
-            effectivemargin = effectivemargin.split(',')
+                effectivemargin = str(effectivemargin)
+                effectivemargin = effectivemargin.split(',')
 
-            data2 = {
-                'dealname': dealname,
-                'effectivemargin': effectivemargin,
-                'date': date
-            }
+                data2 = {
+                    'dealname': dealname,
+                    'effectivemargin': effectivemargin,
+                    'date': date
+                }
 
-            # print(data)
+                # print(data)
 
     return JsonResponse(data2)
-
-
 
 
 @login_required(login_url='/login/')
@@ -173,7 +193,8 @@ def get_content_records(request):
 @login_required(login_url='/login/')
 def get_render_content_chart(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT dealuser, SUM(effectivemargin), sum(expectedmargin) FROM user_deal WHERE dealuser is not null GROUP BY dealuser")
+        cursor.execute(
+            "SELECT dealuser, SUM(effectivemargin), sum(expectedmargin) FROM user_deal WHERE dealuser is not null GROUP BY dealuser")
         rows = cursor.fetchall()
         users = [row[0] for row in rows]
         effective_margins = [row[1] for row in rows]

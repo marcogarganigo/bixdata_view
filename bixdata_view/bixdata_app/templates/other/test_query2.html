@@ -1,8 +1,5 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block body %}
-
+<!--ho tolto extend, loads ecc. per riuscire a visualizzarli sulla dashboard-->
+<!--
     <div id="content_chart" style="height: 100%;width: 100%;overflow: scroll;">
         <div>
             <div class="dropdown">
@@ -20,37 +17,46 @@
                 Chart visual
               </button>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" onclick="dashed()" href="#">Dashed</a></li>
-                <li><a class="dropdown-item" onclick="filled()" href="#">Filled</a></li>
-                <li><a class="dropdown-item" onclick="line()" href="#">Normal non-filled</a></li>
+                <li><a class="dropdown-item" onclick="dashed()">Dashed</a></li>
+                <li><a class="dropdown-item" onclick="filled()">Filled</a></li>
+                <li><a class="dropdown-item" onclick="line()">Normal non-filled</a></li>
               </ul>
+
             </div>
-            <canvas id="myChart"></canvas>
+            -->
+    <div id="content_chart" style="height: 100%;width: 100%;overflow: scroll;">
+        <div style="">
+            <div>
+                <canvas id="myChart2"></canvas>
+            </div>
         </div>
     </div>
-
+<!--
+        </div>
+    </div>
+-->
     <script>
 
     //dashed = no fill
     function dashed() {
-        const myChart = Chart.instances[0];
-        myChart.data.datasets[0].borderDash = [5, 5];
-        myChart.data.datasets[0].fill = false;
-        myChart.update();
+        const myChart2 = Chart.instances[0];
+        myChart2.data.datasets[0].borderDash = [5, 5];
+        myChart2.data.datasets[0].fill = false;
+        myChart2.update();
     }
 
     function filled() {
-        const myChart = Chart.instances[0];
-        myChart.data.datasets[0].borderDash = [];
-        myChart.data.datasets[0].fill = true;
-        myChart.update();
+        const myChart2 = Chart.instances[0];
+        myChart2.data.datasets[0].borderDash = [];
+        myChart2.data.datasets[0].fill = true;
+        myChart2.update();
     }
 
     function line() {
-        const myChart = Chart.instances[0];
-        myChart.data.datasets[0].borderDash = [];
-        myChart.data.datasets[0].fill = false;
-        myChart.update();
+        const myChart2 = Chart.instances[0];
+        myChart2.data.datasets[0].borderDash = [];
+        myChart2.data.datasets[0].fill = false;
+        myChart2.update();
     }
 
 
@@ -76,10 +82,10 @@
         Chart.defaults.pointHoverBackgroundColor = '#fff';
         Chart.defaults.pointHoverBorderColor = 'red';
 
-        const myChart = Chart.instances[0];
-        myChart.data.datasets[0].backgroundColor = '#ffb6b9';
-        myChart.data.datasets[0].borderColor = '#e17055';
-        myChart.update();
+        const myChart2 = Chart.instances[0];
+        myChart2.data.datasets[0].backgroundColor = '#ffb6b9';
+        myChart2.data.datasets[0].borderColor = '#e17055';
+        myChart2.update();
         localStorage.setItem('theme', 'red');
     }
 
@@ -92,19 +98,19 @@
         Chart.defaults.pointHoverBackgroundColor = '#fff';
         Chart.defaults.pointHoverBorderColor = 'blue';
 
-        const myChart = Chart.instances[0];
-        myChart.data.datasets[0].backgroundColor = '#a0c1ee';
-        myChart.data.datasets[0].borderColor = '#4d73b3';
-        myChart.update();
+        const myChart2 = Chart.instances[0];
+        myChart2.data.datasets[0].backgroundColor = '#a0c1ee';
+        myChart2.data.datasets[0].borderColor = '#4d73b3';
+        myChart2.update();
         localStorage.setItem('theme', 'blue');
     }
     </script>
 
 
     <script>
-     const ctx = document.getElementById('myChart');
+     const ctx2 = document.getElementById('myChart2');
 
-const myChart = new Chart(ctx, {
+const myChart2 = new Chart(ctx2, {
     type: 'line',
     data: {
       labels: {{ data.months|safe }},
@@ -123,7 +129,7 @@ const myChart = new Chart(ctx, {
     },
     options: {
       onClick: function clickHandler (evt) {
-        const selectedElements = myChart.getElementsAtEventForMode(evt, "nearest", { intersect: true });
+        const selectedElements = myChart2.getElementsAtEventForMode(evt, "nearest", { intersect: true });
 
         submit(selectedElements)
       },
@@ -138,7 +144,7 @@ const myChart = new Chart(ctx, {
 
   function submit(selectedElements) {
     const selectedMonth = selectedElements[0];
-    const label = myChart.data.labels[selectedMonth.index];
+    const label = myChart2.data.labels[selectedMonth.index];
 
     // AJAX request
       $.ajax ({
@@ -217,4 +223,4 @@ function openModal(response) {
   </div>
 </div>
 
-{% endblock %}
+
