@@ -55,7 +55,7 @@
     {% endwith %}
     {% endwith %}
 {% endfor %}
-            <button id="save-button" type="button" class="btn btn-primary" onclick="request()">Salva</button>
+            <button id="save-button" type="button" class="btn btn-primary" onclick="save_record()">Salva</button>
 </div>
 
 {% if function == "view" %}
@@ -89,23 +89,24 @@ input:disabled, select:disabled, textarea:disabled {
 </style>
 
 <script>
-function request() {
+function save_record() {
 
     var serialized_data = [];
-    //var serialized_data = document.getElementById('fields_container').find("select,textarea,input").serializeArray();
-    serialized_data.push({
-        'function': '{{ function }}'
-    })
+    var serialized_data = $('#fields_container').find("select,textarea,input").serializeArray();
+    serialized_data.push({name: 'funzione',value: 'test'});
 
-  $.ajax ({
-      url: {% url 'save_record_fields' %},
-    type: 'POST',
-    data: serialized_data, csrfmiddlewaretoken: '{{ csrf_token }}',
-    success: function(response) {
-      alert('response')
-      openModal(response);
-    },
-  })
+    $.ajax({
+        type: "POST",
+        url: "{% url 'save_record_fields' %}",
+        data: serialized_data,
+        success: function(response) {
+            alert('ok')
+        },
+        error: function() {
+            alert('ko')
+        }
+    });
+
 }
 
 </script>
