@@ -523,8 +523,9 @@ def get_block_record(request):
 @login_required(login_url='/login/')
 def get_block_record_card(request):
     context = dict()
-    context['recordcard_preview'] = get_block_record_badge(request)
-    context['record_linked_labels'] = get_block_record_linked(request)
+    context['block_record_badge'] = get_block_record_badge(request)
+    context['block_record_linked'] = get_block_record_linked(request)
+    context['block_record_fields'] = get_block_record_fields(request)
     returned = render_to_string('block/record/record_card.html', context, request=request)
     return HttpResponse(returned)
 
@@ -540,12 +541,26 @@ def get_block_record_badge(request):
     }
     response = requests.post(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_fissi", data=post)
-    print(response)
     response_dict = json.loads(response.text)
     context['fields'] = response_dict
     records_table = render_to_string('block/record/record_badge.html', context, request=request)
     return records_table
 
+
+@login_required(login_url='/login/')
+def get_block_record_fields(request):
+    context = dict()
+    tableid = request.POST.get('tableid')
+    recordid = request.POST.get('recordid')
+    post = {
+        'tableid': tableid,
+        'recordid': recordid,
+    }
+    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_fields", data=post)
+    response_dict = json.loads(response.text)
+    context['record_fields'] = response_dict
+    block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
+    return block_record_fields
 
 @login_required(login_url='/login/')
 def get_block_record_linked(request):

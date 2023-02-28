@@ -172,7 +172,7 @@
     
     
             <div class="container" style="height:auto">
-                {{recordcard_preview}}
+                {{block_record_badge}}
             </div>
     
     
@@ -232,26 +232,7 @@
     
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="fields-tab-pane" role="tabpanel" aria-labelledby="fields-tab" tabindex="0">
-    
-    
-                    <?php
-                    foreach ($record_fields as $record => $field) {
-                        if ($field['value'] != null) {
-                            if ($record != 'recordid_jdoc') {
-                    ?>
-    
-    
-                                <br>
-                                <span><b><?= $field['description'] ?></b></span>: <span><?= $field['value'] ?></span>
-    
-                    <?php
-                            }
-                        }
-                    }
-                    ?>
-    
-    
-    
+                    {{block_record_fields}}
     
                 </div>
     
@@ -260,7 +241,7 @@
                     <p>
                     <div class="d-grid gap-2">
     
-                        {{record_linked_labels}}
+                        {{block_record_linked}}
     
     
     
