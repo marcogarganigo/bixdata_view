@@ -560,6 +560,8 @@ def get_block_record_fields(request):
     response_dict = json.loads(response.text)
     context['record_fields'] = response_dict
     context['function'] = 'edit'
+    context['tableid'] = tableid
+    context['recordid'] = recordid
     block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
     return block_record_fields
 
@@ -572,8 +574,7 @@ def get_block_record_linked(request):
         'tableid': tableid,
         'recordid': recordid,
     }
-    response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_labels", data=post)
+    response = requests.post( "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_labels", data=post)
     response_dict = json.loads(response.text)
     context['labels'] = response_dict
     record_linked_labels = render_to_string('block/record/record_linked.html', context, request=request)
@@ -589,9 +590,17 @@ def get_linked(request):
 
 @login_required(login_url='/login/')
 def save_record_fields(request):
+        tableid=''
+        recordid=''
+        fields=''
 
-    if request.method == 'POST':
-        funzione = request.POST.get('funzione');
-        print(funzione)
-        name = request.POST.get('name')
+        tableid=request.POST.get('tableid') 
+        recordid=request.POST.get('recordid')  
+        fields=  request.POST.get('fields')     
+        post = {
+            'tableid': tableid,
+            'recordid': recordid,
+            'fields':fields
+        }
+        response = requests.post( "http://10.0.0.133:8822/bixdata/index.php/rest_controller/set_record", data=post)
         return render(request, 'block/record/record_fields.html')

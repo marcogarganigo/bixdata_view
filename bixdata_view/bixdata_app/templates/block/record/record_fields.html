@@ -1,7 +1,7 @@
 <div class="container" id="fields_container">
 {% for field_key,field in record_fields.items %}
-{% with fieldname='tables['|add:field.tableid|add:'][insert][t_0][fields]['|add:field.fieldid|add:'][f_0]' %}
-{% with fieldid='tables-'|add:field.tableid|add:'-insert-t_0-fields-'|add:field.fieldid|add:'f_0' %}
+{% with fieldname=field.fieldid %}
+{% with fieldid='field-'|add:field.fieldid %}
     <div class="row">
         <div class="col-lg-2" style="text-align: left">
             <p>{{field.description }}</p>
@@ -91,14 +91,18 @@ input:disabled, select:disabled, textarea:disabled {
 <script>
 function save_record() {
 
-    var serialized_data = $('#fields_container').find("select,textarea,input").serializeArray();
-    console.log(serialized_data);
-    serialized_data.push({name: 'funzione',value: '{{ function }}'});
+    var serialized_array = $('#fields_container').find("select,textarea,input").serializeArray();
+    var serialized_json=convertFormToJSON(serialized_array);
+    var post_data=[];
+    post_data.push({name: 'tableid',value: '{{ tableid }}'});
+    post_data.push({name: 'recordid',value: '{{ recordid }}'});
+    post_data.push({name: 'fields',value: serialized_json});
+    
 
     $.ajax({
         type: "POST",
         url: "{% url 'save_record_fields' %}",
-        data: serialized_data,
+        data: post_data,
         success: function(response) {
             alert('ok')
         },

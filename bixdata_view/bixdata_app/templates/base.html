@@ -74,6 +74,20 @@
     <!-- Dragula js - kanban-->
     <script src="{% static 'vendor/dragula/dragula.min.js' %}"></script>
 
+    <!-- Helper-->
+    <script>
+        function convertFormToJSON(formData) {
+            var jsonObject = formData.reduce(function(obj, item) {
+            obj[item.name] = item.value;
+            return obj;
+            }, {});
+
+            console.log(jsonObject);
+            jsonString = JSON.stringify(jsonObject);
+            return jsonString;
+            }
+    </script>
+    
 
 
     {% block head %}
