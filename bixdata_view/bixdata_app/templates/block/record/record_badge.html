@@ -1,10 +1,12 @@
-<div id="block_record_badge" style="height: 100%;width: 100%">
+<div id="block_record_badge" style="height: 100%; width: 100%">
     <div class="row row-cols-3 row-cols-md-2 row-cols-sm-1">
-        {% for  key, field in fields.items %}
+        {% for key, field in fields.items %}
             {% if field.fieldid != 'recordid_jdoc' %}
-            <div class="col">
-                <span class="span-pc"><b>{{field.desc}}</b> : {{field.value}}</span><br />
-            </div>
+                <div class="col">
+                <div class="row">
+                    <div class="col">{{ field.desc }}:</div><div class="col">{{ field.value }}</div>
+                </div>
+                </div>
             {% endif %}
         {% endfor %}
     </div>

@@ -590,5 +590,8 @@ def get_linked(request):
 @login_required(login_url='/login/')
 def save_record_fields(request):
 
-    funzione = request.POST.get('funzione');
-    return render(request, 'block/record/record_fields.html')
+    if request.method == 'POST':
+        funzione = request.POST.get('funzione');
+        print(funzione)
+        name = request.POST.get('name')
+        return render(request, 'block/record/record_fields.html')

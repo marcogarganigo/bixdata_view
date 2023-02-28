@@ -1,8 +1,8 @@
-<div class="container">
+<div class="container" id="fields_container">
 {% for field_key,field in record_fields.items %}
 {% with fieldname='tables['|add:field.tableid|add:'][insert][t_0][fields]['|add:field.fieldid|add:'][f_0]' %}
 {% with fieldid='tables-'|add:field.tableid|add:'-insert-t_0-fields-'|add:field.fieldid|add:'f_0' %}
-    <div class="row" id="fields_container">
+    <div class="row">
         <div class="col-lg-2" style="text-align: left">
             <p>{{field.description }}</p>
         </div>
@@ -91,9 +91,9 @@ input:disabled, select:disabled, textarea:disabled {
 <script>
 function save_record() {
 
-    var serialized_data = [];
     var serialized_data = $('#fields_container').find("select,textarea,input").serializeArray();
-    serialized_data.push({name: 'funzione',value: 'test'});
+    console.log(serialized_data);
+    serialized_data.push({name: 'funzione',value: '{{ function }}'});
 
     $.ajax({
         type: "POST",
