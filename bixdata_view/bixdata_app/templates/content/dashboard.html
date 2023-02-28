@@ -1,47 +1,54 @@
 <script>
-    $(document).ready(function ()
+$(document).ready(function () {
+  var serialized_data = [];
+  $("#content-container").load('http://127.0.0.1:8000/loading/');
+  $.ajax({
+    type: "POST",
+    crossDomain: true,
+    url: "{% url 'test_query' %}",
+    data: serialized_data,
+    success: function (response) {
+      // Clear the existing chart if it exists
+      if (window.myChart) {
+        window.myChart.destroy();
+      }
 
+      $("#chart-1").html(response);
 
-        {
-            var serialized_data = [];
-            $("#content-container").load('http://127.0.0.1:8000/loading/');
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'test_query' %}",
-                data: serialized_data,
-                success: function (response) {
-                    $("#chart-1").html(response);
-                    console.log(response)
+      // Create the chart
 
-                },
-                error: function () {
-                    $("#chart-1").html(response);
-                }
-            })
-        });
+    },
+    error: function () {
+      $("#chart-1").html(response);
+    }
+  });
+});
 
-    $(document).ready(function ()
+$(document).ready(function () {
+  var serialized_data = [];
+  $("#content-container").load('http://127.0.0.1:8000/loading/');
+  $.ajax({
+    type: "POST",
+    crossDomain: true,
+    url: "{% url 'test_query2' %}",
+    data: serialized_data,
+    success: function (response) {
+      // Clear the existing chart if it exists
+      if (window.myChart2) {
+        window.myChart2.destroy();
+      }
 
+      $("#chart-2").html(response);
 
-        {
-            var serialized_data = [];
-            $("#content-container").load('http://127.0.0.1:8000/loading/');
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'test_query2' %}",
-                data: serialized_data,
-                success: function (response) {
-                    $("#chart-2").html(response);
-                    console.log(response)
+      // Create the chart
 
-                },
-                error: function () {
-                    $("#chart-2").html(response);
-                }
-            })
-        });
+    },
+    error: function () {
+      $("#chart-2").html(response);
+    }
+  });
+});
+
 
 </script>
 
