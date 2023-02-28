@@ -559,6 +559,7 @@ def get_block_record_fields(request):
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_fields", data=post)
     response_dict = json.loads(response.text)
     context['record_fields'] = response_dict
+    context['function'] = 'view'
     block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
     return block_record_fields
 
