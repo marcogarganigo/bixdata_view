@@ -1,8 +1,13 @@
 from django.db import models
+from django.contrib.auth.models import Group
 
-#inutile
-"""
-class Login(models.Model):
-    username = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
-    """
+
+class MyModel(models.Model):
+    # Fields
+    # ...
+
+    class Meta:
+        permissions = (
+            ('can_do_something', 'Can do something'),
+            ('can_do_another_thing', 'Can do another thing'),
+        )
