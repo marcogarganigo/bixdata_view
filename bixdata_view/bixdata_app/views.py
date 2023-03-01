@@ -19,7 +19,6 @@ from django.contrib.auth.models import Group, Permission, User, Group
 from bixdata_app.models import MyModel
 
 
-
 # from .models import Login
 
 def get_test_query(request, name=None):
@@ -47,8 +46,8 @@ def get_test_query(request, name=None):
             permission = Permission.objects.get(codename='can_do_something')
 
             # Assign the permission to a group
-            #group = Group.objects.get(name='My group')
-            #group.permissions.add(permission)
+            # group = Group.objects.get(name='My group')
+            # group.permissions.add(permission)
 
             # Assign the permission to a user
             user = User.objects.get(username='test')
@@ -72,10 +71,10 @@ def get_full_data(request):
                 "SELECT query_conditions FROM sys_view WHERE id = 10"
             )
             query = cursor1.fetchone()[0]
-            #query = query.replace('namee', name)
+            # query = query.replace('namee', name)
             with connection.cursor() as cursor2:
                 cursor2.execute(
-                    #"select dealname, expectedmargin, effectivemargin from user_deal where dealuser = %s", [name]
+                    # "select dealname, expectedmargin, effectivemargin from user_deal where dealuser = %s", [name]
                     query
                 )
                 rows = cursor2.fetchall()
@@ -142,7 +141,7 @@ def get_full_data2(request):
             query = cursor1.fetchone()[0]
             with connection.cursor() as cursor2:
                 cursor2.execute(
-                    #"SELECT dealname, effectivemargin FROM user_deal WHERE closedate LIKE %s", [f"{date}-%"]
+                    # "SELECT dealname, effectivemargin FROM user_deal WHERE closedate LIKE %s", [f"{date}-%"]
                     query
                 )
 
@@ -545,7 +544,7 @@ def get_block_record_card(request):
     context = dict()
     context['block_record_badge'] = get_block_record_badge(request)
     context['block_record_linked'] = get_block_record_linked_pytest(request)
-    #context['block_record_linked'] = get_block_record_linked(request)
+    # context['block_record_linked'] = get_block_record_linked(request)
     context['block_record_fields'] = get_block_record_fields(request)
     returned = render_to_string('block/record/record_card.html', context, request=request)
     return HttpResponse(returned)
@@ -585,10 +584,11 @@ def get_block_record_fields(request):
     context['tableid'] = tableid
     context['recordid'] = recordid
     block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
-    if(http_response):
+    if (http_response):
         return HttpResponse(block_record_fields)
     else:
         return block_record_fields
+
 
 @login_required(login_url='/login/')
 def get_block_record_linked(request):
@@ -599,18 +599,31 @@ def get_block_record_linked(request):
         'tableid': tableid,
         'recordid': recordid,
     }
-    response = requests.post( "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_labels", data=post)
+    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_labels", data=post)
     response_dict = json.loads(response.text)
     context['labels'] = response_dict
     record_linked_labels = render_to_string('block/record/record_linked.html', context, request=request)
     return record_linked_labels
 
+
 @login_required(login_url='/login/')
 def get_block_record_linked_pytest(request):
-    context = dict()
-    tableid=request.POST.get('tableid')
-    record_linked_labels = render_to_string('block/record/record_linked_pytest.html', context, request=request)
+    tableid = request.POST.get('tableid')
+    print(tableid)
+
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT tablelinkid FROM sys_table_link WHERE tableid = 'company'")
+        rows = cursor.fetchall()
+        rows = [item for t in rows for item in t]
+        print(rows)
+
+        context = {
+            'labels': rows,
+        }
+
+    record_linked_labels = render_to_string('block/record/record_linked_pytest.html', {'context': context}, request=request)
     return record_linked_labels
+
 
 @login_required(login_url='/login/')
 def get_linked(request):
@@ -619,23 +632,21 @@ def get_linked(request):
         name = request.POST.get('name')
     return JsonResponse(name)
 
+
 @login_required(login_url='/login/')
 def save_record_fields(request):
-        tableid=''
-        recordid=''
-        fields=''
+    tableid = ''
+    recordid = ''
+    fields = ''
 
-        tableid=request.POST.get('tableid') 
-        recordid=request.POST.get('recordid')  
-        fields=  request.POST.get('fields')     
-        post = {
-            'tableid': tableid,
-            'recordid': recordid,
-            'fields':fields
-        }
+    tableid = request.POST.get('tableid')
+    recordid = request.POST.get('recordid')
+    fields = request.POST.get('fields')
+    post = {
+        'tableid': tableid,
+        'recordid': recordid,
+        'fields': fields
+    }
 
-
-
-
-        response = requests.post( "http://10.0.0.133:8822/bixdata/index.php/rest_controller/set_record", data=post)
-        return render(request, 'block/record/record_fields.html')
+    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/set_record", data=post)
+    return render(request, 'block/record/record_fields.html')
