@@ -15,6 +15,9 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db import connection
 from django.http import JsonResponse
+from django.contrib.auth.models import Group, Permission, User, Group
+from bixdata_app.models import MyModel
+
 
 
 # from .models import Login
@@ -39,6 +42,23 @@ def get_test_query(request, name=None):
                 'effective_margins': effective_margins,
                 'expected_margins': expected_margins
             }
+
+            # Get the custom permission
+            permission = Permission.objects.get(codename='can_do_something')
+
+            # Assign the permission to a group
+            #group = Group.objects.get(name='My group')
+            #group.permissions.add(permission)
+
+            # Assign the permission to a user
+            user = User.objects.get(username='test')
+            user.user_permissions.add(permission)
+
+            # Check if a user has a permission
+            if user.has_perm('can_do_something'):
+                print('has permission')
+            else:
+                print('no permission')
 
     return render(request, 'other/test_query.html', {'data': data})
 
@@ -602,5 +622,8 @@ def save_record_fields(request):
             'recordid': recordid,
             'fields':fields
         }
+
+
+
         response = requests.post( "http://10.0.0.133:8822/bixdata/index.php/rest_controller/set_record", data=post)
         return render(request, 'block/record/record_fields.html')
