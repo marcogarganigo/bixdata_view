@@ -55,7 +55,7 @@
     {% endwith %}
     {% endwith %}
 {% endfor %}
-            <button id="save-button" type="button" class="btn btn-primary" onclick="save_record()">Salva</button>
+            <button id="save-button" type="button" class="btn btn-primary" onclick=" save_record()">Salva</button>
 </div>
 
 {% if function == "view" %}
@@ -91,6 +91,7 @@ input:disabled, select:disabled, textarea:disabled {
 <script>
 function save_record() {
 
+    closeNewRecordModal()
     var serialized_array = $('#fields_container').find("select,textarea,input").serializeArray();
     var serialized_json=convertFormToJSON(serialized_array);
     var post_data=[];
@@ -104,7 +105,12 @@ function save_record() {
         url: "{% url 'save_record_fields' %}",
         data: post_data,
         success: function(response) {
-            alert('ok')
+            document.getElementById("saved-alert").style.display = "block";
+            setTimeout(function() {
+                $("#saved-alert").fadeOut(1500);
+                getContentRecords('{{ tableid }}')
+            });
+
         },
         error: function() {
             alert('ko')
@@ -112,6 +118,7 @@ function save_record() {
     });
 
 }
+
 
 </script>
 

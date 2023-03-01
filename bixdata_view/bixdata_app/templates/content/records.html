@@ -205,13 +205,15 @@
     }
 
     function newRecord() {
-        var tableid='task'
-        $('#exampleModal').modal('show');
+        var tableid='{{tableid}}'
+        $('#newRecordModal').modal('show');
         var serialized_data = [];
         serialized_data.push({name: 'tableid',value: tableid});
+        serialized_data.push({name: 'function',value: 'insert'});
+        serialized_data.push({name: 'http_response',value: true});
         $.ajax({
             type: "POST",
-            url: "{% url 'block_record' %}",
+            url: "{% url 'get_record_fields' %}",
             data: serialized_data,
             success: function(response) {
                 $("#fullwidth_modal").html(response);
@@ -227,6 +229,7 @@
 
     function reloadFunc()
     {
+        getContentRecords('{{ tableid }}')
         var serialized_data = [];
         serialized_data.push({
             name: 'table',
@@ -252,7 +255,7 @@
         serialized_data.push({name: 'tableid',value: tableid});
         serialized_data.push({name: 'recordid',value: recordid});
         if (screen.width <= min_width) {
-            $('#exampleModal').modal('show');
+            $('#recordModal').modal('show');
             $("#fullwidth_modal").load('http://127.0.0.1:8000/loading/');
         }
         //$("#block-record-card-container").html('caricamento');
@@ -281,10 +284,14 @@
                 $('#bixdata_recordcard_container').html('');
             });
         } else {
-            $("#exampleModal").modal("hide");
+            $("#recordModal").modal("hide");
         
     }
 }
+
+    function closeNewRecordModal() {
+        $("#newRecordModal").modal("hide");
+    }
 
     function open_kanban() {
         var serialized_data = [];
@@ -307,6 +314,25 @@
         height: 50px;
     }
 </style>
+
+
+<!--save alert-->
+<div class="alert alert-success" role="alert" id="saved-alert" style="display: none; width: 10%">
+    Salvato
+</div>
+
+<!-- new record modal-->
+   <div class="modal fade" id="newRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%;">
+        <div class="modal-dialog modal-xl" style="width: 100%;">
+            <div class="modal-content" style="width: 100%">
+                <div class="modal-body" style="width: 100%">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeNewRecordModal()"></button>
+                    <div id="fullwidth_modal" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <div id="content-records"  style="height: 100%">
     <div class="row" style="width: 100%; height: 99%; margin-top: 1%">

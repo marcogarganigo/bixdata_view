@@ -570,6 +570,7 @@ def get_block_record_badge(request):
 @login_required(login_url='/login/')
 def get_block_record_fields(request):
     context = dict()
+    http_response = request.POST.get('http_response')
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     post = {
@@ -583,7 +584,10 @@ def get_block_record_fields(request):
     context['tableid'] = tableid
     context['recordid'] = recordid
     block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
-    return block_record_fields
+    if(http_response):
+        return HttpResponse(block_record_fields)
+    else:
+        return block_record_fields
 
 @login_required(login_url='/login/')
 def get_block_record_linked(request):
@@ -622,6 +626,7 @@ def save_record_fields(request):
             'recordid': recordid,
             'fields':fields
         }
+
 
 
 

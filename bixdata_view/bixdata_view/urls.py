@@ -44,6 +44,7 @@ urlpatterns = [
     path('get_full_data/', views.get_full_data, name='get_full_data'),
     path('get_full_data2/', views.get_full_data2, name='get_full_data2'),
     path('get_linked/', views.get_linked, name='get_linked'),
+    path('get_record_fields/', views.get_block_record_fields, name='get_record_fields'),
     path('admin/', admin.site.urls),
     path('save_record_fields/', views.save_record_fields, name='save_record_fields'),
 
