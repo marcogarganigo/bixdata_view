@@ -543,8 +543,8 @@ def get_block_record(request):
 def get_block_record_card(request):
     context = dict()
     context['block_record_badge'] = get_block_record_badge(request)
-    context['block_record_linked'] = get_block_record_linked_pytest(request)
-    # context['block_record_linked'] = get_block_record_linked(request)
+    #context['block_record_linked'] = get_block_record_linked_pytest(request)
+    context['block_record_linked'] = get_block_record_linked(request)
     context['block_record_fields'] = get_block_record_fields(request)
     returned = render_to_string('block/record/record_card.html', context, request=request)
     return HttpResponse(returned)
