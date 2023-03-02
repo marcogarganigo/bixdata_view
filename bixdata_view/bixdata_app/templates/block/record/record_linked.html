@@ -25,14 +25,14 @@
 
 <div id="block_record_linked">
   {% for label in context.labels %}
-    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{label}}" aria-expanded="false" aria-controls="{{label}}" style="background-color: #074048; border: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse('{{label}}', '{{ label }}')">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{label.tablelinkid}}" aria-expanded="false" aria-controls="{{label.tablelinkid}}" style="background-color: #074048; border: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse('{{label.tablelinkid}}', '{{ label.tablelinkid }}')">
       <span class="badge bg-danger" style="float: left; color: white; background-color: red; border-radius: 7.5%">5</span>
                 <span class="material-symbols-outlined" style="float: right" onclick="$('#newRecordModal').modal('show')">add</span>
-      {{label}}
+      {{label.tablelinkid}}
     </button>
-    <div class="collapse" id="{{label}}">
+    <div class="collapse" id="{{label.tablelinkid}}">
       <div class="card card-body">
-        {{label}}
+        {{label.tablelinkid}}
       </div>
     </div>
   {% endfor %}

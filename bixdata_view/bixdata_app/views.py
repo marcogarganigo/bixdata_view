@@ -20,6 +20,13 @@ from bixdata_app.models import MyModel
 
 
 # from .models import Login
+def dictfetchall(cursor):
+    "Return all rows from a cursor as a dict"
+    columns = [col[0] for col in cursor.description]
+    return [
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ]
 
 def get_test_query(request, name=None):
     with connection.cursor() as cursor1:
@@ -613,12 +620,9 @@ def get_block_record_linked_pytest(request):
 
     with connection.cursor() as cursor:
         cursor.execute("SELECT tablelinkid FROM sys_table_link WHERE tableid = 'company'")
-        rows = cursor.fetchall()
-        rows = [item for t in rows for item in t]
-        print(rows)
+        rows = dictfetchall(cursor)
         context = dict()
         context['labels'] = rows
-        print(context)
 
     record_linked_labels = render_to_string('block/record/record_linked.html', {'context': context}, request=request)
     return record_linked_labels
