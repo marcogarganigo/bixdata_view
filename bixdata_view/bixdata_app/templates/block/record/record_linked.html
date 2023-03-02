@@ -27,12 +27,12 @@
   {% for label in context.labels %}
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{label.tablelinkid}}" aria-expanded="false" aria-controls="{{label.tablelinkid}}" style="background-color: #074048; border: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse('{{label.tablelinkid}}', '{{ label.tablelinkid }}')">
       <span class="badge bg-danger" style="float: left; color: white; background-color: red; border-radius: 7.5%">5</span>
-                <span class="material-symbols-outlined" style="float: right" onclick="$('#newRecordModal').modal('show')">add</span>
       {{label.tablelinkid}}
     </button>
     <div class="collapse" id="{{label.tablelinkid}}">
       <div class="card card-body">
         {{label.tablelinkid}}
+          <button class="btn btn-secondary d-flex justify-content-center align-items-center"  onclick="$('#newRecordModal').modal('show')" style="width: 5%;"><span class="material-symbols-outlined">add</span></button>
       </div>
     </div>
   {% endfor %}

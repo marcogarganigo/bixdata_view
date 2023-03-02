@@ -25,18 +25,15 @@
 </style>
 
 <script>
-    const myModalEl = document.getElementById('myModal')
-myModalEl.addEventListener('hidden.bs.modal', event => {
-    
-})
+
 
     //alert('test');
 
     function modalShow() {
-        $("#exampleModal").load('http://127.0.0.1:8000/loading/');
+        $("#recordModal").load('http://127.0.0.1:8000/loading/');
         $("results-row").click(function(){
             if (screen.width <= min_width) {
-              $("#exampleModal").modal("show");
+              $("#recordModal").modal("show");
             }
           });
     }
