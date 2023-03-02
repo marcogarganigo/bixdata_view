@@ -14,10 +14,8 @@
                 'name': label
             },
             success: function (response) {
-                alert(response);
                 console.log(response);
             }, error: function (response) {
-                alert(response);
                 console.log(response);
             }
         });
@@ -26,13 +24,19 @@
 </script>
 
 <div id="block_record_linked">
-    {% for key,label in labels.items %}
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{key}}" aria-expanded="false" aria-controls="{{key}}" style="background-color: #074048; border: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse('{{key}}', '{{ label.description }}')"> <span class="badge bg-danger" style="float: left; color: white; background-color: red; border-radius: 7.5%">5</span> {{label.description}}</button>
-        <div class="collapse" id="{{key}}">
-            <div class="card card-body">
-                {{label.description}}
-            </div>
-        </div>
-    {% endfor %}
+  {% for label in context.labels %}
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{label}}" aria-expanded="false" aria-controls="{{label}}" style="background-color: #074048; border: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse('{{label}}', '{{ label }}')">
+      <span class="badge bg-danger" style="float: left; color: white; background-color: red; border-radius: 7.5%">5</span>
+                <span class="material-symbols-outlined" style="float: right" onclick="$('#newRecordModal').modal('show')">add</span>
+      {{label}}
+    </button>
+    <div class="collapse" id="{{label}}">
+      <div class="card card-body">
+        {{label}}
+      </div>
+    </div>
+  {% endfor %}
 </div>
+
+
 

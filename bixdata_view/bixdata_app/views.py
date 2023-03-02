@@ -543,8 +543,8 @@ def get_block_record(request):
 def get_block_record_card(request):
     context = dict()
     context['block_record_badge'] = get_block_record_badge(request)
-    #context['block_record_linked'] = get_block_record_linked_pytest(request)
-    context['block_record_linked'] = get_block_record_linked(request)
+    context['block_record_linked'] = get_block_record_linked_pytest(request)
+    #context['block_record_linked'] = get_block_record_linked(request)
     context['block_record_fields'] = get_block_record_fields(request)
     returned = render_to_string('block/record/record_card.html', context, request=request)
     return HttpResponse(returned)
@@ -616,12 +616,11 @@ def get_block_record_linked_pytest(request):
         rows = cursor.fetchall()
         rows = [item for t in rows for item in t]
         print(rows)
+        context = dict()
+        context['labels'] = rows
+        print(context)
 
-        context = {
-            'labels': rows,
-        }
-
-    record_linked_labels = render_to_string('block/record/record_linked_pytest.html', {'context': context}, request=request)
+    record_linked_labels = render_to_string('block/record/record_linked.html', {'context': context}, request=request)
     return record_linked_labels
 
 

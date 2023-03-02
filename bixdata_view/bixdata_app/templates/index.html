@@ -524,30 +524,28 @@
 
 
 
-
-
                         <li class="side-nav-title side-nav-item">Tables</li>
                         {% for key, menu_list_value in menu_list.items %}
                         <li class="side-nav-item">
-                            <a data-bs-toggle="collapse" href="#sidebar{{key}}" aria-expanded="false"
-                                aria-controls="sidebar{{key}}" class="side-nav-link">
-                                <i class="uil-briefcase"></i>
-                                <span> {{key}} </span>
-                                <span class="menu-arrow"></span>
-                            </a>
-                            <div class="collapse" id="sidebar{{key}}">
-                                <ul class="side-nav-second-level">
-
-                                    {% for value in menu_list_value %}
-                                    <li onclick="getContentRecords('{{value.id}}')">
-                                        <a class="side-nav-txt">{{value.id}}</a>
-                                    </li>
-                                    {% endfor %}
+                          <a data-bs-toggle="collapse" href="#sidebar{{key}}" aria-expanded="false" aria-controls="sidebar{{key}}" class="side-nav-link">
+                            <i class="uil-briefcase"></i>
+                            <span>{{key}}</span>
+                            <span class="menu-arrow"></span>
+                          </a>
+                          <div class="collapse" id="sidebar{{key}}">
+                            <ul class="side-nav-second-level">
+                              {% for value in menu_list_value %}
+                              <li onclick="getContentRecords('{{value.id}}')">
+                                <a href="#" class="side-nav-txt" onclick="document.documentElement.style.color = 'red'">{{value.id}}</a>
+                              </li>
+                              {% endfor %}
                                 </ul>
                             </div>
 
                         </li>
                         {% endfor %}
+
+
                         <!--- End Sidemenu -->
 
                         <!-- Help Box -->
