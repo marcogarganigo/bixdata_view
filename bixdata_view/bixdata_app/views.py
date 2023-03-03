@@ -175,28 +175,36 @@ def get_full_data2(request):
 
 @login_required(login_url='/login/')
 def get_render_index(request):
-    response = requests.get(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
-    menu_list = json.loads(response.text)
 
-    username = request.user
+    screen_width = request.COOKIES.get('screen_width')
+    screen_height = request.COOKIES.get('screen_height')
 
-    print(menu_list.items())
-    print(type(menu_list))
-    for workspace_key, workspace_value in menu_list.items():
-        print(type(workspace_value))
-        for table in workspace_value:
-            print(type(table))
-            print(table.get('description'))
+    if screen_height > screen_width:
+        return render(request, 'other/loading.html')
+    else:
 
-    context = {
-        'menu_list': menu_list,
-        'date': datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
-        'username': username,
+        response = requests.get(
+            "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
+        menu_list = json.loads(response.text)
 
-    }
+        username = request.user
 
-    return render(request, 'index.html', context)
+        print(menu_list.items())
+        print(type(menu_list))
+        for workspace_key, workspace_value in menu_list.items():
+            print(type(workspace_value))
+            for table in workspace_value:
+                print(type(table))
+                print(table.get('description'))
+
+        context = {
+            'menu_list': menu_list,
+            'date': datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
+            'username': username,
+
+        }
+
+        return render(request, 'index.html', context)
 
 
 def get_render_loading(request):

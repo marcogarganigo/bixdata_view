@@ -16,6 +16,11 @@
         const min_width = 1280;
         const fhd_width = 1920;
 
+        // Set cookies for screen width and height
+        document.cookie = "screen_width=" + screen.width;
+        document.cookie = "screen_height=" + screen.height;
+
+
         if (screen.width <= min_width) {
             $("html").attr("data-sidenav-size", "condensed");
             $(".tabs-title").attr("display", "none");
