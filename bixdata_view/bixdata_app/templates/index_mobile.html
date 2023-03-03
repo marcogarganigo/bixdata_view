@@ -18,34 +18,11 @@
 
 
 
-        if (screen.width <= min_width) {
-            $("html").attr("data-sidenav-size", "condensed");
-            $(".tabs-title").attr("display", "none");
-            $(".tabs-icon").attr("display", "visible");
-            $(".card-body").attr("display", "none");
-        }
-
-
 
 
 
         $("#bixdata2").ready(function () {
             getDashboard();
-
-            $("#toggle-menu").click(function () {
-                //$("#content-container").load('http://127.0.0.1:8000/loading/');
-                var current_sidenav_size = $("html").attr("data-sidenav-size");
-                if (current_sidenav_size == 'default') {
-                    $("html").attr("data-sidenav-size", "condensed");
-                } else {
-                    $("html").attr("data-sidenav-size", "default");
-                }
-
-            });
-
-
-
-
         });
 
         function getContentRecords(tableid) {
@@ -140,9 +117,16 @@
                     </div>
 
                     <!-- Sidebar Menu Toggle Button -->
-                    <button class="button-toggle-menu" id="toggle-menu">
-                        <i class="mdi mdi-menu"></i>
-                    </button>
+
+
+                    <script>
+                        function testFunc() {
+                            $('.button-toggle-menu').click(function() {
+                                $(document.documentElement).toggleClass('menuitem-active sidebar-enable');
+                                $(document.documentElement).toggleClass('menuitem-active');
+                            });
+                        }
+                    </script>
 
                     <!-- Horizontal Menu Toggle Button -->
                     <button class="navbar-toggle" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
@@ -341,6 +325,10 @@
                                     </span>
                                 </span>
                             </a>
+                            <button class="button-toggle-menu" id="toggle-menu">
+                        <i class="mdi mdi-menu" onclick="testFunc()"></i>
+                    </button>
+
                             <div
                                 class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
                                 <!-- item-->
@@ -460,10 +448,13 @@
         <!-- ========== Topbar End ========== -->
 
         <!-- ========== Left Sidebar Start ========== -->
-        <div class="leftside-menu">
+
+
+
+         <div class="leftside-menu menuitem-active" id="exampleModalLabel" style="height: 100%;">
 
             <!-- Logo Light -->
-            <div class="logo-topbar" style="height: 100%;">
+            <div class="logo-topbar" style="height: 50%;">
                 <!-- Logo light -->
 
 
@@ -568,6 +559,8 @@
                 </div>
             </div>
         </div>
+
+
         <!-- ========== Left Sidebar End ========== -->
         <!-- ============================================================== -->
         <!-- Start Page Content here -->
@@ -606,6 +599,7 @@
 
     </div>
 </div>
-
+</div>
+    <script src="{% static 'js/vendor.min.js' %}"></script>
 
 {% endblock %}

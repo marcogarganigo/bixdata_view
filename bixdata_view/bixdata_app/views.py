@@ -16,8 +16,16 @@ from django.contrib import messages
 from django.db import connection
 from django.http import JsonResponse
 from django.contrib.auth.models import Group, Permission, User, Group
+from django_user_agents.utils import get_user_agent
 from bixdata_app.models import MyModel
 
+
+def user_agent(request, page, mobilepage, context={}):
+    user_agent = get_user_agent(request)
+    if user_agent.is_mobile:
+        return render(request, mobilepage, context)
+    else:
+        return render(request, page, context)
 
 # from .models import Login
 def dictfetchall(cursor):
@@ -175,36 +183,28 @@ def get_full_data2(request):
 
 @login_required(login_url='/login/')
 def get_render_index(request):
+    response = requests.get(
+        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
+    menu_list = json.loads(response.text)
 
-    screen_width = request.COOKIES.get('screen_width')
-    screen_height = request.COOKIES.get('screen_height')
+    username = request.user
 
-    if screen_height > screen_width:
-        return render(request, 'other/loading.html')
-    else:
+    print(menu_list.items())
+    print(type(menu_list))
+    for workspace_key, workspace_value in menu_list.items():
+        print(type(workspace_value))
+        for table in workspace_value:
+            print(type(table))
+            print(table.get('description'))
 
-        response = requests.get(
-            "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
-        menu_list = json.loads(response.text)
+    context = {
+        'menu_list': menu_list,
+        'date': datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
+        'username': username,
+    }
 
-        username = request.user
-
-        print(menu_list.items())
-        print(type(menu_list))
-        for workspace_key, workspace_value in menu_list.items():
-            print(type(workspace_value))
-            for table in workspace_value:
-                print(type(table))
-                print(table.get('description'))
-
-        context = {
-            'menu_list': menu_list,
-            'date': datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
-            'username': username,
-
-        }
-
-        return render(request, 'index.html', context)
+    return user_agent(request, 'index.html', 'index2.html', context)
+    #return render(request, 'index.html', context)
 
 
 def get_render_loading(request):
@@ -221,7 +221,8 @@ def get_content_records(request):
     context['table'] = tableid.upper()
     context['tableid'] = tableid
     context['views'] = dict()
-    return render(request, 'content/records.html', context)
+    return user_agent(request, 'content/records.html', 'content/records_mobile.html', context)
+    #return render(request, 'content/records.html', context)
 
 
 @login_required(login_url='/login/')
@@ -282,7 +283,8 @@ def get_block_reload(request):
 
 @login_required(login_url='/login/')
 def get_render_content_dashboard(request):
-    return render(request, 'content/dashboard.html')
+    return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', None)
+    #return render(request, 'content/dashboard.html')
 
 
 @login_required(login_url='/login/')
@@ -334,6 +336,7 @@ def get_render_login(request):
 
     else:
         form = LoginForm()
+    #return user_agent(request, 'other/login.html', 'other/test_query.html', {'form': form})
     return render(request, 'other/login.html', {'form': form}, )
 
 
@@ -378,6 +381,7 @@ def get_block_records_table(request):
             else:
                 record[record_index] = value
         records[records_index] = record
+
 
     records_table = render_to_string('block/records/records_table.html', context, request=request)
     return records_table

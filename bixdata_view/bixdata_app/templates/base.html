@@ -1,7 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" data-layout-mode="fluid" data-topbar-color="dark" data-sidenav-color="light" data-sidenav-user="true"
-    data-sidenav-size="default" style="overflow: hidden; height: 100%;">
+    data-sidenav-size="default" style="overflow: hidden; height: 100%;" class="menuitem-active">
 
 <head>
     <meta charset="utf-8" />
@@ -123,7 +123,12 @@
     <!--<script src="<?= assets_url() ?>/js/pages/demo.dashboard-analytics.js"></script>-->
 
     <!-- App js -->
+    <script src="{% static '/js/app.js' %}"></script>
     <script src="{% static '/js/app.min.js' %}"></script>
+
+    <!-- ? js -->
+    <script src="{% static '/js/pages/pages/demo.dashboard-analytics.js' %}"></script>
+
 
 
 
