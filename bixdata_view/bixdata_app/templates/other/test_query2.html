@@ -14,12 +14,26 @@
             }
         },
         series: [{
-            name: 'Margine effettivo',
-            data: {{ data.amounts|safe }}
-        }],
+      name: 'Total amount',
+      data: {{ data.amounts|safe }}
+    },
+    {
+      name: 'Total net',
+      data: {{ data.totalnets|safe }}
+    }],
         xaxis: {
             categories: {{ data.months|safe }}
         },
+                yaxis: {
+    labels: {
+      formatter: function(val) {
+        return Math.round(val);
+      }
+    }
+  },
+        stroke: {
+  curve: 'smooth',
+},
         responsive: [{
             breakpoint: 768, // this is the width at which the chart will become responsive
             options: {
