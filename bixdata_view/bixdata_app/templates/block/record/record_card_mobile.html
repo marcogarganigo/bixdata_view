@@ -1,0 +1,118 @@
+{% load static %}
+<link href="{% static 'css/base_mobile.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<div id="block_record_card" style="height: 100%;width: 100%;">
+    <div id="RecordCard" class="card" style=" height: 100%; overflow: scroll">
+        <div class="card-body">
+            <p class="card-text">
+    
+            <div id="card-menu">
+    
+                <button type="button" id="close-button" class="btn-close button-recordcard" data-bs-dismiss="modal" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="chiudi" onclick="closeCard(this)"></button>
+
+                <div id="func-buttons" style="float: right  ">
+
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="fissa"onclick="pinFunc()"><i class="mdi mdi-pin-outline"></i> </button>
+    
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="permessi" onclick="permissionsFunc()"><i class="mdi mdi-lock-outline"></i> </button>
+    
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="elimina" style="color: red"onclick="deleteFunc()"><i class=" mdi mdi-delete-outline"></i> </button>
+    
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="copia" onclick="copyFunc()"><i class="mdi mdi-content-copy"></i> </button>
+
+                </div>
+    
+
+
+    
+                <div style="clear:both;"></div>
+            </div>
+
+            <br>
+    
+    
+    
+            <div class="container" style="height:auto">
+                {{block_record_badge}}
+            </div>
+    
+    
+    
+            </br>
+    
+    
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="fields-tab" data-bs-toggle="tab" data-bs-target="#fields-tab-pane" type="button" role="tab" aria-controls="fields-tab-pane" aria-selected="true">
+
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="fields">
+                            text_fields
+                        </span>
+    
+                    </button>
+                    <button class="nav-link" id="linked-tab" data-bs-toggle="tab" data-bs-target="#linked-tab-pane" type="button" role="tab" aria-controls="linked-tab-pane" aria-selected="false">
+
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="linked">
+                            link
+                        </span>
+    
+                    </button>
+                    <button class="nav-link" id="attachment-tab" data-bs-toggle="tab" data-bs-target="#attachment-tab-pane" type="button" role="tab" aria-controls="attachment-tab-pane" aria-selected="false">
+
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="attachment">
+                            attachment
+                        </span>
+                    </button>
+                    <button class="nav-link" id="statistics-tab" data-bs-toggle="tab" data-bs-target="#statistics-tab-pane" type="button" role="tab" aria-controls="statistics-tab-pane" aria-selected="false">
+
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="analytics">
+                            analytics
+                        </span>
+                    </button>
+                    <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-tab-pane" type="button" role="tab" aria-controls="history-tab-pane" aria-selected="false">
+
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="history">
+                            history
+                        </span>
+                    </button>
+                    </button>
+                    <button class="nav-link" id="workflow-tab" data-bs-toggle="tab" data-bs-target="#workflow-tab-pane" type="button" role="tab" aria-controls="workflow-tab-pane" aria-selected="false">
+
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="workflow">
+                            rebase
+                        </span>
+                    </button>
+                </div>
+            </nav>
+    
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="fields-tab-pane" role="tabpanel" aria-labelledby="fields-tab" tabindex="0">
+                    {{block_record_fields}}
+    
+                </div>
+    
+                <div class="tab-pane fade" id="linked-tab-pane" role="tabpanel" aria-labelledby="linked-tab" tabindex="0">
+    
+                    <p>
+                    <div class="d-grid gap-2">
+    
+                        {{block_record_linked}}
+    
+    
+    
+                    </div>
+                    </p>
+    
+    
+    
+                </div>
+    
+                <div class="tab-pane fade" id="attachment-tab-pane" role="tabpanel" aria-labelledby="attachment-tab" tabindex="0">...</div>
+                <div class="tab-pane fade" id="statistics-tab-pane" role="tabpanel" aria-labelledby="statistics-tab" tabindex="0">...</div>
+                <div class="tab-pane fade" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">...</div>
+                <div class="tab-pane fade" id="workflow-tab-pane" role="tabpanel" aria-labelledby="workflow-tab" tabindex="0">...</div>
+    
+            </div>
+        </div>
+    </div>
+</div>

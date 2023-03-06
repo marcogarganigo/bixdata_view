@@ -1,0 +1,25 @@
+ .nav-link {
+        display: block;
+        padding: var(--ct-nav-link-padding-y) var(--ct-nav-link-padding-x);
+        font-size: var(--ct-nav-link-font-size);
+        font-weight: var(--ct-nav-link-font-weight);
+        color: #8a969c;
+        -webkit-transition: color .3s ease-in-out, background-color .3s ease-in-out, border-color .3s ease-in-out;
+        transition: color .3s ease-in-out, background-color .3s ease-in-out, border-color .3s ease-in-out;
+    }
+
+    html[data-sidenav-color=light] .side-nav .side-nav-link:active,
+    html[data-sidenav-color=light] .side-nav .side-nav-link:focus,
+    html[data-sidenav-color=light] .side-nav .side-nav-link:hover {
+        --ct-bg-leftbar: rgb(255, 255, 255);
+        --ct-menu-item: #cfd3cf;
+        color: rgb(240, 69, 69);
+        --ct-menu-item-active: white;
+    }
+
+    .nav-tabs .nav-item.show .nav-link,
+    .nav-tabs .nav-link.active {
+        color: #ff0000;
+        background-color: var(--ct-nav-tabs-link-active-bg);
+        border-color: var(--ct-nav-tabs-link-active-border-color);
+    }

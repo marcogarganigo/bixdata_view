@@ -1,3 +1,4 @@
+{% load static %}
 <script type="text/javascript">
     $("#tables").ready(function() {
 
@@ -241,10 +242,8 @@
             url: "{% url 'block_reload' %}",
             data: serialized_data,
             success: function(response) {
-                alert('reload')
             },
             error: function() {
-                alert('reload')
             }
         })
     }
@@ -317,6 +316,8 @@
 
 
 </style>
+    <link href="{% static 'css/base_mobile.css' %}" rel="stylesheet">
+
 
 
 <!--save alert-->
@@ -357,26 +358,18 @@
                         <div class="text-center">
                             <div class="row">
                                 <div class="col filter-column">
-
-
-
-                                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="width: 50%;" id="searchTerm" autocomplete="off">
-                                        <button class="btn btn-outline-danger" type="submit" style="width: 30%" onclick="search()"><i class="mdi mdi-magnify"></i></button>
-
-                                    <button type="button" class="btn btn-outline-secondary" onclick="$('#hiddenCard').toggle(100);"><i class="mdi mdi-filter"></i></button>
-
-                                </div>
-                                <div class="col filter-column">
-
-
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
-                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="reloadFunc()"><i class="mdi mdi-reload"></i></button>
-                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()"><i class="mdi mdi-plus"></i></button>
+                                    <div class="input-group">
+                                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchTerm" autocomplete="off">
+                                        <button class="btn btn-outline-danger" type="submit" style="width: 35%" onclick="search()"><i class="mdi mdi-magnify"></i></button>
                                     </div>
-
                                 </div>
+                                <button type="button" class="btn btn-outline-secondary" onclick="$('#hiddenCard').toggle(100);"><i class="mdi mdi-filter"></i></button>
+                                <button class="btn btn-outline-danger me-md-2" type="button" onclick="reloadFunc()"><i class="mdi mdi-reload"></i></button>
+                                <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()"><i class="mdi mdi-plus"></i></button>
+
                             </div>
                         </div>
+
 
 
 

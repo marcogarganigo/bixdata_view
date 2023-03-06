@@ -47,6 +47,7 @@ urlpatterns = [
     path('get_record_fields/', views.get_block_record_fields, name='get_record_fields'),
     path('admin/', admin.site.urls),
     path('save_record_fields/', views.save_record_fields, name='save_record_fields'),
+    path('get_chart3/', views.get_chart3, name='get_chart3'),
 
 
 ]

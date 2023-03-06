@@ -27,6 +27,7 @@ def user_agent(request, page, mobilepage, context={}):
     else:
         return render(request, page, context)
 
+
 # from .models import Login
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -35,6 +36,7 @@ def dictfetchall(cursor):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ]
+
 
 def get_test_query(request, name=None):
     with connection.cursor() as cursor1:
@@ -181,6 +183,48 @@ def get_full_data2(request):
     return JsonResponse(data2)
 
 
+def get_chart3(request):
+    if request.method == 'POST':
+        with connection.cursor() as cursor1:
+            cursor1.execute(
+                "SELECT query_conditions FROM sys_view WHERE id = 13"
+            )
+            query = cursor1.fetchone()[0]
+            with connection.cursor() as cursor2:
+                cursor2.execute(
+                    query
+                )
+                rows = cursor2.fetchall()
+
+                deal_users = [row[0] for row in rows]
+                amounts = [row[1] for row in rows]
+
+                data = {
+                    'deal_users': deal_users,
+                    'amounts': amounts,
+                }
+                with connection.cursor() as cursor3:
+                    cursor3.execute(
+                        "SELECT query_conditions FROM sys_view WHERE id = 14"
+                    )
+                    query2 = cursor3.fetchone()[0]
+                    with connection.cursor() as cursor4:
+                        cursor4.execute(
+                            query2
+                        )
+                        rows2 = cursor4.fetchall()
+
+                        amounts2 = [row[1] for row in rows2]
+                        deal_users2 = [row[0] for row in rows2]
+
+                        data2 = {
+                            'amounts2': amounts2,
+                            'deal_users2': deal_users2
+                        }
+
+        return render(request, 'other/chart3.html', {'data': data, 'data2': data2})
+
+
 @login_required(login_url='/login/')
 def get_render_index(request):
     response = requests.get(
@@ -204,7 +248,7 @@ def get_render_index(request):
     }
 
     return user_agent(request, 'index.html', 'index2.html', context)
-    #return render(request, 'index.html', context)
+    # return render(request, 'index.html', context)
 
 
 def get_render_loading(request):
@@ -222,7 +266,7 @@ def get_content_records(request):
     context['tableid'] = tableid
     context['views'] = dict()
     return user_agent(request, 'content/records.html', 'content/records_mobile.html', context)
-    #return render(request, 'content/records.html', context)
+    # return render(request, 'content/records.html', context)
 
 
 @login_required(login_url='/login/')
@@ -284,7 +328,7 @@ def get_block_reload(request):
 @login_required(login_url='/login/')
 def get_render_content_dashboard(request):
     return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', None)
-    #return render(request, 'content/dashboard.html')
+    # return render(request, 'content/dashboard.html')
 
 
 @login_required(login_url='/login/')
@@ -336,7 +380,7 @@ def get_render_login(request):
 
     else:
         form = LoginForm()
-    #return user_agent(request, 'other/login.html', 'other/test_query.html', {'form': form})
+    # return user_agent(request, 'other/login.html', 'other/test_query.html', {'form': form})
     return render(request, 'other/login.html', {'form': form}, )
 
 
@@ -381,7 +425,6 @@ def get_block_records_table(request):
             else:
                 record[record_index] = value
         records[records_index] = record
-
 
     records_table = render_to_string('block/records/records_table.html', context, request=request)
     return records_table
@@ -563,9 +606,10 @@ def get_block_record_card(request):
     context = dict()
     context['block_record_badge'] = get_block_record_badge(request)
     context['block_record_linked'] = get_block_record_linked_pytest(request)
-    #context['block_record_linked'] = get_block_record_linked(request)
+    # context['block_record_linked'] = get_block_record_linked(request)
     context['block_record_fields'] = get_block_record_fields(request)
-    returned = render_to_string('block/record/record_card.html', context, request=request)
+    # returned = render_to_string('block/record/record_card.html', context, request=request)
+    returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
     return HttpResponse(returned)
 
 
