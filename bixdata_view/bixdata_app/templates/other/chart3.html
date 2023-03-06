@@ -1,90 +1,43 @@
-   <div id="content_chart3" style="height: 100%;width: 100%;overflow: scroll;">
-        <div style="">
-            <div>
-                <canvas id="myChart3"></canvas>
-            </div>
+<div id="chart"></div>
 
-
-
-
-            <script>
-
-</script>
-
-            <script>
-
-
-          const ctx3 = document.getElementById('myChart3');
-
-  const myChart3 = new Chart(ctx3, {
-    type: 'bar',
-    data: {
-      labels: {{ data2.deal_users2|safe }},
-      datasets: [{
-        label: 'Mese corrente',
-        data: {{ data.amounts|safe }},
-        borderWidth: 1
-      },
-          {
-              label : 'Mese precedente',
-                data: {{ data2.amounts2|safe }},
-                borderWidth: 1
-          }
-      ]
+<script>
+  var options = {
+    chart: {
+      height: 'auto',
+      type: 'bar',
     },
-    options: {
-        onClick:
-            function clickHandler (evt) {
-             // Get the selected chart element
-            const selectedElements = myChart3.getElementsAtEventForMode(evt, "nearest", { intersect: true });
-
-            // Get the selected chart element's data
-            /*const selectedDataset = selectedElements[0].dataset;
-            const selectedElementIndex = selectedElements[0].index;
-            const selectedElementLabel = selectedDataset.labels[selectedElementIndex];
-            const selectedElementValue = selectedDataset.data[selectedElementIndex];
-            const label = selectedDataset.label;*/
-
-            submit(selectedElements);
-            //openModal(selectedElements);
-
-
-
+    series: [{
+      name: 'Mese corrente',
+      data: {{ data.amounts|safe }}
+    },
+    {
+      name: 'Mese precedente',
+      data: {{ data2.amounts2|safe }}
+    }],
+    xaxis: {
+      categories: {{ data2.deal_users2|safe }},
+      labels: {
+        show: true,
+        style: {
+          fontSize: '12px',
         },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-
-
-
-function submit(selectedElements) {
-const selectedElement = selectedElements[0];
-const label = myChart3.data.labels[selectedElement.index];
-const dataset = myChart3.data.datasets[selectedElement.datasetIndex].data[selectedElement.index];
-const dataset_name = myChart3.data.datasets[selectedElement.datasetIndex].label;
-
-document.getElementById("submit-inp").value = label;
-//document.getElementById("frm").submit();
-
-  // Make AJAX request to server
-  $.ajax({
-    url: {% url 'get_full_data' %},
-    type: 'POST',
-    data: {
-      'name': label,
-      csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      tooltip: {
+        enabled: true,
+        offsetY: 8,
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          labels: {
+            rotate: -90,
+          },
+        },
+      }],
     },
-    success: function(response) {
-        console.log(response);
+  };
 
+  var chart = new ApexCharts(document.querySelector("#chart"), options);
 
-
-        openModal(response);
-
-    },
-  });
-}
+  chart.render();
+</script>

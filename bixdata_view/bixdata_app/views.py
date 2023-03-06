@@ -37,6 +37,9 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
     ]
 
+def get_test_apex(request):
+    return render(request, 'test_apex_charts.html')
+
 
 def get_test_query(request, name=None):
     with connection.cursor() as cursor1:
@@ -130,18 +133,18 @@ def get_test_query2(request):
                 query
             )
             rows = cursor2.fetchall()
-            effective_margins = [row[0] for row in rows]
+            amounts = [row[0] for row in rows]
             months = [row[1] for row in rows]
 
             months = months[1::]
-            effective_margins = effective_margins[1::]
+            amounts = amounts[1::]
 
-            for i in range(len(effective_margins)):
-                if effective_margins[i] == None:
-                    effective_margins[i] = 0
+            for i in range(len(amounts)):
+                if amounts[i] is None:
+                    amounts[i] = 0
 
             data = {
-                'effective_margins': effective_margins,
+                'amounts': amounts,
                 'months': months
             }
 

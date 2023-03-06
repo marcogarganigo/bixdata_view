@@ -1,226 +1,36 @@
-<!--ho tolto extend, loads ecc. per riuscire a visualizzarli sulla dashboard-->
-<!--
-    <div id="content_chart" style="height: 100%;width: 100%;overflow: scroll;">
-        <div>
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Chart colortheme
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" onclick="redTheme()" href="#">Red</a></li>
-                <li><a class="dropdown-item" onclick="blueTheme()" href="#">Blue</a></li>
-              </ul>
-            </div>
-
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Chart visual
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" onclick="dashed()">Dashed</a></li>
-                <li><a class="dropdown-item" onclick="filled()">Filled</a></li>
-                <li><a class="dropdown-item" onclick="line()">Normal non-filled</a></li>
-              </ul>
-
-            </div>
-            -->
-    <div id="content_chart" style="height: 100%;width: 100%;overflow: scroll;">
-        <div style="">
-            <div>
-                <canvas id="myChart2"></canvas>
-            </div>
-        </div>
-    </div>
-<!--
-        </div>
-    </div>
--->
-    <script>
-
-    //dashed = no fill
-    function dashed() {
-        const myChart2 = Chart.instances[0];
-        myChart2.data.datasets[0].borderDash = [5, 5];
-        myChart2.data.datasets[0].fill = false;
-        myChart2.update();
-    }
-
-    function filled() {
-        const myChart2 = Chart.instances[0];
-        myChart2.data.datasets[0].borderDash = [];
-        myChart2.data.datasets[0].fill = true;
-        myChart2.update();
-    }
-
-    function line() {
-        const myChart2 = Chart.instances[0];
-        myChart2.data.datasets[0].borderDash = [];
-        myChart2.data.datasets[0].fill = false;
-        myChart2.update();
-    }
-
-
-        Chart.defaults.backgroundColor = '#ffc4ca';
-        Chart.defaults.pointBackgroundColor = 'red';
-        Chart.defaults.pointBorderColor = '#fff';
-        Chart.defaults.pointHoverBackgroundColor = '#fff';
-        Chart.defaults.pointHoverBorderColor = 'red';
-
-    /*
-    if (localStorage.getItem('theme') === 'red') {
-        redTheme();
-    } else if (localStorage.getItem('theme') === 'blue') {
-        blueTheme();
-    }*/
-
- function redTheme() {
-        Chart.defaults.color = '#000000';
-        Chart.defaults.borderColor = '#000000';
-        Chart.defaults.backgroundColor = '#ffc4ca';
-        Chart.defaults.pointBackgroundColor = 'red';
-        Chart.defaults.pointBorderColor = '#fff';
-        Chart.defaults.pointHoverBackgroundColor = '#fff';
-        Chart.defaults.pointHoverBorderColor = 'red';
-
-        const myChart2 = Chart.instances[0];
-        myChart2.data.datasets[0].backgroundColor = '#ffb6b9';
-        myChart2.data.datasets[0].borderColor = '#e17055';
-        myChart2.update();
-        localStorage.setItem('theme', 'red');
-    }
-
-    function blueTheme() {
-        Chart.defaults.color = '#000000';
-        Chart.defaults.borderColor = '#000000';
-        Chart.defaults.backgroundColor = '#b3c6ff';
-        Chart.defaults.pointBackgroundColor = 'blue';
-        Chart.defaults.pointBorderColor = '#fff';
-        Chart.defaults.pointHoverBackgroundColor = '#fff';
-        Chart.defaults.pointHoverBorderColor = 'blue';
-
-        const myChart2 = Chart.instances[0];
-        myChart2.data.datasets[0].backgroundColor = '#a0c1ee';
-        myChart2.data.datasets[0].borderColor = '#4d73b3';
-        myChart2.update();
-        localStorage.setItem('theme', 'blue');
-    }
-    </script>
-
-
-    <script>
-     const ctx2 = document.getElementById('myChart2');
-
-const myChart2 = new Chart(ctx2, {
-    type: 'line',
-    data: {
-      labels: {{ data.months|safe }},
-      datasets: [{
-        label: 'Margine effettivo',
-        data: {{ data.effective_margins|safe }},
-        borderWidth: 1,
-        fill: true, // set fill property to true
-        backgroundColor: '#ffc4ca', // set fill color
-        borderColor: '#f35a67',
-        //pointBackgroundColor: 'red',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        //pointHoverBorderColor: 'red'
-      }]
-    },
-    options: {
-      onClick: function clickHandler (evt) {
-        const selectedElements = myChart2.getElementsAtEventForMode(evt, "nearest", { intersect: true });
-
-        submit(selectedElements)
-      },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-});
-
-
-  function submit(selectedElements) {
-    const selectedMonth = selectedElements[0];
-    const label = myChart2.data.labels[selectedMonth.index];
-
-    // AJAX request
-      $.ajax ({
-          url: {% url 'get_full_data2' %},
-        type: 'POST',
-        data: {
-          'date': label,
-          csrfmiddlewaretoken: '{{ csrf_token }}'
-        },
-        success: function(response) {
-
-
-
-            openModal(response);
-
-        },
-      })
-  }
-
-
-function openModal(response) {
-    var total = 0;
-    // get the table body
-    let tbody = document.getElementById("table-body");
-    // clear any existing rows
-    tbody.innerHTML = "";
-    // loop through the data and add a row for each item
-    for (let i = 0; i < response.dealname.length; i++) {
-        let row = document.createElement("tr");
-        let numberCell = document.createElement("td");
-        numberCell.innerText = i + 1;
-        row.appendChild(numberCell);
-        let dealnameCell = document.createElement("td");
-        dealnameCell.innerText = response.dealname[i]
-        row.appendChild(dealnameCell);
-        let effectiveMarginCell = document.createElement("td");
-        effectiveMarginCell.innerText = response.effectivemargin[i];
-        row.appendChild(effectiveMarginCell);
-        tbody.appendChild(row);
-
-
-    }
-    //set modal title
-    document.getElementById("exampleModalLabel").innerText = response.date + " reports"
-    // show the modal
-    $('#exampleModal').modal('show');
-}
-    </script>
-
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-          <div id="content">
-                <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Deal Name</th>
-                <th scope="col">Effective Margin</th>
-            </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-    </table>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
+<div id="chart2">
 </div>
 
+<script>
+    var options = {
+        chart: {
+            type: 'line',
+            height: 'auto', // auto adjusts height to fit mobile screens
+            toolbar: {
+                show: true, // enables the toolbar to zoom, pan, etc
+                tools: {
+                    download: false, // removes the download button from toolbar
+                }
+            }
+        },
+        series: [{
+            name: 'Margine effettivo',
+            data: {{ data.amounts|safe }}
+        }],
+        xaxis: {
+            categories: {{ data.months|safe }}
+        },
+        responsive: [{
+            breakpoint: 768, // this is the width at which the chart will become responsive
+            options: {
+                chart: {
+                    width: '100%' // set the chart width to 100% at this breakpoint
+                }
+            }
+        }]
+    }
 
+    var chart = new ApexCharts(document.querySelector("#chart2"), options);
+
+    chart.render();
+</script>

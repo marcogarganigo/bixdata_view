@@ -34,9 +34,6 @@ $(document).ready(function () {
     data: serialized_data,
     success: function (response) {
       // Clear the existing chart if it exists
-      if (window.myChart2) {
-        window.myChart2.destroy();
-      }
 
       $("#chart-2").html(response);
 
@@ -58,10 +55,6 @@ $(document).ready(function () {
     url: "{% url 'get_chart3' %}",
     data: serialized_data,
     success: function (response) {
-      // Clear the existing chart if it exists
-      if (window.myChart3) {
-        window.myChart3.destroy();
-      }
 
       $("#chart-3").html(response);
 

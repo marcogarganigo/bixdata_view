@@ -1,3 +1,4 @@
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
 $(document).ready(function () {
   var serialized_data = [];
@@ -8,11 +9,12 @@ $(document).ready(function () {
     url: "{% url 'test_query' %}",
     data: serialized_data,
     success: function (response) {
-
+      // Clear the existing chart if it exists
+      if (window.myChart) {
+        window.myChart.destroy();
+      }
 
       $("#chart-1").html(response);
-
-      const ctx = null;
 
       // Create the chart
 
@@ -32,12 +34,9 @@ $(document).ready(function () {
     url: "{% url 'test_query2' %}",
     data: serialized_data,
     success: function (response) {
-
-
+      // Clear the existing chart if it exists
 
       $("#chart-2").html(response);
-
-      const ctx2 = null;
 
       // Create the chart
 
@@ -57,10 +56,6 @@ $(document).ready(function () {
     url: "{% url 'get_chart3' %}",
     data: serialized_data,
     success: function (response) {
-      // Clear the existing chart if it exists
-      if (window.myChart3) {
-        window.myChart3.destroy();
-      }
 
       $("#chart-3").html(response);
 
@@ -72,7 +67,6 @@ $(document).ready(function () {
     }
   });
 });
-
 
 
 
