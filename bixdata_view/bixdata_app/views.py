@@ -143,9 +143,22 @@ def get_test_query2(request):
                 if amounts[i] is None:
                     amounts[i] = 0
 
+            with connection.cursor() as cursor3:
+                cursor3.execute(
+                    "SELECT query_conditions FROM sys_view WHERE id = 15"
+                )
+                query2 = cursor3.fetchone()[0]
+                with connection.cursor() as cursor4:
+                    cursor4.execute(
+                        query2
+                    )
+                    rows2 = cursor4.fetchall()
+                    totalnets = [row[0] for row in rows2]
+
             data = {
                 'amounts': amounts,
-                'months': months
+                'months': months,
+                'totalnets': totalnets
             }
 
     return render(request, 'other/test_query2.html', {'data': data}, print(data))

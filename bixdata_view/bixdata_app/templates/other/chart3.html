@@ -35,6 +35,13 @@
         },
       }],
     },
+        yaxis: {
+    labels: {
+      formatter: function(val) {
+        return Math.round(val);
+      }
+    }
+  }
   };
 
   var chart = new ApexCharts(document.querySelector("#chart"), options);
