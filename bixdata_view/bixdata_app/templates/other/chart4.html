@@ -44,7 +44,24 @@
     },
       title: {
         text: 'Fatturato per mese',
-      }
+      },
+       export: {
+           csv: {
+               filename: undefined,
+               columnDelimiter: ',',
+               headerCategory: 'category',
+               headerValue: 'value',
+               dateFormatter(timestamp) {
+                   return new Date(timestamp).toDateString()
+               }
+           },
+           svg: {
+               enabled: false,
+           },
+           png: {
+               filename: undefined,
+           },
+       },
   };
 
   var chart = new ApexCharts(document.querySelector("#chart4"), options);
