@@ -1,4 +1,4 @@
-<div id="chart1"></div>
+<div id="chart"></div>
 
 <script>
   var options = {
@@ -7,19 +7,15 @@
       type: 'bar',
     },
     series: [{
-      name: 'Venduto',
+      name: 'Mese corrente',
       data: {{ data.amounts|safe }}
     },
     {
-      name: 'Margine previsto',
-      data: {{ data.expected_margins|safe }}
-    },
-    {
-      name: 'Margine effettivo',
-      data: {{ data.effective_margins|safe }}
+      name: 'Mese precedente',
+      data: {{ data2.amounts2|safe }}
     }],
     xaxis: {
-      categories: {{ data.users|safe }},
+      categories: {{ data2.deal_users2|safe }},
       labels: {
         show: true,
         style: {
@@ -48,7 +44,7 @@
   }
   };
 
-  var chart = new ApexCharts(document.querySelector("#chart1"), options);
+  var chart = new ApexCharts(document.querySelector("#chart"), options);
 
   chart.render();
 </script>

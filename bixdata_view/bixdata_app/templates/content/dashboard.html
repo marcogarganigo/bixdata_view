@@ -9,9 +9,6 @@ $(document).ready(function () {
     data: serialized_data,
     success: function (response) {
       // Clear the existing chart if it exists
-      if (window.myChart) {
-        window.myChart.destroy();
-      }
 
       $("#chart-1").html(response);
 
