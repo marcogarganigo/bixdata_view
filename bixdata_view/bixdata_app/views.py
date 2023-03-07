@@ -242,11 +242,11 @@ def get_chart3(request):
 
         return render(request, 'other/chart3.html', {'data': data, 'data2': data2})
 
-    def get_chart3(request):
+def get_chart4(request):
         if request.method == 'POST':
             with connection.cursor() as cursor1:
                 cursor1.execute(
-                    "SELECT query_conditions FROM sys_view WHERE id = 13"
+                    "SELECT query_conditions FROM sys_view WHERE id = 16"
                 )
                 query = cursor1.fetchone()[0]
                 with connection.cursor() as cursor2:
@@ -255,33 +255,15 @@ def get_chart3(request):
                     )
                     rows = cursor2.fetchall()
 
-                    deal_users = [row[0] for row in rows]
-                    amounts = [row[1] for row in rows]
+                    months = [row[0] for row in rows]
+                    totalnets = [row[1] for row in rows]
 
                     data = {
-                        'deal_users': deal_users,
-                        'amounts': amounts,
+                        'months': months,
+                        'totalnets': totalnets,
                     }
-                    with connection.cursor() as cursor3:
-                        cursor3.execute(
-                            "SELECT query_conditions FROM sys_view WHERE id = 14"
-                        )
-                        query2 = cursor3.fetchone()[0]
-                        with connection.cursor() as cursor4:
-                            cursor4.execute(
-                                query2
-                            )
-                            rows2 = cursor4.fetchall()
 
-                            amounts2 = [row[1] for row in rows2]
-                            deal_users2 = [row[0] for row in rows2]
-
-                            data2 = {
-                                'amounts2': amounts2,
-                                'deal_users2': deal_users2
-                            }
-
-            return render(request, 'other/chart3.html', {'data': data, 'data2': data2})
+            return render(request, 'other/chart4.html', {'data': data})
 
 
 @login_required(login_url='/login/')

@@ -1,4 +1,4 @@
-<div id="chart"></div>
+<div id="chart4"></div>
 
 <script>
   var options = {
@@ -6,16 +6,13 @@
       height: 'auto',
       type: 'bar',
     },
-    series: [{
-      name: 'Mese corrente',
-      data: {{ data.amounts|safe }}
-    },
+    series: [
     {
-      name: 'Mese precedente',
-      data: {{ data2.amounts2|safe }}
+      name: 'Fatturato',
+      data: {{ data.totalnets|safe }}
     }],
     xaxis: {
-      categories: {{ data2.deal_users2|safe }},
+      categories: {{ data.months|safe }},
       labels: {
         show: true,
         style: {
@@ -35,16 +32,23 @@
         },
       }],
     },
-        yaxis: {
-    labels: {
-      formatter: function(val) {
-        return Math.round(val);
+    yaxis: {
+      labels: {
+        formatter: function(val) {
+          return Math.round(val);
+        }
       }
-    }
-  }
+    },
+    dataLabels: {
+      enabled: false
+    },
+      title: {
+        text: 'Fatturato per mese',
+      }
   };
 
-  var chart = new ApexCharts(document.querySelector("#chart"), options);
+  var chart = new ApexCharts(document.querySelector("#chart4"), options);
 
   chart.render();
 </script>
+

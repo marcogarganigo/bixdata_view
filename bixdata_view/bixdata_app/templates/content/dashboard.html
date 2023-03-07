@@ -65,6 +65,28 @@ $(document).ready(function () {
 });
 
 
+$(document).ready(function () {
+  var serialized_data = [];
+  $("#content-container").load('http://127.0.0.1:8000/loading/');
+  $.ajax({
+    type: "POST",
+    crossDomain: true,
+    url: "{% url 'get_chart4' %}",
+    data: serialized_data,
+    success: function (response) {
+
+      $("#chart-4").html(response);
+
+      // Create the chart
+
+    },
+    error: function () {
+      $("#chart-4").html(response);
+    }
+  });
+});
+
+
 
 
 </script>
@@ -94,8 +116,17 @@ $(document).ready(function () {
     <div id="chart-3" style="width: 100%; height: 100%">
     </div>
   </div>
-
 </div>
+
+        <div class="card no-padding" style="width: 30%; float: left; margin-right: 10px">
+  <div class="card-body">
+    <div id="chart-4" style="width: 100%; height: 100%">
+    </div>
+  </div>
+</div>
+
+
+
 </div>
 <style>
     .no-padding .card-body {

@@ -49,6 +49,7 @@ urlpatterns = [
     path('save_record_fields/', views.save_record_fields, name='save_record_fields'),
     path('get_chart3/', views.get_chart3, name='get_chart3'),
     path('test_apex/', views.get_test_apex, name='test_apex'),
+    path('get_chart4/', views.get_chart4, name='get_chart4'),
 
 
 ]
