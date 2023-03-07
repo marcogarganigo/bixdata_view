@@ -138,8 +138,7 @@ def get_test_query2(request):
             amounts = [row[0] for row in rows]
             months = [row[1] for row in rows]
 
-            months = months[1::]
-            amounts = amounts[1::]
+
 
             for i in range(len(amounts)):
                 if amounts[i] is None:
