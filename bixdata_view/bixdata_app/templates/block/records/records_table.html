@@ -66,23 +66,73 @@
                 {% endfor %}
             </tbody>
         </table>
-        <nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
-</nav>
+
+<div class="pagination" id="my-pagination">
+    <a href="#" class="first" data-action="first">&laquo;</a>
+    <a href="#" class="previous" data-action="previous">&lsaquo;</a>
+    <input type="text" readonly="readonly" data-max-page="10" />
+    <a href="#" class="next" data-action="next">&rsaquo;</a>
+    <a href="#" class="last" data-action="last">&raquo;</a>
+</div>
+
+<script>
+	$(function() {
+		$('#my-pagination').jqPagination({
+			current_page: 1,
+			max_page: 10,
+			paged: function(page) {
+                 $.ajax({
+                type: "POST",
+                crossDomain: true,
+                url: "{% url 'pagination' %}",
+                data: page,
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function (response) {
+                    console.log(response)
+                }
+            });
+			}
+		});
+	});
+</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jq-pagination/js/jquery.jqpagination.min.js"></script>
+
+    <style>
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.pagination a {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: 1px solid #dc3545; /* red border */
+  border-radius: 5px;
+  text-decoration: none;
+  color: #dc3545; /* red text color */
+}
+
+.pagination a:hover {
+  background-color: #e35f6c; /* red hover background color */
+  color: #fff; /* white hover text color */
+}
+
+.pagination .current {
+  background-color: #dc3545; /* red current page background color */
+  color: #fff; /* white current page text color */
+}
+
+
+    </style>
+
+
     </div>
 
 </div>
