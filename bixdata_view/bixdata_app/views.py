@@ -749,3 +749,9 @@ def save_record_fields(request):
 
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/set_record", data=post)
     return render(request, 'block/record/record_fields.html')
+
+@login_required(login_url='/login/')
+def pagination(request):
+    if request.method == 'POST':
+        page = request.POST.get('page')
+    return JsonResponse(page)
