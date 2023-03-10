@@ -22,11 +22,13 @@
     }
 
     
-    function newRecord() {
-        var tableid='{{tableid}}'
+    function newRecord(linkedtableid) {
+        var mastertableid='{{mastertableid}}'
+        $("#fullwidth_modal_newrecord").html("");
         $('#newRecordModal').modal('show');
         var serialized_data = [];
-        serialized_data.push({name: 'tableid',value: tableid});
+        serialized_data.push({name: 'mastertableid',value: mastertableid});
+        serialized_data.push({name: 'linkedtableid',value: linkedtableid});
         serialized_data.push({name: 'function',value: 'insert'});
         serialized_data.push({name: 'http_response',value: true});
         $.ajax({
@@ -56,7 +58,7 @@
     <div class="collapse" id="{{label.tablelinkid}}">
       <div class="card card-body">
         {{label.tablelinkid}}
-          <button class="btn btn-secondary d-flex justify-content-center align-items-center"  onclick="$('#newRecordModal').modal('show')" style="width: 5%;"><span class="material-symbols-outlined">add</span></button>
+          <button class="btn btn-secondary d-flex justify-content-center align-items-center"  onclick="newRecord('{{label.tablelinkid}}')" style="width: 5%;"><span class="material-symbols-outlined">add</span></button>
       </div>
     </div>
   {% endfor %}

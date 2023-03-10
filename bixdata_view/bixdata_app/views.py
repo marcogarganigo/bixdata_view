@@ -674,9 +674,13 @@ def get_block_record_fields(request):
     http_response = request.POST.get('http_response')
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
+    master_tableid = request.POST.get('master_tableid')
+    master_recordid = request.POST.get('master_recordid')
     post = {
         'tableid': tableid,
         'recordid': recordid,
+        'master_tableid':master_tableid,
+        'master_recordid':master_recordid
     }
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_fields", data=post)
     response_dict = json.loads(response.text)
@@ -684,6 +688,8 @@ def get_block_record_fields(request):
     context['function'] = 'edit'
     context['tableid'] = tableid
     context['recordid'] = recordid
+    context['master_tableid'] = master_tableid
+    context['master_recordid'] = master_recordid
     block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
     if (http_response):
         return HttpResponse(block_record_fields)
