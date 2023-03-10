@@ -703,6 +703,8 @@ def get_block_record_linked(request):
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_labels", data=post)
     response_dict = json.loads(response.text)
     context['labels'] = response_dict
+    context['master_tableid']=tableid
+    context['master_recordid']=recordid
     record_linked_labels = render_to_string('block/record/record_linked.html', context, request=request)
     return record_linked_labels
 
