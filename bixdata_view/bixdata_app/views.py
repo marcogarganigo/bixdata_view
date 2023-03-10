@@ -754,4 +754,7 @@ def save_record_fields(request):
 def pagination(request):
     if request.method == 'POST':
         page = request.POST.get('page')
+        offset = 50 * page
+        #"SELECT * FROM bixdata.user_invoice LIMIT 50 OFFSET %s;", [offset]
+
     return JsonResponse(page)

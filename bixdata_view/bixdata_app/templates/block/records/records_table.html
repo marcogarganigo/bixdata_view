@@ -1,11 +1,13 @@
 <style>
-    #results-body {
-        overflow-y: scroll;
-        max-height: 100%;
+
+    #block_records_table {
+        height: 100%;
+        width: 100%;
     }
 
     #results-head,
-    #results-body, #results-row {
+    #results-body,
+    #results-row {
         display: table;
         width: 100%;
         table-layout: fixed;
@@ -20,9 +22,28 @@
         height: 100%;
     }
 
+    #results-body {
+        overflow: auto;
+        max-height: calc(100% - 40px);
+        height: 100%;
+        width: 100%;
+        display: block;
+    }
+
+    #pagination-container {
+        height: 92%;
+    }
+
+        @media screen and (max-width: 1400px) {
+        #pagination-container {
+            height: 70%;
+        }
+    }
 
 
 </style>
+
+
 
 <script>
 
@@ -37,11 +58,12 @@
             }
           });
     }
-    
+
 </script>
 
+
 <div id="block_records_table" style="height: 100%;width: 100%;">
-    <div class="col s12 m6 l6" style="height: 100%; overflow-y:scroll;">
+    <div class="col s12 m6 l6" id="pagination-container">
         <table id="results-table">
             <thead id="results-head">
                 <tr id="results-row">
@@ -50,7 +72,7 @@
                             <th>{{column.desc}}</th>
                         {% endif %}
                     {% endfor %}
-                </tr>            
+                </tr>
             </thead id="results-head">
             <tbody id="results-body">
                 {% for record in records %}
@@ -66,6 +88,8 @@
                 {% endfor %}
             </tbody>
         </table>
+
+    </div>
 
 <div class="pagination" id="my-pagination">
     <a href="#" class="first" data-action="first">&laquo;</a>
@@ -85,7 +109,10 @@
                 type: "POST",
                 crossDomain: true,
                 url: "{% url 'pagination' %}",
-                data: page,
+                data: {
+                    'page': page,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
                 success: function (response) {
                     console.log(response)
                 },
@@ -120,7 +147,7 @@
 }
 
 .pagination a:hover {
-  background-color: #e35f6c; /* red hover background color */
+  background-color: #dc3545; /* red hover background color */
   color: #fff; /* white hover text color */
 }
 
@@ -132,7 +159,5 @@
 
     </style>
 
-
-    </div>
-
 </div>
+
