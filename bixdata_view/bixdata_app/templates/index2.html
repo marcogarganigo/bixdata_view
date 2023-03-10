@@ -34,6 +34,18 @@
 
 <body>
 
+<style>
+    html[data-topbar-color=dark] .navbar-custom {
+    /* background-color: #465870; */
+    background-image: linear-gradient(90deg, #074048 100%, #ede4e4 200%) !important;
+}
+
+    html[data-topbar-color=dark] .navbar-custom .nav-user {
+    background-image: linear-gradient(90deg, #074048 100%, #ede4e4 200%) !important;
+    border: 0px !important;
+}
+</style>
+
 
     <script type="text/javascript">
 
@@ -125,22 +137,14 @@
                     <!-- Logo light -->
                     <a href="{{ index2.html }}" class="logo-light">
                         <span class="logo-lg">
-                            <img src="{% static 'images/logo.png' %}" alt="logo" height="22">
+                            <img src="{% static 'images/logos/logo_bix_pulito.jpg' %}" alt="logo" height="22">
                         </span>
                         <span class="logo-sm">
-                            <img src="{% static 'images/logo-sm.png' %}" alt="small logo" height="22">
+                            <img src="{% static 'images/logos/logo_bix_pulito.jpg' %}" alt="small logo" height="22">
                         </span>
                     </a>
 
-                    <!-- Logo Dark -->
-                    <a href="{{ index2.html }}" class="logo-dark">
-                        <span class="logo-lg">
-                            <img src="{% static 'images/logo-dark.png' %}" alt="dark logo" height="22">
-                        </span>
-                        <span class="logo-sm">
-                            <img src="{% static 'images/logo-dark-sm.png' %}" alt="small logo" height="22">
-                        </span>
-                    </a>
+
                 </div>
 
                 <!-- Sidebar Menu Toggle Button -->
@@ -520,24 +524,6 @@
         <div class="leftside-menu">
 
             <!-- Logo Light -->
-            <a href="{{ index2.html }}" class="logo logo-light">
-                <span class="logo-lg">
-                    <img src="assets/images/swissbix.logo-removebg-preview.png" alt="logo" height="22">
-                </span>
-                <span class="logo-sm">
-                    <img src="assets/images/swissbix.logo-removebg-preview.png" alt="small logo" height="22">
-                </span>
-            </a>
-
-            <!-- Logo Dark -->
-            <a href="{{ index2.html }}" class="logo logo-dark">
-                <span class="logo-lg">
-                    <img src="assets/images/swissbix.logo-removebg-preview.png" alt="dark logo" height="22">
-                </span>
-                <span class="logo-sm">
-                    <img src="images/swissbix.logo-removebg-preview.png" alt="small logo" height="22">
-                </span>
-            </a>
 
             <!-- Sidebar Hover Menu Toggle Button -->
             <button type="button" class="bg-transparent button-sm-hover p-0" data-bs-toggle="tooltip"
