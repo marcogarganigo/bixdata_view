@@ -547,6 +547,26 @@
                         </li>
                         {% endfor %}
 
+                        <li class="side-nav-txt side-nav-item " onclick="testcalendar()">TestCalendar</li>
+
+                        <script>
+    function testcalendar() {
+        $.ajax({
+            url: "{% url 'testcalendar' %}",
+            type: "GET",
+            success: function (response) {
+                    $("#content_container").html(response);
+                    $('[data-toggle="tooltip"]').tooltip();
+                },
+                error: function (response) {
+                    $("#content_container").html(response);
+                }
+        });
+    }
+</script>
+
+
+
 
                         <!--- End Sidemenu -->
 

@@ -1,5 +1,4 @@
 <style>
-
     #block_records_table {
         height: 100%;
         width: 100%;
@@ -43,13 +42,7 @@
 
 </style>
 
-
-
 <script>
-
-
-    //alert('test');
-
     function modalShow() {
         $("#recordModal").load('http://127.0.0.1:8000/loading/');
         $("results-row").click(function(){
@@ -58,9 +51,7 @@
             }
           });
     }
-
 </script>
-
 
 <div id="block_records_table" style="height: 100%;width: 100%;">
     <div class="col s12 m6 l6" id="pagination-container">
@@ -88,7 +79,6 @@
                 {% endfor %}
             </tbody>
         </table>
-
     </div>
 
 <div class="pagination" id="my-pagination">
@@ -140,24 +130,20 @@
   display: inline-block;
   padding: 5px 10px;
   margin: 0 5px;
-  border: 1px solid #dc3545; /* red border */
+  border: 1px solid #dc3545;
   border-radius: 5px;
   text-decoration: none;
-  color: #dc3545; /* red text color */
+  color: #dc3545;
 }
 
 .pagination a:hover {
-  background-color: #dc3545; /* red hover background color */
-  color: #fff; /* white hover text color */
+  background-color: #dc3545;
+  color: #fff;
 }
 
 .pagination .current {
-  background-color: #dc3545; /* red current page background color */
-  color: #fff; /* white current page text color */
+  background-color: #dc3545;
+  color: #fff;
 }
-
-
     </style>
-
 </div>
-
