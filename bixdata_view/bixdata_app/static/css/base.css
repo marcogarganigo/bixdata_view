@@ -1,5 +1,4 @@
-@media screen and (max-width: 3440px) {
-    :root {
+ :root {
         --blue: #e74a3b;
         --indigo: #6610f2;
         --purple: #6f42c1;
@@ -586,7 +585,7 @@
     }
 
     html[aria-expanded=true] .side-nav-second-level {
-        background-image: linear-gradient(90deg, #074048 100%, #ede4e4 200%);
+            background-image: linear-gradient(90deg, #074048 100%, #ede4e4 200%);
     }
 
     html[data-sidenav-color=light][data-sidenav-size=condensed] .side-nav .side-nav-item:hover .side-nav-link {
@@ -600,6 +599,6 @@
     }
 
 
-}
+
 
 

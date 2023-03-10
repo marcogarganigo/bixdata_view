@@ -112,6 +112,21 @@
 
     </script>
 
+
+        <style>
+            @media screen and (max-width: 1366px) {
+                #logo-leftside {
+                    height: 13% !important;
+                }
+            }
+
+            @media screen and (max-width: 2500px ) and (min-width: 1367px) {
+                #logo-leftside {
+                    height: 7.5% !important;
+                }
+            }
+        </style>
+
     <div id="bixdata2" style="height: 100%;">
         <!-- ========== Topbar Start ========== -->
             <div class="navbar-custom topnav-navbar">
@@ -123,9 +138,13 @@
                         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ index.html }}">
 
                             <p class="shadow-sm p-0 mb-0 bg-white rounded"
-                                style="width: 50px; color: red; margin-right: 1px;"><b>BIX</b></p>
+                                style="width: 50px; color: red; margin-right: 1px;"> <span class="logo-sm">
+                            <img src="{% static 'images/logos/logo_bixdata.jpg' %}" alt="small logo" height="22">
+                        </span></p>
 
-                            <p class=" mb-0" style="width: 50px; color: white; margin-left: 0px;"><b>DATA</b></p>
+                            <p class=" mb-0" style="width: 50px; color: white; margin-left: 0px;"> <span class="logo-sm">
+                            <img src="{% static 'images/logos/logo_bixdata.jpg' %}" alt="small logo" height="22">
+                        </span></p>
                         </a>
 
                         <!-- Logo Dark -->
@@ -468,16 +487,15 @@
 
 
                 <!-- Logo Dark -->
-                <div id="logo-leftside" href="{{ index.html }}" class="logo logo-dark">
+                <div id="logo-leftside" href="{{ index.html }}" class="logo logo-dark" style="height: 6%">
                     <span class="logo-lg sidebar-brand d-flex align-items-center justify-content-center">
                         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ index.html }}">
 
 
-                            <p id="logo-leftside-bix" class="shadow-sm p-0 mb-0 bg-white rounded"
-                                style="width: 50px; color: red; margin-right: 3px; font-size: 20px;"><b>BIX</b></p>
 
-                            <p class=" mb-0" style="width: 50px; color: white; margin-top: 2px; font-size: 20px;">
-                                <b>DATA</b></p>
+                             <span id="logo-leftside-bix">
+                            <img src="{% static 'images/logos/logo_bixdata_ridotto.jpg' %}" alt="small logo" height="55" style="margin-top: 15%">
+                        </span>
                         </a>
                     </span>
 
@@ -485,13 +503,11 @@
                         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ index.html }}">
 
 
-                            <p id="logo-leftside-bix"
-                                style="width: 50px; color: red; margin-right: -30px; margin-top: 17px; font-size: 20px;">
-                                <b>B</b></p>
 
-                            <p class=" mb-0"
-                                style="width: 50px; color: white; margin-left: -5px; margin-top: 1px; font-size: 20px;">
-                                <b>D</b></p>
+
+                             <span id="logo-leftside-bix" style="margin-top: 30%">
+                            <img src="{% static 'images/logos/logo_bix_pulito.jpg' %}" alt="small logo" height="32">
+                            </span>
 
                         </a>
                     </span>
@@ -546,6 +562,40 @@
 
                         </li>
                         {% endfor %}
+
+                    <li class="side-nav-title side-nav-item">Tables</li>
+                        <li class="side-nav-item">
+                          <a data-bs-toggle="collapse" href="#sidebarcalendar" aria-expanded="false" aria-controls="sidebarcalendar" class="side-nav-link">
+                            <i class="uil-briefcase"></i>
+                            <span>TestCalendar</span>
+                            <span class="menu-arrow"></span>
+                          </a>
+                          <div class="collapse" id="sidebarcalendar">
+                            <ul class="side-nav-second-level">
+                              <li onclick="testcalendar()">
+                                <a href="#" class="side-nav-txt">testcalendar</a>
+                              </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <script>
+                        function testcalendar() {
+                            $.ajax({
+                                url: "{% url 'testcalendar' %}",
+                                type: "GET",
+                                success: function (response) {
+                                        $("#content_container").html(response);
+                                        $('[data-toggle="tooltip"]').tooltip();
+                                    },
+                                    error: function (response) {
+                                        $("#content_container").html(response);
+                                    }
+                            });
+                        }
+                        </script>
+
+
 
 
                         <!--- End Sidemenu -->

@@ -414,8 +414,6 @@ def get_render_login(request):
             else:
                 form.add_error(None, "Invalid username or password")"""
 
-            # request.session['message'] = 'Invalid username or password'
-
 
 
     else:
@@ -760,3 +758,7 @@ def pagination(request):
         #"SELECT * FROM bixdata.user_invoice LIMIT 50 OFFSET %s;", [offset]
 
     return JsonResponse(page)
+
+
+def get_test_calendar(request):
+    return render(request, 'other/testCalendar.html')
