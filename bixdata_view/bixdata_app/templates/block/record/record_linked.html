@@ -7,14 +7,15 @@
             collapse.classList.add('hide');
         }
         $.ajax({
-            url: "{% url 'get_linked' %}",
+            url: "{% url 'temp' %}",
             type: 'POST',
             data: {
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'name': label
             },
             success: function (response) {
-                console.log(response);
+              console.log(response);
+              $(collapse).find('.linked_container').html(response);
             }, error: function (response) {
                 console.log(response);
             }
@@ -22,13 +23,15 @@
     }
 
     
-    function newRecord(linkedtableid) {
-        var mastertableid='{{mastertableid}}'
+    function linked_newRecord(linkedtableid) {
+        var master_tableid='{{tableid}}'
+        var master_recordid='{{recordid}}'
         $("#fullwidth_modal_newrecord").html("");
         $('#newRecordModal').modal('show');
         var serialized_data = [];
-        serialized_data.push({name: 'mastertableid',value: mastertableid});
-        serialized_data.push({name: 'linkedtableid',value: linkedtableid});
+        serialized_data.push({name: 'master_tableid',value: master_tableid});
+        serialized_data.push({name: 'master_recordid',value: master_recordid});
+        serialized_data.push({name: 'tableid',value: linkedtableid});
         serialized_data.push({name: 'function',value: 'insert'});
         serialized_data.push({name: 'http_response',value: true});
         $.ajax({
@@ -50,7 +53,7 @@
 </script>
 
 <div id="block_record_linked">
-  {% for label in context.labels %}
+  {% for label in labels %}
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#{{label.tablelinkid}}" aria-expanded="false" aria-controls="{{label.tablelinkid}}" style="background-color: #074048; border: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse('{{label.tablelinkid}}', '{{ label.tablelinkid }}')">
       <span class="badge bg-danger" style="float: left; color: white; background-color: red; border-radius: 7.5%">5</span>
       {{label.tablelinkid}}
@@ -58,7 +61,10 @@
     <div class="collapse" id="{{label.tablelinkid}}">
       <div class="card card-body">
         {{label.tablelinkid}}
-          <button class="btn btn-secondary d-flex justify-content-center align-items-center"  onclick="newRecord('{{label.tablelinkid}}')" style="width: 5%;"><span class="material-symbols-outlined">add</span></button>
+        <div class="linked_container">
+          
+        </div>
+          <button class="btn btn-secondary d-flex justify-content-center align-items-center"  onclick="linked_newRecord('{{label.tablelinkid}}')" style="width: 5%;"><span class="material-symbols-outlined">add</span></button>
       </div>
     </div>
   {% endfor %}

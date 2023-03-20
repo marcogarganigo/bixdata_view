@@ -32,6 +32,7 @@ urlpatterns = [
     path('block_reload/', views.get_block_reload, name='block_reload'),
     path('block_record_card/', views.get_block_record_card, name='block_record_card'),
     path('test/', views.get_test, name='test'),
+    path('temp/', views.get_temp, name='temp'),
     path('dashboard/', views.get_render_content_dashboard, name='dashboard'),
     path('record_card_copy/', views.get_record_card_copy, name='record_card_copy'),
     path('record_card_delete/', views.get_record_card_delete, name='record_card_delete'),

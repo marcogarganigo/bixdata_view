@@ -263,6 +263,8 @@ def get_chart4(request):
                     }
 
             return render(request, 'other/chart4.html', {'data': data})
+        
+
 
 
 @login_required(login_url='/login/')
@@ -643,7 +645,7 @@ def get_block_record(request):
 def get_block_record_card(request):
     context = dict()
     context['block_record_badge'] = get_block_record_badge(request)
-    context['block_record_linked'] = get_block_record_linked_pytest(request)
+    context['block_record_linked'] = get_block_record_linked(request)
     # context['block_record_linked'] = get_block_record_linked(request)
     context['block_record_fields'] = get_block_record_fields(request)
     # returned = render_to_string('block/record/record_card.html', context, request=request)
@@ -683,6 +685,7 @@ def get_block_record_fields(request):
         'master_recordid':master_recordid
     }
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_fields", data=post)
+
     response_dict = json.loads(response.text)
     context['record_fields'] = response_dict
     context['function'] = 'edit'
@@ -698,7 +701,7 @@ def get_block_record_fields(request):
 
 
 @login_required(login_url='/login/')
-def get_block_record_linked(request):
+def get_block_record_linked_OLD(request):
     context = dict()
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
@@ -709,24 +712,26 @@ def get_block_record_linked(request):
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_labels", data=post)
     response_dict = json.loads(response.text)
     context['labels'] = response_dict
-    context['master_tableid']=tableid
-    context['master_recordid']=recordid
+    context['tableid']=tableid
+    context['recordid']=recordid
     record_linked_labels = render_to_string('block/record/record_linked.html', context, request=request)
     return record_linked_labels
 
 
 @login_required(login_url='/login/')
-def get_block_record_linked_pytest(request):
+def get_block_record_linked(request):
+    context = dict()
     tableid = request.POST.get('tableid')
-    print(tableid)
+    recordid = request.POST.get('recordid')
 
     with connection.cursor() as cursor:
         cursor.execute("SELECT tablelinkid FROM sys_table_link WHERE tableid = 'company'")
         rows = dictfetchall(cursor)
-        context = dict()
-        context['labels'] = rows
+    context['labels'] = rows
+    context['tableid']=tableid
+    context['recordid']=recordid
 
-    record_linked_labels = render_to_string('block/record/record_linked.html', {'context': context}, request=request)
+    record_linked_labels = render_to_string('block/record/record_linked.html', context, request=request)
     return record_linked_labels
 
 
@@ -768,3 +773,7 @@ def pagination(request):
 
 def get_test_calendar(request):
     return render(request, 'other/testCalendar.html')
+
+@login_required(login_url='/login/')
+def get_temp(request):
+    return HttpResponse('test')
