@@ -37,8 +37,11 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
     ]
 
-def get_test_apex(request):
-    return render(request, 'test_apex_charts.html')
+def get_test_autocomplete(request):
+    data = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
+    data = json.dumps(data)
+
+    return render(request, 'test_autocomplete.html' , {'data': data})
 
 
 def get_test_query(request, name=None):
