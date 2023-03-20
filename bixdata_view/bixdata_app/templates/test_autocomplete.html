@@ -14,28 +14,39 @@ https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css
   <label for="birds">Birds: </label>
   <input id="birds">
 </div>
-
 <div class="ui-widget" style="margin-top:2em; font-family:Arial">
   Result:
   <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
 </div>
-
-  <script>
-  $( function() {
+<script>
+  $(function() {
     function log( message ) {
       $( "<div>" ).text( message ).prependTo( "#log" );
       $( "#log" ).scrollTop( 0 );
     }
-
     $( "#birds" ).autocomplete({
-      source: {{ data }},
+      source: function(request, response) {
+        $.ajax({
+          url: "{% url 'get_autocomplete_data' %}",
+          data: {
+             'term': request.term,
+             'tableid': 'task',
+             'mastertableid': 'company'
+          },
+          success: function(data) {
+            response(data.data);
+          }
+        });
+      },
       minLength: 2,
       select: function( event, ui ) {
-        log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+        log( "Selected: " + ui.item.value );
       }
     });
-  } );
-  </script>
+  });
+</script>
+
+
 
 <style>
   .ui-autocomplete-loading {

@@ -38,10 +38,17 @@ def dictfetchall(cursor):
     ]
 
 def get_test_autocomplete(request):
-    data = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange']
-    data = json.dumps(data)
+    return render(request, 'test_autocomplete.html')
 
-    return render(request, 'test_autocomplete.html' , {'data': data})
+def get_autocomplete_data(request):
+    response = requests.get(
+        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
+    menu_list = json.loads(response.text)
+
+    query = request.GET.get('query', '')
+    data = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', '']
+    data = [item for item in data if query.lower() in item.lower()]
+    return JsonResponse({'data': data})
 
 
 def get_test_query(request, name=None):

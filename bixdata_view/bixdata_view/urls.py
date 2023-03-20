@@ -50,6 +50,7 @@ urlpatterns = [
     path('save_record_fields/', views.save_record_fields, name='save_record_fields'),
     path('get_chart3/', views.get_chart3, name='get_chart3'),
     path('test_autocomplete/', views.get_test_autocomplete, name='test_autocomplete'),
+    path('autocomplete/', views.get_autocomplete_data, name='get_autocomplete_data'),
     path('get_chart4/', views.get_chart4, name='get_chart4'),
     path('pagination/', views.pagination, name='pagination'),
     path('testcalendar/', views.get_test_calendar, name='testcalendar'),
