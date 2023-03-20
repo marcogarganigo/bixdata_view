@@ -47,8 +47,9 @@ def get_autocomplete_data(request):
 
     query = request.GET.get('term', '')
     data = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', '']
-    data = [item for item in data if query.lower() in item.lower()]
+    data = [{"id": str(i), "value": item} for i, item in enumerate(data) if query.lower() in item.lower()]
     return JsonResponse({'data': data})
+
 
 
 def get_test_query(request, name=None):

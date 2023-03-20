@@ -40,11 +40,14 @@ https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css
       },
       minLength: 2,
       select: function( event, ui ) {
-        log( "Selected: " + ui.item.value );
+        console.log( "Selected: " + ui.item.id );
+        document.getElementById('hidden-input').value = ui.item.id;
       }
     });
   });
 </script>
+
+<input type="hidden" id="hidden-input">
 
 
 
@@ -81,6 +84,7 @@ https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css
 }
 
 /* Style for the result div */
+
 #log {
   padding: 0.5em;
   margin-top: 0.5em;
@@ -91,3 +95,47 @@ https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css
 }
 
   </style>
+
+
+<script>
+  $( function() {
+    var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp",
+      "BASIC",
+      "C",
+      "C++",
+      "Clojure",
+      "COBOL",
+      "ColdFusion",
+      "Erlang",
+      "Fortran",
+      "Groovy",
+      "Haskell",
+      "Java",
+      "JavaScript",
+      "Lisp",
+      "Perl",
+      "PHP",
+      "Python",
+      "Ruby",
+      "Scala",
+      "Scheme"
+    ];
+    $( "#tags" ).autocomplete({
+      source: availableTags
+    });
+
+    // Add click event listener to the input field
+    $( "#tags" ).click(function() {
+      // Trigger the search event to show the dropdown menu
+      $(this).autocomplete("search", "");
+    });
+  } );
+  </script>
+
+<div class="ui-widget">
+  <label for="tags">Tags: </label>
+  <input id="tags">
+</div>
