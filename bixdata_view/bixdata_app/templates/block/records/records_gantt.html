@@ -3,11 +3,14 @@
     //alert si apre con il doppio click sulla task
         $("#content_records_gantt").ready(function() {
 
+            var today = new Date();
+
+
 
             $(function(){
                 var tasks = '{{records_json|safe}}';
                 tasks=jQuery.parseJSON(tasks);
-                               
+
                 // Get the Gantt task elements
                 var gantt = new Gantt('#tasks-gantt',tasks, {
                     //Add click event listener to tasks
@@ -64,5 +67,5 @@
 
 
 
-    
-    
+
+
