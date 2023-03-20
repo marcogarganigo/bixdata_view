@@ -34,6 +34,7 @@ https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css
              'mastertableid': 'company'
           },
           success: function(data) {
+            console.info(data)
             response(data.data);
           }
         });

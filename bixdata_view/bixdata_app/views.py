@@ -41,14 +41,20 @@ def get_test_autocomplete(request):
     return render(request, 'test_autocomplete.html')
 
 def get_autocomplete_data(request):
-    response = requests.get(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
-    menu_list = json.loads(response.text)
+    term = request.GET.get('term')
+    tableid = request.GET.get('tableid')
+    mastertableid = request.GET.get('mastertableid')
+    post = {
+        'tableid': tableid,
+        'mastertableid': mastertableid,
+        'term':term
+    }
+    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_autocomplete_data", data=post)
+    response = json.loads(response.text)
 
-    query = request.GET.get('term', '')
     data = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', '']
-    data = [{"id": str(i), "value": item} for i, item in enumerate(data) if query.lower() in item.lower()]
-    return JsonResponse({'data': data})
+    data = [{"id": str(i), "value": item} for i, item in enumerate(data) if term.lower() in item.lower()]
+    return JsonResponse({'data': response})
 
 
 
