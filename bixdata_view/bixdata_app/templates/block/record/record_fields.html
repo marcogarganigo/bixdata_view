@@ -50,7 +50,40 @@
             </div>
             {% endif %}
             {% if field.fieldtypeid == 'linkedmaster' %}
-            DA FARE
+              <input id="{{ fieldid }}">
+            </div>
+
+                <input type="hidden" id="hidden-input">
+
+                <script>
+  $(function() {
+    function log( message ) {
+      $( "<div>" ).text( message ).prependTo( "#log" );
+      $( "#log" ).scrollTop( 0 );
+    }
+    $( "#{{ fieldid }}" ).autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: "{% url 'get_autocomplete_data' %}",
+          data: {
+             'term': request.term,
+             'tableid': 'task',
+             'mastertableid': 'company'
+          },
+          success: function(data) {
+            console.info(data)
+            response(data.data);
+          }
+        });
+      },
+      minLength: 2,
+      select: function( event, ui ) {
+        console.log( "Selected: " + ui.item.id );
+        document.getElementById('hidden-input').value = ui.item.id;
+      }
+    });
+  });
+</script>
             {% endif %}
 
         </div>
@@ -124,6 +157,20 @@ function save_record() {
 
 
 </script>
+
+
+<style>
+    ul.ui-autocomplete {
+    z-index: 1100;
+}
+</style>
+
+
+
+
+
+
+
 
 
 
