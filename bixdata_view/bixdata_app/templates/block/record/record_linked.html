@@ -1,5 +1,6 @@
 <script>
     function triggerCollapse(el, id, label) {
+      var collapse = document.getElementById(id);
       if ($(el).attr('aria-expanded') == 'false') {
           $(el).css('background-color', '#e1dfdf');
           $(el).css('color', 'black');
