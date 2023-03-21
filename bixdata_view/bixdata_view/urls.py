@@ -54,6 +54,7 @@ urlpatterns = [
     path('get_chart4/', views.get_chart4, name='get_chart4'),
     path('pagination/', views.pagination, name='pagination'),
     path('testcalendar/', views.get_test_calendar, name='testcalendar'),
+    path('get_records_linked/', views.get_records_linked, name='get_records_linked'),
 
 
 ]

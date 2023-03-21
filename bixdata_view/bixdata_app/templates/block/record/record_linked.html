@@ -7,7 +7,7 @@
             collapse.classList.add('hide');
         }
         $.ajax({
-            url: "{% url 'temp' %}",
+            url: "{% url 'get_records_linked' %}",
             type: 'POST',
             data: {
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
@@ -65,10 +65,9 @@
           
         </div>
           <button class="btn btn-secondary d-flex justify-content-center align-items-center"  onclick="linked_newRecord('{{label.tablelinkid}}')" style="width: 5%;"><span class="material-symbols-outlined">add</span></button>
+
       </div>
     </div>
   {% endfor %}
 </div>
-
-
 
