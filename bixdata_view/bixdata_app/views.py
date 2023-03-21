@@ -466,9 +466,11 @@ def get_block_records_table(request):
     master_recordid=request.POST.get('master_recordid')
     searchTerm = request.POST.get('searchTerm')
     viewid = request.POST.get('viewid')
-    table_options='100%';
+    table_type='standard'
+    table_height='100%';
     if master_tableid:
-        table_options='500px'
+        table_height='500px'
+        table_type='linked'
 
     post = {
         'tableid': tableid,
@@ -486,7 +488,8 @@ def get_block_records_table(request):
         'records': records,
         'columns': columns,
         'tableid': tableid,
-        'table_options':table_options
+        'table_height':table_height,
+        'table_type':table_type
     }
 
     for records_index, record in enumerate(records):
