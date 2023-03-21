@@ -64,7 +64,7 @@
 
 <div id="block_record_linked">
   {% for label in labels %}
-  <button class="btn btn-primary" id="top-label" type="button" data-toggle="collapse" data-target="#{{label.tablelinkid}}" aria-expanded="false" aria-controls="{{label.tablelinkid}}" style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse('{{label.tablelinkid}}', '{{ label.tablelinkid }}">
+  <button class="btn btn-primary" id="top-label" type="button" data-toggle="collapse" data-target="#{{label.tablelinkid}}" aria-expanded="false" aria-controls="{{label.tablelinkid}}" style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse('{{label.tablelinkid}}', '{{ label.tablelinkid }}')">
     <span class="badge bg-danger" style="float: left; color: #d9d4d4; background-color: red; border-radius: 7.5%; margin-right: 10px">5</span>
     {{label.tablelinkid}}
   </button>
