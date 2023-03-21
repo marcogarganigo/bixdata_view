@@ -328,6 +328,13 @@ def get_content_records(request):
     # return render(request, 'content/records.html', context)
 
 
+def get_records_linked(request):
+    context = dict()
+    records_table = get_block_records_table(request);
+    context['records_table'] = records_table
+    return render(request, 'content/records_linked.html', context)
+
+
 @login_required(login_url='/login/')
 def get_render_content_chart(request):
     with connection.cursor() as cursor:
