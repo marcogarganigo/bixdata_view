@@ -1,14 +1,12 @@
 <script>
     function triggerCollapse(el, id, label) {
-      alert('test');
-        var collapse = document.getElementById(id);
-        if (collapse.classList.contains('show')) {
-            collapse.classList.remove('hide');
-            collapse.classList.remove('clicked');
-        } else {
-            collapse.classList.add('hide');
-            collapse.classList.add('clicked');
-        }
+      if ($(el).attr('aria-expanded') == 'false') {
+          $(el).css('background-color', '#e1dfdf');
+          $(el).css('color', 'black');
+      } else {
+            $(el).css('background-color', 'whitesmoke');
+            $(el).css('color', '#074048');
+      }
         $.ajax({
             url: "{% url 'get_records_linked' %}",
             type: 'POST',
