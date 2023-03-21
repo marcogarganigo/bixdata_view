@@ -761,7 +761,7 @@ def get_block_record_linked(request):
     recordid = request.POST.get('recordid')
 
     with connection.cursor() as cursor:
-        cursor.execute("SELECT tablelinkid FROM sys_table_link WHERE tableid = 'project'")
+        cursor.execute("SELECT tablelinkid FROM sys_table_link WHERE tableid = '"+tableid+"'")
         rows = dictfetchall(cursor)
     context['labels'] = rows
     context['tableid']=tableid
