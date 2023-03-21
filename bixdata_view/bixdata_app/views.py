@@ -332,7 +332,7 @@ def get_records_linked(request):
     context = dict()
     records_table = get_block_records_table(request);
     context['records_table'] = records_table
-    return render(request, 'content/records_linked.html', context)
+    return HttpResponse(records_table)
 
 
 @login_required(login_url='/login/')
@@ -462,12 +462,20 @@ def get_render_logout(request):
 @login_required(login_url='/login/')
 def get_block_records_table(request):
     tableid = request.POST.get('tableid')
+    master_tableid=request.POST.get('master_tableid')
+    master_recordid=request.POST.get('master_recordid')
     searchTerm = request.POST.get('searchTerm')
     viewid = request.POST.get('viewid')
+    table_options='100%';
+    if master_tableid:
+        table_options='500px'
+
     post = {
         'tableid': tableid,
         'searchTerm': searchTerm,
         'viewid': viewid,
+        'master_tableid': master_tableid,
+        'master_recordid': master_recordid,
     }
     response = requests.post(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
@@ -478,6 +486,7 @@ def get_block_records_table(request):
         'records': records,
         'columns': columns,
         'tableid': tableid,
+        'table_options':table_options
     }
 
     for records_index, record in enumerate(records):

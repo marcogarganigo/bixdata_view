@@ -11,7 +11,9 @@
             type: 'POST',
             data: {
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
-                'name': label
+                'tableid': label,
+                'master_tableid': '{{tableid}}',
+                'master_recordid': '{{recordid}}'
             },
             success: function (response) {
               console.log(response);
