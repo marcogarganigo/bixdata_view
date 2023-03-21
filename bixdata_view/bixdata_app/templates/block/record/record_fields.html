@@ -77,7 +77,7 @@
           url: "{% url 'get_autocomplete_data' %}",
           data: {
              'term': request.term,
-             'tableid': 'task',
+             'tableid': '{{tableid}}',
              'mastertableid': 'company'
           },
           success: function(data) {
