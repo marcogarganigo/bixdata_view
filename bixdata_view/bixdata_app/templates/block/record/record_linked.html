@@ -1,11 +1,12 @@
 <script>
     function triggerCollapse(id, label) {
-        document.getElementById("top-label").style.backgroundColor = "red";
         var collapse = document.getElementById(id);
         if (collapse.classList.contains('show')) {
             collapse.classList.remove('hide');
+            collapse.classList.remove('clicked');
         } else {
             collapse.classList.add('hide');
+            collapse.classList.add('clicked');
         }
         $.ajax({
             url: "{% url 'get_records_linked' %}",
