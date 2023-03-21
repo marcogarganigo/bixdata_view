@@ -15,7 +15,11 @@
                 {% if field.lookuptableid  %}
             <div class="input-group mb-3">
               <select id="{{ fieldid }}" name="{{ fieldname }}" class="form-select">
-                <option value="1">{{ field.value }}</option>
+              {% if field.lookupitems %}
+                  {% for item in field.lookupitems %}
+                <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                    {% endfor %}
+                  {% endif %}
               </select>
             </div>
             {% else %}
