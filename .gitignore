@@ -1,0 +1,21 @@
+# Python compiled files
+*.pyc
+
+# Django-generated files
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+
+# Database files
+*.sqlite3
+
+# Media files
+/media/
+
+# Static files
+/staticfiles/
+
+# Secret keys
+secret_key.txt
