@@ -489,17 +489,18 @@ def get_block_records_table(request):
         'columns': columns,
         'tableid': tableid,
         'table_height':table_height,
-        'table_type':table_type
+        'table_type':table_type,
     }
 
     for records_index, record in enumerate(records):
         for record_index, value in enumerate(record):
-            if record_index == 4:
-                # record[index]=split(value)
+            if isinstance(value, str):
                 value = value.split('|:|')
                 record[record_index] = value[0]
+                other_values = value[1:]  # Save other split values in a new list
             else:
                 record[record_index] = value
+
         records[records_index] = record
 
     records_table = render_to_string('block/records/records_table.html', context, request=request)

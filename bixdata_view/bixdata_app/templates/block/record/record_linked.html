@@ -18,10 +18,8 @@
                 'master_recordid': '{{recordid}}'
             },
             success: function (response) {
-              console.log(response);
               $(collapse).find('.linked_container').html(response);
             }, error: function (response) {
-                console.log(response);
             }
         });
     }
@@ -69,7 +67,7 @@
     <span class="badge bg-danger" style="float: left; color: #d9d4d4; background-color: red; border-radius: 7.5%; margin-right: 10px">5</span>
     {{label.tablelinkid}}
   </button>
-  <div class="collapse" id="{{label.tablelinkid}}">
+  <div class="collapse" id="{{label.tablelinkid}}" style="margin-top: 10px">
     <div class="card card-body">
       {{label.tablelinkid}}
       <div class="linked_container">

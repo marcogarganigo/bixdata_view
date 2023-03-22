@@ -249,7 +249,7 @@
 
 
 
-    function open_record(tableid,recordid) {
+    function open_record(el,tableid,recordid) {
         var serialized_data = [];
         serialized_data.push({name: 'tableid',value: tableid});
         serialized_data.push({name: 'recordid',value: recordid});
@@ -264,14 +264,27 @@
             url: "{% url 'block_record_card' %}",
             data: serialized_data,
             success: function(response) {
-                if (screen.width > min_width) {
-                    $("#block-record-card-container").html(response);
+                //if ($(el.closest('table')).attr('data-type') === 'linked') {
+                //if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                    console.log($(el.closest('#block_records_table')));
+                    console.log('ora dovrebbe apparire nel modal')
+                    $("#linked-table-modal").html(response);
+                    $("#linked-table-modal").modal("show");
+                    $('.modal-backdrop').hide()
+                    console.log('fatto')
                 } else {
-                    $("#fullwidth_modal").html(response);
+                    if (screen.width > min_width) {
+                        console.log($(el.closest('#block_records_table')));
+                        $("#block-record-card-container").html(response);
+                    } else {
+                        $("#fullwidth_modal").html(response);
+                    }
                 }
             },
-            error: function() {
+            error: function(response) {
                 $("#bixdata_recordcard_container").html(response);
+                console.log('erore')
             }
         });
 
@@ -290,6 +303,10 @@
 
     function closeNewRecordModal() {
         $("#newRecordModal").modal("hide");
+    }
+
+    function closeLinkedTableModal() {
+        $("#linked-table-modal").modal("hide");
     }
 
     function open_kanban() {
@@ -340,6 +357,20 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade shadow-lg" id="linked-table-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 20%; height: 60%; margin-left: 47.5%">
+        <div class="modal-dialog" style="">
+            <div class="modal-content" style="">
+                <div class="modal-body" style="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
 <div id="content-records"  style="height: 100%">
     <div class="row" style="width: 100%; height: 99%; margin-top: 1%">

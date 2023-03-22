@@ -19,6 +19,7 @@
 
     function closeModal() {
         $("#recordModal").modal("hide");
+        //$("#linked-table-modal").modal("hide");
     }
 
     //appena la card carica aprire collegato di default
@@ -122,6 +123,14 @@
                 alert('pin')
             }
         });
+    }
+
+    function backdropHide() {
+        if($('.modal-backdrop').attr('style') === 'hide'){
+            $('.modal-backdrop').fadeIn(500);
+        } else {
+            $('.modal-backdrop').fadeOut(500);
+        }
     }
 
     

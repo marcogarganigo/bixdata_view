@@ -360,6 +360,7 @@ const min_width = 1280;
             url: "{% url 'block_record_card' %}",
             data: serialized_data,
             success: function(response) {
+                if ($('block_records_table').attr(type))
                 if (screen.width > min_width) {
                     $("#block-record-card-container").html(response);
                 } else {
@@ -377,9 +378,11 @@ const min_width = 1280;
         if (screen.width > min_width) {
             $(vrbl).closest("#RecordCard").slideToggle(200, function() {
                 $('#bixdata_recordcard_container').html('');
+                $("#linked-table-modal").modal("hide");
             });
         } else {
             $("#recordModal").modal("hide");
+            $("#linked-table-modal").modal("hide");
 
     }
 }

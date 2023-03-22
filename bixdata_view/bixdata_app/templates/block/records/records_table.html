@@ -44,10 +44,13 @@
 
 {% if table_type == 'linked' %}
   <style>
-    .linked_container #block_records_table {
-        height: 100%;
-        width: 100%;
+
+   .linked_container #block_records_table {
+      border-collapse: collapse;
+      width: 100%;
+       height: 500px !important;
     }
+
   </style>
   <script>
 
@@ -72,7 +75,7 @@
     }
 </script>
 
-<div id="block_records_table" style="height: {{table_height}};width: 100%;">
+<div id="block_records_table" style="width: 100%;" data-type="{{ table_type }}">
     
     <div class="col s12 m6 l6" id="pagination-container">
         <table id="results-table">
@@ -89,8 +92,9 @@
                 {% for record in records %}
                     <tr id="results-row">
                         {% for column_value in record %}
+
                             {% if forloop.counter0 > 2 %}
-                                <td onclick="open_record('{{tableid}}','{{record.0}}')">
+                                <td onclick="open_record(this,'{{tableid}}','{{record.0}}')">
                                     {{column_value}}
                                 </td>
                             {% endif %}
