@@ -267,15 +267,12 @@
                 //if ($(el.closest('table')).attr('data-type') === 'linked') {
                 //if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
                 if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
-                    console.log($(el.closest('#block_records_table')));
-                    console.log('ora dovrebbe apparire nel modal')
                     $("#linked-table-modal").html(response);
                     $("#linked-table-modal").modal("show");
-                    $('.modal-backdrop').hide()
-                    console.log('fatto')
+                    //$('.modal-backdrop').hide()
                 } else {
                     if (screen.width > min_width) {
-                        console.log($(el.closest('#block_records_table')));
+                        //console.log($(el.closest('#block_records_table')));
                         $("#block-record-card-container").html(response);
                     } else {
                         $("#fullwidth_modal").html(response);
@@ -284,30 +281,28 @@
             },
             error: function(response) {
                 $("#bixdata_recordcard_container").html(response);
-                console.log('erore')
             }
         });
 
     }
-
     function closeCard(vrbl) {
+        console.log('chiudendo records')
+        //$("#linked-table-modal").modal("hide");
+        //$(vrbl).closest("#linked-table-modal").modal("hide");
         if (screen.width > min_width) {
             $(vrbl).closest("#RecordCard").slideToggle(200, function() {
                 $('#bixdata_recordcard_container').html('');
             });
         } else {
             $("#recordModal").modal("hide");
+
         
     }
 }
-
     function closeNewRecordModal() {
         $("#newRecordModal").modal("hide");
     }
 
-    function closeLinkedTableModal() {
-        $("#linked-table-modal").modal("hide");
-    }
 
     function open_kanban() {
         var serialized_data = [];
@@ -359,15 +354,18 @@
     </div>
 
 
-    <div class="modal fade shadow-lg" id="linked-table-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 20%; height: 60%; margin-left: 47.5%">
-        <div class="modal-dialog" style="">
-            <div class="modal-content" style="">
-                <div class="modal-body" style="">
+     <div class="modal fade" id="linked-table-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%;">
+        <div class="modal-dialog modal-xl" style="width: 100%;">
+            <div class="modal-content" style="width: 100%">
+                <div class="modal-body" style="width: 100%">
+                    <div id="fullwidth_modal" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
 
 
 

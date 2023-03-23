@@ -484,12 +484,14 @@ def get_block_records_table(request):
     response_dict = json.loads(response.text)
     columns = response_dict['columns']
     records = response_dict['records']
+    other_values = dict()
     context = {
         'records': records,
         'columns': columns,
         'tableid': tableid,
         'table_height':table_height,
         'table_type':table_type,
+        'other_values': other_values
     }
 
     for records_index, record in enumerate(records):

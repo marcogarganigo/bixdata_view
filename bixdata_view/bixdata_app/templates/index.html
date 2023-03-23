@@ -33,7 +33,7 @@
             getDashboard();
 
             $("#toggle-menu").click(function () {
-                //$("#content-container").load('http://127.0.0.1:8000/loading/');
+                //$("#content_container").load('http://127.0.0.1:8000/loading/');
                 var current_sidenav_size = $("html").attr("data-sidenav-size");
                 if (current_sidenav_size == 'default') {
                     $("html").attr("data-sidenav-size", "condensed");
@@ -50,7 +50,7 @@
 
         function getContentRecords(tableid) {
             var serialized_data = [];
-            $("#content-container").load('http://127.0.0.1:8000/loading/');
+            $("#content_container").load('http://127.0.0.1:8000/loading/');
             serialized_data.push({ name: 'tableid', value: tableid });
             serialized_data.push({ name: 'searchTerm', value: '' });
             $.ajax({
@@ -77,12 +77,12 @@
                 url: "{% url 'charts_view' %}",
                 data: serialized_data,
                 success: function (response) {
-                    $("#content-container").load('http://127.0.0.1:8000/loading/');
+                    $("#content_container").load('http://127.0.0.1:8000/loading/');
                     $("#content_container").html(response);
                     $('[data-toggle="tooltip"]').tooltip();
                 },
                 error: function () {
-                    $("#content-container").load('http://127.0.0.1:8000/loading/');
+                    $("#content_container").load('http://127.0.0.1:8000/loading/');
                     $("#content_container") .html(response);
                 }
             });
@@ -91,7 +91,7 @@
         function getDashboard()
         {
             var serialized_data = [];
-            $("#content-container").load('http://127.0.0.1:8000/loading/');
+            $("#content_container").load('http://127.0.0.1:8000/loading/');
             $.ajax({
                 type: "POST",
                 crossDomain: true,
@@ -540,6 +540,27 @@
                             </div>
                         </li>
 
+                        <script>
+                          function setColor(el) {
+                            var els = document.querySelectorAll('.side-nav-txt');
+                            els.forEach(function(el) {
+                              el.classList.remove('active');
+                              el.style.color = '#d3cfcf';
+                            });
+                            el.classList.add('active');
+                            el.style.color = 'red';
+                          }
+
+                          var els = document.querySelectorAll('.side-nav-txt');
+                          els.forEach(function(el) {
+                            el.addEventListener('click', function() {
+                              setColor(el);
+                            });
+                          });
+                        </script>
+
+
+
 
 
                         <li class="side-nav-title side-nav-item">Tables</li>
@@ -554,7 +575,7 @@
                             <ul class="side-nav-second-level">
                               {% for value in menu_list_value %}
                               <li onclick="getContentRecords('{{value.id}}')">
-                                <a href="#" class="side-nav-txt" onclick="document.documentElement.style.color = 'red'">{{value.id}}</a>
+                                <a href="#" class="side-nav-txt" onclick="setColor(this)">{{value.id}}</a>
                               </li>
                               {% endfor %}
                                 </ul>

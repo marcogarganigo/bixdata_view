@@ -373,20 +373,20 @@ const min_width = 1280;
         });
 
     }
-
+/*
     function closeCard(vrbl) {
+        console.log('chiudendo base')
+        $("#linked-table-modal").modal("hide");
         if (screen.width > min_width) {
             $(vrbl).closest("#RecordCard").slideToggle(200, function() {
                 $('#bixdata_recordcard_container').html('');
-                $("#linked-table-modal").modal("hide");
             });
         } else {
             $("#recordModal").modal("hide");
-            $("#linked-table-modal").modal("hide");
 
     }
 }
-
+*/
     function closeNewRecordModal() {
         $("#newRecordModal").modal("hide");
     }
