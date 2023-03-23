@@ -92,12 +92,10 @@
                 {% for record in records %}
                     <tr id="results-row">
                         {% for column_value in record %}
+
                             {% if forloop.counter0 > 2 %}
                                 <td onclick="open_record(this,'{{tableid}}','{{record.0}}')">
                                     {{column_value}}
-                                    {% for key,value in other_values.items %}
-                                    <p id="other-values">{{ value }}</p>
-                                    {% endfor %}
                                 </td>
                             {% endif %}
                         {% endfor %}

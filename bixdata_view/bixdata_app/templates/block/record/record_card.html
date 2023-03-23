@@ -125,7 +125,15 @@
         });
     }
 
-    
+    function backdropHide() {
+        if($('.modal-backdrop').attr('style') === 'hide'){
+            $('.modal-backdrop').fadeIn(500);
+        } else {
+            $('.modal-backdrop').fadeOut(500);
+        }
+    }
+
+
 </script>
 
 <div id="block_record_card" style="height: 100%;width: 100%;">
