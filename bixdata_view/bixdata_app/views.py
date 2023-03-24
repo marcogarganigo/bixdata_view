@@ -496,12 +496,17 @@ def get_block_records_table(request):
 
     for records_index, record in enumerate(records):
         for record_index, value in enumerate(record):
+            record[record_index]=dict()
+            record[record_index]['value']=value;
+            record[record_index]['code']=value;
+            record[record_index]['fieldtype']='string';
             if isinstance(value, str):
                 value = value.split('|:|')
-                record[record_index] = value[0]
-                other_values = value[1:]  # Save other split values in a new list
-            else:
-                record[record_index] = value
+                if(len(value)>2):
+                    record[record_index]['value']=value[0];
+                    record[record_index]['code']=value[1];
+                    record[record_index]['link_tableid']=value[2];
+                
 
         records[records_index] = record
 
