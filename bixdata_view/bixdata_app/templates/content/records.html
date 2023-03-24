@@ -200,7 +200,7 @@
         if (screen.width > min_width) {
             $("#bixdata_recordcard_container").html(response);
         } else {
-            $("#fullwidth_modal").html(response);
+            $("#record-modal-content").html(response);
             $("#fullwidth_modal_newrecord").html(response);
         }
     }
@@ -253,16 +253,39 @@
         var serialized_data = [];
         serialized_data.push({name: 'tableid',value: tableid});
         serialized_data.push({name: 'recordid',value: recordid});
+
+        /*
+        $('#linked-table-modal').on('show.bs.modal', function () {
+        $('this').closest(".modal-backdrop").css("z-index", 11200);
+        });
+        */
+
         if (screen.width <= min_width) {
-            $('#recordModal').modal('show');
-            $("#fullwidth_modal").load('http://127.0.0.1:8000/loading/');
+
+            if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                    $('#linked-table-modal').modal('show');
+                    $(".modal-backdrop:last").css("z-index", 11200);
+                    $("#linked-table-modal-content").load('http://127.0.0.1:8000/loading/');
+                } else {
+                    $('#recordModal').modal('show');
+                    $("#record-modal-content").load('http://127.0.0.1:8000/loading/');
+                }
+
+
         }
         else
         {
-            $("#block-record-card-container").load('http://127.0.0.1:8000/loading/');
+            if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                    $('#linked-table-modal').modal('show');
+                    $("#linked-table-modal-content").load('http://127.0.0.1:8000/loading/');
+                } else {
+                    if (screen.width > min_width) {
+                     $("#block-record-card-container").load('http://127.0.0.1:8000/loading/');
+                    }
+                }
         }
         //$("#block-record-card-container").html('caricamento');
-        
+
         $.ajax({
             type: "POST",
             url: "{% url 'block_record_card' %}",
@@ -276,36 +299,38 @@
                     //$("#linked-table-modal").html(response);
                     //$("#linked-table-modal").modal("show");
                     //$('.modal-backdrop').hide()
-                    $('#recordModal').modal('show');
-                    $("#fullwidth_modal").html(response);
+                    $('#linked-table-modal').modal('show');
+                    //$(".modal-backdrop").css("z-index", 11200);
+                    $("#linked-table-modal-content").html(response);
                     console.log('fatto')
                 } else {
                     if (screen.width > min_width) {
                         console.log($(el.closest('#block_records_table')));
                         $("#block-record-card-container").html(response);
                     } else {
-                        $("#fullwidth_modal").html(response);
+                        $("#record-modal-content").html(response);
                     }
                 }
             },
             error: function(response) {
                 $("#bixdata_recordcard_container").html(response);
-                console.log('erore')
             }
         });
 
     }
 
     function closeCard(vrbl) {
+      $(vrbl).closest('.modal').modal('hide');
+      setTimeout(function() {
+        $(vrbl).closest('#RecordCard').html('')
+      }, 1000);
         if (screen.width > min_width) {
-            $(vrbl).closest("#RecordCard").slideToggle(200, function() {
-                $('#bixdata_recordcard_container').html('');
-            });
-        } else {
-            $("#recordModal").modal("hide");
-
+          $(vrbl).closest("#RecordCard").slideToggle(200, function() {
+            $('#bixdata_recordcard_container').html('');
+          });
+        }
     }
-}
+
 
     function closeNewRecordModal() {
         $("#newRecordModal").modal("hide");
@@ -316,7 +341,7 @@
     }
 
     function open_kanban() {
-        var serialized_data = [];
+        var serialized_data = [];ffgezfgfsuhei
         $.ajax({
             type: "POST",
             url: controller_url + 'ajax_get_kanban',
@@ -365,15 +390,20 @@
     </div>
 
 
-    <div class="modal fade" id="linked-table-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%;">
+        <div class="modal fade" id="linked-table-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%; z-index: 12000">
         <div class="modal-dialog modal-xl" style="width: 100%;">
-            <div class="modal-content" style="width: 100%">
+            <div class="modal-content" style="width: 80%">
                 <div class="modal-body" style="width: 100%">
-
+                    <div id="linked-table-modal-content" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+<script>
+
+</script>
 
 
 

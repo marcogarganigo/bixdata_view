@@ -296,7 +296,7 @@ const min_width = 1280;
         if (screen.width > min_width) {
             $("#bixdata_recordcard_container").html(response);
         } else {
-            $("#fullwidth_modal").html(response);
+            $("#record-modal-content").html(response);
             $("#fullwidth_modal_newrecord").html(response);
         }
     }
@@ -351,7 +351,7 @@ const min_width = 1280;
         serialized_data.push({name: 'recordid',value: recordid});
         if (screen.width <= min_width) {
             $('#recordModal').modal('show');
-            $("#fullwidth_modal").load('http://127.0.0.1:8000/loading/');
+            $("#record-modal-content").load('http://127.0.0.1:8000/loading/');
         }
         //$("#block-record-card-container").html('caricamento');
         $("#block-record-card-container").load('http://127.0.0.1:8000/loading/');
@@ -364,7 +364,7 @@ const min_width = 1280;
                 if (screen.width > min_width) {
                     $("#block-record-card-container").html(response);
                 } else {
-                    $("#fullwidth_modal").html(response);
+                    $("#record-modal-content").html(response);
                 }
             },
             error: function() {
