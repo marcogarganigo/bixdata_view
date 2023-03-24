@@ -257,8 +257,12 @@
             $('#recordModal').modal('show');
             $("#fullwidth_modal").load('http://127.0.0.1:8000/loading/');
         }
+        else
+        {
+            $("#block-record-card-container").load('http://127.0.0.1:8000/loading/');
+        }
         //$("#block-record-card-container").html('caricamento');
-        $("#block-record-card-container").load('http://127.0.0.1:8000/loading/');
+        
         $.ajax({
             type: "POST",
             url: "{% url 'block_record_card' %}",
@@ -269,9 +273,11 @@
                 if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
                     console.log($(el.closest('#block_records_table')));
                     console.log('ora dovrebbe apparire nel modal')
-                    $("#linked-table-modal").html(response);
-                    $("#linked-table-modal").modal("show");
-                    $('.modal-backdrop').hide()
+                    //$("#linked-table-modal").html(response);
+                    //$("#linked-table-modal").modal("show");
+                    //$('.modal-backdrop').hide()
+                    $('#recordModal').modal('show');
+                    $("#fullwidth_modal").html(response);
                     console.log('fatto')
                 } else {
                     if (screen.width > min_width) {
