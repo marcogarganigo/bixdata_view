@@ -34,6 +34,7 @@ urlpatterns = [
     path('test/', views.get_test, name='test'),
     path('temp/', views.get_temp, name='temp'),
     path('dashboard/', views.get_render_content_dashboard, name='dashboard'),
+    path('dashboard2/', views.get_render_content_dashboard2, name='dashboard2'),
     path('record_card_copy/', views.get_record_card_copy, name='record_card_copy'),
     path('record_card_delete/', views.get_record_card_delete, name='record_card_delete'),
     path('record_card_permissions/', views.get_record_card_permissions, name='record_card_permissions'),
@@ -55,6 +56,7 @@ urlpatterns = [
     path('pagination/', views.pagination, name='pagination'),
     path('testcalendar/', views.get_test_calendar, name='testcalendar'),
     path('get_records_linked/', views.get_records_linked, name='get_records_linked'),
+    path('get_chart/', views.get_chart, name='get_chart'),
 
 
 ]

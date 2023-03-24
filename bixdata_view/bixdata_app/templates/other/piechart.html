@@ -1,0 +1,28 @@
+<div id="chart{{ id }}"></div>
+
+<script>
+  var options = {
+    chart: {
+      height: 'auto',
+      type: 'pie', // change chart type to pie
+    },
+    series: {{ value|safe }},
+    labels: {{ labels|safe }},
+    title: {
+      text: '{{ name }}',
+    },
+    colors: ['#008ffbd9','#00e396d9','#ff4560d9'], // set color for each dataset
+    responsive: [{
+      breakpoint: 480,
+      options: {
+        legend: {
+          position: 'bottom',
+        },
+      },
+    }],
+  };
+
+  var chart = new ApexCharts(document.querySelector("#chart{{ id }}"), options);
+
+  chart.render();
+</script>

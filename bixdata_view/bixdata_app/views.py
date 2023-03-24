@@ -37,8 +37,10 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
     ]
 
+
 def get_test_autocomplete(request):
     return render(request, 'test_autocomplete.html')
+
 
 def get_autocomplete_data(request):
     term = request.GET.get('term')
@@ -47,15 +49,15 @@ def get_autocomplete_data(request):
     post = {
         'tableid': tableid,
         'mastertableid': mastertableid,
-        'term':term
+        'term': term
     }
-    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_autocomplete_data", data=post)
+    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_autocomplete_data",
+                             data=post)
     response = json.loads(response.text)
 
     data = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', '']
     data = [{"id": str(i), "value": item} for i, item in enumerate(data) if term.lower() in item.lower()]
     return JsonResponse({'data': response})
-
 
 
 def get_test_query(request, name=None):
@@ -154,8 +156,6 @@ def get_test_query2(request):
             rows = cursor2.fetchall()
             amounts = [row[0] for row in rows]
             months = [row[1] for row in rows]
-
-
 
             for i in range(len(amounts)):
                 if amounts[i] is None:
@@ -258,30 +258,29 @@ def get_chart3(request):
 
         return render(request, 'other/chart3.html', {'data': data, 'data2': data2})
 
+
 def get_chart4(request):
-        if request.method == 'POST':
-            with connection.cursor() as cursor1:
-                cursor1.execute(
-                    "SELECT query_conditions FROM sys_view WHERE id = 16"
+    if request.method == 'POST':
+        with connection.cursor() as cursor1:
+            cursor1.execute(
+                "SELECT query_conditions FROM sys_view WHERE id = 16"
+            )
+            query = cursor1.fetchone()[0]
+            with connection.cursor() as cursor2:
+                cursor2.execute(
+                    query
                 )
-                query = cursor1.fetchone()[0]
-                with connection.cursor() as cursor2:
-                    cursor2.execute(
-                        query
-                    )
-                    rows = cursor2.fetchall()
+                rows = cursor2.fetchall()
 
-                    months = [row[0] for row in rows]
-                    totalnets = [row[1] for row in rows]
+                months = [row[0] for row in rows]
+                totalnets = [row[1] for row in rows]
 
-                    data = {
-                        'months': months,
-                        'totalnets': totalnets,
-                    }
+                data = {
+                    'months': months,
+                    'totalnets': totalnets,
+                }
 
-            return render(request, 'other/chart4.html', {'data': data})
-        
-
+        return render(request, 'other/chart4.html', {'data': data})
 
 
 @login_required(login_url='/login/')
@@ -394,7 +393,67 @@ def get_block_reload(request):
 @login_required(login_url='/login/')
 def get_render_content_dashboard(request):
     return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', None)
-    # return render(request, 'content/dashboard.html')
+    # return render(request, 'content/dashboard.html')@login_required(login_url='/login/')
+
+
+@login_required(login_url='/login/')
+def get_render_content_dashboard2(request):
+    context = dict()
+    context['blocks'] = []  # Initialize the blocks list
+    if request.method == 'POST':
+        with connection.cursor() as cursor1:
+            cursor1.execute(
+                "SELECT * FROM v_sys_dashboard_block"
+            )
+            rows = dictfetchall(cursor1)
+
+            for row in rows:
+                select_fields = row['select_fields']
+                groupby_fields = row['groupby_fields']
+                query_conditions = row['query_conditions']
+                id = row['id']
+                tableid = "user_" + row['tableid']
+                name = row['name']
+                layout = row['layout']
+                sql = "SELECT " + select_fields + " FROM " + tableid + " WHERE " + query_conditions + " GROUP BY " + groupby_fields
+                print(sql)
+                block = dict()
+                block['sql'] = sql
+                block['name'] = 'test'
+                block['html'] = get_chart(request, sql, id, name, layout)
+                context['blocks'].append(block)
+
+    return user_agent(request, 'content/dashboard2.html', 'content/dashboard_mobile.html', context)
+
+
+def get_chart(request, sql, id, name, layout):
+    query = sql
+    id_sql = id
+    name_chart = name
+    layout_chart = layout
+
+    with connection.cursor() as cursor2:
+        cursor2.execute(query)
+        rows = cursor2.fetchall()
+
+        value = [row[0] for row in rows]
+        labels = [row[1] for row in rows]
+
+        context = {
+            'value': value,
+            'labels': labels,
+            'id': id_sql,
+            'name': name_chart,
+        }
+
+        if layout_chart == 'barchart':
+            return render_to_string('other/barchart.html', context, request=request)
+        elif layout_chart == 'piechart':
+            return render_to_string('other/piechart.html', context, request=request)
+        elif layout_chart == 'linechart':
+            return render_to_string('other/linechart.html', context, request=request)
+
+    return  render_to_string('other/barchart.html', context, request=request)
 
 
 @login_required(login_url='/login/')
@@ -462,15 +521,15 @@ def get_render_logout(request):
 @login_required(login_url='/login/')
 def get_block_records_table(request):
     tableid = request.POST.get('tableid')
-    master_tableid=request.POST.get('master_tableid')
-    master_recordid=request.POST.get('master_recordid')
+    master_tableid = request.POST.get('master_tableid')
+    master_recordid = request.POST.get('master_recordid')
     searchTerm = request.POST.get('searchTerm')
     viewid = request.POST.get('viewid')
-    table_type='standard'
-    table_height='100%';
+    table_type = 'standard'
+    table_height = '100%';
     if master_tableid:
-        table_height='500px'
-        table_type='linked'
+        table_height = '500px'
+        table_type = 'linked'
 
     post = {
         'tableid': tableid,
@@ -489,8 +548,8 @@ def get_block_records_table(request):
         'records': records,
         'columns': columns,
         'tableid': tableid,
-        'table_height':table_height,
-        'table_type':table_type,
+        'table_height': table_height,
+        'table_type': table_type,
         'other_values': other_values
     }
 
@@ -720,8 +779,8 @@ def get_block_record_fields(request):
     post = {
         'tableid': tableid,
         'recordid': recordid,
-        'master_tableid':master_tableid,
-        'master_recordid':master_recordid
+        'master_tableid': master_tableid,
+        'master_recordid': master_recordid
     }
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_fields", data=post)
 
@@ -751,8 +810,8 @@ def get_block_record_linked_OLD(request):
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_labels", data=post)
     response_dict = json.loads(response.text)
     context['labels'] = response_dict
-    context['tableid']=tableid
-    context['recordid']=recordid
+    context['tableid'] = tableid
+    context['recordid'] = recordid
     record_linked_labels = render_to_string('block/record/record_linked.html', context, request=request)
     return record_linked_labels
 
@@ -764,11 +823,11 @@ def get_block_record_linked(request):
     recordid = request.POST.get('recordid')
 
     with connection.cursor() as cursor:
-        cursor.execute("SELECT tablelinkid FROM sys_table_link WHERE tableid = '"+tableid+"'")
+        cursor.execute("SELECT tablelinkid FROM sys_table_link WHERE tableid = '" + tableid + "'")
         rows = dictfetchall(cursor)
     context['labels'] = rows
-    context['tableid']=tableid
-    context['recordid']=recordid
+    context['tableid'] = tableid
+    context['recordid'] = recordid
 
     record_linked_labels = render_to_string('block/record/record_linked.html', context, request=request)
     return record_linked_labels
@@ -800,18 +859,20 @@ def save_record_fields(request):
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/set_record", data=post)
     return render(request, 'block/record/record_fields.html')
 
+
 @login_required(login_url='/login/')
 def pagination(request):
     if request.method == 'POST':
         page = request.POST.get('page')
         offset = 50 * page
-        #"SELECT * FROM bixdata.user_invoice LIMIT 50 OFFSET %s;", [offset]
+        # "SELECT * FROM bixdata.user_invoice LIMIT 50 OFFSET %s;", [offset]
 
     return JsonResponse(page)
 
 
 def get_test_calendar(request):
     return render(request, 'other/testCalendar.html')
+
 
 @login_required(login_url='/login/')
 def get_temp(request):

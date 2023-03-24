@@ -1,0 +1,8 @@
+{% for block in blocks %}
+    <div class="card no-padding" style="width: 30%; float: left; margin-right: 10px">
+  <div class="card-body">
+        {{ block.html|safe }}
+  </div>
+</div>
+
+  {% endfor %}
