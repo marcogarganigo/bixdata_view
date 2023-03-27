@@ -563,8 +563,9 @@ def get_block_records_table(request):
                 value = value.split('|:|')
                 if(len(value)>2):
                     record[record_index]['value']=value[0];
-                    record[record_index]['code']=value[1];
+                    record[record_index]['link_recordid']=value[1];
                     record[record_index]['link_tableid']=value[2];
+                    record[record_index]['fieldtype']='linked';
                 
 
         records[records_index] = record
