@@ -95,6 +95,11 @@
                             {% if forloop.counter0 > 2 %}
                                 <td onclick="open_record(this,'{{tableid}}','{{record.0}}')">
                                     {{column_value}}
+                                {% for record in records %}
+                        {% for r in record %}
+                            <p>{{ r.code }}</p>
+                            {% endfor %}
+                        {% endfor %}
                                 </td>
                             {% endif %}
                         {% endfor %}
