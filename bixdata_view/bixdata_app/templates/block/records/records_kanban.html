@@ -154,7 +154,7 @@
     var cards = document.querySelectorAll('.kanban-record');
     cards.forEach(function(card) {
         card.addEventListener('click', function() {
-            alert('alert');
+            open_record(this, $(this).data('recordid') );
         });
     });
 </script>
