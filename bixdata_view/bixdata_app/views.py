@@ -642,9 +642,9 @@ def get_block_records_kanban(request):
         'searchTerm': '',
     }
 
-    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
-    response_dict = json.loads(response.text)
-    groups=response_dict['groups']
+    #response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
+    #response_dict = json.loads(response.text)
+    #groups=response_dict['groups']
     # records = response_dict['records']
     # print(records)
     groups = []
