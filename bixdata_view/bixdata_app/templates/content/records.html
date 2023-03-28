@@ -79,6 +79,10 @@
 
     function searchKanban(){
         var serialized_data = [];
+        serialized_data.push({
+            name: 'tableid',
+            value: '{{tableid}}'
+        });
         $.ajax({
             type: "POST",
             url: "{% url 'block_records_kanban' %}",
