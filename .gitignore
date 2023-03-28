@@ -19,3 +19,5 @@ local_settings.py
 
 # Secret keys
 secret_key.txt
+*.pyc
+*.pyc
