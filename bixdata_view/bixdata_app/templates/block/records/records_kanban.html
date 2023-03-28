@@ -22,7 +22,7 @@
           <h5 class="mt-0 task-header">{{ group.description }}</h5>
           <div id="task-list-{{ group.description }}" class="task-list-items">
             {% for record in group.records %}
-              <div class="card mb-0 kanban-record" data-recordid="{{ record.id }}">
+              <div class="card mb-0 kanban-record" data-recordid="{{ record.recordid }}">
                  <div class="card-body p-3">
                     <small class="float-end text-muted">{{ record.date }}</small>
                      <h5 class="mt-2 mb-2">
@@ -149,17 +149,20 @@
 
     dragula(tsi_id).on('drop', function(el) {
         update_status(el);
-        update_db(this, '{{ record.id }}', '{{ tableid }}' )
+        update_db(this,'{{ tableid }}', $('.kanban-record').data('recordid') )
     });
 
     var cards = document.querySelectorAll('.kanban-record');
     cards.forEach(function(card) {
         card.addEventListener('click', function() {
-            open_record(this, $(this).data('recordid') );
+            open_record(this , '{{ tableid }}', $(this).data('recordid') );
         });
     });
 
     function update_db(el, recordid, tableid ) {
+        alert(el)
+        alert(recordid)
+        alert(tableid)
     }
 
 </script>
