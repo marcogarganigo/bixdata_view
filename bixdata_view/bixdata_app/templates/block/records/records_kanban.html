@@ -149,6 +149,7 @@
 
     dragula(tsi_id).on('drop', function(el) {
         update_status(el);
+        update_db(this, '{{ record.id }}', '{{ tableid }}' )
     });
 
     var cards = document.querySelectorAll('.kanban-record');
@@ -157,6 +158,10 @@
             open_record(this, $(this).data('recordid') );
         });
     });
+
+    function update_db(el, recordid, tableid ) {
+    }
+
 </script>
 
 
