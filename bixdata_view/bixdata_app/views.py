@@ -179,6 +179,8 @@ def get_test_query2(request):
                 'totalnets': totalnets
             }
 
+            print(query2)
+
     return render(request, 'other/test_query2.html', {'data': data}, print(data))
 
 
@@ -398,52 +400,75 @@ def get_render_content_dashboard(request):
 
 @login_required(login_url='/login/')
 def get_render_content_dashboard2(request):
-    context = dict()
+    context = {}
     context['blocks'] = []  # Initialize the blocks list
+
     if request.method == 'POST':
-        with connection.cursor() as cursor1:
-            cursor1.execute(
+        selected = ''
+        with connection.cursor() as cursor:
+            cursor.execute(
                 "SELECT * FROM v_sys_dashboard_block"
             )
-            rows = dictfetchall(cursor1)
+            rows = dictfetchall(cursor)
+            print(rows)
 
             for row in rows:
-                select_fields = row['select_fields']
-                groupby_fields = row['groupby_fields']
+                selected = ''
+                if row['operation'] == 'somma':
+                    fields = row['fieldid'].split(';')
+                    for field in fields:
+                        field = 'ROUND(SUM(' + field + '))'
+                        selected += field + ','
+                        print(selected)
+                    groupby = row['groupby']
+                    selected += groupby
+
                 query_conditions = row['query_conditions']
                 id = row['id']
-                tableid = "user_" + row['tableid']
+                tableid = row['tableid']
                 name = row['name']
                 layout = row['layout']
-                sql = "SELECT " + select_fields + " FROM " + tableid + " WHERE " + query_conditions + " GROUP BY " + groupby_fields
+                sql = "SELECT " + selected + " FROM " + tableid + " WHERE " + query_conditions + " GROUP BY " + groupby
                 print(sql)
                 block = dict()
                 block['sql'] = sql
+                print(sql)
                 block['name'] = 'test'
-                block['html'] = get_chart(request, sql, id, name, layout)
+                block['html'] = get_chart(request, sql, id, name, layout, fields)
                 context['blocks'].append(block)
 
     return user_agent(request, 'content/dashboard2.html', 'content/dashboard_mobile.html', context)
 
 
-def get_chart(request, sql, id, name, layout):
+
+@login_required(login_url='/login/')
+def get_chart(request, sql, id, name, layout, fields):
     query = sql
     id_sql = id
     name_chart = name
     layout_chart = layout
+    fields_chart = fields
 
     with connection.cursor() as cursor2:
         cursor2.execute(query)
         rows = cursor2.fetchall()
 
-        value = [row[0] for row in rows]
-        labels = [row[1] for row in rows]
+
+
+        value= []
+        for num in range(0, len(fields_chart)):
+            value.append([row[num] for row in rows])
+
+
+        labels = [row[-1] for row in rows]
+
 
         context = {
             'value': value,
             'labels': labels,
             'id': id_sql,
             'name': name_chart,
+            'fields': fields_chart,
         }
 
         if layout_chart == 'barchart':
@@ -454,6 +479,7 @@ def get_chart(request, sql, id, name, layout):
             return render_to_string('other/linechart.html', context, request=request)
 
     return  render_to_string('other/barchart.html', context, request=request)
+
 
 
 @login_required(login_url='/login/')
@@ -566,7 +592,7 @@ def get_block_records_table(request):
                     record[record_index]['link_recordid']=value[1];
                     record[record_index]['link_tableid']=value[2];
                     record[record_index]['fieldtype']='linked';
-                
+
 
         records[records_index] = record
 

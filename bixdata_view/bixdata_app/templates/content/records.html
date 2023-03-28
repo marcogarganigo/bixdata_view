@@ -262,27 +262,40 @@
 
         if (screen.width <= min_width) {
 
+        if ($(el.closest('td')).attr('data-fieldtype') === 'linked') {
+            $('#linked-table-modal').modal('show');
+            $(".modal-backdrop:last").css("z-index", 11200);
+            $("#linked-table-modal-content").load('http://127.0.0.1:8000/loading/');
+        } else {
+
             if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
-                    $('#linked-table-modal').modal('show');
-                    $(".modal-backdrop:last").css("z-index", 11200);
-                    $("#linked-table-modal-content").load('http://127.0.0.1:8000/loading/');
-                } else {
-                    $('#recordModal').modal('show');
-                    $("#record-modal-content").load('http://127.0.0.1:8000/loading/');
-                }
+                $('#linked-table-modal').modal('show');
+                $(".modal-backdrop:last").css("z-index", 11200);
+                $("#linked-table-modal-content").load('http://127.0.0.1:8000/loading/');
+            } else {
+                $('#recordModal').modal('show');
+                $("#record-modal-content").load('http://127.0.0.1:8000/loading/');
+            }
+        }
 
 
         }
         else
         {
-            if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+            if ($(el.closest('td')).attr('data-fieldtype') === 'linked') {
+                $('#linked-table-modal').modal('show');
+                $(".modal-backdrop:last").css("z-index", 11200);
+                $("#linked-table-modal-content").load('http://127.0.0.1:8000/loading/');
+            } else {
+                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
                     $('#linked-table-modal').modal('show');
                     $("#linked-table-modal-content").load('http://127.0.0.1:8000/loading/');
                 } else {
                     if (screen.width > min_width) {
-                     $("#block-record-card-container").load('http://127.0.0.1:8000/loading/');
+                        $("#block-record-card-container").load('http://127.0.0.1:8000/loading/');
                     }
                 }
+            }
         }
         //$("#block-record-card-container").html('caricamento');
 
@@ -293,9 +306,7 @@
             success: function(response) {
                 //if ($(el.closest('table')).attr('data-type') === 'linked') {
                 //if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
-                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
-                    console.log($(el.closest('#block_records_table')));
-                    console.log('ora dovrebbe apparire nel modal')
+                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el.closest('td')).attr('data-fieldtype') === 'linked') {
                     //$("#linked-table-modal").html(response);
                     //$("#linked-table-modal").modal("show");
                     //$('.modal-backdrop').hide()
@@ -322,14 +333,19 @@
     function closeCard(vrbl) {
       $(vrbl).closest('.modal').modal('hide');
       setTimeout(function() {
-        $(vrbl).closest('#RecordCard').html('')
       }, 1000);
         if (screen.width > min_width) {
           $(vrbl).closest("#RecordCard").slideToggle(200, function() {
-            $('#bixdata_recordcard_container').html('');
           });
         }
     }
+
+    $('.modal').on('hidden.bs.modal', function (e) {
+  // Remove the content of the component here
+  $('#RecordCard').html('');
+  $('#bixdata_recordcard_container').html('');
+})
+
 
 
     function closeNewRecordModal() {
@@ -341,7 +357,7 @@
     }
 
     function open_kanban() {
-        var serialized_data = [];ffgezfgfsuhei
+        var serialized_data = [];
         $.ajax({
             type: "POST",
             url: controller_url + 'ajax_get_kanban',

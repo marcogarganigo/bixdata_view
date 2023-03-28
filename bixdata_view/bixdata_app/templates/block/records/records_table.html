@@ -75,7 +75,22 @@
     }
 </script>
 
+  <style>
+      td:hover {
+          outline: #0a0a0a solid 1px;
+      }
+
+        .records-linked {
+            cursor: pointer;
+        }
+
+        .records-standard {
+            cursor: context-menu;
+        }
+  </style>
+
 <div id="block_records_table" style="width: 100%;" data-type="{{ table_type }}">
+
     
     <div class="col s12 m6 l6" id="pagination-container">
         <table id="results-table">
@@ -93,9 +108,16 @@
                     <tr id="results-row">
                         {% for column_value in record %}
                             {% if forloop.counter0 > 2 %}
-                                <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')">
+                                {% if column_value.fieldtype == 'linked' %}
+
+                                    <td onclick="open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')" class="records-linked" data-fieldtype="{{ column_value.fieldtype }}" style="font-weight: bold !important;">
                                     {{column_value.value}}
                                 </td>
+                                {% else %}
+                                <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
+                                    {{column_value.value}}
+                                </td>
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                     </tr>

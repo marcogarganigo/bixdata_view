@@ -6,10 +6,14 @@
       height: 'auto',
       type: 'line',
     },
-    series: [{
-      name: 'Venduto',
-      data: {{ value|safe }}
-    }],
+   series: [
+        {% for val in value %}
+        {
+      name: '{{ fields }}',
+      data: {{ val|safe }}
+    },
+        {% endfor %}
+    ],
     xaxis: {
       categories: {{ labels|safe }},
       labels: {
