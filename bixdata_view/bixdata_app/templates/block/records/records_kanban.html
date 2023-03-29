@@ -19,7 +19,7 @@
     <div class="board">
       {% for group in groups %}
         <div class="tasks" data-plugin="dragula" data-containers='["task-list-one", "task-list-two", "task-list-three", "task-list-four"]' data-status="{{ group.description }}">
-          <h5 class="mt-0 task-header" data-name="{{ group.description }}">{{ group.description }}</h5>
+          <h5 class="mt-0 task-header" data-column="{{ group.description }}">{{ group.description }}</h5>
           <div id="task-list-{{ group.description }}" class="task-list-items">
             {% for record in group.records %}
               <div class="card mb-0 kanban-record" data-recordid="{{ record.recordid }}">
@@ -217,9 +217,8 @@
     console.log('Kanban debug:');
     console.log(tsi_id);
 
-    dragula(tsi_id).on('drop', function(el) {
-        update_status(el);
-        update_db(this,'{{ tableid }}', $('.kanban-record').data('recordid'), $(this).closest('.task-header').data('name'))
+    dragula(tsi_id).on('drop', function(el, target) {
+        update_db(this,'{{ tableid }}', $('.kanban-record').data('recordid'), $(target).closest('.tasks').data('status'))
     });
 
     var cards = document.querySelectorAll('.kanban-record');
@@ -231,6 +230,7 @@
 
     function update_db(el, recordid, tableid, listname ) {
         alert(el)
+        console.info(listname)
         alert(recordid)
         alert(tableid)
         alert(listname)
