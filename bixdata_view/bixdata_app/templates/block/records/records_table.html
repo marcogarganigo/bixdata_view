@@ -150,9 +150,11 @@
                 },
                 success: function (response) {
                     console.log(response)
+                    reloadFunc();
                 },
                 error: function (response) {
                     console.log(response)
+                    reloadFunc();
                 }
             });
 			}

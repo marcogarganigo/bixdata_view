@@ -19,7 +19,7 @@
     <div class="board">
       {% for group in groups %}
         <div class="tasks" data-plugin="dragula" data-containers='["task-list-one", "task-list-two", "task-list-three", "task-list-four"]' data-status="{{ group.description }}">
-          <h5 class="mt-0 task-header">{{ group.description }}</h5>
+          <h5 class="mt-0 task-header" data-name="{{ group.description }}">{{ group.description }}</h5>
           <div id="task-list-{{ group.description }}" class="task-list-items">
             {% for record in group.records %}
               <div class="card mb-0 kanban-record" data-recordid="{{ record.recordid }}">
@@ -130,6 +130,76 @@
 </div><!-- /.modal -->
 </div>
 
+<div class="pagination" id="my-pagination-kanban">
+    <a href="#" class="first" data-action="first">&laquo;</a>
+    <a href="#" class="previous" data-action="previous">&lsaquo;</a>
+    <input type="text" readonly="readonly" data-max-page="10" />
+    <a href="#" class="next" data-action="next">&rsaquo;</a>
+    <a href="#" class="last" data-action="last">&raquo;</a>
+</div>
+
+<script>
+    $(function() {
+        $('#my-pagination-kanban').jqPagination({
+            current_page: 1,
+            max_page: 10,
+            paged: function(page) {
+                 $.ajax({
+                    type: "POST",
+                    url: "{% url 'pagination' %}",
+                    data: {
+                        'page': page,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        console.log(response)
+                        reloadFunc();
+                        document.getElementById("kanban-tab").click();
+                    },
+                    error: function (response) {
+                        console.log(response)
+                        reloadFunc();
+                        document.getElementById("kanban-tab").click();
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+
+
+    <style>
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.pagination a {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: 1px solid #dc3545;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #dc3545;
+}
+
+.pagination a:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.pagination .current {
+  background-color: #dc3545;
+  color: #fff;
+}
+    </style>
+
 
 
 <script>
@@ -149,7 +219,7 @@
 
     dragula(tsi_id).on('drop', function(el) {
         update_status(el);
-        update_db(this,'{{ tableid }}', $('.kanban-record').data('recordid') )
+        update_db(this,'{{ tableid }}', $('.kanban-record').data('recordid'), $(this).closest('.task-header').data('name'))
     });
 
     var cards = document.querySelectorAll('.kanban-record');
@@ -159,10 +229,11 @@
         });
     });
 
-    function update_db(el, recordid, tableid ) {
+    function update_db(el, recordid, tableid, listname ) {
         alert(el)
         alert(recordid)
         alert(tableid)
+        alert(listname)
     }
 
 </script>
