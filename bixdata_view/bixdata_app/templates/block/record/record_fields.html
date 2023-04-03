@@ -14,7 +14,6 @@
             {% if field.fieldtypeid == 'Parola' %}
                 {% if field.lookuptableid  %}
                      {% for valuecode in field.valuecode %}
-        {% if valuecode.value and valuecode.code %}
 
             <script>
             document.getElementById("hidden-input").value = "{{ items.code }}";
@@ -29,7 +28,6 @@
                   {% endif %}
               </select>
             </div>
-            {% endif %}
             {% endfor %}
             {% else %}
                <label>
