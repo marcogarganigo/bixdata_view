@@ -18,25 +18,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import Group, Permission, User, Group
 from django_user_agents.utils import get_user_agent
 from bixdata_app.models import MyModel
-
-
-
-def user_agent(request, page, mobilepage, context={}):
-    user_agent = get_user_agent(request)
-    if user_agent.is_mobile:
-        return render(request, mobilepage, context)
-    else:
-        return render(request, page, context)
-
-
-# from .models import Login
-def dictfetchall(cursor):
-    "Return all rows from a cursor as a dict"
-    columns = [col[0] for col in cursor.description]
-    return [
-        dict(zip(columns, row))
-        for row in cursor.fetchall()
-    ]
+from .beta import *
 
 
 def get_test_autocomplete(request):
