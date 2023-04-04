@@ -779,12 +779,12 @@ def get_block_record_card(request):
     context['block_record_linked'] = get_block_record_linked(request)
     # context['block_record_linked'] = get_block_record_linked(request)
     context['block_record_fields'] = get_block_record_fields(request)
-    # returned = render_to_string('block/record/record_card.html', context, request=request)
-    context = {
-        'recordid': request.POST.get('recordid'),
-        'tableid': request.POST.get('tableid'),
-    }
-    recordid = request.POST.get('recordid')
+    context['recordid'] = request.POST.get('recordid')
+    context['tableid'] = request.POST.get('tableid')
+
+ 
+    
+    
     returned = user_agent(request, 'block/record/record_card.html',
                           'block/record/record_card_mobile.html', context)
     return HttpResponse(returned)
