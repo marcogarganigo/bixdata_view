@@ -484,11 +484,12 @@ def get_record_card_delete(request):
         print(tableid)
 
         with connection.cursor() as cursor:
+            query = 'UPDATE user_' + tableid + ' SET deleted_ = "Y" WHERE id = ' + recordid
             cursor.execute(
-                "UPDATE user_project SET deleted_ = 'Y' WHERE id = 00000000000000000000000000000016",
+                query
             )
             print('deleted')
-    return render(request)
+    return JsonResponse({'success': True})
 
 
 @login_required(login_url='/login/')
