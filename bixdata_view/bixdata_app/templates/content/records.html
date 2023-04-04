@@ -353,8 +353,12 @@
 
 
     function closeNewRecordModal() {
-        $("#newRecordModal").modal("hide");
+      $("#newRecordModal").modal("hide");
+      setTimeout(function() {
+        $("#fullwidth_modal_newrecord").html("");
+      }, 500);
     }
+
 
     function closeLinkedTableModal() {
         $("#linked-table-modal").modal("hide");
