@@ -4,16 +4,16 @@
 
 <div class="container" id="fields_container">
 {% for field_key,field in record_fields.items %}
-{% with fieldname=field.fieldid %}
-{% with fieldid='field-'|add:field.fieldid %}
-    <div class="row">
-        <div class="col-lg-2" style="text-align: left">
-            <p>{{field.description }}</p>
-        </div>
-        <div class="col">
-            {% if field.fieldtypeid == 'Parola' %}
-                {% if field.lookuptableid  %}
-                     {% for valuecode in field.valuecode %}
+  {% with fieldname=field.fieldid %}
+  {% with fieldid='field-'|add:field.fieldid %}
+      <div class="row">
+          <div class="col-lg-2" style="text-align: left">
+              <p>{{field.description }}</p>
+          </div>
+          <div class="col field">
+              {% if field.fieldtypeid == 'Parola' %}
+                  {% if field.lookuptableid  %}
+                      {% for valuecode in field.valuecode %}
 
             <script>
             document.getElementById("hidden-input").value = "{{ items.code }}";
@@ -72,51 +72,51 @@
               <input class="form-select mb-2" id="{{ fieldid }}" style="width: 80%">
             </div>
 
-                <input type="hidden" id="hidden-input">
+                  <input type="hidden" class="hidden-input" name="{{ field.fieldid }}">
 
-                <script>
-  $(function() {
-    function log( message ) {
-      $( "<div>" ).text( message ).prependTo( "#log" );
-      $( "#log" ).scrollTop( 0 );
-    }
-    $( "#{{ fieldid }}" ).autocomplete({
-      source: function(request, response) {
-        $.ajax({
-          url: "{% url 'get_autocomplete_data' %}",
-          data: {
-             'term': request.term,
-             'tableid': '{{tableid}}',
-             'mastertableid': 'company'
-          },
-          success: function(data) {
-            console.info(data)
-            response(data.data);
-          }
-        });
-      },
-      minLength: 2,
-      select: function( event, ui ) {
-        //console.log( "Selected: " + ui.item.id );
-        document.getElementById('hidden-input').value = ui.item.id;
-      }
-    });
-  });
-</script>
-            {% endif %}
+                  <script>
+                    $(function() {
+                      function log( message ) {
+                        $( "<div>" ).text( message ).prependTo( "#log" );
+                        $( "#log" ).scrollTop( 0 );
+                      }
+                      $( "#{{ fieldid }}" ).autocomplete({
+                        source: function(request, response) {
+                          $.ajax({
+                            url: "{% url 'get_autocomplete_data' %}",
+                            data: {
+                              'term': request.term,
+                              'tableid': '{{tableid}}',
+                              'mastertableid': 'company'
+                            },
+                            success: function(data) {
+                              console.info(data)
+                              response(data.data);
+                            }
+                          });
+                        },
+                        minLength: 2,
+                        select: function( event, ui ) {
+                          //console.log( "Selected: " + ui.item.id );
+                          $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+                        }
+                      });
+                    });
+                  </script>
+              {% endif %}
 
-        </div>
-    </div>
-        {% for items in field.valuecode %}
-        {% if items.value and items.code %}
-            <script>
-            document.getElementById("hidden-input").value = "{{ items.code }}";
-            document.getElementById("{{ fieldid }}").value = "{{ items.value }}";
-            </script>
-        {% endif %}
-    {% endfor %}
-    {% endwith %}
-    {% endwith %}
+          </div>
+      </div>
+          {% for items in field.valuecode %}
+          {% if items.value and items.code %}
+              <script>
+              document.getElementById("hidden-input").value = "{{ items.code }}";
+              document.getElementById("{{ fieldid }}").value = "{{ items.value }}";
+              </script>
+          {% endif %}
+      {% endfor %}
+      {% endwith %}
+      {% endwith %}
 {% endfor %}
             <button id="save-button" type="button" class="btn btn-primary" onclick=" save_record()">Salva</button>
 </div>
