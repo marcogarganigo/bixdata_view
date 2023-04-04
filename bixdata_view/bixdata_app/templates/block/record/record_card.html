@@ -78,19 +78,26 @@
     }
 
     function deleteFunc() {
-        var serialized_data = [];
-        $.ajax({
+        if (confirm("Sei sicuro di voler eliminare questo record?")) {
+
+                    $.ajax({
             type: "POST",
             url: "{% url 'record_card_delete' %}",
-            data: serialized_data,
+            data : {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'tableid': '{{ tableid }}',
+                'recordid': '{{ recordid }}',
+            },
             success: function(response) {
                 //$("#bixdata_recordcard_container").html(response);
-                alert('delete')
             },
             error: function() {
-                alert('delete')
             }
-        });
+            });
+
+                } else {
+              alert('non cancellato')
+               }
     }
 
     function permissionsFunc()
