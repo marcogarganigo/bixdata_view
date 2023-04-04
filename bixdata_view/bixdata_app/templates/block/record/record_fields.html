@@ -69,10 +69,10 @@
             {% endif %}
             {% if field.fieldtypeid == 'linkedmaster' %}
             <div class="ui-widget">
-              <input class="form-select mb-2" id="{{ fieldid }}" style="width: 80%">
+              <input class="form-select mb-2" id="{{ fieldid }}" style="width: 80%" value="{{ field.value }}">
             </div>
 
-                  <input type="hidden" class="hidden-input" name="{{ field.fieldid }}">
+                  <input type="hidden" class="hidden-input" name="{{ field.fieldid }}" value="{{ field.recordid }}">
 
                   <script>
                     $(function() {
