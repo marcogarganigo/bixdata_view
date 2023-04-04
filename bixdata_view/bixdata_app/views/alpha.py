@@ -380,12 +380,6 @@ def get_block_reload(request):
 
 @login_required(login_url='/login/')
 def get_render_content_dashboard(request):
-    return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', None)
-    # return render(request, 'content/dashboard.html')@login_required(login_url='/login/')
-
-
-@login_required(login_url='/login/')
-def get_render_content_dashboard2(request):
     context = {}
     context['blocks'] = []  # Initialize the blocks list
 
@@ -425,7 +419,7 @@ def get_render_content_dashboard2(request):
                     request, sql, id, name, layout, fields)
                 context['blocks'].append(block)
 
-    return user_agent(request, 'content/dashboard2.html', 'content/dashboard_mobile.html', context)
+    return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', context)
 
 
 @login_required(login_url='/login/')

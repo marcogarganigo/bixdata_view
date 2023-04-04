@@ -34,7 +34,6 @@ urlpatterns = [
     path('test/', alpha.get_test, name='test'),
     path('temp/', alpha.get_temp, name='temp'),
     path('dashboard/', alpha.get_render_content_dashboard, name='dashboard'),
-    path('dashboard2/', alpha.get_render_content_dashboard2, name='dashboard2'),
     path('record_card_copy/', alpha.get_record_card_copy, name='record_card_copy'),
     path('record_card_delete/', alpha.get_record_card_delete, name='record_card_delete'),
     path('record_card_permissions/', alpha.get_record_card_permissions, name='record_card_permissions'),

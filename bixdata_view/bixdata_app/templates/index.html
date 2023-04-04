@@ -100,25 +100,6 @@
                     $("#content_container").html(response);
                     $('[data-toggle="tooltip"]').tooltip();
                 },
-                error: function () {
-                    $("#content_container").html(response);
-                }
-            });
-        }
-
-        function getDashboard2()
-        {
-            var serialized_data = [];
-            $("#content_container").load('http://127.0.0.1:8000/loading/');
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'dashboard2' %}",
-                data: serialized_data,
-                success: function (response) {
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
                 error: function (response) {
                     $("#content_container").html(response);
                 }
@@ -543,31 +524,16 @@
                     <!--- Sidemenu -->
                     <ul class="side-nav">
 
-                        <li class="side-nav-item">
-                            <a data-bs-toggle="collapse" onclick="getDashboard()" aria-expanded="false"
-                                aria-controls="sidebarDashboards" class="side-nav-link">
-                                <i class="uil-home-alt"></i>
-                                <span> Dashboards </span>
-                            </a>
-                            <div class="collapse" id="sidebarDashboards">
-                                <ul class="side-nav-second-level">
-                                    <li>
-                                        <a onclick="getDashboard()">Analytics</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-
                     <li class="side-nav-item">
-                            <a data-bs-toggle="collapse" onclick="getDashboard2()" aria-expanded="false"
+                            <a data-bs-toggle="collapse" onclick="getDashboard()" aria-expanded="false"
                                 aria-controls="sidebarDashboards2" class="side-nav-link">
                                 <i class="uil-home-alt"></i>
-                                <span> Dashboards2 </span>
+                                <span> Dashboard </span>
                             </a>
                             <div class="collapse" id="sidebarDashboards2">
                                 <ul class="side-nav-second-level">
                                     <li>
-                                        <a onclick="getDashboard2()">Analytics</a>
+                                        <a onclick="getDashboard()">Analytics</a>
                                     </li>
                                 </ul>
                             </div>
