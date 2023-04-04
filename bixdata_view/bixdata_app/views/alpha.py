@@ -382,15 +382,27 @@ def get_block_reload(request):
 def get_render_content_dashboard(request):
     context = {}
     context['blocks'] = []  # Initialize the blocks list
+    user_id = request.user.id
+
+    with connection.cursor() as cursor2:
+        cursor2.execute(
+            "SELECT dashboardid FROM v_user_dashboard_block WHERE bixid = %s", [user_id]
+        )
+        rows = cursor2.fetchall()
+        for row in rows:
+            dashboard_id = row[0]
+
 
     if request.method == 'POST':
         selected = ''
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM v_sys_dashboard_block"
+                "SELECT * FROM v_sys_dashboard_block WHERE dashboardid = %s", [dashboard_id]
             )
             rows = dictfetchall(cursor)
             print(rows)
+
+
 
             for row in rows:
                 selected = ''

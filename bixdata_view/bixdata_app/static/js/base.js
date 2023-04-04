@@ -387,9 +387,6 @@ const min_width = 1280;
     }
 }
 
-    function closeNewRecordModal() {
-        $("#newRecordModal").modal("hide");
-    }
 
     function open_kanban() {
         var serialized_data = [];
