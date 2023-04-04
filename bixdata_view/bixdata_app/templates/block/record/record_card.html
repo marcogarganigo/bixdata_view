@@ -85,8 +85,8 @@
             url: "{% url 'record_card_delete' %}",
             data : {
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
-                'tableid': '{{ table.id }}',
-                'recordid': '{{ record.id }}',
+                'tableid': '{{ tableid }}',
+                'recordid': '{{ recordid }}',
             },
             success: function(response) {
                 //$("#bixdata_recordcard_container").html(response);

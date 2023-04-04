@@ -480,13 +480,14 @@ def get_record_card_delete(request):
     if request.method == 'POST':
         recordid = request.POST.get('recordid')
         tableid = request.POST.get('tableid')
+        print(recordid)
+        print(tableid)
 
         with connection.cursor() as cursor:
             cursor.execute(
-                "update 'user_' + %s [tableid] set delete + '_' = 'y'"
+                "UPDATE user_project SET deleted_ = 'Y' WHERE id = 00000000000000000000000000000016",
             )
-            rows = cursor.fetchall()
-            print(rows)
+            print('deleted')
     return render(request)
 
 
