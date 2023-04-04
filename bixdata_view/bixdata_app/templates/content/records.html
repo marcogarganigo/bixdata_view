@@ -352,12 +352,10 @@
 
 
 
-    function closeNewRecordModal() {
-      $("#newRecordModal").modal("hide");
-      setTimeout(function() {
+    $('#newRecordModal').on('hidden.bs.modal', function (e) {
         $("#fullwidth_modal_newrecord").html("");
-      }, 500);
-    }
+    });
+
 
 
     function closeLinkedTableModal() {
