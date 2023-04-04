@@ -477,6 +477,16 @@ def get_record_card_copy(request):
 
 @login_required(login_url='/login/')
 def get_record_card_delete(request):
+    if request.method == 'POST':
+        recordid = request.POST.get('recordid')
+        tableid = request.POST.get('tableid')
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "update 'user_' + %s [tableid] set delete + '_' = 'y'"
+            )
+            rows = cursor.fetchall()
+            print(rows)
     return render(request)
 
 
