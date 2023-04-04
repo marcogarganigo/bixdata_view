@@ -20,7 +20,7 @@
             document.getElementById("{{ fieldid }}").value = "{{ items.value }}";
             </script>
             <div class="input-group mb-3">
-              <select id="{{ fieldid }}" name="{{ fieldname }}" class="form-select">
+              <select id="{{ fieldid }}" name="{{ fieldname }}" class="form-select mb-2">
               {% if field.lookupitems %}
                   {% for item in field.lookupitems %}
                 <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
@@ -31,13 +31,13 @@
             {% endfor %}
             {% else %}
                <label>
-                    <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control" type="text" value="{{ field.value }}">
+                    <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2" type="text" value="{{ field.value }}">
                 </label>
             {% endif %}
         {% endif %}
             {% if field.fieldtypeid == 'Data' %}
                 <label>
-                    <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control" type="date" value="{{ field.value }}">
+                    <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2" type="date" value="{{ field.value }}">
                 </label>
             {% endif %}
             {% if field.fieldtypeid == 'Seriale' %}
@@ -45,19 +45,19 @@
             {% endif %}
             {% if field.fieldtypeid == 'Numero' %}
                 <label>
-                    <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control" type="number" value="{{ field.value }}">
+                    <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2" type="number" value="{{ field.value }}">
                 </label>
             {% endif %}
             {% if field.fieldtypeid == 'Memo' %}
-                <textarea class="form-control" id="{{ fieldid }}" name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
+                <textarea class="form-control mb-2" id="{{ fieldid }}" name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
             {% endif %}
             {% if field.fieldtypeid == 'Ora' %}
                 <label>
-                    <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control" type="time" value="{{ field.value }}">
+                    <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2" type="time" value="{{ field.value }}">
                 </label>
             {% endif %}
             {% if field.fieldtypeid == 'Utente' %}
-            <div class="input-group mb-3">
+            <div class="input-group mb-2">
               <select id="{{ fieldid }}" name="{{ fieldname }}" class="form-select">
                   {% for items in field.lookupitems %}
                     {% if items.id and items.firstname and items.lastname %}
@@ -69,7 +69,7 @@
             {% endif %}
             {% if field.fieldtypeid == 'linkedmaster' %}
             <div class="ui-widget">
-              <input class="form-select" id="{{ fieldid }}" style="width: 80%">
+              <input class="form-select mb-2" id="{{ fieldid }}" style="width: 80%">
             </div>
 
                 <input type="hidden" id="hidden-input">
