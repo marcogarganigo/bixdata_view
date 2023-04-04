@@ -87,7 +87,7 @@
                             data: {
                               'term': request.term,
                               'tableid': '{{tableid}}',
-                              'mastertableid': 'company'
+                              'mastertableid': '{{ field.tablelink }}'
                             },
                             success: function(data) {
                               console.info(data)
