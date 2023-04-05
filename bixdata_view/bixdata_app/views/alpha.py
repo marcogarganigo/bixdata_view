@@ -18,6 +18,8 @@ from django.http import JsonResponse
 from django.contrib.auth.models import Group, Permission, User, Group
 from django_user_agents.utils import get_user_agent
 from bixdata_app.models import MyModel
+from bixdata_app.models import CustomUser
+
 from .beta import *
 
 
@@ -277,6 +279,9 @@ def get_render_index(request):
 
     username = request.user
 
+    role = username.role
+    #role = 'ruolo'
+
     print(menu_list.items())
     print(type(menu_list))
     for workspace_key, workspace_value in menu_list.items():
@@ -289,6 +294,7 @@ def get_render_index(request):
         'menu_list': menu_list,
         'date': datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
         'username': username,
+        'role': role
     }
 
     return user_agent(request, 'index.html', 'index2.html', context)
@@ -392,7 +398,6 @@ def get_render_content_dashboard(request):
         for row in rows:
             dashboard_id = row[0]
 
-
     if request.method == 'POST':
         selected = ''
         with connection.cursor() as cursor:
@@ -401,8 +406,6 @@ def get_render_content_dashboard(request):
             )
             rows = dictfetchall(cursor)
             print(rows)
-
-
 
             for row in rows:
                 selected = ''
@@ -421,7 +424,7 @@ def get_render_content_dashboard(request):
                 name = row['name']
                 layout = row['layout']
                 sql = "SELECT " + selected + " FROM " + tableid + \
-                    " WHERE " + query_conditions + " GROUP BY " + groupby
+                      " WHERE " + query_conditions + " GROUP BY " + groupby
                 print(sql)
                 block = dict()
                 block['sql'] = sql
@@ -528,7 +531,7 @@ def get_render_login(request):
     else:
         form = LoginForm()
     # return user_agent(request, 'other/login.html', 'other/test_query.html', {'form': form})
-    return render(request, 'other/login.html', {'form': form}, )
+    return render(request, 'other/../templates/registration/login.html', {'form': form}, )
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -536,10 +539,10 @@ def get_render_gestione_utenti(request):
     return render(request, 'other/gestione_utenti.html')
 
 
-@login_required(login_url='/login/')
+#   @login_required(login_url='/login/')
 def get_render_logout(request):
     logout(request)
-    return render(request, 'other/login.html')
+    return redirect('login')
 
 
 @login_required(login_url='/login/')
@@ -643,9 +646,9 @@ def get_block_records_kanban(request):
         'searchTerm': '',
     }
 
-    #response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
-    #response_dict = json.loads(response.text)
-    #groups=response_dict['groups']
+    # response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
+    # response_dict = json.loads(response.text)
+    # groups=response_dict['groups']
     # records = response_dict['records']
     # print(records)
     groups = []
@@ -783,9 +786,6 @@ def get_block_record_card(request):
     context['recordid'] = request.POST.get('recordid')
     context['tableid'] = request.POST.get('tableid')
 
- 
-    
-    
     returned = user_agent(request, 'block/record/record_card.html',
                           'block/record/record_card_mobile.html', context)
     return HttpResponse(returned)

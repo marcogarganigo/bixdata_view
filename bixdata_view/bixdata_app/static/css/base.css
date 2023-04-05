@@ -598,6 +598,10 @@
         color: #a59595
     }
 
+    html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
+    color: black !important;
+    }
+
 
 
 

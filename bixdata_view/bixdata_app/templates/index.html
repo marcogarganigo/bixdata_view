@@ -13,11 +13,13 @@
     </style>
     <script type="text/javascript">
 
-        const min_width = 1280;
+        const min_width = 1920;
         const fhd_width = 1920;
 
+        console.info(window.innerWidth)
 
-        if (screen.width <= min_width) {
+
+        if (window.innerWidth <= min_width) {
             $("html").attr("data-sidenav-size", "condensed");
             $(".tabs-title").attr("display", "none");
             $(".tabs-icon").attr("display", "visible");
@@ -32,7 +34,7 @@
             getDashboard();
 
             $("#toggle-menu").click(function () {
-                //$("#content_container").load('http://127.0.0.1:8000/loading/');
+                //$("#content_container").load('/loading/');
                 var current_sidenav_size = $("html").attr("data-sidenav-size");
                 if (current_sidenav_size == 'default') {
                     $("html").attr("data-sidenav-size", "condensed");
@@ -49,7 +51,7 @@
 
         function getContentRecords(tableid) {
             var serialized_data = [];
-            $("#content_container").load('http://127.0.0.1:8000/loading/');
+            $("#content_container").load('/loading/');
             serialized_data.push({ name: 'tableid', value: tableid });
             serialized_data.push({ name: 'searchTerm', value: '' });
             $.ajax({
@@ -61,7 +63,7 @@
                     $("#content_container").html(response);
                     $('[data-toggle="tooltip"]').tooltip();
                 },
-                error: function () {
+                error: function (response) {
                     $("#content_container").html(response);
                 }
             });
@@ -76,12 +78,12 @@
                 url: "{% url 'charts_view' %}",
                 data: serialized_data,
                 success: function (response) {
-                    $("#content_container").load('http://127.0.0.1:8000/loading/');
+                    $("#content_container").load('/loading/');
                     $("#content_container").html(response);
                     $('[data-toggle="tooltip"]').tooltip();
                 },
                 error: function () {
-                    $("#content_container").load('http://127.0.0.1:8000/loading/');
+                    $("#content_container").load('/loading/');
                     $("#content_container") .html(response);
                 }
             });
@@ -90,7 +92,7 @@
         function getDashboard()
         {
             var serialized_data = [];
-            $("#content_container").load('http://127.0.0.1:8000/loading/');
+            $("#content_container").load('/loading/');
             $.ajax({
                 type: "POST",
                 crossDomain: true,
@@ -355,7 +357,7 @@
                                 <span>
                                     <span class="user-hover">
                                         <span class="account-user-name">{{ username }}</span>
-                                        <span class="account-position">Founder</span>
+                                        <span class="account-position">{{ role }}</span>
                                     </span>
                                 </span>
                             </a>

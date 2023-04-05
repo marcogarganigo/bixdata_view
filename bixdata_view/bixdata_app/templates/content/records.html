@@ -35,7 +35,7 @@
             }
         })
         
-        if (screen.width <= min_width) {
+        if (window.innerWidth <= min_width) {
                 $("#block-record-card-container").css('display', 'none');
                 $("#block-records-search-container").css('width', '100%');
             }
@@ -156,11 +156,11 @@
             url: "{% url 'block_records_table' %}",
             data: serialized_data,
             success: function(response) {
-                $("#records-table-container").load('http://127.0.0.1:8000/loading/');
+                $("#records-table-container").load('/loading/');
                 $("#records_table_container").html(response);
             },
             error: function() {
-                $("#records_table_container").load('http://127.0.0.1:8000/loading/');
+                $("#records_table_container").load('/loading/');
                 $("#records_table_container").html(response);
             }
         });
@@ -201,7 +201,7 @@
 
     
     function checkWidth(response) {
-        if (screen.width > min_width) {
+        if (window.innerWidth > min_width) {
             $("#bixdata_recordcard_container").html(response);
         } else {
             $("#record-modal-content").html(response);
@@ -264,21 +264,21 @@
         });
         */
 
-        if (screen.width <= min_width) {
+        if (window.innerWidth <= min_width) {
 
         if ($(el.closest('td')).attr('data-fieldtype') === 'linked') {
             $('#linked-table-modal').modal('show');
             $(".modal-backdrop:last").css("z-index", 11200);
-            $("#linked-table-modal-content").load('http://127.0.0.1:8000/loading/');
+            $("#linked-table-modal-content").load('/loading/');
         } else {
 
             if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
                 $('#linked-table-modal').modal('show');
                 $(".modal-backdrop:last").css("z-index", 11200);
-                $("#linked-table-modal-content").load('http://127.0.0.1:8000/loading/');
+                $("#linked-table-modal-content").load('/loading/');
             } else {
                 $('#recordModal').modal('show');
-                $("#record-modal-content").load('http://127.0.0.1:8000/loading/');
+                $("#record-modal-content").load('/loading/');
             }
         }
 
@@ -289,14 +289,14 @@
             if ($(el.closest('td')).attr('data-fieldtype') === 'linked') {
                 $('#linked-table-modal').modal('show');
                 $(".modal-backdrop:last").css("z-index", 11200);
-                $("#linked-table-modal-content").load('http://127.0.0.1:8000/loading/');
+                $("#linked-table-modal-content").load('/loading/');
             } else {
                 if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
                     $('#linked-table-modal').modal('show');
-                    $("#linked-table-modal-content").load('http://127.0.0.1:8000/loading/');
+                    $("#linked-table-modal-content").load('/loading/');
                 } else {
-                    if (screen.width > min_width) {
-                        $("#block-record-card-container").load('http://127.0.0.1:8000/loading/');
+                    if (window.innerWidth > min_width) {
+                        $("#block-record-card-container").load('/loading/');
                     }
                 }
             }
@@ -319,7 +319,7 @@
                     $("#linked-table-modal-content").html(response);
                     console.log('fatto')
                 } else {
-                    if (screen.width > min_width) {
+                    if (window.innerWidth > min_width) {
                         console.log($(el.closest('#block_records_table')));
                         $("#block-record-card-container").html(response);
                     } else {
@@ -338,7 +338,7 @@
       $(vrbl).closest('.modal').modal('hide');
       setTimeout(function() {
       }, 1000);
-        if (screen.width > min_width) {
+        if (window.innerWidth > min_width) {
           $(vrbl).closest("#RecordCard").slideToggle(200, function() {
           });
         }

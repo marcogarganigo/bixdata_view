@@ -7,12 +7,13 @@
       type: 'bar',
     },
     series: [
-        {% for val in value %}
-        {
-      name: '{{ fields }}',
-      data: {{ val|safe }}
+    {% for val in value %}
+    {
+      name: '{{ fields|join:'' }}',
+      data: {{ val|safe }},
     },
-        {% endfor %}
+    {% endfor %}
+
     ],
     xaxis: {
       categories: {{ labels|safe }},
@@ -35,20 +36,20 @@
         },
       }],
     },
-        yaxis: {
-    labels: {
-      formatter: function(val) {
-        return Math.round(val);
+    yaxis: {
+      labels: {
+        formatter: function(val) {
+          return Math.round(val);
+        }
       }
-    }
-  },
-      dataLabels: {
+    },
+    dataLabels: {
       enabled: false
     },
-      title: {
-          text: '{{ name }}',
-        },
-       colors: ['#008ffbd9','#00e396d9','#ff4560d9'] // set color for each dataset
+    title: {
+      text: '{{ name }}',
+    },
+    colors: ['#008ffbd9','#00e396d9','#ff4560d9'], // set color for each dataset
   };
 
   var chart = new ApexCharts(document.querySelector("#chart{{ id }}"), options);

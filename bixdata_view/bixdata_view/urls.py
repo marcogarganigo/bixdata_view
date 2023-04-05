@@ -14,7 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
 from bixdata_app.views import alpha
 
 urlpatterns = [
@@ -38,8 +39,10 @@ urlpatterns = [
     path('record_card_delete/', alpha.get_record_card_delete, name='record_card_delete'),
     path('record_card_permissions/', alpha.get_record_card_permissions, name='record_card_permissions'),
     path('record_card_pin/', alpha.get_record_card_pin, name='record_card_pin'),
-    path('login/', alpha.get_render_login, name='login'),
-    path('logout/', alpha.get_render_logout, name='logout'),
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    #path('login/', alpha.get_render_login, name='login'),
+    #path('logout/', alpha.get_render_logout, name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('test_query/', alpha.get_test_query, name='test_query'),
     path('test_query2/', alpha.get_test_query2, name='test_query2'),
     path('get_full_data/', alpha.get_full_data, name='get_full_data'),
@@ -56,6 +59,17 @@ urlpatterns = [
     path('testcalendar/', alpha.get_test_calendar, name='testcalendar'),
     path('get_records_linked/', alpha.get_records_linked, name='get_records_linked'),
     path('get_chart/', alpha.get_chart, name='get_chart'),
+    #path('accounts/', include('django.contrib.auth.urls')),
+    # Password reset URLs
+    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
 
+]
+
+
+urlpatterns += [
+    path('accounts/login/', include('django.contrib.auth.urls')),
 ]

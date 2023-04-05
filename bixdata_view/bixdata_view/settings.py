@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+import requests
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -28,8 +28,19 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# SMTP settings for sending email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'marcogarga27@gmail.com'
+EMAIL_HOST_PASSWORD = 'kifsbemwdsdtolsr'
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_URL = '/logout/'
+LOGOUT_REDIRECT_URL = 'login'
+
 
 
 # Application definition
@@ -45,6 +56,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'bixdata_app',
 ]
+
+AUTH_USER_MODEL = 'bixdata_app.CustomUser'
+
+MIGRATION_MODULES = {
+    'bixdata_app': 'bixdata_app.migrations',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -81,7 +98,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bixdata_view.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -95,7 +111,6 @@ DATABASES = {
         'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -115,7 +130,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -126,7 +140,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/

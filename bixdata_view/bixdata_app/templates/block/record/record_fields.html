@@ -148,12 +148,10 @@ input:disabled, select:disabled, textarea:disabled {
   background-color: #fff !important;
   color: #000;
 }
-
 </style>
 
 <script>
 function save_record() {
-
     closeNewRecordModal()
     var serialized_array = $('#fields_container').find("select,textarea,input").serializeArray();
     var serialized_json=convertFormToJSON(serialized_array);
@@ -168,10 +166,9 @@ function save_record() {
         url: "{% url 'save_record_fields' %}",
         data: post_data,
         success: function(response) {
-            document.getElementById("saved-alert").style.display = "block";
             setTimeout(function() {
                 $("#saved-alert").fadeOut(1500);
-                getContentRecords('{{ tableid }}')
+                //getContentRecords('{{ tableid }}')
             });
 
         },
@@ -179,7 +176,6 @@ function save_record() {
             alert('ko')
         }
     });
-
 }
 
 
