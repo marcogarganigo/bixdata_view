@@ -37,3 +37,20 @@ def dictfetchall(cursor):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ]
+
+
+def get_user_setting(request):
+    if request.user.is_authenticated:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT setting, value FROM v_sys_user_settings WHERE bixid = %s", [request.user.id])
+            rows = cursor.fetchall()
+
+            setting = rows[0][0]
+            value = rows[0][1]
+
+            context = {
+                'setting': setting,
+                'value': value,
+            }
+
+            return context

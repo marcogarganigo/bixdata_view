@@ -581,6 +581,18 @@
                     </div>
                     <!-- Filters end-->
 
+                    <script>
+                        function underConstruction(el) {
+                            $.ajax({
+                                url: "{% url 'under_construction' %}",
+                                type: "GET",
+                                success: function(data) {
+                                    $(el).html(data);
+                                }
+                            });
+                        }
+                    </script>
+
 
 
                     <!-- Results start-->
@@ -591,16 +603,16 @@
                                 <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab" data-bs-target="#records_table_container" type="button" role="tab" aria-controls="records_table_container" aria-selected="true">Tabella</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="chart-tab" data-bs-toggle="tab" data-bs-target="#chart-tab-pane" type="button" role="tab" aria-controls="chart-tab-pane" href="chart" aria-selected="false">Grafico</button>
+                                <button onclick="underConstruction('#chart-tab-pane')" class="nav-link" id="chart-tab" data-bs-toggle="tab" data-bs-target="#chart-tab-pane" type="button" role="tab" aria-controls="chart-tab-pane" href="chart" aria-selected="false">Grafico</button>
                             </li>
                             <li id="nav-calendar" class="nav-item" role="presentation">
-                                <button class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane" type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar" aria-selected="false">Calendario</button>
+                                <button onclick="underConstruction('#calendar-tab-pane')" class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane" type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar" aria-selected="false">Calendario</button>
                             </li>
                             <li id="nav-kanban" class="nav-item" role="presentation">
-                                <button class="nav-link" id="kanban-tab" data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab" aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban</button>
+                                <button onclick="underConstruction('#kanban-tab-pane')" class="nav-link" id="kanban-tab" data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab" aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban</button>
                             </li>
                             <li id="nav-gantt" class="nav-item" role="presentation">
-                                <button class="nav-link" id="gantt-tab" data-bs-toggle="tab" data-bs-target="#gantt-tab-pane" type="button" role="tab" aria-controls="gantt-tab-pane" href="#gantt" aria-selected="false">Gantt</button>
+                                <button onclick="underConstruction('#gantt-tab-pane')" class="nav-link" id="gantt-tab" data-bs-toggle="tab" data-bs-target="#gantt-tab-pane" type="button" role="tab" aria-controls="gantt-tab-pane" href="#gantt" aria-selected="false">Gantt</button>
                             </li>
                         </ul>
                         <!-- Nav menu end -->

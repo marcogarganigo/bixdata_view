@@ -19,7 +19,8 @@ from django.contrib.auth.models import Group, Permission, User, Group
 from django_user_agents.utils import get_user_agent
 from bixdata_app.models import MyModel
 from bixdata_app.models import CustomUser
-
+import os
+from django.conf import settings
 from .beta import *
 
 
@@ -279,7 +280,7 @@ def get_render_index(request):
 
     username = request.user
 
-    #role = username.role
+    # role = username.role
     role = 'ruolo'
 
     print(menu_list.items())
@@ -925,3 +926,54 @@ def get_test_calendar(request):
 @login_required(login_url='/login/')
 def get_temp(request):
     return HttpResponse('test')
+
+
+@login_required(login_url='/login/')
+def get_settings(request):
+    context = get_user_setting(request)
+
+    setting = context['setting']
+    value = context['value']
+
+    context = {
+        'setting': setting,
+        'value': value
+    }
+
+    print(setting)
+    return render(request, 'other/settings.html', context)
+
+
+@login_required(login_url='/login/')
+def get_under_construction(request):
+    return render(request, 'other/under_construction.html')
+
+
+@login_required(login_url='/login/')
+def support(request):
+    if request.method == 'POST':
+        category = request.POST['category']
+        description = request.POST['description']
+        user = request.user.first_name + ' ' + request.user.last_name
+
+        # Get the uploaded files
+        images = request.FILES.getlist('images')
+
+        # Create a directory to store the images
+        directory = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'support_images')
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        # Print the names of the images
+        for image in images:
+            print(image.name)
+
+        # Do something with the saved images
+        # ...
+
+        print(category)
+        print(description)
+        print(user)
+        print(images)
+
+    return redirect('index')

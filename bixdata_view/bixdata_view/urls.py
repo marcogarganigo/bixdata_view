@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from bixdata_app.views import alpha
+from bixdata_app.views import beta
 
 urlpatterns = [
     path('', alpha.get_render_index, name='index'),
@@ -65,6 +66,10 @@ urlpatterns = [
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('get_settings/', alpha.get_settings, name='get_settings'),
+    path('get_user_setting/', beta.get_user_setting, name='get_user_setting'),
+    path('under_construction/', alpha.get_under_construction, name='under_construction'),
+    path('support/', alpha.support, name='support'),
 
 
 ]
