@@ -11,7 +11,6 @@ import datetime
 from django.contrib.auth.decorators import login_required
 import time
 from ..forms import LoginForm
-from ..forms import ProfilePicForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db import connection
@@ -563,6 +562,7 @@ def get_render_logout(request):
 
 @login_required(login_url='/login/')
 def get_block_records_table(request):
+
     tableid = request.POST.get('tableid')
     master_tableid = request.POST.get('master_tableid')
     master_recordid = request.POST.get('master_recordid')
@@ -758,6 +758,7 @@ def get_block_records_calendar(request):
 
 @login_required(login_url='/login/')
 def get_block_record(request):
+
     table = request.POST.get('table')
     searchTerm = request.POST.get('searchTerm')
     viewid = request.POST.get('viewid')
@@ -996,6 +997,7 @@ def support(request):
 
 @login_required(login_url='/login/')
 def save_settings(request):
+
     id = 'undefined'
 
     with connection.cursor() as cursor2:
@@ -1018,6 +1020,7 @@ def save_settings(request):
 
 @login_required(login_url='/login/')
 def get_account(request):
+
     user = request.user
     context = {
         'user': user
@@ -1029,16 +1032,16 @@ def get_account(request):
 @login_required(login_url='/login/')
 def update_profile_pic(request):
     if request.method == 'POST':
-        form = ProfilePicForm(request.POST, request.FILES)
-        if form.is_valid():
-            file_image = form.cleaned_data.get('image')
-            request.session['file_image'] = file_image
-            if file_image:
-                # Save the uploaded image with the user's username as the filename
-                filename = f"{request.user.username}.png"
-                filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), filename)
-                with open(filepath, 'wb') as f:
-                    for chunk in file_image.chunks():
-                        f.write(chunk)
+        image = request.FILES.get('image')
+        if image:
+            # Save the uploaded image with the user's username as the filename
+            filename = f"{request.user.username}.png"
+            filepath = os.path.join(settings.MEDIA_ROOT, filename)
+            with open(filepath, 'wb') as f:
+                for chunk in image.chunks():
+                    f.write(chunk)
+            # Update the user's profile image URL in the database
+
     return redirect('index')
+
 

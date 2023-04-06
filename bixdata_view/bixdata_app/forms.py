@@ -7,6 +7,4 @@ class LoginForm(forms.Form):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
 
 
-class ProfilePicForm(forms.Form):
-    profile_pic = forms.ImageField(label='Profile Picture')
 
