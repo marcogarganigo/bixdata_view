@@ -279,8 +279,8 @@ def get_render_index(request):
 
     username = request.user
 
-    role = username.role
-    #role = 'ruolo'
+    #role = username.role
+    role = 'ruolo'
 
     print(menu_list.items())
     print(type(menu_list))
