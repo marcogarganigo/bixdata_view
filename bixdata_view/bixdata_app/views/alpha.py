@@ -11,6 +11,7 @@ import datetime
 from django.contrib.auth.decorators import login_required
 import time
 from ..forms import LoginForm
+from ..forms import ProfilePicForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db import connection
@@ -281,7 +282,12 @@ def get_render_index(request):
     username = request.user
 
     # role = username.role
-    role = 'ruolo'
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT description FROM sys_user WHERE bixid = %s", [request.user.id]
+        )
+        role = cursor.fetchone()[0]
 
     print(menu_list.items())
     print(type(menu_list))
@@ -316,6 +322,15 @@ def get_content_records(request):
     context['table'] = tableid.upper()
     context['tableid'] = tableid
     context['views'] = dict()
+
+    #
+    with connection.cursor() as cursor2:
+        cursor2.execute(
+            "SELECT value FROM v_sys_user_settings where bixid = %s", [request.user.id]
+        )
+        layout_setting = cursor2.fetchone()[0]
+    #
+    context['layout_setting'] = layout_setting
     return user_agent(request, 'content/records.html', 'content/records_mobile.html', context)
     # return render(request, 'content/records.html', context)
 
@@ -578,7 +593,7 @@ def get_block_records_table(request):
         'tableid': tableid,
         'table_height': table_height,
         'table_type': table_type,
-        'other_values': other_values
+        'other_values': other_values,
     }
 
     for records_index, record in enumerate(records):
@@ -977,3 +992,53 @@ def support(request):
         print(images)
 
     return redirect('index')
+
+
+@login_required(login_url='/login/')
+def save_settings(request):
+    id = 'undefined'
+
+    with connection.cursor() as cursor2:
+        cursor2.execute(
+            "SELECT id FROM sys_user where bixid = %s", [request.user.id]
+        )
+        id = cursor2.fetchone()[0]
+
+    if request.method == 'POST':
+        value = request.POST.get('value')
+        query = "UPDATE v_sys_user_settings SET value = '" + value + "' WHERE userid =" + str(id)
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                query
+            )
+
+    return redirect('index')
+
+
+@login_required(login_url='/login/')
+def get_account(request):
+    user = request.user
+    context = {
+        'user': user
+    }
+
+    return render(request, 'other/account.html', context)
+
+
+@login_required(login_url='/login/')
+def update_profile_pic(request):
+    if request.method == 'POST':
+        form = ProfilePicForm(request.POST, request.FILES)
+        if form.is_valid():
+            file_image = form.cleaned_data.get('image')
+            request.session['file_image'] = file_image
+            if file_image:
+                # Save the uploaded image with the user's username as the filename
+                filename = f"{request.user.username}.png"
+                filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), filename)
+                with open(filepath, 'wb') as f:
+                    for chunk in file_image.chunks():
+                        f.write(chunk)
+    return redirect('index')
+

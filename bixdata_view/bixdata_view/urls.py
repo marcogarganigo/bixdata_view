@@ -70,7 +70,9 @@ urlpatterns = [
     path('get_user_setting/', beta.get_user_setting, name='get_user_setting'),
     path('under_construction/', alpha.get_under_construction, name='under_construction'),
     path('support/', alpha.support, name='support'),
-
+    path('save_settings/', alpha.save_settings, name='save_settings'),
+    path('get_account/', alpha.get_account, name='get_account'),
+    path('update_profile_pic/', alpha.update_profile_pic, name='update_profile_pic'),
 
 ]
 

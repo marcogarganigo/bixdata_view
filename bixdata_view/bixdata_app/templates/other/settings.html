@@ -1,5 +1,16 @@
-
-
-<br>
-{{ setting }}
-{{ value }}
+<div class="container" style="margin-top: 2%">
+  layout
+  <form method="POST" action="{% url 'save_settings' %}">
+    {% csrf_token %}
+    <select name="value" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+      {% if value == 'rightcard' %}
+        <option value="rightcard" selected>scheda a destra (consigliato)</option>
+        <option value="modal">popup</option>
+      {% else %}
+        <option value="modal" selected>popup</option>
+          <option value="rightcard">scheda a destra (consigliato)</option>
+      {% endif %}
+    </select>
+    <button type="submit" class="btn btn-primary" style="float:right">Salva</button>
+  </form>
+</div>

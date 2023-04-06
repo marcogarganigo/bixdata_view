@@ -263,6 +263,9 @@
         $('this').closest(".modal-backdrop").css("z-index", 11200);
         });
         */
+        {% if layout_setting == 'modal' %}
+        const min_width = 5000
+        {% endif %}
 
         if (window.innerWidth <= min_width) {
 
@@ -401,6 +404,14 @@
         z-index: 9999
     }
 </style>
+
+{% if layout_setting == 'modal' %}
+<style>
+#block-records-search-container {
+    width: 100% !important;
+}
+</style>
+{% endif %}
 
 <!-- new record modal-->
    <div class="modal fade" id="newRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%;">

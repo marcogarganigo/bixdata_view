@@ -602,6 +602,17 @@
     color: black !important;
     }
 
+    .noti-title, .notify-item, .me-1, .notify-item > span {
+        cursor: pointer;
+    }
+
+    .nav-user {
+    background-color: white;
+    background-image: linear-gradient(180deg, #ffffff 50%, #ede4e4 200%);
+    background-size: cover;
+    }
+
+
 
 
 
