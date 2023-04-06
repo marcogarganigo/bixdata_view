@@ -108,6 +108,22 @@
             });
         }
 
+        function get_settings() {
+            $("#content_container").load('/loading/');
+            $.ajax({
+                type: "POST",
+                crossDomain: true,
+                url: "{% url 'get_settings' %}",
+                success: function (response) {
+                    $("#content_container").html(response);
+                    $('[data-toggle="tooltip"]').tooltip();
+                },
+                error: function (response) {
+                    $("#content_container").html(response);
+                }
+            });
+        }
+
 
 
 
@@ -351,7 +367,7 @@
                             <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown"
                                 href="#" role="button" aria-haspopup="false" aria-expanded="false">
                                 <span class="account-user-avatar">
-                                     <img src="{% static 'images/users/' %}{{ username }}.png" alt="user-image"
+                                     <img src="{% static 'images/users/' %}{{ username }}.png" alt=""
                                         class="rounded-circle">
                                 </span>
                                 <span>
@@ -368,31 +384,31 @@
                                     <h6 class="text-overflow m-0">Welcome !</h6>
                                 </div>
 
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="mdi mdi-account-circle me-1"></i>
-                                    <span>My Account</span>
+                                <a class="dropdown-item notify-item" href="{% url 'under_construction' %}">
+                                    <i class="mdi mdi-lifebuoy me-1"></i>
+
+                                    <span>Account</span>
                                 </a>
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <a onclick="get_settings()" class="dropdown-item notify-item">
                                     <i class="mdi mdi-account-edit me-1"></i>
                                     <span>Settings</span>
                                 </a>
 
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <a class="dropdown-item notify-item" onclick="openSupportModal()">
                                     <i class="mdi mdi-lifebuoy me-1"></i>
 
                                     <span>Support</span>
                                 </a>
 
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="mdi mdi-lock-outline me-1"></i>
-                                    <span>Lock Screen</span>
-                                </a>
+                                <script>
+                                    function openSupportModal() {
+                                        $('#supportModal').modal('show');
+                                    }
+                                </script>
 
                                 <!-- item-->
                                 <a href="{% url 'logout' %}" class="dropdown-item notify-item">
@@ -663,17 +679,107 @@
             </div>
         </div>
 
-
-
-
-
-
-        <!-- ============================================================== -->
-        <!-- End Page content -->
-        <!-- ============================================================== -->
-
     </div>
+
+<div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Bixdata support</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'support' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="category-select">Category:</label>
+            <select class="form-control" id="category-select" name="category">
+              <option value="">-- Select Category --</option>
+              <option value="technical">Technical Issue</option>
+              <option value="billing">Billing Issue</option>
+              <option value="other">Other Issue</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="description-textarea">Description:</label>
+            <textarea class="form-control" id="description-textarea" name="description" rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <div id="image-drop-area" style="border: 2px dashed #ccc; padding: 10px;">
+              <p>Drag and drop images or paste them here</p>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+
+    <script>
+  var imageDropArea = document.getElementById('image-drop-area');
+
+  // Handle drag and drop events
+  imageDropArea.addEventListener('dragenter', function(e) {
+    e.preventDefault();
+    imageDropArea.style.backgroundColor = '#eee';
+  });
+
+  imageDropArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+  });
+
+  imageDropArea.addEventListener('dragleave', function(e) {
+    imageDropArea.style.backgroundColor = '#fff';
+  });
+
+  imageDropArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    imageDropArea.style.backgroundColor = '#fff';
+
+    // Handle dropped image
+    var file = e.dataTransfer.files[0];
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = document.createElement('img');
+      img.src = e.target.result;
+      imageDropArea.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Handle paste event
+  imageDropArea.addEventListener('paste', function(e) {
+    e.preventDefault();
+
+    // Handle pasted image
+    var file = e.clipboardData.items[0].getAsFile();
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = document.createElement('img');
+      img.src = e.target.result;
+      imageDropArea.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+</script>
+
+<style>
+    #image-drop-area img {
+  max-width: 100px;
+  max-height: 100px;
+  margin: 5px;
+}
+</style>
+
+
+
+</div>
+
 
 
 

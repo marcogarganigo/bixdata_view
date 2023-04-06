@@ -13,9 +13,14 @@
 
     function show_alert() {
         $(".alert").fadeOut(200);
-
-
     }
+
+    function submitOnEnter(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault(); // prevent form submission on Enter key press
+    document.getElementById("frm").submit(); // submit the form
+  }
+}
 
 
 
@@ -35,11 +40,11 @@
     <form action="{% url 'login' %}" method="post" id="frm">
       {% csrf_token %}
       <div class="user-box">
-        <input class="txt-inp" type="text" name="username" required="">
+        <input class="txt-inp" type="text" name="username" required="" onkeypress="submitOnEnter(event)">
         <label>Username</label>
       </div>
       <div class="user-box">
-        <input class="txt-inp" type="password" name="password" required="">
+        <input class="txt-inp" type="password" name="password" required="" onkeypress="submitOnEnter(event)">
         <label>Password</label>
       </div>
     <a id="reset-password" href="{% url 'password_reset' %}">reset password</a>
