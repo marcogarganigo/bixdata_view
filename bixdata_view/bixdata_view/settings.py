@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'bixdata_app',
 ]
 
-AUTH_USER_MODEL = 'bixdata_app.CustomUser'
+#AUTH_USER_MODEL = 'bixdata_app.CustomUser'
 
 MIGRATION_MODULES = {
     'bixdata_app': 'bixdata_app.migrations',
