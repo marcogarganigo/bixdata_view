@@ -169,6 +169,8 @@ function save_record() {
             setTimeout(function() {
                 $("#saved-alert").fadeOut(1500);
                 //getContentRecords('{{ tableid }}')
+                $("#container-{{ tableid }}").load('/loading/')
+                triggerCollapse($("#container-{{ tableid }}"), '{{ tableid }}', '{{ tableid }}')
             });
 
         },
