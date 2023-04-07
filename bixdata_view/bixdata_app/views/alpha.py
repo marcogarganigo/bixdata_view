@@ -281,6 +281,7 @@ def get_render_index(request):
     username = request.user
 
     # role = username.role
+    context = {}
 
     with connection.cursor() as cursor:
         cursor.execute(
@@ -296,11 +297,20 @@ def get_render_index(request):
             print(type(table))
             print(table.get('description'))
 
+
+    with connection.cursor() as cursor2:
+        cursor2.execute(
+            "SELECT value FROM v_sys_user_settings where setting = 'theme' and bixid = %s", [request.user.id]
+        )
+        theme = cursor2.fetchone()[0]
+    #
+
     context = {
         'menu_list': menu_list,
         'date': datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
         'username': username,
-        'role': role
+        'role': role,
+        'theme': theme
     }
 
     return user_agent(request, 'index.html', 'index2.html', context)
@@ -325,7 +335,7 @@ def get_content_records(request):
     #
     with connection.cursor() as cursor2:
         cursor2.execute(
-            "SELECT value FROM v_sys_user_settings where bixid = %s", [request.user.id]
+            "SELECT value FROM v_sys_user_settings where setting = 'record_open_layout' and bixid = %s", [request.user.id]
         )
         layout_setting = cursor2.fetchone()[0]
     #
@@ -946,18 +956,11 @@ def get_temp(request):
 
 @login_required(login_url='/login/')
 def get_settings(request):
-    context = get_user_setting(request)
+    settings_list = get_user_setting(request)
 
-    setting = context['setting']
-    value = context['value']
+    print(settings_list)
 
-    context = {
-        'setting': setting,
-        'value': value
-    }
-
-    print(setting)
-    return render(request, 'other/settings.html', context)
+    return render(request, 'other/settings.html', {'settings_list': settings_list})
 
 
 @login_required(login_url='/login/')
@@ -997,22 +1000,26 @@ def support(request):
 
 @login_required(login_url='/login/')
 def save_settings(request):
+    id = None
 
-    id = 'undefined'
-
-    with connection.cursor() as cursor2:
-        cursor2.execute(
-            "SELECT id FROM sys_user where bixid = %s", [request.user.id]
-        )
-        id = cursor2.fetchone()[0]
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT id FROM sys_user WHERE bixid = %s", [request.user.id])
+        row = cursor.fetchone()
+        if row:
+            id = row[0]
 
     if request.method == 'POST':
-        value = request.POST.get('value')
-        query = "UPDATE v_sys_user_settings SET value = '" + value + "' WHERE userid =" + str(id)
+        layout = request.POST.get('record_open_layout')
+        theme = request.POST.get('theme')
 
         with connection.cursor() as cursor:
             cursor.execute(
-                query
+                "UPDATE v_sys_user_settings SET value = %s WHERE userid = %s AND setting = 'record_open_layout'",
+                [layout, id]
+            )
+            cursor.execute(
+                "UPDATE v_sys_user_settings SET value = %s WHERE userid = %s AND setting = 'theme'",
+                [theme, id]
             )
 
     return redirect('index')

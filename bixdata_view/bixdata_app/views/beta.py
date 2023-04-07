@@ -44,13 +44,12 @@ def get_user_setting(request):
         with connection.cursor() as cursor:
             cursor.execute("SELECT setting, value FROM v_sys_user_settings WHERE bixid = %s", [request.user.id])
             rows = cursor.fetchall()
+            settings_list = []
 
-            setting = rows[0][0]
-            value = rows[0][1]
+            for row in rows:
+                settings_list.append({'setting': row[0], 'value': row[1]})
 
-            context = {
-                'setting': setting,
-                'value': value,
-            }
+            #print(settings_list)
 
-            return context
+            return settings_list
+
