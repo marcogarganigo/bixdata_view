@@ -407,7 +407,11 @@
 
 <script>
     $('#newRecordModal').on('show.bs.modal', function (e) {
-        $('#newRecordModal').closest('.modal-backdrop').css('z-index', 11200)
+        $('.modal-backdrop:first').css('z-index', 8000)
+    });
+
+    $('#newRecordModal').on('hide.bs.modal', function (e) {
+        $('.modal-backdrop:first').css('z-index', 1000)
     });
 </script>
 
