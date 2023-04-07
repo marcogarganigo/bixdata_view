@@ -55,10 +55,14 @@
     <!-- App css -->
     <link href="{% static 'css/app-modern.min.css' %}" rel="stylesheet" type="text/css" id="app-style" />
 
-    <!-- if theme == 'default' -->
+{% if theme == 'default' %}
     <!-- Base css -->
     <link href="{% static 'css/base.css' %}?v={{date}}" rel="stylesheet" type="text/css" id="app-style" />
 
+{% elif theme == 'theme1' %}
+     <link href="{% static 'css/custom-theme.css' %}?v={{date}}" rel="stylesheet" type="text/css" id="app-style" />
+
+{% endif %}
 
     <!--Custom small css-->
     <link href="{% static 'css/custom-sm.css' %}?v={{date}}" rel="stylesheet" type="text/css" id="app-style" />
