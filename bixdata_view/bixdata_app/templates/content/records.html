@@ -407,11 +407,11 @@
 
 <script>
     $('#newRecordModal').on('show.bs.modal', function (e) {
-        $('.modal-backdrop:first').css('z-index', 8000)
+        $('.modal-backdrop').css('z-index', 8000)
     });
 
     $('#newRecordModal').on('hide.bs.modal', function (e) {
-        $('.modal-backdrop:first').css('z-index', 1000)
+        $('.modal-backdrop').css('z-index', 1000)
     });
 </script>
 
@@ -424,12 +424,12 @@
 {% endif %}
 
 <!-- new record modal-->
-   <div class="modal fade" id="newRecordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%;">
+   <div class="modal fade" id="newRecordModal" aria-hidden="true" style="width: 100%;">
         <div class="modal-dialog modal-xl" style="width: 100%;">
             <div class="modal-content" style="width: 100%">
                 <div class="modal-body" style="width: 100%">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeNewRecordModal()"></button>
-                    <div id="fullwidth_modal_newrecord" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
+                    <div id="fullwidth_modal_newrecord"  style="height: 100%; width: 100%;">
                     </div>
                 </div>
             </div>
@@ -437,7 +437,9 @@
     </div>
 
 
-        <div class="modal fade" id="linked-table-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%; z-index: 12000">
+
+
+        <div class="modal fade" id="linked-table-modal" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%; z-index: 12000">
         <div class="modal-dialog modal-xl" style="width: 100%;">
             <div class="modal-content" style="width: 80%">
                 <div class="modal-body" style="width: 100%">

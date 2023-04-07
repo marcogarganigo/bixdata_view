@@ -200,37 +200,37 @@
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <button class="nav-link active" id="fields-tab" data-bs-toggle="tab" data-bs-target="#fields-tab-pane" type="button" role="tab" aria-controls="fields-tab-pane" aria-selected="true">
-    
+
                         <p class="tabs-title">Campi</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="fields">
                             text_fields
                         </span>
-    
+
                     </button>
                     <button class="nav-link" id="linked-tab" data-bs-toggle="tab" data-bs-target="#linked-tab-pane" type="button" role="tab" aria-controls="linked-tab-pane" aria-selected="false">
-    
+
                         <p class="tabs-title">Collegati</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="linked">
                             link
                         </span>
-    
+
                     </button>
                     <button class="nav-link" id="attachment-tab" data-bs-toggle="tab" data-bs-target="#attachment-tab-pane" type="button" role="tab" aria-controls="attachment-tab-pane" aria-selected="false">
-    
+
                         <p class="tabs-title">Allegati</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="attachment">
                             attachment
                         </span>
                     </button>
                     <button class="nav-link" id="statistics-tab" data-bs-toggle="tab" data-bs-target="#statistics-tab-pane" type="button" role="tab" aria-controls="statistics-tab-pane" aria-selected="false">
-    
+
                         <p class="tabs-title">Analitica</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="analytics">
                             analytics
                         </span>
                     </button>
                     <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-tab-pane" type="button" role="tab" aria-controls="history-tab-pane" aria-selected="false">
-    
+
                         <p class="tabs-title">Storico</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="history">
                             history
@@ -238,7 +238,7 @@
                     </button>
                     </button>
                     <button class="nav-link" id="workflow-tab" data-bs-toggle="tab" data-bs-target="#workflow-tab-pane" type="button" role="tab" aria-controls="workflow-tab-pane" aria-selected="false">
-    
+
                         <p class="tabs-title">Flusso di lavoro</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="workflow">
                             rebase
@@ -246,29 +246,29 @@
                     </button>
                 </div>
             </nav>
-    
+
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="fields-tab-pane" role="tabpanel" aria-labelledby="fields-tab" tabindex="0">
                     {{block_record_fields}}
-    
+
                 </div>
-    
+
                 <div class="tab-pane fade" id="linked-tab-pane" role="tabpanel" aria-labelledby="linked-tab" tabindex="0">
-    
+
                     <p>
                     <div class="d-grid gap-2">
-    
+
                         {{block_record_linked}}
-    
-    
-    
+
+
+
                     </div>
                     </p>
-    
-    
-    
+
+
+
                 </div>
-    
+
                 <div class="tab-pane fade" id="attachment-tab-pane" role="tabpanel" aria-labelledby="attachment-tab" tabindex="0">...</div>
                 <div class="tab-pane fade" id="statistics-tab-pane" role="tabpanel" aria-labelledby="statistics-tab" tabindex="0">...</div>
                 <div class="tab-pane fade" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">...</div>
