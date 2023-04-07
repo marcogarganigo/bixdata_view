@@ -1,16 +1,35 @@
 <div class="container" style="margin-top: 2%">
-  layout
-  <form method="POST" action="{% url 'save_settings' %}">
+  {% for item in settings_list %}
+       <form method="POST" action="{% url 'save_settings' %}">
+    {% if item.setting == 'record_open_layout' %}
+      <div>
+        <label for="record_open_layout">layout</label>
+        <select name="record_open_layout" id="record_open_layout" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+          {% if item.value == 'rightcard' %}
+            <option value="rightcard" selected>scheda a destra (consigliato)</option>
+            <option value="modal">popup</option>
+          {% else %}
+            <option value="modal" selected>popup</option>
+            <option value="rightcard">scheda a destra (consigliato)</option>
+          {% endif %}
+        </select>
+      </div>
+    {% elif item.setting == 'theme' %}
+      <div>
+        <label for="theme">theme</label>
+        <select name="theme" id="theme" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+          {% if item.value == 'default' %}
+            <option value="default" selected>tema default</option>
+            <option value="theme1">tema1</option>
+          {% else %}
+            <option value="theme1" selected>tema1</option>
+            <option value="default">tema default</option>
+          {% endif %}
+        </select>
+      </div>
+    {% endif %}
+  {% endfor %}
     {% csrf_token %}
-    <select name="value" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-      {% if value == 'rightcard' %}
-        <option value="rightcard" selected>scheda a destra (consigliato)</option>
-        <option value="modal">popup</option>
-      {% else %}
-        <option value="modal" selected>popup</option>
-          <option value="rightcard">scheda a destra (consigliato)</option>
-      {% endif %}
-    </select>
     <button type="submit" class="btn btn-primary" style="float:right">Salva</button>
   </form>
 </div>

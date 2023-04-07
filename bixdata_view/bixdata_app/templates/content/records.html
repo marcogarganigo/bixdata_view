@@ -405,6 +405,12 @@
     }
 </style>
 
+<script>
+    $('#newRecordModal').on('show.bs.modal', function (e) {
+        $('#newRecordModal').closest('.modal-backdrop').css('z-index', 11200)
+    });
+</script>
+
 {% if layout_setting == 'modal' %}
 <style>
 #block-records-search-container {
