@@ -845,11 +845,17 @@ def get_block_record_fields(request):
     recordid = request.POST.get('recordid')
     master_tableid = request.POST.get('master_tableid')
     master_recordid = request.POST.get('master_recordid')
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT id FROM sys_user WHERE bixid = %s", [request.user.id])
+        row = cursor.fetchone()
+        if row:
+            userid = row[0]
     post = {
         'tableid': tableid,
         'recordid': recordid,
         'master_tableid': master_tableid,
-        'master_recordid': master_recordid
+        'master_recordid': master_recordid,
+        'userid':userid
     }
     response = requests.post(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_fields", data=post)
