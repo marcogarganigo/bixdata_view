@@ -1,5 +1,5 @@
 <script>
-    function triggerCollapse(el, id, label) {
+    function triggerCollapse(el, id, tablelinkid) {
       var collapse = document.getElementById(id);
       if ($(el).attr('aria-expanded') == 'false') {
           $(el).css('background-color', '#e1dfdf');
@@ -8,23 +8,29 @@
             $(el).css('background-color', 'whitesmoke');
             $(el).css('color', '#074048');
       }
-        $.ajax({
+
+      load_linked(el,tablelinkid);
+        
+    }
+
+    function load_linked(el,linkedtableid)
+    {
+      $.ajax({
             url: "{% url 'get_records_linked' %}",
             type: 'POST',
             data: {
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
-                'tableid': label,
+                'tableid': linkedtableid,
                 'master_tableid': '{{tableid}}',
                 'master_recordid': '{{recordid}}'
             },
             success: function (response) {
-              $(collapse).find('.linked_container').html(response);
+              //$(collapse).find('.linked_container').html(response);
+              $("#linked-container-" + linkedtableid).html(response)
             }, error: function (response) {
             }
         });
     }
-
-
 
     function linked_newRecord(el, linkedtableid) {
         //console.info(el)
@@ -50,8 +56,8 @@
                 $("#bixdata_recordcard_container").html(response);
             }
         });
-        $("#container-" + linkedtableid).load('/loading/')
-        triggerCollapse(this, linkedtableid, linkedtableid)
+        $("#linked-container-" + linkedtableid).load('/loading/')
+        load_linked(el,linkedtableid)
     }
 
 </script>
@@ -73,7 +79,7 @@
   <div class="collapse" id="{{label.tablelinkid}}" style="margin-top: 10px">
     <div class="card card-body">
     <button class="btn btn-secondary d-flex justify-content-center align-items-center" onclick="linked_newRecord(this, '{{label.tablelinkid}}')" style="width: 5%;"><span class="material-symbols-outlined">add</span></button>
-      <div class="linked_container" id="container-{{ label.tablelinkid }}">
+      <div id="linked-container-{{ label.tablelinkid }}"  class="linked_container" >
 
       </div>
 
