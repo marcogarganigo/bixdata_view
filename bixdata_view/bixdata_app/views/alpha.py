@@ -273,7 +273,7 @@ def get_chart4(request):
 
 
 @login_required(login_url='/login/')
-def get_render_index(request):
+def get_render_index(request,content=''):
     response = requests.get(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
     menu_list = json.loads(response.text)
@@ -310,7 +310,8 @@ def get_render_index(request):
         'date': datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
         'username': username,
         'role': role,
-        'theme': theme
+        'theme': theme,
+        'content':content
     }
 
     return user_agent(request, 'index.html', 'index2.html', context)
@@ -1051,4 +1052,11 @@ def update_profile_pic(request):
 
     return redirect('index')
 
+
+@login_required(login_url='/login/')
+def get_url(request):
+    tableid=request.GET['tableid']
+    recordid = request.GET['recordid']
+    content=tableid+": "+recordid
+    return get_render_index(request,content)
 

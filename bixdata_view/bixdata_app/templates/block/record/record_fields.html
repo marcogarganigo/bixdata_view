@@ -23,10 +23,14 @@
               <select id="{{ fieldid }}" name="{{ fieldname }}" class="form-select">
               {% if field.lookupitems %}
                 <option value=""></option>
-                  {% for item in field.lookupitems %}
-                <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                    {% for item in field.lookupitems %}
+                        {% if item.itemcode == field.valuecode.0.code %}
+                            <option selected value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                            {% else %}
+                        <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                        {% endif %}
                     {% endfor %}
-                  {% endif %}
+              {% endif %}
               </select>
             </div>
             {% endfor %}
@@ -63,7 +67,11 @@
                 <option id="" value=""></option>
                   {% for items in field.lookupitems %}
                     {% if items.id and items.firstname and items.lastname %}
+                        {% if items.id == field.valuecode.0.code %}
+                            <option selected id="{{ items.id }}" value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                            {% else %}
                 <option id="{{ items.id }}" value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                            {% endif %}
                   {% endif %}
                   {% endfor %}
               </select>
