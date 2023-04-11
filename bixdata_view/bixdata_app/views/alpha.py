@@ -1079,3 +1079,4 @@ def get_url(request):
     recordid = request.GET['recordid']
     content = tableid + ": " + recordid
     return get_render_index(request, content)
+
