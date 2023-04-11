@@ -1,7 +1,7 @@
 <script>
     function triggerCollapse(el, id, tablelinkid) {
       var collapse = document.getElementById(id);
-      if ($(el).find('.div-collapse').attr('display') === 'none') {
+      if ($(el).next('.div-collapse').attr('display') === 'none') {
           $(el).css('background-color', '#e1dfdf');
           $(el).css('color', 'black');
       } else {

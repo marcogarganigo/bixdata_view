@@ -42,7 +42,7 @@
         {% endif %}
             {% if field.fieldtypeid == 'Data' %}
                 <label>
-                    <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2" type="date" value="{{ field.value }}">
+                    <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2" type="date" value="{{ field.valuecode.0.code }}">
                 </label>
             {% endif %}
             {% if field.fieldtypeid == 'Seriale' %}
@@ -70,6 +70,7 @@
                         {% if items.id == field.valuecode.0.code %}
                             <option selected id="{{ items.id }}" value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
                             {% else %}
+                <option id="{{ items.id }}" value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
                 <option id="{{ items.id }}" value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
                             {% endif %}
                   {% endif %}
