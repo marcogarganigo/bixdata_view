@@ -603,13 +603,19 @@ def get_block_records_table(request):
             record[record_index]['value'] = value
             record[record_index]['code'] = value
             record[record_index]['fieldtype'] = columns[record_index]['fieldtypeid'];
-            if isinstance(value, str):
-                value = value.split('|:|')
-                if (len(value) > 2):
-                    record[record_index]['value'] = value[0]
-                    record[record_index]['link_recordid'] = value[1]
-                    record[record_index]['link_tableid'] = value[2]
-                    record[record_index]['fieldtype'] = 'linked'
+            if(record[record_index]['fieldtype']=='linked'):
+                if isinstance(value, str):
+                    value = value.split('|:|')
+                    if (len(value) > 2):
+                        record[record_index]['value'] = value[0]
+                        record[record_index]['link_recordid'] = value[1]
+                        record[record_index]['link_tableid'] = value[2]
+                        record[record_index]['fieldtype'] = 'linked'
+            if(record[record_index]['fieldtype']=='Utente'):
+                code = record[record_index]['code']
+                code=code.replace(' ','.')
+                code=code.lower()
+                record[record_index]['code'] = code
 
         records[records_index] = record
 
