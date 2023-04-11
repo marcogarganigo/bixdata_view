@@ -13,6 +13,10 @@
 
     }
 
+    function toggleCollapse(el) {
+        $(el).next('.div-collapse').slideToggle(200);
+    }
+
     function load_linked(el,linkedtableid)
     {
       $.ajax({
@@ -69,15 +73,29 @@
 </style>
 
 
+<script>
+    /*
+$('#top-label').on('click', function(event) {
+  if ($(this).find('.collapse').hasClass('show')) {
+    $(this).find('.collapse').removeClass('show');
+  } else {
+    $(this).find('.collapse').addClass('show');
+  }
+});
+*/
+</script>
+
+
 
 
 <div id="block_record_linked">
   {% for label in labels %}
-  <button class="btn btn-primary" id="top-label" type="button" data-toggle="collapse" data-target="#{{label.tablelinkid}}" aria-expanded="false" aria-controls="{{label.tablelinkid}}" style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse(this,'{{label.tablelinkid}}', '{{ label.tablelinkid }}')">
+  <button class="btn btn-primary" id="top-label" type="button" data-bs-toggle="collapse" data-bs-target="#{{label.tablelinkid}}" aria-expanded="false" aria-controls="{{label.tablelinkid}}" style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse(this,'{{label.tablelinkid}}', '{{ label.tablelinkid }}'); toggleCollapse(this)">
     <span class="badge bg-danger" style="float: left; color: #d9d4d4; background-color: red; border-radius: 7.5%; margin-right: 10px">5</span>
     {{label.tablelinkid}}
   </button>
-  <div class="collapse" id="{{label.tablelinkid}}" style="margin-top: 10px">
+
+  <div class="div-collapse" id="{{label.tablelinkid}}" style="margin-top: 10px; display: none">
     <div class="card card-body">
     <button class="btn btn-secondary d-flex justify-content-center align-items-center" onclick="linked_newRecord(this, '{{label.tablelinkid}}')" style="width: 5%;"><span class="material-symbols-outlined">add</span></button>
       <div id="linked-container-{{ label.tablelinkid }}"  class="linked_container" >
@@ -88,7 +106,6 @@
   </div>
   {% endfor %}
 </div>
-
 
 
 
