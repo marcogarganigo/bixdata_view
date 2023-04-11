@@ -616,6 +616,19 @@ def get_block_records_table(request):
                 code=code.replace(' ','.')
                 code=code.lower()
                 record[record_index]['code'] = code
+            if(record[record_index]['fieldtype']=='Numero'):
+                string_num=record[record_index]['value']
+                if string_num:
+                    try:
+                        num = float(string_num)
+                    except ValueError:
+                        num=0
+                else:
+                    num=0
+                record[record_index]['value']=format(num, ".2f")
+            if(record[record_index]['value']=='Validazionetecnica'):
+                record[record_index]['fieldtype']='lookup'
+                record[record_index]['fieldbackground']='green'
 
         records[records_index] = record
 
