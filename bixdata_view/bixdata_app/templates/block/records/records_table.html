@@ -109,14 +109,20 @@
                         {% for column_value in record %}
                             {% if forloop.counter0 > 2 %}
                                 {% if column_value.fieldtype == 'linked' %}
-
                                     <td onclick="open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')" class="records-linked" data-fieldtype="{{ column_value.fieldtype }}" style="font-weight: bold !important;">
                                     {{column_value.value}}
                                 </td>
-                                {% else %}
+
+                                    {% elif column_value.fieldtype == 'Numero' %}
+                                        <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number" style="color: red !important;">
+                                    {{column_value.value}}
+                                </td>
+
+                                    {% else %}
                                 <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
                                     {{column_value.value}}
                                 </td>
+
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
@@ -175,7 +181,7 @@ function activeRow(el, id) {
   if (el.classList.contains('clicked')) {
     el.style.backgroundColor = '#e1dfdf';
   } else {
-    el.style.backgroundColor = 'white';
+
   }
 }
 

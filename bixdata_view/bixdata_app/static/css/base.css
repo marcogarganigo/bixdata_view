@@ -198,7 +198,7 @@
     }
 
     #results-row:hover {
-        background-color: #e3e6f0
+        background-color: #e3e6f0 !important;
     }
 
     #results-hover:hover {
