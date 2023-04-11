@@ -105,7 +105,7 @@
             </thead id="results-head">
             <tbody id="results-body">
                 {% for record in records %}
-                    <tr id="results-row">
+                    <tr id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
                         {% for column_value in record %}
                             {% if forloop.counter0 > 2 %}
                                 {% if column_value.fieldtype == 'linked' %}
@@ -160,6 +160,27 @@
 			}
 		});
 	});
+
+
+
+
+function activeRow(el, id) {
+  var row = document.getElementById(id);
+  var els = document.querySelectorAll('.clicked');
+  els.forEach(function(e) {
+    e.classList.remove('clicked');
+    e.style.backgroundColor = 'white';
+  });
+  el.classList.add('clicked');
+  if (el.classList.contains('clicked')) {
+    el.style.backgroundColor = '#e1dfdf';
+  } else {
+    el.style.backgroundColor = 'white';
+  }
+}
+
+
+
 </script>
 
 
