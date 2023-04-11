@@ -299,15 +299,16 @@ def get_render_index(request,content=''):
 
 
     with connection.cursor() as cursor2:
+        id = 1
         cursor2.execute(
-            "SELECT value FROM v_sys_user_settings where setting = 'theme' and bixid = %s", [request.user.id]
+            "SELECT value FROM v_sys_user_settings where setting = 'theme' and bixid = %s", [id]
         )
         theme = cursor2.fetchone()[0]
     #
     #
     with connection.cursor() as cursor2:
         cursor2.execute(
-            "SELECT value FROM v_sys_user_settings where setting = 'record_open_layout' and bixid = %s", [request.user.id]
+            "SELECT value FROM v_sys_user_settings where setting = 'record_open_layout' and bixid = %s", [id]
         )
         layout_setting = cursor2.fetchone()[0]
     #
