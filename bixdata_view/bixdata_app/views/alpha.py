@@ -602,7 +602,7 @@ def get_block_records_table(request):
             record[record_index] = dict()
             record[record_index]['value'] = value
             record[record_index]['code'] = value
-            record[record_index]['fieldtype'] = 'string'
+            record[record_index]['fieldtype'] = columns[record_index]['fieldtypeid'];
             if isinstance(value, str):
                 value = value.split('|:|')
                 if (len(value) > 2):
