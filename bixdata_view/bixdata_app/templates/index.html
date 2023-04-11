@@ -30,7 +30,9 @@
 
 
         $("#bixdata2").ready(function () {
-            //getDashboard();
+            {% if content == '' %}
+            getDashboard();
+            {% endif %}
 
             $("#toggle-menu").click(function () {
                 //$("#content_container").load('/loading/');
@@ -140,7 +142,122 @@
         }
 
 
+        function open_record(el,tableid,recordid) {
+            
+            var serialized_data = [];
+            serialized_data.push({name: 'tableid',value: tableid});
+            serialized_data.push({name: 'recordid',value: recordid});
 
+            
+            /*
+            $('#linked-table-modal').on('show.bs.modal', function () {
+            $('this').closest(".modal-backdrop").css("z-index", 11200);
+            });
+            */
+           
+            {% if layout_setting == 'modal' %}
+            const min_width = 5000
+            {% endif %}
+
+            $('#modalMedium').modal('show');
+                /*     
+                if (window.innerWidth <= min_width) {
+                    if ($(el.closest('td')).attr('data-fieldtype') === 'linked') {
+                        $('#linked-table-modal').modal('show');
+                        $(".modal-backdrop:last").css("z-index", 11200);
+                        $("#linked-table-modal-content").load('/loading/');
+                    } else {
+
+                        if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                            $('#linked-table-modal').modal('show');
+                            $(".modal-backdrop:last").css("z-index", 11200);
+                            $("#linked-table-modal-content").load('/loading/');
+                        } else {
+                            $('#recordModal').modal('show');
+                            $("#record-modal-content").load('/loading/');
+                        }
+                    }
+
+
+                }
+                else
+                {
+                    if ($(el.closest('td')).attr('data-fieldtype') === 'linked') {
+                        $('#linked-table-modal').modal('show');
+                        $(".modal-backdrop:last").css("z-index", 11200);
+                        $("#linked-table-modal-content").load('/loading/');
+                    } else {
+                        if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                            $('#linked-table-modal').modal('show');
+                            $("#linked-table-modal-content").load('/loading/');
+                        } else {
+                            if (window.innerWidth > min_width) {
+                                $("#block-record-card-container").load('/loading/');
+                            }
+                        }
+                    }
+                }
+                */
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'block_record_card' %}",
+                    data: serialized_data,
+                    success: function(response) {
+                        if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el.closest('td')).attr('data-fieldtype') === 'linked') {
+                            $("#linked-table-modal-content").html(response);
+                            console.log('fatto')
+                        } else {
+                            if (window.innerWidth > min_width) {
+                                //$("#block-record-card-container").html(response);
+                                $("#modalMedium-body").html(response);
+                            } else {
+                                //$("#record-modal-content").html(response);
+                                $("#modalMedium-body").html(response);
+                            }
+                        }
+                    },
+                    error: function(response) {
+                        $("#bixdata_recordcard_container").html(response);
+                    }
+                });
+
+            }
+
+
+    function closeCard(vrbl) {
+        $(vrbl).closest('.modal').modal('hide');
+            setTimeout(function() {
+            }, 1000);
+                if (window.innerWidth > min_width) {
+                $(vrbl).closest("#RecordCard").slideToggle(200, function() {
+                });
+                }
+            }
+
+            $('.modal').on('hidden.bs.modal', function (e) {
+        // Remove the content of the component here
+        //$('#RecordCard').html('');
+        $('#bixdata_recordcard_container').html('');
+        })
+
+
+
+    $('#newRecordModal').on('hidden.bs.modal', function (e) {
+        $("#fullwidth_modal_newrecord").html("");
+    });
+
+        function closeNewRecordModal() {
+            $("#newRecordModal").modal("hide");
+        }
+
+
+
+    function closeLinkedTableModal() {
+        $("#linked-table-modal").modal("hide");
+    }
+
+
+    
 
     </script>
 
@@ -528,9 +645,8 @@
         <!-- Start Page Content here -->
         <!-- ============================================================== -->
 
-        <!--test content-->
         <div class="content-page" style="min-height:0px; margin-top:70px;">
-
+            <button onclick="$('#modalMedium').modal('show')">Test</button>
             <!-- Start Content-->
             <div class="row" style="height: 100%;">
                 <div id="content_container" style="height: 100%">
@@ -539,57 +655,98 @@
                 </div>
             </div>
         </div>
-        <!--record modal-->
-        <div class="modal fade" id="recordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%;">
-        <div class="modal-dialog modal-xl modal-fullscreen" style="width: 50%; height: 90%; margin: auto; margin-top: 1%">
-            <div class="modal-content" style="width: 100%">
-                <div class="modal-body" style="width: 100%">
-                    <div id="record-modal-content" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
+
+        <!--record modal big start-->
+        <div id="modalBig" class="modal fade"  tabindex="-1" >
+            <div class="modal-dialog modal-fullscreen" style="width: 80%; height: 90%; margin: auto; margin-top: 1%">
+                <div class="modal-content" style="width: 100%">
+                    <div id="modalBig-body" class="modal-body" style="width: 100%;background-color: blue;">
+                        big
                     </div>
                 </div>
             </div>
         </div>
-
-    </div>
-
-<div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Bixdata support</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="post" action="{% url 'support' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="category-select">Category:</label>
-            <select class="form-control" id="category-select" name="category">
-              <option value="">-- Select Category --</option>
-              <option value="technical">Technical Issue</option>
-              <option value="billing">Billing Issue</option>
-              <option value="other">Other Issue</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="description-textarea">Description:</label>
-            <textarea class="form-control" id="description-textarea" name="description" rows="4"></textarea>
-          </div>
-          <div class="form-group">
-            <div id="image-drop-area" style="border: 2px dashed #ccc; padding: 10px;">
-              <p>Drag and drop images or paste them here</p>
+        <!--record modal big end-->
+        
+        <!--record modal medium start-->
+        <div id="modalMedium" class="modal fade"  tabindex="-1" >
+            <div class="modal-dialog modal-fullscreen" style="width: 50%; height: 90%; margin: auto; margin-top: 1%">
+                <div class="modal-content" style="width: 100%">
+                    <div id="modalMedium-body" class="modal-body" style="width: 100%;background-color: red">
+                        medium <button onclick="$('#modalSmall').modal('show')">Test</button>
+                        <textarea></textarea>
+                    </div>
+                </div>
             </div>
+        </div>
+        <!--record modal medium end-->
 
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+        <!--record modal small start-->
+        <div id="modalSmall" class="modal fade" tabindex="-1" >
+            <div class="modal-dialog modal-fullscreen" style="width: 20%; height: 90%; margin: auto; margin-top: 1%">
+                <div class="modal-content" style="width: 100%">
+                    <div id="modalSmall-body" class="modal-body" style="width: 100%;background-color:yellow">
+                        small
+                        <textarea></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--record modal small end-->
+
+        
+
+        <!--record modal start-->
+        <div class="modal fade" id="recordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%;">
+            <div class="modal-dialog modal-xl modal-fullscreen" style="width: 50%; height: 90%; margin: auto; margin-top: 1%">
+                <div class="modal-content" style="width: 100%">
+                    <div class="modal-body" style="width: 100%">
+                        <div id="record-modal-content" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--record modal end-->
+
+        <div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Bixdata support</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'support' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="category-select">Category:</label>
+                        <select class="form-control" id="category-select" name="category">
+                        <option value="">-- Select Category --</option>
+                        <option value="technical">Technical Issue</option>
+                        <option value="billing">Billing Issue</option>
+                        <option value="other">Other Issue</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="description-textarea">Description:</label>
+                        <textarea class="form-control" id="description-textarea" name="description" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <div id="image-drop-area" style="border: 2px dashed #ccc; padding: 10px;">
+                        <p>Drag and drop images or paste them here</p>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
 
     <script>
   var imageDropArea = document.getElementById('image-drop-area');

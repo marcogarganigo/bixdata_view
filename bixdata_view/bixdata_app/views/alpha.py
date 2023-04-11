@@ -304,14 +304,22 @@ def get_render_index(request,content=''):
         )
         theme = cursor2.fetchone()[0]
     #
-
+    #
+    with connection.cursor() as cursor2:
+        cursor2.execute(
+            "SELECT value FROM v_sys_user_settings where setting = 'record_open_layout' and bixid = %s", [request.user.id]
+        )
+        layout_setting = cursor2.fetchone()[0]
+    #
+    
     context = {
         'menu_list': menu_list,
         'date': datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
         'username': username,
         'role': role,
         'theme': theme,
-        'content':content
+        'content':content,
+        'layout_setting':layout_setting
     }
 
     return user_agent(request, 'index.html', 'index2.html', context)
