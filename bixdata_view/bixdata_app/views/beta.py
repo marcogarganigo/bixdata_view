@@ -39,8 +39,9 @@ def dictfetchall(cursor):
     ]
 
 
-def get_user_setting(request):
+def get_user_setting_list(request):
     if request.user.is_authenticated:
+        # settings superuser
         id = 1
         with connection.cursor() as cursor:
             cursor.execute("SELECT setting, value FROM v_sys_user_settings WHERE bixid = %s", [id])
@@ -50,7 +51,24 @@ def get_user_setting(request):
             for row in rows:
                 settings_list.append({'setting': row[0], 'value': row[1]})
 
-            #print(settings_list)
-
             return settings_list
 
+
+def get_user_setting(request, setting):
+    # settings superuser
+    returned_value=''
+    id = request.user.id
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT value FROM v_sys_user_settings WHERE bixid = %s AND setting = %s", [id, setting])
+        result = cursor.fetchone()
+        if result:
+            returned_value= result[0]
+        else:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT value FROM v_sys_user_settings WHERE bixid = %s AND setting = %s", [1, setting])
+                result = cursor.fetchone()
+                if result:
+                    returned_value= result[0]
+
+
+    return returned_value

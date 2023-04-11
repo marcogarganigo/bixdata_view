@@ -273,7 +273,7 @@ def get_chart4(request):
 
 
 @login_required(login_url='/login/')
-def get_render_index(request,content=''):
+def get_render_index(request, content=''):
     response = requests.get(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
     menu_list = json.loads(response.text)
@@ -297,30 +297,20 @@ def get_render_index(request,content=''):
             print(type(table))
             print(table.get('description'))
 
+    theme = get_user_setting(request, 'theme')
+    #
+    #
+    layout_setting = get_user_setting(request, 'record_open_layout')
+    #
 
-    with connection.cursor() as cursor2:
-        id = 1
-        cursor2.execute(
-            "SELECT value FROM v_sys_user_settings where setting = 'theme' and bixid = %s", [id]
-        )
-        theme = cursor2.fetchone()[0]
-    #
-    #
-    with connection.cursor() as cursor2:
-        cursor2.execute(
-            "SELECT value FROM v_sys_user_settings where setting = 'record_open_layout' and bixid = %s", [id]
-        )
-        layout_setting = cursor2.fetchone()[0]
-    #
-    
     context = {
         'menu_list': menu_list,
         'date': datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
         'username': username,
         'role': role,
         'theme': theme,
-        'content':content,
-        'layout_setting':layout_setting
+        'content': content,
+        'layout_setting': layout_setting
     }
 
     return user_agent(request, 'index.html', 'index2.html', context)
@@ -342,14 +332,6 @@ def get_content_records(request):
     context['tableid'] = tableid
     context['views'] = dict()
 
-    #
-    with connection.cursor() as cursor2:
-        cursor2.execute(
-            "SELECT value FROM v_sys_user_settings where setting = 'record_open_layout' and bixid = %s", [request.user.id]
-        )
-        layout_setting = cursor2.fetchone()[0]
-    #
-    context['layout_setting'] = layout_setting
     return user_agent(request, 'content/records.html', 'content/records_mobile.html', context)
     # return render(request, 'content/records.html', context)
 
@@ -582,7 +564,6 @@ def get_render_logout(request):
 
 @login_required(login_url='/login/')
 def get_block_records_table(request):
-
     tableid = request.POST.get('tableid')
     master_tableid = request.POST.get('master_tableid')
     master_recordid = request.POST.get('master_recordid')
@@ -778,7 +759,6 @@ def get_block_records_calendar(request):
 
 @login_required(login_url='/login/')
 def get_block_record(request):
-
     table = request.POST.get('table')
     searchTerm = request.POST.get('searchTerm')
     viewid = request.POST.get('viewid')
@@ -864,7 +844,7 @@ def get_block_record_fields(request):
         'recordid': recordid,
         'master_tableid': master_tableid,
         'master_recordid': master_recordid,
-        'userid':userid
+        'userid': userid
     }
     response = requests.post(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_fields", data=post)
@@ -972,7 +952,7 @@ def get_temp(request):
 
 @login_required(login_url='/login/')
 def get_settings(request):
-    settings_list = get_user_setting(request)
+    settings_list = get_user_setting_list(request)
 
     print(settings_list)
 
@@ -1043,7 +1023,6 @@ def save_settings(request):
 
 @login_required(login_url='/login/')
 def get_account(request):
-
     user = request.user
     context = {
         'user': user
@@ -1070,8 +1049,7 @@ def update_profile_pic(request):
 
 @login_required(login_url='/login/')
 def get_url(request):
-    tableid=request.GET['tableid']
+    tableid = request.GET['tableid']
     recordid = request.GET['recordid']
-    content=tableid+": "+recordid
-    return get_render_index(request,content)
-
+    content = tableid + ": " + recordid
+    return get_render_index(request, content)
