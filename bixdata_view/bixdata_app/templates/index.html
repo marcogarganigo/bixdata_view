@@ -386,11 +386,37 @@
 
 
                                 <!-- item-->
-                                <a class="dropdown-item notify-item" onclick="openSupportModal()">
+                                <a class="dropdown-item notify-item" onclick="support('ticketbixdata')">
                                     <i class="mdi mdi-lifebuoy me-1"></i>
 
                                     <span>Support</span>
                                 </a>
+
+
+                                <script>
+                                        function support(tableid) {
+                                            $('#supportModal').modal('show');
+                                            var serialized_data = [];
+                                            serialized_data.push({name: 'tableid',value: tableid});
+                                            serialized_data.push({name: 'function',value: 'insert'});
+                                            serialized_data.push({name: 'http_response',value: true});
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "{% url 'get_record_fields' %}",
+                                                data: serialized_data,
+                                                success: function(response) {
+                                                    $("#support-modal-content").html(response);
+
+                                                },
+                                                error: function() {
+                                                    $("#bixdata_recordcard_container").html(response);
+                                                }
+                                            });
+
+
+                                        }
+                                </script>
+
 
                                 <script>
                                     function openSupportModal() {
@@ -656,6 +682,21 @@
         </div>
 
 
+            <div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="supportModal" aria-hidden="true">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Bixdata support</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div id="support-modal-content" class="modal-body">
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
 
 
 
@@ -672,6 +713,7 @@
         </div>
         <!--record modal end-->
 
+        <!--
         <div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -710,7 +752,7 @@
                 </div>
             </div>
         </div>
-
+-->
     <script>
   var imageDropArea = document.getElementById('image-drop-area');
 

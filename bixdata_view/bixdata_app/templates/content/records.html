@@ -222,15 +222,17 @@
             data: serialized_data,
             success: function(response) {
                 $("#fullwidth_modal_newrecord").html(response);
-                
+
             },
             error: function() {
                 $("#bixdata_recordcard_container").html(response);
             }
         });
 
-        
+
     }
+
+
 
     function reloadFunc()
     {
