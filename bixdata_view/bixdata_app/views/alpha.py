@@ -331,6 +331,13 @@ def get_content_records(request):
     context['table'] = tableid.upper()
     context['tableid'] = tableid
     context['views'] = dict()
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM sys_view WHERE userid = 1 AND tableid='%s'" % (tableid)
+        )
+        result = dictfetchall(cursor)
+        if result:
+            context['views']=result
 
     return user_agent(request, 'content/records.html', 'content/records_mobile.html', context)
     # return render(request, 'content/records.html', context)
