@@ -125,8 +125,15 @@
 
                                     {% elif column_value.fieldtype == 'Utente' %}
                                         <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                                            <img src="{% static 'images/users/' %}{{ column_value.code }}.png"  alt="{{ column_value.code }}" width="30px" class="rounded-circle">
                                     {{column_value.value}}
-                                        <img src="{% static 'images/users/{{column_value.code}}.png' %}" alt="{{ column_value.code }}" width="20px" class="rounded-circle">
+
+
+                                        {% elif column_value.fieldtype == 'lookup' %}
+                                        <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number" style="background-color: {{ column_value.fieldbackground }}">
+                                    {{column_value.value}}
+
+
                                 </td>
 
                                     {% else %}
