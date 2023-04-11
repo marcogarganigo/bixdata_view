@@ -41,8 +41,9 @@ def dictfetchall(cursor):
 
 def get_user_setting(request):
     if request.user.is_authenticated:
+        id = 1
         with connection.cursor() as cursor:
-            cursor.execute("SELECT setting, value FROM v_sys_user_settings WHERE bixid = %s", [request.user.id])
+            cursor.execute("SELECT setting, value FROM v_sys_user_settings WHERE bixid = %s", [id])
             rows = cursor.fetchall()
             settings_list = []
 
