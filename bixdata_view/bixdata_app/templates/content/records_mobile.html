@@ -147,17 +147,17 @@
             name: 'searchTerm',
             value: $("#searchTerm").val()
         });
-
+        $("#records-table-container").load('http://127.0.0.1:8000/loading/');
+        
         $.ajax({
             type: "POST",
             url: "{% url 'block_records_table' %}",
             data: serialized_data,
             success: function(response) {
-                $("#records-table-container").load('http://127.0.0.1:8000/loading/');
+                
                 $("#records_table_container").html(response);
             },
             error: function() {
-                $("#records_table_container").load('http://127.0.0.1:8000/loading/');
                 $("#records_table_container").html(response);
             }
         });

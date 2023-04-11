@@ -401,21 +401,7 @@
     Salvato
 </div>
 
-<style>
-    #newRecordModal {
-        z-index: 9999
-    }
-</style>
 
-<script>
-    $('#newRecordModal').on('show.bs.modal', function (e) {
-        $('.modal-backdrop').css('z-index', 8000)
-    });
-
-    $('#newRecordModal').on('hide.bs.modal', function (e) {
-        $('.modal-backdrop').css('z-index', 1000)
-    });
-</script>
 
 {% if layout_setting == 'modal' %}
 <style>
@@ -425,18 +411,7 @@
 </style>
 {% endif %}
 
-<!-- new record modal-->
-   <div class="modal fade" id="newRecordModal" aria-hidden="true" style="width: 100%;">
-        <div class="modal-dialog modal-xl" style="width: 100%;">
-            <div class="modal-content" style="width: 100%">
-                <div class="modal-body" style="width: 100%">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeNewRecordModal()"></button>
-                    <div id="fullwidth_modal_newrecord"  style="height: 100%; width: 100%;">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 
 
