@@ -1,91 +1,79 @@
 <script>
-  function triggerCollapse(el, id, tablelinkid) {
-    var collapse = document.getElementById(id);
-    if ($(el).attr('aria-expanded') == 'false') {
-        $(el).css('background-color', '#e1dfdf');
-        $(el).css('color', 'black');
-    } else {
-          $(el).css('background-color', 'whitesmoke');
-          $(el).css('color', '#074048');
+    function triggerCollapse(el, id, tablelinkid) {
+      var collapse = document.getElementById(id);
+      if ($(el).attr('aria-expanded') == 'false') {
+          $(el).css('background-color', '#e1dfdf');
+          $(el).css('color', 'black');
+      } else {
+            $(el).css('background-color', 'whitesmoke');
+            $(el).css('color', '#074048');
+      }
+
+      load_linked(el,tablelinkid);
+
     }
 
-    load_linked(el,tablelinkid);
-      
-  }
-
-  function load_linked(el,linkedtableid)
-  {
-    $.ajax({
-          url: "{% url 'get_records_linked' %}",
-          type: 'POST',
-          data: {
-              'csrfmiddlewaretoken': '{{ csrf_token }}',
-              'tableid': linkedtableid,
-              'master_tableid': '{{tableid}}',
-              'master_recordid': '{{recordid}}'
-          },
-          success: function (response) {
-            //$(collapse).find('.linked_container').html(response);
-            $("#linked-container-" + linkedtableid).html(response)
-          }, error: function (response) {
-          }
-      });
-  }
-
-  function linked_newRecord(el, linkedtableid) {
-      //console.info(el)
-      var master_tableid='{{tableid}}'
-      var master_recordid='{{recordid}}'
-      $("#fullwidth_modal_newrecord").html("");
-      $('#newRecordModal').modal('show');
-      var serialized_data = [];
-      serialized_data.push({name: 'master_tableid',value: master_tableid});
-      serialized_data.push({name: 'master_recordid',value: master_recordid});
-      serialized_data.push({name: 'tableid',value: linkedtableid});
-      serialized_data.push({name: 'function',value: 'insert'});
-      serialized_data.push({name: 'http_response',value: true});
+    function load_linked(el,linkedtableid)
+    {
       $.ajax({
-          type: "POST",
-          url: "{% url 'get_record_fields' %}",
-          data: serialized_data,
-          success: function(response) {
-              $("#fullwidth_modal_newrecord").html(response);
+            url: "{% url 'get_records_linked' %}",
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'tableid': linkedtableid,
+                'master_tableid': '{{tableid}}',
+                'master_recordid': '{{recordid}}'
+            },
+            success: function (response) {
+              //$(collapse).find('.linked_container').html(response);
+              $("#linked-container-" + linkedtableid).html(response)
+            }, error: function (response) {
+            }
+        });
+    }
 
-          },
-          error: function() {
-              $("#bixdata_recordcard_container").html(response);
-          }
-      });
-      $("#linked-container-" + linkedtableid).load('/loading/')
-      load_linked(el,linkedtableid)
-  }
+    function linked_newRecord(el, linkedtableid) {
+        //console.info(el)
+        var master_tableid='{{tableid}}'
+        var master_recordid='{{recordid}}'
+        $("#fullwidth_modal_newrecord").html("");
+        $('#newRecordModal').modal('show');
+        var serialized_data = [];
+        serialized_data.push({name: 'master_tableid',value: master_tableid});
+        serialized_data.push({name: 'master_recordid',value: master_recordid});
+        serialized_data.push({name: 'tableid',value: linkedtableid});
+        serialized_data.push({name: 'function',value: 'insert'});
+        serialized_data.push({name: 'http_response',value: true});
+        $.ajax({
+            type: "POST",
+            url: "{% url 'get_record_fields' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#fullwidth_modal_newrecord").html(response);
+
+            },
+            error: function() {
+                $("#bixdata_recordcard_container").html(response);
+            }
+        });
+        $("#linked-container-" + linkedtableid).load('/loading/')
+        load_linked(el,linkedtableid)
+    }
 
 </script>
 <style>
-#top-label:hover {
-  background-color: #e1dfdf !important;
-  color: white;
-}
+  #top-label:hover {
+    background-color: #e1dfdf !important;
+    color: white;
+  }
 </style>
 
 
-<p>
-  <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-    Link with href
-  </a>
-  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-    Button with data-bs-target
-  </button>
-</p>
-<div class="collapse" id="collapseExample">
-  <div class="card card-body">
-    Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
-  </div>
-</div>
+
 
 <div id="block_record_linked">
   {% for label in labels %}
-  <button class="btn btn-primary" id="top-label" type="button" data-bs-toggle="collapse" data-bs-target="#{{label.tablelinkid}}" aria-expanded="false" aria-controls="{{label.tablelinkid}}" style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse(this,'{{label.tablelinkid}}', '{{ label.tablelinkid }}')">
+  <button class="btn btn-primary" id="top-label" type="button" data-toggle="collapse" data-target="#{{label.tablelinkid}}" aria-expanded="false" aria-controls="{{label.tablelinkid}}" style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 2%" onclick="triggerCollapse(this,'{{label.tablelinkid}}', '{{ label.tablelinkid }}')">
     <span class="badge bg-danger" style="float: left; color: #d9d4d4; background-color: red; border-radius: 7.5%; margin-right: 10px">5</span>
     {{label.tablelinkid}}
   </button>
@@ -97,10 +85,8 @@
       </div>
 
     </div>
-
   </div>
-</div>
-{% endfor %}
+  {% endfor %}
 </div>
 
 
