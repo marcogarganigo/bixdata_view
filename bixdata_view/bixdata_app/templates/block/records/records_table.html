@@ -1,3 +1,4 @@
+{% load static %}
 <style>
     #block_records_table {
         height: 100%;
@@ -98,7 +99,11 @@
                 <tr id="results-row">
                     {% for column in columns %}
                         {% if column.desc != 'recordid_' and column.desc != 'recordstatus_' and column.desc != 'recordcss_' %}
-                            <th>{{column.desc}}</th>
+                            {% if column.fieldtypeid == 'Numero' %}
+                            <th style="text-align: right">{{column.desc}}</th>
+                                {% else %}
+                                <th>{{column.desc}}</th>
+                                {% endif %}
                         {% endif %}
                     {% endfor %}
                 </tr>
@@ -116,6 +121,12 @@
                                     {% elif column_value.fieldtype == 'Numero' %}
                                         <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number" style="text-align: right;">
                                     {{column_value.value}}
+                                </td>
+
+                                    {% elif column_value.fieldtype == 'Utente' %}
+                                        <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                                    {{column_value.value}}
+                                        <img src="{% static 'images/users/{{column_value.code}}.png' %}" alt="{{ column_value.code }}" width="20px" class="rounded-circle">
                                 </td>
 
                                     {% else %}
