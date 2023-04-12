@@ -445,8 +445,9 @@
                                           <option value="{{ view.id }}">{{ view.name }}</option>
                                             {% endfor %}
                                         </select>
-                                        <input class="form-control me-2" type="search" placeholder="Ricerca" aria-label="Search" style="width: 50%; float: left" id="searchTerm" autocomplete="off">
-                                        <button class="btn btn-outline-danger" type="submit" style=" float: left" onclick="refresh()">Cerca</button>
+                                            <input class="form-control me-2" type="search" placeholder="Ricerca" aria-label="Search" style="width: 50%; float: left" id="searchTerm" autocomplete="off" onkeydown="if(event.keyCode === 13) { event.preventDefault(); refresh(); }">
+                                            <button class="btn btn-outline-danger" type="button" style=" float: left" onclick="refresh()">Cerca</button>
+
                                     </div>
 
                                     <button type="button" class="btn btn-outline-secondary" style=" margin-left: 1%; float: left" onclick="$('#hiddenCard').toggle(100);">Filtri</button>
