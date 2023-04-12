@@ -88,7 +88,7 @@
         }
 
         .linked-field {
-            color: #ee8284;
+            color: #8fbad3;
 
         }
   </style>
@@ -113,7 +113,11 @@
             </thead id="results-head">
             <tbody id="results-body">
                 {% for record in records %}
+                    {% if record.2 %}
+                    <tr style="{{ record.2.value }}" id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
+                    {% else %}
                     <tr id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
+                    {% endif %}
                         {% for column_value in record %}
                             {% if forloop.counter0 > 2 %}
                                 {% if column_value.fieldtype == 'linked' %}
