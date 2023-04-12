@@ -41,7 +41,7 @@
             }
 
 
-
+        refresh()
     })
 
 
@@ -139,27 +139,27 @@
     }
 
 
-    function search() {
+    function refresh() {
         var serialized_data = [];
         serialized_data.push({
-            name: 'table',
-            value: ''
+            name: 'tableid',
+            value: '{{tableid}}'
         });
         serialized_data.push({
             name: 'searchTerm',
             value: $("#searchTerm").val()
         });
-        
+        $("#records_table_container").load('/loading/');
         $.ajax({
             type: "POST",
             url: "{% url 'block_records_table' %}",
             data: serialized_data,
             success: function(response) {
-                $("#records-table-container").load('/loading/');
+                
                 $("#records_table_container").html(response);
             },
             error: function() {
-                $("#records_table_container").load('/loading/');
+                
                 $("#records_table_container").html(response);
             }
         });
@@ -450,7 +450,7 @@
                                             {% endfor %}
                                         </select>
                                         <input class="form-control me-2" type="search" placeholder="Ricerca" aria-label="Search" style="width: 50%; float: left" id="searchTerm" autocomplete="off">
-                                        <button class="btn btn-outline-danger" type="submit" style=" float: left" onclick="search()">Cerca</button>
+                                        <button class="btn btn-outline-danger" type="submit" style=" float: left" onclick="refresh()">Cerca</button>
                                     </div>
 
                                     <button type="button" class="btn btn-outline-secondary" style=" margin-left: 1%; float: left" onclick="$('#hiddenCard').toggle(100);">Filtri</button>
@@ -460,7 +460,7 @@
 
 
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
-                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="reloadFunc()">Ricarica</button>
+                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="refresh()">Ricarica</button>
                                         <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()">Nuovo</button>
                                         <div class="dropdown">
                                             <button class="btn btn-outline-secondary me md-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

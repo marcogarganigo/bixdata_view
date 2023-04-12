@@ -309,8 +309,8 @@ def get_render_loading(request):
 @login_required(login_url='/login/')
 def get_content_records(request):
     context = dict()
-    records_table = get_block_records_table(request)
-    context['records_table'] = records_table
+    #records_table = get_block_records_table(request)
+    context['records_table'] = ''
     tableid = request.POST.get('tableid')
     context['table'] = tableid.upper()
     context['tableid'] = tableid
@@ -618,7 +618,7 @@ def get_block_records_table(request):
 
     records_table = render_to_string(
         'block/records/records_table.html', context, request=request)
-    return records_table
+    return HttpResponse(records_table)
 
 
 @login_required(login_url='/login/')
