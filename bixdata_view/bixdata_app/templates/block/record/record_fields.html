@@ -178,10 +178,15 @@ function save_record() {
         data: post_data,
         success: function(response) {
             setTimeout(function() {
-                $("#saved-alert").fadeOut(1500);
-                //getContentRecords('{{ tableid }}')
-                $("#linked-container-{{ tableid }}").load('/loading/')
-                load_linked(this,'{{ tableid }}')
+              if('{{ tableid }}'=='ticketbixdata')
+              {
+                  alert('Grazie per la segnalazione, gentilissimo rompicoglioni. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
+              }
+              $("#saved-alert").fadeOut(1500);
+              //getContentRecords('{{ tableid }}')
+              $("#linked-container-{{ tableid }}").load('/loading/')
+              load_linked(this,'{{ tableid }}')
+
             });
 
         },
