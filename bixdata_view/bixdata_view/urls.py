@@ -73,7 +73,7 @@ urlpatterns = [
     path('save_settings/', alpha.save_settings, name='save_settings'),
     path('get_account/', alpha.get_account, name='get_account'),
     path('update_profile_pic/', alpha.update_profile_pic, name='update_profile_pic'),
-    path('get_url/', alpha.get_url, name='get_url'),
+    #path('get_url/', alpha.get_url, name='get_url'),
     path('accounts/password-reset/', auth_views.PasswordResetView.as_view(html_email_template_name='registration/password_reset_email.html'), name='password_reset'),
 ]
 

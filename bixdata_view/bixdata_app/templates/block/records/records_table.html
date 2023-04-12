@@ -77,16 +77,19 @@
 </script>
 
   <style>
-      .records-linked:hover {
-          outline: #0a0a0a solid 1px;
-      }
-
-        .records-linked {
-            cursor: pointer;
-        }
 
         .records-standard {
             cursor: context-menu;
+        }
+
+        .linked-field:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .linked-field {
+            color: #ee8284;
+
         }
   </style>
 
@@ -114,8 +117,8 @@
                         {% for column_value in record %}
                             {% if forloop.counter0 > 2 %}
                                 {% if column_value.fieldtype == 'linked' %}
-                                    <td onclick="open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')" class="records-linked" data-fieldtype="{{ column_value.fieldtype }}" style="font-weight: bold !important;">
-                                    {{column_value.value}}
+                                    <td class="records-linked" data-fieldtype="{{ column_value.fieldtype }}" style="font-weight: bold !important;">
+                                    <span onclick="open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')" class="linked-field">{{column_value.value}}</span>
                                 </td>
 
                                     {% elif column_value.fieldtype == 'Numero' %}
