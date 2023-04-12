@@ -917,17 +917,24 @@ def save_record_fields(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     fields = request.POST.get('fields')
-    post = {
+
+    post_data = {
         'tableid': tableid,
         'recordid': recordid,
         'fields': fields
     }
 
-    if tableid == 'ticketbixdata':
-        send_email(request, ['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'], 'Supporto bixdata', 'nuovo ticket aperto da ' + request.user.username)
-
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/set_record", data=post)
+        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/set_record", data=post_data)
+
+    fields_dict = json.loads(fields)
+
+    if tableid == 'ticketbixdata' and 'description' in fields_dict:
+        message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(
+            request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
+        send_email(request, ['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'], 'Supporto bixdata',
+                   message)
+
     return render(request, 'block/record/record_fields.html')
 
 
@@ -988,7 +995,6 @@ def support(request):
         print(description)
         print(user)
         print(images)
-
 
     return redirect('index')
 
