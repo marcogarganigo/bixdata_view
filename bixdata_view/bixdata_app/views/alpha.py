@@ -82,10 +82,7 @@ def get_test_query(request, name=None):
             user.user_permissions.add(permission)
 
             # Check if a user has a permission
-            if user.has_perm('can_do_something'):
-                print('has permission')
-            else:
-                print('no permission')
+
 
     return render(request, 'other/test_query.html', {'data': data})
 
@@ -93,7 +90,6 @@ def get_test_query(request, name=None):
 def get_full_data(request):
     if request.method == 'POST':
         name = request.POST.get('name')
-        print(name)
         with connection.cursor() as cursor1:
             cursor1.execute(
                 "SELECT query_conditions FROM sys_view WHERE id = 10"
@@ -125,7 +121,6 @@ def get_full_data(request):
                     'effectivemargin': effectivemargin,
                     'name': name
                 }
-                # print(data)
 
     return JsonResponse(data2)
 
@@ -166,9 +161,7 @@ def get_test_query2(request):
                 'totalnets': totalnets
             }
 
-            print(query2)
-
-    return render(request, 'other/test_query2.html', {'data': data}, print(data))
+    return render(request, 'other/test_query2.html', {'data': data})
 
 
 def get_full_data2(request):
@@ -201,7 +194,6 @@ def get_full_data2(request):
                     'date': date
                 }
 
-                # print(data)
 
     return JsonResponse(data2)
 
@@ -289,18 +281,11 @@ def get_render_index(request, content=''):
         )
         role = cursor.fetchone()[0]
 
-    print(menu_list.items())
-    print(type(menu_list))
-    for workspace_key, workspace_value in menu_list.items():
-        print(type(workspace_value))
-        for table in workspace_value:
-            print(type(table))
-            print(table.get('description'))
+
 
     theme = get_user_setting(request, 'theme')
     #
     #
-    layout_setting = get_user_setting(request, 'record_open_layout')
     #
 
     context = {
@@ -310,7 +295,6 @@ def get_render_index(request, content=''):
         'role': role,
         'theme': theme,
         'content': content,
-        'layout_setting': layout_setting
     }
 
     return user_agent(request, 'index.html', 'index2.html', context)
@@ -337,7 +321,10 @@ def get_content_records(request):
         )
         result = dictfetchall(cursor)
         if result:
-            context['views']=result
+            context['views'] = result
+
+    layout_setting = get_user_setting(request, 'record_open_layout')
+    context['layout_setting'] = layout_setting
 
     return user_agent(request, 'content/records.html', 'content/records_mobile.html', context)
     # return render(request, 'content/records.html', context)
@@ -388,13 +375,10 @@ def get_block_records_chart(request):
     data = [12, 19, 3, 5, 2, 3]
     data = json.dumps(data)
 
-    context = {
-        'label': label,
-        'labels': labels,
-        'data': data,
-    }
+    chart_data = list(zip(labels, data))
+
     records_table = render_to_string(
-        'block/records/records_chart.html', context, request=request)
+        'block/records/records_chart.html', chart_data, request=request)
     return HttpResponse(records_table)
 
 
@@ -429,7 +413,6 @@ def get_render_content_dashboard(request):
                 "SELECT * FROM v_sys_dashboard_block WHERE dashboardid = %s", [dashboard_id]
             )
             rows = dictfetchall(cursor)
-            print(rows)
 
             for row in rows:
                 selected = ''
@@ -438,7 +421,6 @@ def get_render_content_dashboard(request):
                     for field in fields:
                         field = 'ROUND(SUM(' + field + '))'
                         selected += field + ','
-                        print(selected)
                     groupby = row['groupby']
                     selected += groupby
 
@@ -449,13 +431,10 @@ def get_render_content_dashboard(request):
                 layout = row['layout']
                 sql = "SELECT " + selected + " FROM " + tableid + \
                       " WHERE " + query_conditions + " GROUP BY " + groupby
-                print(sql)
                 block = dict()
                 block['sql'] = sql
-                print(sql)
                 block['name'] = 'test'
-                block['html'] = get_chart(
-                    request, sql, id, name, layout, fields)
+                block['html'] = get_chart(request, sql, id, name, layout, fields)
                 context['blocks'].append(block)
 
     return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', context)
@@ -507,15 +486,13 @@ def get_record_card_delete(request):
     if request.method == 'POST':
         recordid = request.POST.get('recordid')
         tableid = request.POST.get('tableid')
-        print(recordid)
-        print(tableid)
+
 
         with connection.cursor() as cursor:
             query = 'UPDATE user_' + tableid + ' SET deleted_ = "Y" WHERE id = ' + recordid
             cursor.execute(
                 query
             )
-            print('deleted')
     return JsonResponse({'success': True})
 
 
@@ -610,7 +587,7 @@ def get_block_records_table(request):
             record[record_index]['value'] = value
             record[record_index]['code'] = value
             record[record_index]['fieldtype'] = columns[record_index]['fieldtypeid'];
-            if(record[record_index]['fieldtype']=='linked'):
+            if record[record_index]['fieldtype'] == 'linked':
                 if isinstance(value, str):
                     value = value.split('|:|')
                     if (len(value) > 2):
@@ -618,24 +595,24 @@ def get_block_records_table(request):
                         record[record_index]['link_recordid'] = value[1]
                         record[record_index]['link_tableid'] = value[2]
                         record[record_index]['fieldtype'] = 'linked'
-            if(record[record_index]['fieldtype']=='Utente'):
+            if record[record_index]['fieldtype'] == 'Utente':
                 code = record[record_index]['code']
-                code=code.replace(' ','.')
-                code=code.lower()
+                code = code.replace(' ', '.')
+                code = code.lower()
                 record[record_index]['code'] = code
-            if(record[record_index]['fieldtype']=='Numero'):
-                string_num=record[record_index]['value']
+            if record[record_index]['fieldtype'] == 'Numero':
+                string_num = record[record_index]['value']
                 if string_num:
                     try:
                         num = float(string_num)
                     except ValueError:
-                        num=0
+                        num = 0
                 else:
-                    num=0
-                record[record_index]['value']=format(num, ".2f")
-            if(record[record_index]['value']=='Validazionetecnica'):
-                record[record_index]['fieldtype']='lookup'
-                record[record_index]['fieldbackground']='green'
+                    num = 0
+                record[record_index]['value'] = format(num, ".2f")
+            if record[record_index]['value'] == 'Validazionetecnica':
+                record[record_index]['fieldtype'] = 'lookup'
+                record[record_index]['fieldbackground'] = 'green'
 
         records[records_index] = record
 
@@ -658,7 +635,7 @@ def get_block_records_gantt(request):
     response_dict = json.loads(response.text)
 
     records = response_dict['records']
-    # print(records)
+
     records_gantt = []
     for record in records:
         new_record = dict()
@@ -693,7 +670,6 @@ def get_block_records_kanban(request):
     # response_dict = json.loads(response.text)
     # groups=response_dict['groups']
     # records = response_dict['records']
-    # print(records)
     groups = []
     # for record in records:
     #   new_record = dict()
@@ -980,7 +956,7 @@ def get_temp(request):
 def get_settings(request):
     settings_list = get_user_setting_list(request)
 
-    print(settings_list)
+
 
     return render(request, 'other/settings.html', {'settings_list': settings_list})
 
@@ -1079,4 +1055,3 @@ def get_url(request):
     recordid = request.GET['recordid']
     content = tableid + ": " + recordid
     return get_render_index(request, content)
-

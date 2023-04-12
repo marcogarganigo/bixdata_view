@@ -88,7 +88,6 @@
             url: "{% url 'block_records_kanban' %}",
             data: serialized_data,
             success: function(response) {
-                console.info(response)
                 $("#kanban-tab-pane").html(response);
             },
             error: function() {
@@ -322,10 +321,8 @@
                     $('#linked-table-modal').modal('show');
                     //$(".modal-backdrop").css("z-index", 11200);
                     $("#linked-table-modal-content").html(response);
-                    console.log('fatto')
                 } else {
                     if (window.innerWidth > min_width) {
-                        console.log($(el.closest('#block_records_table')));
                         $("#block-record-card-container").html(response);
                     } else {
                         $("#record-modal-content").html(response);
@@ -410,9 +407,6 @@
 }
 </style>
 {% endif %}
-
-
-
 
 
 

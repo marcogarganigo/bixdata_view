@@ -15,7 +15,6 @@
         const min_width = 1920;
         const fhd_width = 1920;
 
-        console.info(window.innerWidth)
 
 
         if (window.innerWidth <= min_width) {
@@ -205,7 +204,6 @@
                     success: function(response) {
                         if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el.closest('td')).attr('data-fieldtype') === 'linked') {
                             $("#linked-table-modal-content").html(response);
-                            console.log('fatto')
                         } else {
                             if (window.innerWidth > min_width) {
                                 //$("#block-record-card-container").html(response);
@@ -355,7 +353,7 @@
                             <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown"
                                 href="#" role="button" aria-haspopup="false" aria-expanded="false">
                                 <span class="account-user-avatar">
-                                     <<img src="{% static 'images/users/' %}{{ username }}.png"  alt=""
+                                     <img src="{% static 'images/users/' %}{{ username }}.png"  alt=""
                                         class="rounded-circle">
                                 </span>
                                 <span>
@@ -652,14 +650,6 @@
 
                         <!-- end Help Box -->
                         <li class="side-nav-title side-nav-item">Systems</li>
-
-                        <li class="side-nav-item">
-                            <a data-bs-toggle="collapse" href="#sidebarSettings" aria-expanded="false"
-                                aria-controls="sidebarSettings" class="side-nav-link">
-                                <i class="uil-home-alt"></i>
-                                <span> Settings </span>
-                            </a>
-                        </li>
 
                         <div class="clearfix"></div>
                     </ul>
