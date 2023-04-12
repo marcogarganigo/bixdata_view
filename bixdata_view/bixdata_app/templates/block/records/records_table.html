@@ -93,7 +93,19 @@
         }
   </style>
 
+<script>
+    $('.linked-field').hover(function() {
+        $('#card-mini-records').show();
+    }, function() {
+    });
+</script>
+
+
+
+
 <div id="block_records_table" style="width: 100%;" data-type="{{ table_type }}">
+
+
 
     
     <div class="col s12 m6 l6" id="pagination-container">
@@ -114,7 +126,7 @@
             <tbody id="results-body">
                 {% for record in records %}
                     {% if record.2 %}
-                    <tr style="{{ record.2.value }}" id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
+                    <tr style="{{ record.2.value }} !important;" id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
                     {% else %}
                     <tr id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
                     {% endif %}
@@ -123,6 +135,11 @@
                                 {% if column_value.fieldtype == 'linked' %}
                                     <td class="records-linked" data-fieldtype="{{ column_value.fieldtype }}" style="font-weight: bold !important;">
                                     <span onclick="open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')" class="linked-field">{{column_value.value}}</span>
+                                    <div class="card" id="card-mini-records" style="width: 18rem; display:none">
+                                      <div class="card-body">
+
+                                      </div>
+                                    </div>
                                 </td>
 
                                     {% elif column_value.fieldtype == 'Numero' %}
@@ -132,7 +149,7 @@
 
                                     {% elif column_value.fieldtype == 'Utente' %}
                                         <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                                            <img src="{% static 'images/users/' %}{{ column_value.code }}.png"  alt="{{ column_value.code }}" width="30px" class="rounded-circle">
+                                            <img src="{% static 'images/users/' %}{{ column_value.code }}.png"  alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
                                     {{column_value.value}}
 
 
