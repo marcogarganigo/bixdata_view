@@ -83,7 +83,6 @@ def get_test_query(request, name=None):
 
             # Check if a user has a permission
 
-
     return render(request, 'other/test_query.html', {'data': data})
 
 
@@ -194,7 +193,6 @@ def get_full_data2(request):
                     'date': date
                 }
 
-
     return JsonResponse(data2)
 
 
@@ -280,8 +278,6 @@ def get_render_index(request, content=''):
             "SELECT description FROM sys_user WHERE bixid = %s", [request.user.id]
         )
         role = cursor.fetchone()[0]
-
-
 
     theme = get_user_setting(request, 'theme')
     #
@@ -486,7 +482,6 @@ def get_record_card_delete(request):
     if request.method == 'POST':
         recordid = request.POST.get('recordid')
         tableid = request.POST.get('tableid')
-
 
         with connection.cursor() as cursor:
             query = 'UPDATE user_' + tableid + ' SET deleted_ = "Y" WHERE id = ' + recordid
@@ -928,6 +923,9 @@ def save_record_fields(request):
         'fields': fields
     }
 
+    if tableid == 'ticketbixdata':
+        send_email(request, ['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'], 'Supporto bixdata', 'nuovo ticket aperto da ' + request.user.username)
+
     response = requests.post(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/set_record", data=post)
     return render(request, 'block/record/record_fields.html')
@@ -955,8 +953,6 @@ def get_temp(request):
 @login_required(login_url='/login/')
 def get_settings(request):
     settings_list = get_user_setting_list(request)
-
-
 
     return render(request, 'other/settings.html', {'settings_list': settings_list})
 
@@ -992,6 +988,7 @@ def support(request):
         print(description)
         print(user)
         print(images)
+
 
     return redirect('index')
 
@@ -1047,11 +1044,3 @@ def update_profile_pic(request):
             # Update the user's profile image URL in the database
 
     return redirect('index')
-
-
-@login_required(login_url='/login/')
-def get_url(request):
-    tableid = request.GET['tableid']
-    recordid = request.GET['recordid']
-    content = tableid + ": " + recordid
-    return get_render_index(request, content)

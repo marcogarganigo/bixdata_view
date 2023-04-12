@@ -56,19 +56,30 @@ def get_user_setting_list(request):
 
 def get_user_setting(request, setting):
     # settings superuser
-    returned_value=''
+    returned_value = ''
     id = request.user.id
     with connection.cursor() as cursor:
         cursor.execute("SELECT value FROM v_sys_user_settings WHERE bixid = %s AND setting = %s", [id, setting])
         result = cursor.fetchone()
         if result:
-            returned_value= result[0]
+            returned_value = result[0]
         else:
             with connection.cursor() as cursor:
                 cursor.execute("SELECT value FROM v_sys_user_settings WHERE bixid = %s AND setting = %s", [1, setting])
                 result = cursor.fetchone()
                 if result:
-                    returned_value= result[0]
-
+                    returned_value = result[0]
 
     return returned_value
+
+
+def send_email(request, email, subject, message):
+    send_mail(
+        subject,
+        message,
+        'bixdata@sender.swissbix.ch',
+        email,
+        fail_silently=False,
+    )
+    return True
+

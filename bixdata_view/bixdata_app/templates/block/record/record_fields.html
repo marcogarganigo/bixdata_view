@@ -3,6 +3,21 @@
 <link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
 
 <div class="container" id="fields_container">
+<div class="alert alert-success" role="alert" id="saved-alert" style="display: none">
+    Salvato
+</div>
+
+<style>
+    #saved-alert {
+          position: fixed;
+          float: right;
+          width: 20%;
+          height: 5%;
+          z-index: 9999;
+        }
+</style>
+
+
 {% for field_key,field in record_fields.items %}
   {% with fieldname=field.fieldid %}
   {% with fieldid='field-'|add:field.fieldid %}
@@ -131,6 +146,8 @@
             <button id="save-button" type="button" class="btn btn-primary" onclick=" save_record()">Salva</button>
 </div>
 
+<!--save alert-->
+
 {% if function == "view" %}
   <script>
     $(document).ready(function(){
@@ -181,6 +198,7 @@ function save_record() {
               {
                   alert('Grazie per la segnalazione, gentilissimo rompicoglioni. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
               }
+              $("#saved-alert").css("display", "block");
               $("#saved-alert").fadeOut(1500);
               //getContentRecords('{{ tableid }}')
               $("#linked-container-{{ tableid }}").load('/loading/')
