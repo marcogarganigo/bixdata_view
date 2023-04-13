@@ -191,7 +191,7 @@
             </div>
 
             <script>
-                function load_fields() {
+                function load_fields(el) {
                     alert('test');
                     $.ajax({
                         type: "POST",
@@ -218,7 +218,7 @@
     
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="fields-tab" data-bs-toggle="tab" data-bs-target="#fields-tab-pane" type="button" role="tab" aria-controls="fields-tab-pane" aria-selected="true" onclick="load_fields()">
+                    <button class="nav-link active" id="fields-tab" data-bs-toggle="tab" data-bs-target="#fields-tab-pane" type="button" role="tab" aria-controls="fields-tab-pane" aria-selected="true" onclick="load_fields(this)">
 
                         <p class="tabs-title">Campi</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="fields">
@@ -273,19 +273,7 @@
                 </div>
 
                 <div class="tab-pane fade" id="linked-tab-pane" role="tabpanel" aria-labelledby="linked-tab" tabindex="0">
-
-                    <p>
-                    <div class="d-grid gap-2">
-
                         {{block_record_linked}}
-
-
-
-                    </div>
-                    </p>
-
-
-
                 </div>
 
                 <div class="tab-pane fade" id="attachment-tab-pane" role="tabpanel" aria-labelledby="attachment-tab" tabindex="0">...</div>
