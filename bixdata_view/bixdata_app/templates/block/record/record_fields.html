@@ -2,7 +2,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
 
-<div class="container" id="fields_container">
+<div class="container fields_container" id="fields_container_{{tableid}}_{{recordid}}">
 <div class="alert alert-success" role="alert" id="saved-alert" style="display: none">
     Salvato
 </div>
@@ -143,7 +143,7 @@
       {% endwith %}
       {% endwith %}
 {% endfor %}
-            <button id="save-button" type="button" class="btn btn-primary" onclick=" save_record()">Salva</button>
+            <button id="save-button" type="button" class="btn btn-primary" onclick=" save_record(this)">Salva</button>
 </div>
 
 <!--save alert-->
@@ -178,9 +178,9 @@ input:disabled, select:disabled, textarea:disabled {
 </style>
 
 <script>
-function save_record() {
+function save_record(el) {
     closeNewRecordModal()
-    var serialized_array = $('#fields_container').find("select,textarea,input").serializeArray();
+    var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
     var serialized_json=convertFormToJSON(serialized_array);
     var post_data=[];
     post_data.push({name: 'tableid',value: '{{ tableid }}'});

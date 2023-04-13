@@ -327,10 +327,12 @@ def get_content_records(request):
 
 
 def get_records_linked(request):
-    context = dict()
-    records_table = get_block_records_table(request)
-    context['records_table'] = records_table
+    tableid = request.POST.get('tableid')
+    master_tableid = request.POST.get('master_tableid')
+    master_recordid = request.POST.get('master_recordid')
+    records_table = get_records_table(request,tableid,master_tableid,master_recordid)
     return HttpResponse(records_table)
+
 
 
 @login_required(login_url='/login/')
@@ -542,12 +544,18 @@ def get_render_logout(request):
 
 
 @login_required(login_url='/login/')
-def get_block_records_table(request):
+def get_records_table_render(request):
     tableid = request.POST.get('tableid')
     master_tableid = request.POST.get('master_tableid')
     master_recordid = request.POST.get('master_recordid')
     searchTerm = request.POST.get('searchTerm')
     viewid = request.POST.get('viewid')
+    render=get_records_table(request,tableid,master_tableid,master_recordid,searchTerm,viewid)
+    return HttpResponse(render)
+
+@login_required(login_url='/login/')
+def get_records_table(request,tableid,master_tableid='',master_recordid='',searchTerm='',viewid=''):
+    
     table_type = 'standard'
     table_height = '100%'
     if master_tableid:
@@ -613,7 +621,7 @@ def get_block_records_table(request):
 
     records_table = render_to_string(
         'block/records/records_table.html', context, request=request)
-    return HttpResponse(records_table)
+    return records_table
 
 
 @login_required(login_url='/login/')
@@ -796,7 +804,7 @@ def get_block_record_card(request):
     context['block_record_badge'] = get_block_record_badge(request)
     context['block_record_linked'] = get_block_record_linked(request)
     # context['block_record_linked'] = get_block_record_linked(request)
-    context['block_record_fields'] = get_block_record_fields(request)
+    context['block_record_fields'] = ""#get_block_record_fields(request)
     context['recordid'] = request.POST.get('recordid')
     context['tableid'] = request.POST.get('tableid')
 
@@ -814,10 +822,18 @@ def get_block_record_badge(request):
         'tableid': tableid,
         'recordid': recordid,
     }
-    response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_fissi", data=post)
-    response_dict = json.loads(response.text)
-    context['fields'] = response_dict
+    #response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_fissi", data=post)
+    #response_dict = json.loads(response.text)
+    sql=f"SELECT sys_field.* FROM sys_field join sys_user_order on sys_field.fieldid=sys_user_order.fieldid WHERE sys_user_order.userid=1 AND sys_user_order.tableid='{tableid}' AND typePreference='campiFissi' ORDER BY fieldorder asc"
+    fields=db_query_sql(sql)
+    values=db_get_row(f"user_{tableid}","*",f"recordid_='{recordid}'")
+    context_fields=dict()
+    for field in fields:
+        fieldid=field['fieldid']
+        field['value']=values[fieldid]
+        context_fields[fieldid]=field
+        
+    context['fields'] = context_fields
     records_table = render_to_string(
         'block/record/record_badge.html', context, request=request)
     return records_table
@@ -887,11 +903,20 @@ def get_block_record_linked(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT tablelinkid FROM sys_table_link WHERE tableid = '" + tableid + "'")
-        rows = dictfetchall(cursor)
-    context['labels'] = rows
+    rows=db_query_sql("SELECT * FROM sys_table_link WHERE tableid = '" + tableid + "'")
+    
+    linked_tables=list()
+    for row in rows:
+        linked_table=dict()
+        linked_tableid=row['tablelinkid']
+        table_name='test'
+        linked_table['table_name']=db_get_value("sys_table","description",f"id='{linked_tableid}'")
+        table_count=db_get_count(f"user_{linked_tableid}",f"recordid{tableid}_='{recordid}'")
+        linked_table['table_count']=table_count
+        linked_table['tableid']=linked_tableid
+        linked_tables.append(linked_table)
+        
+    context['linked_tables'] = linked_tables
     context['tableid'] = tableid
     context['recordid'] = recordid
 

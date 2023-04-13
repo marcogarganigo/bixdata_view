@@ -89,16 +89,16 @@ $('#top-label').on('click', function(event) {
 
 
 <div id="block_record_linked">
-  {% for label in labels %}
-  <button class="btn btn-primary" id="top-label" type="button" data-bs-toggle="collapse" data-bs-target="#{{label.tablelinkid}}" aria-expanded="false" aria-controls="{{label.tablelinkid}}" style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 2%" onclick="toggleCollapse(this); triggerCollapse(this,'{{label.tablelinkid}}', '{{ label.tablelinkid }}')">
-    <span class="badge bg-danger" style="float: left; color: #d9d4d4; background-color: red; border-radius: 7.5%; margin-right: 10px">5</span>
-    {{label.tablelinkid}}
+  {% for linked_table in linked_tables %}
+  <button class="btn btn-primary" id="top-label" type="button" data-bs-toggle="collapse" data-bs-target="#{{linked_table.tableid}}" aria-expanded="false" aria-controls="{{linked_table.tableid}}" style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 2%" onclick="toggleCollapse(this); triggerCollapse(this,'{{linked_table.tableid}}', '{{ linked_table.tableid }}')">
+    <span class="badge bg-danger" style="float: left; color: #d9d4d4; background-color: red; border-radius: 7.5%; margin-right: 10px">{{linked_table.table_count}}</span>
+    {{linked_table.table_name}}
   </button>
 
-  <div class="div-collapse" id="{{label.tablelinkid}}" style="margin-top: 10px; display: none">
+  <div class="div-collapse" id="{{linked_table.tableid}}" style="margin-top: 10px; display: none">
     <div class="card card-body">
-    <button class="btn btn-secondary d-flex justify-content-center align-items-center" onclick="linked_newRecord(this, '{{label.tablelinkid}}')" style="width: 5%;"><span class="material-symbols-outlined">add</span></button>
-      <div id="linked-container-{{ label.tablelinkid }}"  class="linked_container" >
+    <button class="btn btn-secondary d-flex justify-content-center align-items-center" onclick="linked_newRecord(this, '{{linked_table.tableid}}')" style="width: 5%;"><span class="material-symbols-outlined">add</span></button>
+      <div id="linked-container-{{ linked_table.tableid }}"  class="linked_container" >
 
       </div>
 

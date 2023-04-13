@@ -83,3 +83,38 @@ def send_email(request, email, subject, message):
     )
     return True
 
+def db_query_sql(sql):
+    rows=dict()
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        rows = dictfetchall(cursor)
+    return rows
+
+def db_get(table,columns,condition,order='',limit=''): 
+    sql=f"SELECT {columns} FROM {table} WHERE {condition}"
+    rows= db_query_sql(sql)
+    return rows
+
+def db_get_row(table,columns,condition,order=''):
+    sql=f"SELECT {columns} FROM {table} WHERE {condition} LIMIT 1"
+    rows= db_query_sql(sql)
+    if rows:
+        return rows[0]
+    else:
+        return None
+    
+def db_get_value(table,column,condition,order=''):
+    sql=f"SELECT {column} FROM {table} WHERE {condition} LIMIT 1"
+    rows= db_query_sql(sql)
+    if rows:
+        return rows[0][column]
+    else:
+        return None
+
+def db_get_count(table,condition,order=''):
+    sql=f"SELECT count(*) as counter FROM {table} WHERE {condition}"
+    rows= db_query_sql(sql)
+    if rows:
+        return rows[0]['counter']
+    else:
+        return None
