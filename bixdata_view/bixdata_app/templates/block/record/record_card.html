@@ -189,6 +189,27 @@
             <div class="container" style="height:auto">
                 {{block_record_badge}}
             </div>
+
+            <script>
+                function load_fields() {
+                    alert('test');
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'get_record_fields' %}",
+                        data: {
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                            'tableid': '{{ tableid }}',
+                            'recordid': '{{ recordid }}',
+                        },
+                        success: function(response) {
+                            $("#myTabContent").html(response);
+                        },
+                        error: function(response) {
+                             $("#myTabContent").html(response)
+                        }
+                    });
+                }
+            </script>
     
     
     
@@ -197,7 +218,7 @@
     
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="fields-tab" data-bs-toggle="tab" data-bs-target="#fields-tab-pane" type="button" role="tab" aria-controls="fields-tab-pane" aria-selected="true">
+                    <button class="nav-link active" id="fields-tab" data-bs-toggle="tab" data-bs-target="#fields-tab-pane" type="button" role="tab" aria-controls="fields-tab-pane" aria-selected="true" onclick="load_fields()">
 
                         <p class="tabs-title">Campi</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="fields">
