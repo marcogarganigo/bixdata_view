@@ -91,12 +91,14 @@ $('#top-label').on('click', function(event) {
 <div id="block_record_linked">
   {% for linked_table in linked_tables %}
   <button class="btn btn-primary" id="top-label" type="button" data-bs-toggle="collapse" data-bs-target="#{{linked_table.tableid}}" aria-expanded="false" aria-controls="{{linked_table.tableid}}" style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 2%" onclick="toggleCollapse(this); triggerCollapse(this,'{{linked_table.tableid}}', '{{ linked_table.tableid }}')">
+      <span style="width: 97%; margin:auto; display: block ">
   {% if linked_table.table_count == 0 %}
-
       {% else %}
+
     <span class="badge bg-danger" style="float: left; color: #d9d4d4; background-color: red; border-radius: 7.5%; margin-right: 10px">{{linked_table.table_count}}</span>
       {% endif %}
     {{linked_table.table_name}}
+      </span>
   </button>
 
   <div class="div-collapse" id="{{linked_table.tableid}}" style="margin-top: 10px; display: none">
