@@ -619,8 +619,7 @@ def get_records_table(request,tableid,master_tableid='',master_recordid='',searc
 
         records[records_index] = record
 
-    records_table = render_to_string(
-        'block/records/records_table.html', context, request=request)
+    records_table = bix_render_to_string('block/records/records_table.html', context, request)
     return records_table
 
 

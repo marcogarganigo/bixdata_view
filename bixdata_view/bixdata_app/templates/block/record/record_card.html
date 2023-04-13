@@ -142,8 +142,8 @@
 
 </script>
 
-<div id="block_record_card" style="height: 100%;width: 100%;">
-    <div id="RecordCard" class="card" style=" height: 100%; overflow: scroll">
+<div id="block_record_card" class="block_record_card" style="height: 100%;width: 100%;">
+    <div id="RecordCard" class="card RecordCard" style=" height: 100%; overflow: scroll">
         <div class="card-body">
             <p class="card-text">
     
@@ -192,20 +192,21 @@
 
             <script>
                 function load_fields(el) {
-                    alert('test');
+                    $(el).closest('.block_record_card').find('.tab-pane-fields').html('loading')
                     $.ajax({
                         type: "POST",
                         url: "{% url 'get_record_fields' %}",
                         data: {
+                            'http_response':'true',
                             'csrfmiddlewaretoken': '{{ csrf_token }}',
                             'tableid': '{{ tableid }}',
                             'recordid': '{{ recordid }}',
                         },
                         success: function(response) {
-                            $("#myTabContent").html(response);
+                            $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
                         },
                         error: function(response) {
-                             $("#myTabContent").html(response)
+                            $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
                         }
                     });
                 }
@@ -267,7 +268,7 @@
             </nav>
 
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="fields-tab-pane" role="tabpanel" aria-labelledby="fields-tab" tabindex="0">
+                <div class="tab-pane tab-pane-fields fade show active" id="fields-tab-pane" role="tabpanel" aria-labelledby="fields-tab" tabindex="0">
                     {{block_record_fields}}
 
                 </div>

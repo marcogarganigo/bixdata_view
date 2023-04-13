@@ -28,7 +28,9 @@ def user_agent(request, page, mobilepage, context={}):
     else:
         return render(request, page, context)
 
-
+def bix_render_to_string(template_path,context,request):
+    context['date']=datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+    return render_to_string(template_path, context, request)
 # from .models import Login
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
