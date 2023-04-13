@@ -134,13 +134,8 @@
                                 {% if column_value.fieldtype == 'linked' %}
                                     <td class="records-linked" onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="standard" style="font-weight: bold !important;">
                                         <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')" data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">{{column_value.value}}</span>
-                                        <!--
-                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Disabled popover">
-  <button class="btn btn-primary" type="button" disabled>Disabled button</button>
-</span>
--->
                                         <script>$('.popover-linked').popover();</script>
-                                    
+
 
                                 </td>
 
