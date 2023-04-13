@@ -270,7 +270,7 @@
 
         if (window.innerWidth <= min_width) {
 
-        if ($(el.closest('td')).attr('data-fieldtype') === 'linked') {
+        if ($(el).attr('data-fieldtype') === 'linked') {
             $('#linked-table-modal').modal('show');
             $(".modal-backdrop:last").css("z-index", 11200);
             $("#linked-table-modal-content").load('/loading/');
@@ -290,7 +290,7 @@
         }
         else
         {
-            if ($(el.closest('td')).attr('data-fieldtype') === 'linked') {
+            if ($(el).attr('data-fieldtype') === 'linked') {
                 $('#linked-table-modal').modal('show');
                 $(".modal-backdrop:last").css("z-index", 11200);
                 $("#linked-table-modal-content").load('/loading/');
@@ -314,7 +314,7 @@
             success: function(response) {
                 //if ($(el.closest('table')).attr('data-type') === 'linked') {
                 //if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
-                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el.closest('td')).attr('data-fieldtype') === 'linked') {
+                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el).attr('data-fieldtype') === 'linked') {
                     //$("#linked-table-modal").html(response);
                     //$("#linked-table-modal").modal("show");
                     //$('.modal-backdrop').hide()
