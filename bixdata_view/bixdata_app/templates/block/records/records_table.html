@@ -88,17 +88,10 @@
         }
 
         .linked-field {
-            color: #8fbad3;
+            color: #7cc4ef;
 
         }
   </style>
-
-<script>
-    $('.linked-field').hover(function() {
-        $('#card-mini-records').show();
-    }, function() {
-    });
-</script>
 
 
 
@@ -125,7 +118,7 @@
             <tbody id="results-body">
                 {% for record in records %}
                     {% if record.2 %}
-                    <tr style="{{ record.2.value }} !important;" id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
+                    <tr style="{{ record.2.value }};" id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
                     {% else %}
                     <tr id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
                     {% endif %}
@@ -133,8 +126,24 @@
                             {% if forloop.counter0 > 2 %}
                                 {% if column_value.fieldtype == 'linked' %}
                                     <td class="records-linked" onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="standard" style="font-weight: bold !important;">
-                                        <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')" data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-title="Popover title" data-bs-content="And here's some amazing content. It's very engaging. Right?">{{column_value.value}}</span>
+                                        <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')"
+                                            data-fieldtype="{{ column_value.fieldtype }}"
+                                            class="linked-field popover-linked"
+                                            data-bs-toggle="popover"
+                                            data-bs-trigger="hover focus"
+                                            data-bs-title="Qui non c'è ancora niente ma ci stiamo lavorando"
+                                            data-bs-content="<img src={% static 'images/mauro&lorenzo.jpg' %} width='400px'>" data-bs-container="body"
+                                            data-bs-html="true"
+                                              data-bs-custom-class="popover-custom"
+                                            style="width: 300px"
+                                            >{{column_value.value}}</span>
+
                                         <script>$('.popover-linked').popover();</script>
+                                    <style>
+                                        .popover-custom {
+                                            max-width: 500px;
+                                        }
+                                    </style>
 
 
                                 </td>
@@ -145,11 +154,14 @@
                                 </td>
 
                                     {% elif column_value.fieldtype == 'Utente' %}
+                                    {% if column_value.value %}
                                         <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
                                             <img src="{% static 'images/users/' %}{{ column_value.code }}.png?v={{ date }}"  alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
                                     {{column_value.value}}
-
-
+                                            {% else %}
+                                      <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                                    {{column_value.value}}
+                                    {% endif %}
                                         {% elif column_value.fieldtype == 'lookup' %}
                                         <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
                                             <div class="badge" style="background-color: {{ column_value.fieldbackground }}; font-size: 10.5pt">{{column_value.value}}</div>
@@ -194,10 +206,10 @@
                     'csrfmiddlewaretoken': '{{ csrf_token }}'
                 },
                 success: function (response) {
-                    reloadFunc();
+                    refresh();
                 },
                 error: function (response) {
-
+                    refresh()
                 }
             });
 			}
@@ -207,7 +219,10 @@
 
 
 
+
+
 function activeRow(el, id) {
+    /*
   var row = document.getElementById(id);
   var els = document.querySelectorAll('.clicked');
   els.forEach(function(e) {
@@ -220,6 +235,7 @@ function activeRow(el, id) {
   } else {
 
   }
+  */
 }
 
 
