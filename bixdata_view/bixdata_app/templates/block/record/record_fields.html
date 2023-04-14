@@ -15,8 +15,22 @@
         }
 </style>
 
+
+
 {% for label,record_fields  in record_fields_labels.items %}
-  <div style="color:red">{{label}}</div>
+    {% if label != 'Dati' %}
+    <button class="btn btn-secondary" type="button" onclick="toggleCollapse(this)">
+    {{ label }}
+  </button>
+    {% endif %}
+    {% if label != 'Dati' %}
+
+<div class="div-collapse" style="display: none" id="collapse-{{ label }}">
+  <div>
+  {% else %}
+<div class="div-collapse" id="collapse-{{ label }}">
+  <div>
+  {% endif %}
   {% for field_key,field in record_fields.items %}
     {% with fieldname=field.fieldid %}
     {% with fieldid='field-'|add:field.fieldid %}
@@ -178,8 +192,12 @@
         {% endwith %}
         {% endwith %}
   {% endfor %}
-    
+
+    </div>
+    </div>
+    <br>
 {% endfor %}
+<br>
             <button id="save-button" type="button" class="btn btn-primary" onclick=" save_record(this)">Salva</button>
 </div>
       <div class="alert alert-success" role="alert" id="saved-alert" style="display: none">
