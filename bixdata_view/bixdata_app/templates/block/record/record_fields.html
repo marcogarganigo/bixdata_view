@@ -9,7 +9,7 @@
 
 <style>
     #saved-alert {
-          position: fixed;
+          position: unset;
           float: right;
           width: 20%;
           height: 5%;
@@ -94,7 +94,7 @@
             {% endif %}
             {% if field.fieldtypeid == 'linkedmaster' %}
             <div class="ui-widget">
-              <input class="form-select mb-2" id="{{ fieldid }}" style="width: 80%" value="{{ field.value }}" onfocus="selectAllText(this)">
+              <input class="form-select mb-2" id="{{ fieldid }}" style="width: 80%" value="{{ field.value }}" onfocus="selectAllText(this); showOptions()">
             </div>
 
                   <input type="hidden" class="hidden-input" name="{{ field.fieldid }}" value="{{ field.recordid }}">
@@ -124,9 +124,45 @@
                         select: function( event, ui ) {
                           //console.log( "Selected: " + ui.item.id );
                           $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+                          $.ajax({
+                            url: "{% url 'get_badge' %}",
+                            data: {
+                              'recordid': ui.item.id,
+                              'tableid': '{{tableid}}',
+                            },
+                            success: function(data) {
+                              console.info(data)
+                              response(data.data);
+                            }
+                          });
                         }
                       });
                     });
+
+
+                    function showOptions() {
+                      $( "#{{ fieldid }}" ).autocomplete({
+                        source: function(request, response) {
+                          $.ajax({
+                            url: "{% url 'get_autocomplete_data' %}",
+                            data: {
+                              'term': request.term,
+                              'tableid': '{{tableid}}',
+                              'mastertableid': '{{ field.tablelink }}'
+                            },
+                            success: function(data) {
+                              console.info(data)
+                              response(data.data);
+                            }
+                          });
+                        },
+                        minLength: 0,
+                        select: function( event, ui ) {
+                          //console.log( "Selected: " + ui.item.id );
+                          $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+                        }
+                      });
+                    }
                   </script>
               {% endif %}
 

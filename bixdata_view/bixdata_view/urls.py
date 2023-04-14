@@ -75,6 +75,7 @@ urlpatterns = [
     path('update_profile_pic/', alpha.update_profile_pic, name='update_profile_pic'),
     #path('get_url/', alpha.get_url, name='get_url'),
     path('accounts/password-reset/', auth_views.PasswordResetView.as_view(html_email_template_name='registration/password_reset_email.html'), name='password_reset'),
+    path('get_badge/', alpha.get_badge, name='get_badge'),
 ]
 
 

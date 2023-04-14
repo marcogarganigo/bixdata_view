@@ -457,61 +457,8 @@
 
 
                         <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
-                            <!-- item-->
-                            <div class="dropdown-header noti-title">
-                                <h5 class="text-overflow mb-2">Found <span class="text-danger">17</span> results</h5>
-                            </div>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="uil-notes font-16 me-1"></i>
-                                <span>Analytics Report</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="uil-life-ring font-16 me-1"></i>
-                                <span>How can I help you?</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="uil-cog font-16 me-1"></i>
-                                <span>User profile settings</span>
-                            </a>
-
-                            <!-- item-->
-                            <div class="dropdown-header noti-title">
-                                <h6 class="text-overflow mb-2 text-uppercase">Users</h6>
-                            </div>
-
-                            <div class="notification-list">
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <div class="d-flex">
-                                        <img class="d-flex me-2 rounded-circle"
-                                            src="{% static 'images/users/avatar-2.jpg' %}"
-                                            alt="Generic placeholder image" height="32">
-                                        <div class="w-100">
-                                            <h5 class="m-0 font-14">Erwin Brown</h5>
-                                            <span class="font-12 mb-0">UI Designer</span>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <div class="d-flex">
-                                        <img class="d-flex me-2 rounded-circle"
-                                            src="{% static 'images/users/avatar-5.jpg' %}"
-                                            alt="Generic placeholder image" height="32">
-                                        <div class="w-100">
-                                            <h5 class="m-0 font-14">Jacob Deo</h5>
-                                            <span class="font-12 mb-0">Developer</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
+                            <h4>Qui non c'è ancora niente ma ci stiamo lavorando</h4>
+                           <img src="{% static 'images/mauro&lorenzo.jpg' %}" width="300px">
                         </div>
                     </div>
                 </div>
@@ -701,15 +648,16 @@
 
         <style>
             #newRecordModal {
-                z-index: 9999
+                z-index: 9999;
             }
         </style>
         
         <script>
-            $('#newRecordModal').on('show.bs.modal', function (e) {
-                $('.modal-backdrop').css('z-index', 8000)
+            $('#newRecordModal').on('shown.bs.modal', function (e) {
+                $('#newRecordModal').css('z-index', 9000)
+                //alert('test')
             });
-        
+
             $('#newRecordModal').on('hide.bs.modal', function (e) {
                 $('.modal-backdrop').css('z-index', 1000)
             });
@@ -717,7 +665,7 @@
 
         <!-- new record modal-->
         <div class="modal fade" id="newRecordModal" aria-hidden="true" style="width: 100%;">
-            <div class="modal-dialog modal-xl" style="width: 100%;">
+            <div class="modal-dialog modal-fullscreen" style="width: 50%; margin: 2% auto auto;height: 85%">
                 <div class="modal-content" style="width: 100%">
                     <div class="modal-body" style="width: 100%">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeNewRecordModal()"></button>
@@ -730,7 +678,7 @@
 
         <!--record modal start-->
         <div class="modal fade" id="recordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%;">
-            <div class="modal-dialog modal-xl modal-fullscreen" style="width: 50%; height: 90%; margin: auto; margin-top: 1%">
+            <div class="modal-dialog  modal-fullscreen" style="width: 80%; height: 90%; margin: 1% auto auto;">
                 <div class="modal-content" style="width: 100%">
                     <div class="modal-body" style="width: 100%">
                         <div id="record-modal-content" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
