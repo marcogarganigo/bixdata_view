@@ -192,7 +192,7 @@
 
             <script>
                 function load_fields(el) {
-                    $(el).closest('.block_record_card').find('.tab-pane-fields').load('/loading/')
+                    //$(el).closest('.block_record_card').find('.tab-pane-fields').load('/loading/')
                     $.ajax({
                         type: "POST",
                         url: "{% url 'get_record_fields' %}",

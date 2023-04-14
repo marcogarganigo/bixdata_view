@@ -322,6 +322,8 @@ def get_content_records(request):
     layout_setting = get_user_setting(request, 'record_open_layout')
     context['layout_setting'] = layout_setting
 
+    context['loading'] = render_to_string('other/loading.html', context, request)
+
     return user_agent(request, 'content/records.html', 'content/records_mobile.html', context)
     # return render(request, 'content/records.html', context)
 
