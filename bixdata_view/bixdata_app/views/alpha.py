@@ -1080,3 +1080,8 @@ def update_profile_pic(request):
             # Update the user's profile image URL in the database
 
     return redirect('index')
+
+
+@login_required(login_url='/login/')
+def get_badge(request):
+    return True
