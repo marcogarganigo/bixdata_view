@@ -51,7 +51,7 @@
 
         function getContentRecords(tableid) {
             var serialized_data = [];
-            //$("#content_container").load('/loading/');
+            $("#content_container").load('/loading/');
             serialized_data.push({ name: 'tableid', value: tableid });
             serialized_data.push({ name: 'searchTerm', value: '' });
             $.ajax({
