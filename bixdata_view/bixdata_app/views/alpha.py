@@ -616,6 +616,12 @@ def get_records_table(request,tableid,master_tableid='',master_recordid='',searc
             if record[record_index]['value'] == 'Validazionetecnica':
                 record[record_index]['fieldtype'] = 'lookup'
                 record[record_index]['fieldbackground'] = 'green'
+            if record[record_index]['value'] == 'Controllosolvibilita':
+                record[record_index]['fieldtype'] = 'lookup'
+                record[record_index]['fieldbackground'] = 'red'    
+            if record[record_index]['value'] == 'Chiusovinto':
+                record[record_index]['fieldtype'] = 'lookup'
+                record[record_index]['fieldbackground'] = 'blue'
 
         records[records_index] = record
 
@@ -862,7 +868,7 @@ def get_block_record_fields(request):
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_fields", data=post)
 
     response_dict = json.loads(response.text)
-    context['record_fields'] = response_dict
+    context['record_fields_labels'] = response_dict
     context['function'] = 'edit'
     context['tableid'] = tableid
     context['recordid'] = recordid
