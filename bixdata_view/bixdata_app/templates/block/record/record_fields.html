@@ -3,9 +3,7 @@
 <link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
 
 <div class="container fields_container" id="fields_container_{{tableid}}_{{recordid}}">
-<div class="alert alert-success" role="alert" id="saved-alert" style="display: none">
-    Salvato
-</div>
+
 
 <style>
     #saved-alert {
@@ -180,6 +178,9 @@
       {% endwith %}
 {% endfor %}
             <button id="save-button" type="button" class="btn btn-primary" onclick=" save_record(this)">Salva</button>
+</div>
+      <div class="alert alert-success" role="alert" id="saved-alert" style="display: none">
+    Salvato
 </div>
 
 <!--save alert-->
