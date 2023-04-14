@@ -97,7 +97,7 @@
 
     .simplebar-mask {
         background-color: black;
-        background-image: linear-gradient(180deg, #074048 90%, #ede4e4 200%);
+        background-image: linear-gradient(180deg, grey 90%, whitesmoke 200%);
         background-size: cover;
     }
 
