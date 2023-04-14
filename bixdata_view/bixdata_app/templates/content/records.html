@@ -1,5 +1,387 @@
 <script type="text/javascript">
     $("#tables").ready(function() {
+
+
+
+
+        $('[data-bs-toggle="popover"]').popover();
+
+
+        $('button[data-bs-toggle="tab"]').each(function(i){
+            if($(this).attr("id")=='gantt-tab')
+            {
+                $(this)[0].addEventListener('shown.bs.tab', function (event) {
+                    searchGantt()
+                })
+            }
+            if($(this).attr("id")=='kanban-tab')
+            {
+                $(this)[0].addEventListener('shown.bs.tab', function (event) {
+                    searchKanban()
+
+                })
+            }
+            if($(this).attr("id")=='calendar-tab')
+            {
+                $(this)[0].addEventListener('shown.bs.tab', function (event) {
+                    searchCalendar()
+                })
+            }
+            if($(this).attr("id")=='chart-tab')
+            {
+                $(this)[0].addEventListener('shown.bs.tab', function (event) {
+                    searchChart()
+                })
+            }
+        })
+        
+        if (window.innerWidth <= min_width) {
+                $("#block-record-card-container").css('display', 'none');
+                $("#block-records-search-container").css('width', '100%');
+            }
+
+
+        refresh()
+    })
+
+
+
+
+
+    $(function() {
+        $('#calendar-tab a:last').tab('show');
+    });
+
+
+    function searchGantt(){
+        var serialized_data = [];
+        serialized_data.push({
+            name: 'table',
+            value: ''
+        });
+        serialized_data.push({
+            name: 'searchTerm',
+            value: $("#searchTerm").val()
+        });
+        
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_records_gantt' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#gantt-tab-pane").html(response);
+            },
+            error: function() {
+                $("#gantt-tab-pane").html(response);
+            }
+        });
+    }
+
+    function searchKanban(){
+        var serialized_data = [];
+        serialized_data.push({
+            name: 'tableid',
+            value: '{{tableid}}'
+        });
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_records_kanban' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#kanban-tab-pane").html(response);
+            },
+            error: function() {
+                $("#kanban-tab-pane").html(response);
+            }
+        });
+    }
+
+    function searchCalendar() {
+        var serialized_data = [];
+        serialized_data.push(
+            {name: 'tableid',value: '{{tableid}}'}
+        );
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_records_calendar' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#calendar-tab-pane").html(response);
+            },
+            error: function() {
+                $("#calendar-tab-pane").html(response);
+            }
+        });
+    }
+
+    function searchChart() {
+        var serialized_data = [];
+        serialized_data.push({
+            name: 'table',
+            value: ''
+        });
+        serialized_data.push({
+            name: 'searchTerm',
+            value: $("#searchTerm").val()
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_records_chart' %}",
+            data: serialized_data,
+            success: function(response) {
+                //$("#chart-tab-pane").html(response);
+            },
+            error: function() {
+                //$("#chart-tab-pane").html(response);
+            }
+        });
+    }
+
+
+    function refresh() {
+        var serialized_data = [];
+        serialized_data.push({
+            name: 'tableid',
+            value: '{{tableid}}'
+        });
+        serialized_data.push({
+            name: 'searchTerm',
+            value: $("#searchTerm").val()
+        });
+        $("#records_table_container").load('/loading/');
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_records_table' %}",
+            data: serialized_data,
+            success: function(response) {
+                
+                $("#records_table_container").html(response);
+            },
+            error: function() {
+                
+                $("#records_table_container").html(response);
+            }
+        });
+    }
+
+    $("#searchTerm").ready(function() {
+        $("input").keypress(function() {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                var serialized_data = [];
+                serialized_data.push({
+                    name: 'table',
+                    value: '{{tableid}}'
+                });
+                serialized_data.push({
+                    name: 'searchTerm',
+                    value: $("#searchTerm").val()
+                });
+                serialized_data.push({
+                    name: 'viewid',
+                    value: null
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'block_records_table' %}",
+                    data: serialized_data,
+                    success: function(response) {
+                        $("#records_table_container").html(response);
+                    },
+                    error: function() {
+                        $("#records_table_container").html(response);
+                    }
+                });
+            }
+        });
+    });
+
+
+    
+    function checkWidth(response) {
+        if (window.innerWidth > min_width) {
+            $("#bixdata_recordcard_container").html(response);
+        } else {
+            $("#record-modal-content").html(response);
+            $("#fullwidth_modal_newrecord").html(response);
+        }
+    }
+
+    function newRecord() {
+        var tableid='{{tableid}}'
+        $('#newRecordModal').modal('show');
+        var serialized_data = [];
+        serialized_data.push({name: 'tableid',value: tableid});
+        serialized_data.push({name: 'function',value: 'insert'});
+        serialized_data.push({name: 'http_response',value: true});
+        $.ajax({
+            type: "POST",
+            url: "{% url 'get_record_fields' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#fullwidth_modal_newrecord").html(response);
+
+            },
+            error: function() {
+                $("#bixdata_recordcard_container").html(response);
+            }
+        });
+
+
+    }
+
+
+
+    function reloadFunc()
+    {
+        getContentRecords('{{ tableid }}')
+        var serialized_data = [];
+        serialized_data.push({
+            name: 'table',
+            value: ''
+        });
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_reload' %}",
+            data: serialized_data,
+            success: function(response) {
+            },
+            error: function() {
+            }
+        })
+    }
+
+
+
+    function open_record(el,tableid,recordid) {
+        var serialized_data = [];
+        serialized_data.push({name: 'tableid',value: tableid});
+        serialized_data.push({name: 'recordid',value: recordid});
+
+        /*
+        $('#linked-table-modal').on('show.bs.modal', function () {
+        $('this').closest(".modal-backdrop").css("z-index", 11200);
+        });
+        */
+        {% if layout_setting == 'modal' %}
+        const min_width = 5000
+        {% endif %}
+
+        if (window.innerWidth <= min_width) {
+
+        if ($(el).attr('data-fieldtype') === 'linked') {
+            $('#linked-table-modal').modal('show');
+            $(".modal-backdrop:last").css("z-index", 11200);
+            $("#linked-table-modal-content").load('/loading/');
+        } else {
+
+            if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                $('#linked-table-modal').modal('show');
+                $(".modal-backdrop:last").css("z-index", 11200);
+                $("#linked-table-modal-content").load('/loading/');
+            } else {
+                $('#recordModal').modal('show');
+                $("#record-modal-content").load('/loading/');
+            }
+        }
+
+
+        }
+        else
+        {
+            if ($(el).attr('data-fieldtype') === 'linked') {
+                $('#linked-table-modal').modal('show');
+                $(".modal-backdrop:last").css("z-index", 11200);
+                $("#linked-table-modal-content").load('/loading/');
+            } else {
+                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                    $('#linked-table-modal').modal('show');
+                    $("#linked-table-modal-content").load('/loading/');
+                } else {
+                    if (window.innerWidth > min_width) {
+                        $("#block-record-card-container").load('/loading/');
+                    }
+                }
+            }
+        }
+        //$("#block-record-card-container").html('caricamento');
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_record_card' %}",
+            data: serialized_data,
+            success: function(response) {
+                //if ($(el.closest('table')).attr('data-type') === 'linked') {
+                //if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el).attr('data-fieldtype') === 'linked') {
+                    //$("#linked-table-modal").html(response);
+                    //$("#linked-table-modal").modal("show");
+                    //$('.modal-backdrop').hide()
+                    $('#linked-table-modal').modal('show');
+                    //$(".modal-backdrop").css("z-index", 11200);
+                    $("#linked-table-modal-content").html(response);
+                } else {
+                    if (window.innerWidth > min_width) {
+                        $("#block-record-card-container").html(response);
+                    } else {
+                        $("#record-modal-content").html(response);
+                    }
+                }
+            },
+            error: function(response) {
+                $("#bixdata_recordcard_container").html(response);
+            }
+        });
+
+    }
+
+    function closeCard(vrbl) {
+      $(vrbl).closest('.modal').modal('hide');
+      setTimeout(function() {
+      }, 1000);
+        if (window.innerWidth > min_width) {
+          $(vrbl).closest("#RecordCard").slideToggle(200, function() {
+          });
+        }
+    }
+
+    $('.modal').on('hidden.bs.modal', function (e) {
+  // Remove the content of the component here
+  //$('#RecordCard').html('');
+  $('#bixdata_recordcard_container').html('');
+})
+
+
+
+    $('#newRecordModal').on('hidden.bs.modal', function (e) {
+        $("#fullwidth_modal_newrecord").html("");
+    });
+
+        function closeNewRecordModal() {
+            $("#newRecordModal").modal("hide");
+        }
+
+
+
+    function closeLinkedTableModal() {
+        $("#linked-table-modal").modal("hide");
+    }
+
+    function open_kanban() {
+        var serialized_data = [];
+        $.ajax({
+            type: "POST",
+            url: controller_url + 'ajax_get_kanban',
+            data: serialized_data,
+            success: function(response) {
+                $("#bixdata_results_container").html(response);
+            },
+            error: function() {
+                $("#bixdata_results_container").html(response);
+            }
+        });
+    }
 </script>
 
 <style>
