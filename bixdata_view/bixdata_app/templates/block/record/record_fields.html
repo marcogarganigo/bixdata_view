@@ -15,7 +15,7 @@
         }
 </style>
 
-
+{% for record_fields, labels in record_fields_labels.items %}
 {% for field_key,field in record_fields.items %}
   {% with fieldname=field.fieldid %}
   {% with fieldid='field-'|add:field.fieldid %}
@@ -177,6 +177,8 @@
       {% endwith %}
       {% endwith %}
 {% endfor %}
+    {{ record_fields }}
+{% endfor %}
             <button id="save-button" type="button" class="btn btn-primary" onclick=" save_record(this)">Salva</button>
 </div>
       <div class="alert alert-success" role="alert" id="saved-alert" style="display: none">
@@ -223,7 +225,7 @@ function save_record(el) {
     post_data.push({name: 'tableid',value: '{{ tableid }}'});
     post_data.push({name: 'recordid',value: '{{ recordid }}'});
     post_data.push({name: 'fields',value: serialized_json});
-    
+
 
     $.ajax({
         type: "POST",
