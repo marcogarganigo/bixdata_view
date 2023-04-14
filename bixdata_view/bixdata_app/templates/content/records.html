@@ -130,10 +130,10 @@
             url: "{% url 'block_records_chart' %}",
             data: serialized_data,
             success: function(response) {
-                $("#chart-tab-pane").html(response);
+                //$("#chart-tab-pane").html(response);
             },
             error: function() {
-                $("#chart-tab-pane").html(response);
+                //$("#chart-tab-pane").html(response);
             }
         });
     }
