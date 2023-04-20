@@ -70,6 +70,31 @@
             }
           });
     }
+
+
+    function popoverContent() { 
+var responseblock='response block';
+        $.ajax({
+            method: "POST",  
+			async: false,
+                        url: "{% url 'get_block_record_badge' %}",
+                        data: {
+                            'http_response':'true',
+                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                            'tableid': $(this).data("linkedtableid"),
+                            'recordid': $(this).data("linkedrecordid"),
+                        },
+                        success: function(response) {
+                            responseblock= response;
+                        },
+                        error: function(response) {
+                            $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
+                            responseblock= 'error';
+                        }
+                    });
+                            
+                    return responseblock;  
+    }
 </script>
 
   <style>
@@ -125,7 +150,8 @@
                         {% for column_value in record %}
                             {% if forloop.counter0 > 2 %}
                                 {% if column_value.fieldtype == 'linked' %}
-                                    <td class="records-linked" onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="standard" style="font-weight: bold !important;">
+                                    <td class="records-linked" onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="standard" style="font-weight: bold !important;" >
+                                        <!--
                                         <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')"
                                             data-fieldtype="{{ column_value.fieldtype }}"
                                             class="linked-field popover-linked"
@@ -139,6 +165,17 @@
                                             >{{column_value.value}}</span>
 
                                         <script>$('.popover-linked').popover();</script>
+                                        -->
+                                        <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')" data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked" data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom" data-linkedtableid="{{column_value.link_tableid}}" data-linkedrecordid="{{column_value.link_recordid}}" >{{column_value.value}}</span>
+                                        <script>
+                                            $('.popover-linked').popover({  
+        content: popoverContent,
+		html: true,  
+		placement: 'right',  
+		trigger: 'hover focus'
+	});
+                                        </script>
+                            
                                     <style>
                                         .popover-custom {
                                             max-width: 500px;

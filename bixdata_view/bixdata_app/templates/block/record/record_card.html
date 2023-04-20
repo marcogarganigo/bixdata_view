@@ -139,6 +139,22 @@
         }
     }
 
+    function get_timesheet_serviceassets(el)
+    {
+        var serialized_data = [];
+        $('#modalMedium').modal('show');
+        $.ajax({
+            type: "POST",
+            url: "{% url 'get_timesheet_serviceassets' %}",
+            data: serialized_data,
+            success: function(response) {
+                $("#modalMedium-body").html(response);
+            },
+            error: function() {
+                alert('pin')
+            }
+        });
+    }
 
 </script>
 
@@ -175,9 +191,10 @@
                         Funzioni
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        {% if tableid == 'timesheet' %}
+                            <li><a class="dropdown-item" onclick="get_timesheet_serviceassets(this)">Servizi e risorse</a></li>
+                        {% endif %}
+                       
                     </ul>
                 </div>
     

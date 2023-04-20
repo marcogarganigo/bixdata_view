@@ -560,7 +560,7 @@
                             <ul class="side-nav-second-level">
                               {% for value in menu_list_value %}
                               <li onclick="getContentRecords('{{value.id}}')">
-                                <a href="#" class="side-nav-txt" onclick="setColor(this)">{{value.id}}</a>
+                                <a href="#" class="side-nav-txt" onclick="setColor(this)">{{value.description}}</a>
                               </li>
                               {% endfor %}
                                 </ul>
@@ -730,6 +730,43 @@
                 </div>
             </div>
         </div>
+
+         <!--record modal big start-->
+         <div id="modalBig" class="modal fade"  tabindex="-1" >
+            <div class="modal-dialog modal-fullscreen" style="width: 80%; height: 90%; margin: auto; margin-top: 1%">
+                <div class="modal-content" style="width: 100%">
+                    <div id="modalBig-body" class="modal-body" style="width: 100%;background-color: blue;">
+                        big
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--record modal big end-->
+        
+        <!--record modal medium start-->
+        <div id="modalMedium" class="modal fade"  tabindex="-1" >
+            <div class="modal-dialog modal-fullscreen" style="width: 50%; height: 90%; margin: auto; margin-top: 1%">
+                <div class="modal-content" style="width: 100%">
+                    <div id="modalMedium-body" class="modal-body" style="width: 100%;">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--record modal medium end-->
+
+        <!--record modal small start-->
+        <div id="modalSmall" class="modal fade" tabindex="-1" >
+            <div class="modal-dialog modal-fullscreen" style="width: 20%; height: 90%; margin: auto; margin-top: 1%">
+                <div class="modal-content" style="width: 100%">
+                    <div id="modalSmall-body" class="modal-body" style="width: 100%;background-color:yellow">
+                        small
+                        <textarea></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--record modal small end-->
 -->
     <script>
   var imageDropArea = document.getElementById('image-drop-area');

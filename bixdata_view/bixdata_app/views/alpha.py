@@ -821,7 +821,7 @@ def get_block_record_card(request):
 
 
 @login_required(login_url='/login/')
-def get_block_record_badge(request):
+def get_block_record_badge(request,http_response=False):
     context = dict()
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
@@ -841,8 +841,11 @@ def get_block_record_badge(request):
         context_fields[fieldid]=field
         
     context['fields'] = context_fields
-    records_table = render_to_string(
-        'block/record/record_badge.html', context, request=request)
+    records_table = render_to_string('block/record/record_badge.html', context, request=request)
+    if (http_response):
+        return HttpResponse(records_table)
+    else:
+        return records_table
     return records_table
 
 
@@ -1087,3 +1090,8 @@ def update_profile_pic(request):
 @login_required(login_url='/login/')
 def get_badge(request):
     return True
+
+
+@login_required(login_url='/login/')
+def get_timesheet_serviceassets(request):
+    return HttpResponse('test')

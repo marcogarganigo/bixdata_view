@@ -76,6 +76,9 @@ urlpatterns = [
     #path('get_url/', alpha.get_url, name='get_url'),
     path('accounts/password-reset/', auth_views.PasswordResetView.as_view(html_email_template_name='registration/password_reset_email.html'), name='password_reset'),
     path('get_badge/', alpha.get_badge, name='get_badge'),
+    path('get_timesheet_serviceassets/', alpha.get_timesheet_serviceassets, name='get_timesheet_serviceassets'),
+    path('get_block_record_badge/', alpha.get_block_record_badge,kwargs={'http_response':True}, name='get_block_record_badge'),
+    
 ]
 
 
