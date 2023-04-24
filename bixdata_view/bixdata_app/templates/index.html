@@ -34,10 +34,7 @@
             {% endif %}
 
             $("#toggle-menu").click(function () {
-                $("#content_container").load('/loading/');
-                (async function() {
-
-                await new Promise(resolve => setTimeout(resolve, 0));
+                //$("#content_container").load('/loading/');
 
                 var current_sidenav_size = $("html").attr("data-sidenav-size");
                 if (current_sidenav_size == 'default') {
@@ -45,8 +42,6 @@
                 } else {
                     $("html").attr("data-sidenav-size", "default");
                 }
-
-            })();
 
             });
 
@@ -58,9 +53,9 @@
         function getContentRecords(tableid) {
             var serialized_data = [];
 
-            $("#content_container").load('/loading/');
 
-            $("#content-container").ready(function () {
+                //$("#content_container").load('/loading/');
+
                 serialized_data.push({ name: 'tableid', value: tableid });
             serialized_data.push({ name: 'searchTerm', value: '' });
             $.ajax({
@@ -76,9 +71,7 @@
                     $("#content_container").html(response);
                 }
             });
-            });
         }
-
 
         function getRenderChartsView() {
             var serialized_data = [];
@@ -125,6 +118,22 @@
                 type: "POST",
                 crossDomain: true,
                 url: "{% url 'get_settings' %}",
+                success: function (response) {
+                    $("#content_container").html(response);
+                    $('[data-toggle="tooltip"]').tooltip();
+                },
+                error: function (response) {
+                    $("#content_container").html(response);
+                }
+            });
+        }
+
+        function get_bixdata_updates() {
+            //$("#content_container").load('/loading/');
+            $.ajax({
+                type: "POST",
+                crossDomain: true,
+                url: "{% url 'get_bixdata_updates' %}",
                 success: function (response) {
                     $("#content_container").html(response);
                     $('[data-toggle="tooltip"]').tooltip();
@@ -361,7 +370,7 @@
                             </a>
                         </li>
 
-                        <li onclick="" class="notification-list d-none d-sm-inline-block">
+                        <li onclick="get_bixdata_updates()" class="notification-list d-none d-sm-inline-block">
                             <a class="nav-link" data-bs-toggle="offcanvas" href="#theme-settings-offcanvas">
                                 <i class="ri-notification-3-line noti-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Aggiornamenti bixdata"></i>
                             </a>

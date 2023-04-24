@@ -24,6 +24,9 @@ from django.conf import settings
 from .beta import *
 
 
+bixdata_server = os.environ.get('BIXDATA_SERVER')
+
+
 def get_test_autocomplete(request):
     return render(request, 'test_autocomplete.html')
 
@@ -37,7 +40,7 @@ def get_autocomplete_data(request):
         'mastertableid': mastertableid,
         'term': term
     }
-    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_autocomplete_data",
+    response = requests.post(f"{bixdata_server}/bixdata/index.php/rest_controller/get_autocomplete_data",
                              data=post)
     response = json.loads(response.text)
 
@@ -265,7 +268,7 @@ def get_chart4(request):
 @login_required(login_url='/login/')
 def get_render_index(request, content=''):
     response = requests.get(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_tables_menu")
     menu_list = json.loads(response.text)
 
     username = request.user
@@ -311,6 +314,7 @@ def get_content_records(request):
     context['table'] = tableid.upper()
     context['tableid'] = tableid
     context['views'] = dict()
+    context['user_table_settings']=get_user_table_settings(request.user.id,tableid)
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT * FROM sys_view WHERE userid = 1 AND tableid='%s'" % (tableid)
@@ -365,7 +369,7 @@ def get_block_records_chart(request):
         'searchTerm': '',
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_chart", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_records_chart", data=post)
     response_dict = json.loads(response.text)
     label = response_dict['label']
 
@@ -425,6 +429,8 @@ def get_render_content_dashboard(request):
                     selected += groupby
 
                 query_conditions = row['query_conditions']
+                userid=get_userid(request.user.id)
+                query_conditions=query_conditions.replace("$userid$",str(userid))
                 id = row['id']
                 tableid = row['tableid']
                 name = row['name']
@@ -573,7 +579,7 @@ def get_records_table(request,tableid,master_tableid='',master_recordid='',searc
         'userid': userid
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
     response_dict = json.loads(response.text)
     columns = response_dict['columns']
     records = response_dict['records']
@@ -642,7 +648,7 @@ def get_block_records_gantt(request):
     }
 
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_gantt", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_records_gantt", data=post)
     response_dict = json.loads(response.text)
 
     records = response_dict['records']
@@ -745,7 +751,7 @@ def get_block_records_calendar(request):
         'viewid': viewid,
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
     response_dict = json.loads(response.text)
     columns = response_dict['columns']
     records = response_dict['records']
@@ -781,7 +787,7 @@ def get_block_record(request):
         'viewid': viewid,
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
     response_dict = json.loads(response.text)
     columns = response_dict['columns']
     records = response_dict['records']
@@ -814,10 +820,10 @@ def get_block_record_card(request):
     # context['block_record_linked'] = get_block_record_linked(request)
     context['block_record_fields'] = ""#get_block_record_fields(request)
     context['recordid'] = request.POST.get('recordid')
-    context['tableid'] = request.POST.get('tableid')
-
-    returned = user_agent(request, 'block/record/record_card.html',
-                          'block/record/record_card_mobile.html', context)
+    tableid=request.POST.get('tableid')
+    context['tableid'] = tableid
+    context['user_table_settings']=get_user_table_settings(request.user.id,tableid)
+    returned = user_agent(request, 'block/record/record_card.html','block/record/record_card_mobile.html', context)
     return HttpResponse(returned)
 
 
@@ -871,7 +877,7 @@ def get_block_record_fields(request):
         'userid': userid
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_fields", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_record_fields", data=post)
 
     response_dict = json.loads(response.text)
     context['record_fields_labels'] = response_dict
@@ -898,7 +904,7 @@ def get_block_record_linked_OLD(request):
         'recordid': recordid,
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_labels", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_record_labels", data=post)
     response_dict = json.loads(response.text)
     context['labels'] = response_dict
     context['tableid'] = tableid
@@ -961,7 +967,7 @@ def save_record_fields(request):
     }
 
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/set_record", data=post_data)
+        f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
 
     fields_dict = json.loads(fields)
 
@@ -1096,3 +1102,12 @@ def get_badge(request):
 @login_required(login_url='/login/')
 def get_timesheet_serviceassets(request):
     return HttpResponse('test')
+
+@login_required(login_url='/login/')
+def get_bixdata_updates(request):
+    user_id = request.user.id
+    return render(request, 'other/bixdata_updates.html', {'user_id': user_id})
+
+@login_required(login_url='/login/')
+def new_update(request):
+    return render(request, 'other/bixdata_updates.html')

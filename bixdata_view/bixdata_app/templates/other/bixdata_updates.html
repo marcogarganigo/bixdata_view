@@ -1,0 +1,10 @@
+<div class="container text-center">
+aggiornamenti
+
+{% if user_id == 1 or user_id == 2 %}
+    <h5>Nuovo aggiornamento</h5>
+ <form method="POST" action="{% url 'new_update' %}">
+
+  </form>
+    </div>
+{% endif %}

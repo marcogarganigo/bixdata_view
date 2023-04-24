@@ -2,7 +2,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
 
-<div class="container fields_container" id="fields_container_{{tableid}}_{{recordid}}">
+<div class="container fields_container" style="height: 80%; overflow-y:scroll" id="fields_container_{{tableid}}_{{recordid}}">
 
 
 <style>
@@ -251,6 +251,7 @@ function save_record(el) {
         url: "{% url 'save_record_fields' %}",
         data: post_data,
         success: function(response) {
+            refresh();
             setTimeout(function() {
               if('{{ tableid }}'=='ticketbixdata')
               {
