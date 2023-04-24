@@ -5,4 +5,4 @@ __pycache__/
 /media/
 /local_settings.py
 .env
-*.pyc
+bixdata_view/bixdata_app/__pycache__/__init__.cpython-311.pyc
