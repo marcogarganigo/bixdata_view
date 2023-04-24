@@ -56,6 +56,15 @@ def get_user_setting_list(request):
             return settings_list
 
 
+def get_userid(django_userid):
+    userid=0
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT id FROM sys_user WHERE bixid = %s", [django_userid])
+        row = cursor.fetchone()
+        if row:
+            userid = row[0]
+    return userid        
+
 def get_user_setting(request, setting):
     # settings superuser
     returned_value = ''
@@ -73,6 +82,23 @@ def get_user_setting(request, setting):
                     returned_value = result[0]
 
     return returned_value
+
+def get_user_table_settings(bixid,tableid):
+    returned_settings = dict()
+    settings=list()
+    with connection.cursor() as cursor:
+        cursor.execute(f"SELECT * FROM v_sys_user_settings WHERE bixid = {bixid} and tableid= '{tableid}'")
+        result = cursor.fetchall()
+        if result:
+            settings = result
+        else:
+            with connection.cursor() as cursor:
+                cursor.execute(f"SELECT * FROM v_sys_user_settings WHERE bixid = 1 and tablied='{tableid}' ")
+                result = cursor.fetchall()
+                if result:
+                    settings = result
+
+    return returned_settings
 
 
 def send_email(request, email, subject, message):

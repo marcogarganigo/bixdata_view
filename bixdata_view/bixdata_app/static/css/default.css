@@ -571,8 +571,12 @@
         --bs-popover-body-padding-y: .5rem;
     }
 
-    .side-nav-txt:hover {
+        .side-nav-txt:hover {
         color: #ff0000 !important;
+    }
+
+     html[data-sidenav-size=condensed] .side-nav-txt {
+            background-color: #f5f1f1 !important;
     }
 
     html[aria-expanded=false] .side-nav-second-level {

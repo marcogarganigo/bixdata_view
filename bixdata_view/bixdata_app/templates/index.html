@@ -35,6 +35,7 @@
 
             $("#toggle-menu").click(function () {
                 //$("#content_container").load('/loading/');
+
                 var current_sidenav_size = $("html").attr("data-sidenav-size");
                 if (current_sidenav_size == 'default') {
                     $("html").attr("data-sidenav-size", "condensed");
@@ -51,8 +52,10 @@
 
         function getContentRecords(tableid) {
             var serialized_data = [];
-            //$("#content_container").load('/loading/');
-            serialized_data.push({ name: 'tableid', value: tableid });
+
+                //$("#content_container").load('/loading/');
+
+                serialized_data.push({ name: 'tableid', value: tableid });
             serialized_data.push({ name: 'searchTerm', value: '' });
             $.ajax({
                 type: "POST",
@@ -568,11 +571,11 @@
 
                         </li>
                         {% endfor %}
-
+                    <!---
                     <li class="side-nav-title side-nav-item">Tables</li>
                         <li class="side-nav-item">
                           <a data-bs-toggle="collapse" href="#sidebarcalendar" aria-expanded="false" aria-controls="sidebarcalendar" class="side-nav-link">
-                            <i class="uil-briefcase"></i>
+                            <i class="mdi mdi-calendar"></i>
                             <span>TestCalendar</span>
                             <span class="menu-arrow"></span>
                           </a>
@@ -600,7 +603,7 @@
                             });
                         }
                         </script>
-
+                    
 
 
 
