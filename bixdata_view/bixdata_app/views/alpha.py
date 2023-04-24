@@ -818,10 +818,10 @@ def get_block_record_card(request):
     # context['block_record_linked'] = get_block_record_linked(request)
     context['block_record_fields'] = ""#get_block_record_fields(request)
     context['recordid'] = request.POST.get('recordid')
-    context['tableid'] = request.POST.get('tableid')
-
-    returned = user_agent(request, 'block/record/record_card.html',
-                          'block/record/record_card_mobile.html', context)
+    tableid=request.POST.get('tableid')
+    context['tableid'] = tableid
+    context['user_table_settings']=get_user_table_settings(request.user.id,tableid)
+    returned = user_agent(request, 'block/record/record_card.html','block/record/record_card_mobile.html', context)
     return HttpResponse(returned)
 
 
