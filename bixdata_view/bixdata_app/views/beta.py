@@ -87,17 +87,21 @@ def get_user_table_settings(bixid,tableid):
     returned_settings = dict()
     settings=list()
     with connection.cursor() as cursor:
-        cursor.execute(f"SELECT * FROM v_sys_user_settings WHERE bixid = {bixid} and tableid= '{tableid}'")
-        result = cursor.fetchall()
+        cursor.execute(f"SELECT * FROM v_sys_user_table_settings WHERE bixid = {bixid} and tableid= '{tableid}'")
+        result = dictfetchall(cursor)
         if result:
             settings = result
         else:
             with connection.cursor() as cursor:
-                cursor.execute(f"SELECT * FROM v_sys_user_settings WHERE bixid = 1 and tablied='{tableid}' ")
-                result = cursor.fetchall()
+                cursor.execute(f"SELECT * FROM v_sys_user_table_settings WHERE bixid = 1 and tableid='{tableid}' ")
+                result = dictfetchall(cursor)
                 if result:
                     settings = result
 
+    for setting in settings:
+        returned_settings[setting['settingid']]=setting['value']
+
+        
     return returned_settings
 
 
