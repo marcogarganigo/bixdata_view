@@ -56,7 +56,34 @@ def get_user_setting_list(request):
             return settings_list
 
 
+def get_userid(django_userid):
+    userid=0
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT id FROM sys_user WHERE bixid = %s", [django_userid])
+        row = cursor.fetchone()
+        if row:
+            userid = row[0]
+    return userid        
+
 def get_user_setting(request, setting):
+    # settings superuser
+    returned_value = ''
+    id = request.user.id
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT value FROM v_sys_user_settings WHERE bixid = %s AND setting = %s", [id, setting])
+        result = cursor.fetchone()
+        if result:
+            returned_value = result[0]
+        else:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT value FROM v_sys_user_settings WHERE bixid = %s AND setting = %s", [1, setting])
+                result = cursor.fetchone()
+                if result:
+                    returned_value = result[0]
+
+    return returned_value
+
+def get_user_table_setting(request, setting):
     # settings superuser
     returned_value = ''
     id = request.user.id
