@@ -61,7 +61,7 @@
             $("#content_container").load('/loading/');
             (async function() {
 
-                await new Promise(resolve => setTimeout(resolve, 0));
+                await new Promise(resolve => setTimeout(resolve, 1));
 
                 serialized_data.push({ name: 'tableid', value: tableid });
             serialized_data.push({ name: 'searchTerm', value: '' });
