@@ -429,6 +429,8 @@ def get_render_content_dashboard(request):
                     selected += groupby
 
                 query_conditions = row['query_conditions']
+                userid=get_userid(request.user.id)
+                query_conditions=query_conditions.replace("$userid$",str(userid))
                 id = row['id']
                 tableid = row['tableid']
                 name = row['name']
