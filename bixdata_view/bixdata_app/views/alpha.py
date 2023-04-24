@@ -311,6 +311,7 @@ def get_content_records(request):
     context['table'] = tableid.upper()
     context['tableid'] = tableid
     context['views'] = dict()
+    context['user_table_settings']=get_user_table_settings(request.user.id,tableid)
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT * FROM sys_view WHERE userid = 1 AND tableid='%s'" % (tableid)
