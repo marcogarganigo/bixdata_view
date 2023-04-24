@@ -21,9 +21,13 @@
     }
 
     //appena la card carica aprire collegato di default
+    var recordtab = '{{user_table_settings.default_recordtab}}';
     $('#block_record_card').ready(function() {
-        document.getElementById("linked-tab").click();
-        console.log('errore')
+        if ( recordtab === 'Linked' ) {
+            $('#linked-tab').click();
+        } else {
+            $('#fields-tab').click();
+        }
     });
 
     
@@ -235,7 +239,6 @@
     
     
             <nav>
-                {{user_table_settings.default_recordtab}}
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <button class="nav-link active" id="fields-tab" data-bs-toggle="tab" data-bs-target="#fields-tab-pane" type="button" role="tab" aria-controls="fields-tab-pane" aria-selected="true" onclick="load_fields(this)">
 

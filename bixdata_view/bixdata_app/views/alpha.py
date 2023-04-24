@@ -1100,3 +1100,12 @@ def get_badge(request):
 @login_required(login_url='/login/')
 def get_timesheet_serviceassets(request):
     return HttpResponse('test')
+
+@login_required(login_url='/login/')
+def get_bixdata_updates(request):
+    user_id = request.user.id
+    return render(request, 'other/bixdata_updates.html', {'user_id': user_id})
+
+@login_required(login_url='/login/')
+def new_update(request):
+    return render(request, 'other/bixdata_updates.html')

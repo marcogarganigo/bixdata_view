@@ -78,7 +78,9 @@ urlpatterns = [
     path('get_badge/', alpha.get_badge, name='get_badge'),
     path('get_timesheet_serviceassets/', alpha.get_timesheet_serviceassets, name='get_timesheet_serviceassets'),
     path('get_block_record_badge/', alpha.get_block_record_badge,kwargs={'http_response':True}, name='get_block_record_badge'),
-    
+    path('get_bixdata_updates/', alpha.get_bixdata_updates, name='get_bixdata_updates'),
+    path('new_update/', alpha.new_update, name='new_update'),
+
 ]
 
 
