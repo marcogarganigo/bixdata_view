@@ -149,6 +149,10 @@
             name: 'searchTerm',
             value: $("#searchTerm").val()
         });
+        serialized_data.push({
+            name: 'viewid',
+            value: $("#viewid").val()
+        });
         //$("#records_table_container").load('/loading/');
         $.ajax({
             type: "POST",
@@ -436,7 +440,7 @@
                                 <div class="col filter-column">
 
                                     <div>
-                                        <select class="form-select" aria-label="Default select example" style="width: 20%; float: left">
+                                        <select id="viewid" class="form-select" aria-label="Default select example" style="width: 20%; float: left">
                                             {% for view in views %}
                                           <option value="{{ view.id }}">{{ view.name }}</option>
                                             {% endfor %}

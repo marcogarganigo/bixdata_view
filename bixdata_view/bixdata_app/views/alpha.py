@@ -557,7 +557,7 @@ def get_records_table_render(request):
 
 @login_required(login_url='/login/')
 def get_records_table(request,tableid,master_tableid='',master_recordid='',searchTerm='',viewid=''):
-    
+    userid=get_userid(request.user.id)
     table_type = 'standard'
     table_height = '100%'
     if master_tableid:
@@ -570,6 +570,7 @@ def get_records_table(request,tableid,master_tableid='',master_recordid='',searc
         'viewid': viewid,
         'master_tableid': master_tableid,
         'master_recordid': master_recordid,
+        'userid': userid
     }
     response = requests.post(
         "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
