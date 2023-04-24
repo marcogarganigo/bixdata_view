@@ -442,12 +442,11 @@
                                     <div>
                                         <select id="viewid" class="form-select" aria-label="Default select example" style="width: 20%; float: left" onchange="refresh()">
                                             {% for view in views %}
-                                                {% if view.id == 'user_table_settings.default_viewid' %}
-
-                                          <option value="{{ view.id }}" selected>{{ view.name }}</option>
+                                                {% if view.id == user_table_settings.default_viewid %}
+                                                    <option value="{{ view.id }}" selected>{{ view.name }}</option>
                                                 {% else %}
-                                            <option value="{{ view.id }}">{{ view.name }}</option>
-                                                    {% endif %}
+                                                    <option value="{{ view.id }}">{{view.name}}: {{ view.id }} - Default: {{user_table_settings.default_viewid}}</option>
+                                                {% endif %}
                                             {% endfor %}
                                         </select>
                                             <input class="form-control me-2" type="search" placeholder="Ricerca" aria-label="Search" style="width: 50%; float: left" id="searchTerm" autocomplete="off" onkeydown="if(event.keyCode === 13) { event.preventDefault(); refresh(); }">
