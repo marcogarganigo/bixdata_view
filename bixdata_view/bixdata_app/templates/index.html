@@ -34,10 +34,7 @@
             {% endif %}
 
             $("#toggle-menu").click(function () {
-                $("#content_container").load('/loading/');
-                (async function() {
-
-                await new Promise(resolve => setTimeout(resolve, 0));
+                //$("#content_container").load('/loading/');
 
                 var current_sidenav_size = $("html").attr("data-sidenav-size");
                 if (current_sidenav_size == 'default') {
@@ -45,8 +42,6 @@
                 } else {
                     $("html").attr("data-sidenav-size", "default");
                 }
-
-            })();
 
             });
 
@@ -58,9 +53,8 @@
         function getContentRecords(tableid) {
             var serialized_data = [];
 
-            $("#content_container").load('/loading/');
+                //$("#content_container").load('/loading/');
 
-            $("#content-container").ready(function () {
                 serialized_data.push({ name: 'tableid', value: tableid });
             serialized_data.push({ name: 'searchTerm', value: '' });
             $.ajax({
@@ -76,9 +70,7 @@
                     $("#content_container").html(response);
                 }
             });
-            });
         }
-
 
         function getRenderChartsView() {
             var serialized_data = [];
