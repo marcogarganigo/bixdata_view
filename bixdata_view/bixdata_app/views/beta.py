@@ -28,9 +28,12 @@ def user_agent(request, page, mobilepage, context={}):
     else:
         return render(request, page, context)
 
-def bix_render_to_string(template_path,context,request):
-    context['date']=datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+
+def bix_render_to_string(template_path, context, request):
+    context['date'] = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     return render_to_string(template_path, context, request)
+
+
 # from .models import Login
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -57,13 +60,14 @@ def get_user_setting_list(request):
 
 
 def get_userid(django_userid):
-    userid=0
+    userid = 0
     with connection.cursor() as cursor:
         cursor.execute("SELECT id FROM sys_user WHERE bixid = %s", [django_userid])
         row = cursor.fetchone()
         if row:
             userid = row[0]
-    return userid        
+    return userid
+
 
 def get_user_setting(request, setting):
     # settings superuser
@@ -83,9 +87,10 @@ def get_user_setting(request, setting):
 
     return returned_value
 
-def get_user_table_settings(bixid,tableid):
+
+def get_user_table_settings(bixid, tableid):
     returned_settings = dict()
-    settings=list()
+    settings = list()
     with connection.cursor() as cursor:
         cursor.execute(f"SELECT * FROM v_sys_user_table_settings WHERE bixid = {bixid} and tableid= '{tableid}'")
         result = dictfetchall(cursor)
@@ -99,9 +104,9 @@ def get_user_table_settings(bixid,tableid):
                     settings = result
 
     for setting in settings:
-        returned_settings[setting['settingid']]=setting['value']
+        returned_settings[setting['settingid']] = setting['value']
 
-        
+    returned_settings['default_viewid'] = int(returned_settings['default_viewid'])
     return returned_settings
 
 
@@ -115,37 +120,42 @@ def send_email(request, email, subject, message):
     )
     return True
 
+
 def db_query_sql(sql):
-    rows=dict()
+    rows = dict()
     with connection.cursor() as cursor:
         cursor.execute(sql)
         rows = dictfetchall(cursor)
     return rows
 
-def db_get(table,columns,condition,order='',limit=''): 
-    sql=f"SELECT {columns} FROM {table} WHERE {condition}"
-    rows= db_query_sql(sql)
+
+def db_get(table, columns, condition, order='', limit=''):
+    sql = f"SELECT {columns} FROM {table} WHERE {condition}"
+    rows = db_query_sql(sql)
     return rows
 
-def db_get_row(table,columns,condition,order=''):
-    sql=f"SELECT {columns} FROM {table} WHERE {condition} LIMIT 1"
-    rows= db_query_sql(sql)
+
+def db_get_row(table, columns, condition, order=''):
+    sql = f"SELECT {columns} FROM {table} WHERE {condition} LIMIT 1"
+    rows = db_query_sql(sql)
     if rows:
         return rows[0]
     else:
         return None
-    
-def db_get_value(table,column,condition,order=''):
-    sql=f"SELECT {column} FROM {table} WHERE {condition} LIMIT 1"
-    rows= db_query_sql(sql)
+
+
+def db_get_value(table, column, condition, order=''):
+    sql = f"SELECT {column} FROM {table} WHERE {condition} LIMIT 1"
+    rows = db_query_sql(sql)
     if rows:
         return rows[0][column]
     else:
         return None
 
-def db_get_count(table,condition,order=''):
-    sql=f"SELECT count(*) as counter FROM {table} WHERE {condition}"
-    rows= db_query_sql(sql)
+
+def db_get_count(table, condition, order=''):
+    sql = f"SELECT count(*) as counter FROM {table} WHERE {condition}"
+    rows = db_query_sql(sql)
     if rows:
         return rows[0]['counter']
     else:

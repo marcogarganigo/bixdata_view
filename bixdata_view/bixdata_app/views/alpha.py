@@ -24,6 +24,9 @@ from django.conf import settings
 from .beta import *
 
 
+bixdata_server = os.environ.get('BIXDATA_SERVER')
+
+
 def get_test_autocomplete(request):
     return render(request, 'test_autocomplete.html')
 
@@ -37,7 +40,7 @@ def get_autocomplete_data(request):
         'mastertableid': mastertableid,
         'term': term
     }
-    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_autocomplete_data",
+    response = requests.post(f"{bixdata_server}/bixdata/index.php/rest_controller/get_autocomplete_data",
                              data=post)
     response = json.loads(response.text)
 
@@ -265,7 +268,7 @@ def get_chart4(request):
 @login_required(login_url='/login/')
 def get_render_index(request, content=''):
     response = requests.get(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_tables_menu")
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_tables_menu")
     menu_list = json.loads(response.text)
 
     username = request.user
@@ -366,7 +369,7 @@ def get_block_records_chart(request):
         'searchTerm': '',
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_chart", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_records_chart", data=post)
     response_dict = json.loads(response.text)
     label = response_dict['label']
 
@@ -574,7 +577,7 @@ def get_records_table(request,tableid,master_tableid='',master_recordid='',searc
         'userid': userid
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
     response_dict = json.loads(response.text)
     columns = response_dict['columns']
     records = response_dict['records']
@@ -643,7 +646,7 @@ def get_block_records_gantt(request):
     }
 
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_gantt", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_records_gantt", data=post)
     response_dict = json.loads(response.text)
 
     records = response_dict['records']
@@ -746,7 +749,7 @@ def get_block_records_calendar(request):
         'viewid': viewid,
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
     response_dict = json.loads(response.text)
     columns = response_dict['columns']
     records = response_dict['records']
@@ -782,7 +785,7 @@ def get_block_record(request):
         'viewid': viewid,
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
     response_dict = json.loads(response.text)
     columns = response_dict['columns']
     records = response_dict['records']
@@ -872,7 +875,7 @@ def get_block_record_fields(request):
         'userid': userid
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_fields", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_record_fields", data=post)
 
     response_dict = json.loads(response.text)
     context['record_fields_labels'] = response_dict
@@ -899,7 +902,7 @@ def get_block_record_linked_OLD(request):
         'recordid': recordid,
     }
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_record_labels", data=post)
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_record_labels", data=post)
     response_dict = json.loads(response.text)
     context['labels'] = response_dict
     context['tableid'] = tableid
@@ -962,7 +965,7 @@ def save_record_fields(request):
     }
 
     response = requests.post(
-        "http://10.0.0.133:8822/bixdata/index.php/rest_controller/set_record", data=post_data)
+        f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
 
     fields_dict = json.loads(fields)
 
