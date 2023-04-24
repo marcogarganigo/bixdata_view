@@ -59,10 +59,8 @@
             var serialized_data = [];
 
             $("#content_container").load('/loading/');
-            (async function() {
 
-                await new Promise(resolve => setTimeout(resolve, 1));
-
+            $("#content-container").ready(function () {
                 serialized_data.push({ name: 'tableid', value: tableid });
             serialized_data.push({ name: 'searchTerm', value: '' });
             $.ajax({
@@ -78,8 +76,9 @@
                     $("#content_container").html(response);
                 }
             });
-                })();
+            });
         }
+
 
         function getRenderChartsView() {
             var serialized_data = [];
