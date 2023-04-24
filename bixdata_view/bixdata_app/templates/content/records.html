@@ -154,18 +154,20 @@
             value: $("#viewid").val()
         });
         //$("#records_table_container").load('/loading/');
-        $.ajax({
-            type: "POST",
-            url: "{% url 'block_records_table' %}",
-            data: serialized_data,
-            success: function(response) {
-                
-                $("#records_table_container").html(response);
-            },
-            error: function() {
-                
-                $("#records_table_container").html(response);
-            }
+        $("#records_table_container").load('/loading/', function() {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'block_records_table' %}",
+                data: serialized_data,
+                success: function(response) {
+                    
+                    $("#records_table_container").html(response);
+                },
+                error: function() {
+                    
+                    $("#records_table_container").html(response);
+                }
+            });
         });
     }
 
