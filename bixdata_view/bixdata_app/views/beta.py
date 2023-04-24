@@ -83,23 +83,22 @@ def get_user_setting(request, setting):
 
     return returned_value
 
-def get_user_table_setting(request, setting):
-    # settings superuser
-    returned_value = ''
-    id = request.user.id
+def get_user_table_settings(bixid,tableid):
+    returned_settings = dict()
+    settings=list()
     with connection.cursor() as cursor:
-        cursor.execute("SELECT value FROM v_sys_user_settings WHERE bixid = %s AND setting = %s", [id, setting])
-        result = cursor.fetchone()
+        cursor.execute(f"SELECT * FROM v_sys_user_settings WHERE bixid = {bixid} and tableid= '{tableid}'")
+        result = cursor.fetchall()
         if result:
-            returned_value = result[0]
+            settings = result
         else:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT value FROM v_sys_user_settings WHERE bixid = %s AND setting = %s", [1, setting])
-                result = cursor.fetchone()
+                cursor.execute(f"SELECT * FROM v_sys_user_settings WHERE bixid = 1 and tablied='{tableid}' ")
+                result = cursor.fetchall()
                 if result:
-                    returned_value = result[0]
+                    settings = result
 
-    return returned_value
+    return returned_settings
 
 
 def send_email(request, email, subject, message):
