@@ -23,7 +23,6 @@ import os
 from django.conf import settings
 from .beta import *
 
-
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
 
@@ -40,10 +39,8 @@ def get_autocomplete_data(request):
         'mastertableid': mastertableid,
         'term': term
     }
-    test = f"{bixdata_server}/bixdata/index.php/rest_controller/get_autocomplete_data"
-    #response = requests.post(f"{bixdata_server}/bixdata/index.php/rest_controller/get_autocomplete_data",data=post)
-    response = requests.post(test,data=post)
-    
+    response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_autocomplete_data", data=post)
+
     response = json.loads(response.text)
 
     data = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', '']
@@ -310,13 +307,13 @@ def get_render_loading(request):
 @login_required(login_url='/login/')
 def get_content_records(request):
     context = dict()
-    #records_table = get_block_records_table(request)
+    # records_table = get_block_records_table(request)
     context['records_table'] = ''
     tableid = request.POST.get('tableid')
     context['table'] = tableid.upper()
     context['tableid'] = tableid
     context['views'] = dict()
-    context['user_table_settings']=get_user_table_settings(request.user.id,tableid)
+    context['user_table_settings'] = get_user_table_settings(request.user.id, tableid)
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT * FROM sys_view WHERE userid = 1 AND tableid='%s'" % (tableid)
@@ -338,9 +335,8 @@ def get_records_linked(request):
     tableid = request.POST.get('tableid')
     master_tableid = request.POST.get('master_tableid')
     master_recordid = request.POST.get('master_recordid')
-    records_table = get_records_table(request,tableid,master_tableid,master_recordid)
+    records_table = get_records_table(request, tableid, master_tableid, master_recordid)
     return HttpResponse(records_table)
-
 
 
 @login_required(login_url='/login/')
@@ -431,8 +427,8 @@ def get_render_content_dashboard(request):
                     selected += groupby
 
                 query_conditions = row['query_conditions']
-                userid=get_userid(request.user.id)
-                query_conditions=query_conditions.replace("$userid$",str(userid))
+                userid = get_userid(request.user.id)
+                query_conditions = query_conditions.replace("$userid$", str(userid))
                 id = row['id']
                 tableid = row['tableid']
                 name = row['name']
@@ -560,12 +556,13 @@ def get_records_table_render(request):
     master_recordid = request.POST.get('master_recordid')
     searchTerm = request.POST.get('searchTerm')
     viewid = request.POST.get('viewid')
-    render=get_records_table(request,tableid,master_tableid,master_recordid,searchTerm,viewid)
+    render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid)
     return HttpResponse(render)
 
+
 @login_required(login_url='/login/')
-def get_records_table(request,tableid,master_tableid='',master_recordid='',searchTerm='',viewid=''):
-    userid=get_userid(request.user.id)
+def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid=''):
+    userid = get_userid(request.user.id)
     table_type = 'standard'
     table_height = '100%'
     if master_tableid:
@@ -629,7 +626,7 @@ def get_records_table(request,tableid,master_tableid='',master_recordid='',searc
                 record[record_index]['fieldbackground'] = 'green'
             if record[record_index]['value'] == 'Controllosolvibilita':
                 record[record_index]['fieldtype'] = 'lookup'
-                record[record_index]['fieldbackground'] = 'red'    
+                record[record_index]['fieldbackground'] = 'red'
             if record[record_index]['value'] == 'Chiusovinto':
                 record[record_index]['fieldtype'] = 'lookup'
                 record[record_index]['fieldbackground'] = 'blue'
@@ -820,17 +817,17 @@ def get_block_record_card(request):
     context['block_record_badge'] = get_block_record_badge(request)
     context['block_record_linked'] = get_block_record_linked(request)
     # context['block_record_linked'] = get_block_record_linked(request)
-    context['block_record_fields'] = ""#get_block_record_fields(request)
+    context['block_record_fields'] = ""  # get_block_record_fields(request)
     context['recordid'] = request.POST.get('recordid')
-    tableid=request.POST.get('tableid')
+    tableid = request.POST.get('tableid')
     context['tableid'] = tableid
-    context['user_table_settings']=get_user_table_settings(request.user.id,tableid)
-    returned = user_agent(request, 'block/record/record_card.html','block/record/record_card_mobile.html', context)
+    context['user_table_settings'] = get_user_table_settings(request.user.id, tableid)
+    returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
     return HttpResponse(returned)
 
 
 @login_required(login_url='/login/')
-def get_block_record_badge(request,http_response=False):
+def get_block_record_badge(request, http_response=False):
     context = dict()
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
@@ -838,17 +835,17 @@ def get_block_record_badge(request,http_response=False):
         'tableid': tableid,
         'recordid': recordid,
     }
-    #response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_fissi", data=post)
-    #response_dict = json.loads(response.text)
-    sql=f"SELECT sys_field.* FROM sys_field join sys_user_order on sys_field.fieldid=sys_user_order.fieldid WHERE sys_user_order.userid=1 AND sys_user_order.tableid='{tableid}' AND typePreference='campiFissi' ORDER BY fieldorder asc"
-    fields=db_query_sql(sql)
-    values=db_get_row(f"user_{tableid}","*",f"recordid_='{recordid}'")
-    context_fields=dict()
+    # response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_fissi", data=post)
+    # response_dict = json.loads(response.text)
+    sql = f"SELECT sys_field.* FROM sys_field join sys_user_order on sys_field.fieldid=sys_user_order.fieldid WHERE sys_user_order.userid=1 AND sys_user_order.tableid='{tableid}' AND typePreference='campiFissi' ORDER BY fieldorder asc"
+    fields = db_query_sql(sql)
+    values = db_get_row(f"user_{tableid}", "*", f"recordid_='{recordid}'")
+    context_fields = dict()
     for field in fields:
-        fieldid=field['fieldid']
-        field['value']=values[fieldid]
-        context_fields[fieldid]=field
-        
+        fieldid = field['fieldid']
+        field['value'] = values[fieldid]
+        context_fields[fieldid] = field
+
     context['fields'] = context_fields
     records_table = render_to_string('block/record/record_badge.html', context, request=request)
     if (http_response):
@@ -922,19 +919,19 @@ def get_block_record_linked(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
 
-    rows=db_query_sql("SELECT * FROM sys_table_link WHERE tableid = '" + tableid + "'")
-    
-    linked_tables=list()
+    rows = db_query_sql("SELECT * FROM sys_table_link WHERE tableid = '" + tableid + "'")
+
+    linked_tables = list()
     for row in rows:
-        linked_table=dict()
-        linked_tableid=row['tablelinkid']
-        table_name='test'
-        linked_table['table_name']=db_get_value("sys_table","description",f"id='{linked_tableid}'")
-        table_count=db_get_count(f"user_{linked_tableid}",f"recordid{tableid}_='{recordid}'")
-        linked_table['table_count']=table_count
-        linked_table['tableid']=linked_tableid
+        linked_table = dict()
+        linked_tableid = row['tablelinkid']
+        table_name = 'test'
+        linked_table['table_name'] = db_get_value("sys_table", "description", f"id='{linked_tableid}'")
+        table_count = db_get_count(f"user_{linked_tableid}", f"recordid{tableid}_='{recordid}'")
+        linked_table['table_count'] = table_count
+        linked_table['tableid'] = linked_tableid
         linked_tables.append(linked_table)
-        
+
     context['linked_tables'] = linked_tables
     context['tableid'] = tableid
     context['recordid'] = recordid
@@ -1105,10 +1102,12 @@ def get_badge(request):
 def get_timesheet_serviceassets(request):
     return HttpResponse('test')
 
+
 @login_required(login_url='/login/')
 def get_bixdata_updates(request):
     user_id = request.user.id
     return render(request, 'other/bixdata_updates.html', {'user_id': user_id})
+
 
 @login_required(login_url='/login/')
 def new_update(request):

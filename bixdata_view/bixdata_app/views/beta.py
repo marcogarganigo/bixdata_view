@@ -19,6 +19,7 @@ from django.contrib.auth.models import Group, Permission, User, Group
 from django_user_agents.utils import get_user_agent
 from bixdata_app.models import MyModel
 from .alpha import *
+from django import template
 
 
 def user_agent(request, page, mobilepage, context={}):
@@ -160,3 +161,6 @@ def db_get_count(table, condition, order=''):
         return rows[0]['counter']
     else:
         return None
+
+
+

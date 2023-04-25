@@ -1,3 +1,4 @@
+{% load define_action %}
  <!--JQuery UI-->
 <script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
@@ -33,11 +34,21 @@
   <div>
   {% endif %}
   {% for field_key,field in record_fields.items %}
+        {% if field.settings.obbligatorio == 'true' %}
+          {% define 'necessary' as mandatory %}
+          {% define 'badge bg-danger fs-5' as tooltip %}
+        {% else %}
+          {% define '' as mandatory %}
+          {% define '' as tooltip %}
+        {% endif %}
+
+
+
     {% with fieldname=field.fieldid %}
     {% with fieldid='field-'|add:field.fieldid %}
         <div class="row">
             <div class="col-lg-2" style="text-align: left">
-                <p>{{field.description }}</p>
+                <p class="{{ tooltip }}" >{{field.description }}</p>
             </div>
             <div class="col field">
                 {% if field.fieldtypeid == 'Parola' %}
@@ -49,7 +60,7 @@
               document.getElementById("{{ fieldid }}").value = "{{ items.value }}";
               </script>
               <div class="input-group mb-2">
-                <select id="{{ fieldid }}" name="{{ fieldname }}" class="form-select">
+                <select id="{{ fieldid }}" name="{{ fieldname }}" class="form-select {{ mandatory }}">
                 {% if field.lookupitems %}
                   <option value=""></option>
                       {% for item in field.lookupitems %}
@@ -65,13 +76,13 @@
               {% endfor %}
               {% else %}
                 <label>
-                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2" type="text" value="{{ field.value }}">
+                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2 {{ mandatory }}" type="text" value="{{ field.value }}">
                   </label>
               {% endif %}
           {% endif %}
               {% if field.fieldtypeid == 'Data' %}
                   <label>
-                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2 necessary" type="date" value="{{ field.valuecode.0.code }}">
+                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2 {{ mandatory }}" type="date" value="{{ field.valuecode.0.code }}">
                   </label>
               {% endif %}
               {% if field.fieldtypeid == 'Seriale' %}
@@ -79,20 +90,20 @@
               {% endif %}
               {% if field.fieldtypeid == 'Numero' %}
                   <label>
-                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2" type="number" value="{{ field.value }}">
+                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2 {{ mandatory }}" type="number" value="{{ field.value }}">
                   </label>
               {% endif %}
               {% if field.fieldtypeid == 'Memo' %}
-                  <textarea class="form-control mb-2 necessary" id="{{ fieldid }}" name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
+                  <textarea class="form-control mb-2 {{ mandatory }}" id="{{ fieldid }}" name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
               {% endif %}
               {% if field.fieldtypeid == 'Ora' %}
                   <label>
-                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2" type="time" value="{{ field.value }}">
+                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2 {{ mandatory }}" type="time" value="{{ field.value }}">
                   </label>
               {% endif %}
               {% if field.fieldtypeid == 'Utente' %}
               <div class="input-group mb-2">
-                <select id="{{ fieldid }}" name="{{ fieldname }}" class="form-select">
+                <select id="{{ fieldid }}" name="{{ fieldname }}" class="form-select {{ mandatory }}">
                   <option id="" value=""></option>
                     {% for items in field.lookupitems %}
                       {% if items.id and items.firstname and items.lastname %}
@@ -108,10 +119,10 @@
               {% endif %}
               {% if field.fieldtypeid == 'linkedmaster' %}
               <div class="ui-widget">
-                <input class="form-select mb-2" id="{{ fieldid }}" style="width: 80%" value="{{ field.value }}" onfocus="selectAllText(this); showOptions()">
+                <input class="form-select mb-2 {{ mandatory }}" id="{{ fieldid }}" style="width: 80%" value="{{ field.value }}" onfocus="selectAllText(this); showOptions()">
               </div>
 
-                    <input type="hidden" class="hidden-input" name="{{ field.fieldid }}" value="{{ field.recordid }}">
+                    <input type="hidden" class="hidden-input {{ mandatory }}" name="{{ field.fieldid }}" value="{{ field.recordid }}">
 
                     <script>
                       $(function() {
@@ -248,13 +259,13 @@ function save_record(el) {
     let hasNecessaryFields = false;
 
     necessaryFields.forEach(function(field) {
-      if (field.value === null || field.value === "") {
+      if (field.value === null || field.value === "" || field.value === "None") {
         hasNecessaryFields = true;
       }
     });
 
     if (hasNecessaryFields === true) {
-      alert('i campi obbligatori non sono stati compilati');
+      alert('Compila tutti i campi obbligatori prima di salvare');
     } else {
 
 
