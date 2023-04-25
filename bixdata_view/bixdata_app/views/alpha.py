@@ -40,8 +40,9 @@ def get_autocomplete_data(request):
         'mastertableid': mastertableid,
         'term': term
     }
+    test = f"{bixdata_server}/bixdata/index.php/rest_controller/get_autocomplete_data"
     #response = requests.post(f"{bixdata_server}/bixdata/index.php/rest_controller/get_autocomplete_data",data=post)
-    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_autocomplete_data",data=post)
+    response = requests.post(test,data=post)
     
     response = json.loads(response.text)
 
