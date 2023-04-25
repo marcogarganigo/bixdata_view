@@ -847,7 +847,12 @@ def get_block_record_badge(request, http_response=False):
         context_fields[fieldid] = field
 
     context['fields'] = context_fields
-    records_table = render_to_string('block/record/record_badge.html', context, request=request)
+
+    if tableid == 'company':
+        records_table = render_to_string('block/record/custom/record_badge_company.html', context, request=request)
+    else:
+        records_table = render_to_string('block/record/record_badge.html', context, request=request)
+
     if (http_response):
         return HttpResponse(records_table)
     else:
