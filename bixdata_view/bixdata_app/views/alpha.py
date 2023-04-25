@@ -40,8 +40,9 @@ def get_autocomplete_data(request):
         'mastertableid': mastertableid,
         'term': term
     }
-    response = requests.post(f"{bixdata_server}/bixdata/index.php/rest_controller/get_autocomplete_data",
-                             data=post)
+    #response = requests.post(f"{bixdata_server}/bixdata/index.php/rest_controller/get_autocomplete_data",data=post)
+    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_autocomplete_data",data=post)
+    
     response = json.loads(response.text)
 
     data = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', '']
