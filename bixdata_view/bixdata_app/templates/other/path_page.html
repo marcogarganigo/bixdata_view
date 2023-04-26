@@ -1,0 +1,28 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block body %}
+
+    <div id="index-container" class="container-fluid" style="width: 100%; height: 100%">
+
+    </div>
+
+    <script>
+    $(document).ready(function(){
+            $.ajax({
+                url: "{% url 'index' %}",
+                type: "POST",
+                dataType: "json",
+                success: function(data){
+                    console.log(data);
+
+                    $("#index-container").html(data);
+                },
+                error: function(data){
+                    console.log(data);
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

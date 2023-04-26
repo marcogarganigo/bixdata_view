@@ -1105,6 +1105,63 @@ def update_profile_pic(request):
 
     return redirect('index')
 
+@login_required(login_url='/login/')
+def admin_page(request):
+    page = request.POST.get('page')
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM sys_user_dashboard"
+                       )
+        rows = dictfetchall(cursor)
+
+        userids = [row['userid'] for row in rows]
+        dashboardids = [row['dashboardid'] for row in rows]
+
+    with connection.cursor() as cursor2:
+        cursor2.execute(
+            "SELECT firstname, lastname FROM sys_user where id in (SELECT userid FROM sys_user_dashboard)"
+                        )
+        rows2 = dictfetchall(cursor2)
+
+        names = [row['firstname'] + ' ' + row['lastname'] for row in rows2]
+
+    context = {
+        'userids': userids,
+        'dashboardids': dashboardids,
+        'names': names
+    }
+
+    return render(request, f'admin_settings/{page}.html', {'context': context})
+
+
+@login_required(login_url='/login/')
+def save_admin_settings(request):
+    if request.method == 'POST':
+        userids = request.POST.getlist('userids[]')
+        dashboardids = request.POST.getlist('dashboardids[]')
+
+        with connection.cursor() as cursor:
+            for i in range(len(userids)):
+                user_id = userids[i]
+                dashboard_id = dashboardids[i]
+
+
+                cursor.execute('UPDATE sys_user_dashboard SET dashboardid = %s WHERE userid = %s',
+                                [dashboard_id, user_id])
+
+
+    return redirect('index')
+
+@login_required(login_url='/login/')
+def get_record_path(request, tableid, recordid):
+    tableid = request.GET.get('tableid')
+    recordid = request.GET.get('recordid')
+    print(tableid)
+    print(recordid)
+
+    return render(request, 'other/path_page.html', {'tableid': tableid, 'recordid': recordid})
+
+
+
 
 @login_required(login_url='/login/')
 def get_badge(request):
