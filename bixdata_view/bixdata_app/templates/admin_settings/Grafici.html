@@ -1,0 +1,33 @@
+<div class="container text-center card card-body" style="margin-top: 2%">
+    <h3>Aggiorna dashboard</h3>
+  <form method="post" action="{% url 'save_admin_settings' %}">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-2 d-flex flex-column">
+        <h4>User id</h4>
+        {% for item in context.userids %}
+        <div class="flex-fill">
+          <input type="text" name="userids[]" disabled value="{{ item }}">
+        </div>
+        {% endfor %}
+      </div>
+        <div class="col-md-2 d-flex flex-column">
+            <h4>User Names</h4>
+            {% for item in context.names %}
+            <div class="flex-fill">
+              <input type="text" name="userids[]" disabled value="{{ item }}">
+            </div>
+            {% endfor %}
+          </div>
+      <div class="col-md-2 d-flex flex-column">
+        <h4>Dashboard id</h4>
+        {% for item in context.dashboardids %}
+        <div class="flex-fill">
+          <input type="text" name="dashboardids[]" value="{{ item }}">
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Salva</button>
+  </form>
+</div>

@@ -52,8 +52,6 @@
 
         function getContentRecords(tableid) {
             var serialized_data = [];
-
-
                 //$("#content_container").load('/loading/');
 
                 serialized_data.push({ name: 'tableid', value: tableid });
@@ -72,6 +70,26 @@
                 }
             });
         }
+
+        function getContentRecordsAdmin(page) {
+             $.ajax({
+                type: "POST",
+                crossDomain: true,
+                url: "{% url 'admin_page' %}",
+                data: {
+                    'page': page
+                },
+                success: function (response) {
+                    $("#content_container").html(response);
+                    $('[data-toggle="tooltip"]').tooltip();
+                },
+                error: function (response) {
+                    $("#content_container").html(response);
+                }
+            });
+        }
+
+
 
         function getRenderChartsView() {
             var serialized_data = [];
@@ -621,15 +639,34 @@
                         }
                         </script>
                     
+                            -->
 
 
 
-                        <!--- End Sidemenu -->
 
-                        <!-- Help Box -->
 
-                        <!-- end Help Box -->
+
+
+                    {% if username|lower == "admin" %}
                         <li class="side-nav-title side-nav-item">Systems</li>
+
+                        <li class="side-nav-item">
+                          <a data-bs-toggle="collapse" href="#sidebarAdmin" aria-expanded="false" aria-controls="sidebarAdmin" class="side-nav-link">
+                            <i class="uil-briefcase"></i>
+                            <span>Admin settings</span>
+                            <span class="menu-arrow"></span>
+                          </a>
+                          <div class="collapse" id="sidebarAdmin">
+                            <ul class="side-nav-second-level">
+                              <li onclick="getContentRecordsAdmin($(this).find('a').text())">
+                                  <a href="#" class="side-nav-txt" onclick="setColor(this)">Grafici</a>
+                                </li>
+
+                                </ul>
+                            </div>
+
+                        </li>
+                    {% endif %}
 
                         <div class="clearfix"></div>
                     </ul>
