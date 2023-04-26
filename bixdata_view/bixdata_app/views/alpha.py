@@ -838,6 +838,10 @@ def get_block_record_badge(request, http_response=False):
     # response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_fissi", data=post)
     # response_dict = json.loads(response.text)
     sql = f"SELECT sys_field.* FROM sys_field join sys_user_order on sys_field.fieldid=sys_user_order.fieldid WHERE sys_user_order.userid=1 AND sys_user_order.tableid='{tableid}' AND typePreference='campiFissi' ORDER BY fieldorder asc"
+
+    if tableid == 'company' or tableid == 'project':
+        sql = f"SELECT sys_field.* FROM sys_field join sys_user_order on sys_field.fieldid=sys_user_order.fieldid WHERE sys_user_order.userid=1 AND sys_user_order.tableid='{tableid}' ORDER BY fieldorder asc"
+
     fields = db_query_sql(sql)
     values = db_get_row(f"user_{tableid}", "*", f"recordid_='{recordid}'")
     context_fields = dict()
@@ -850,6 +854,10 @@ def get_block_record_badge(request, http_response=False):
 
     if tableid == 'company':
         records_table = render_to_string('block/record/custom/record_badge_company.html', context, request=request)
+
+    elif tableid == 'project':
+        records_table = render_to_string('block/record/custom/record_badge_project.html', context, request=request)
+
     else:
         records_table = render_to_string('block/record/record_badge.html', context, request=request)
 

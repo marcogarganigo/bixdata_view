@@ -119,7 +119,7 @@
               {% endif %}
               {% if field.fieldtypeid == 'linkedmaster' %}
               <div class="ui-widget">
-                <input class="form-select mb-2 {{ mandatory }}" id="{{ fieldid }}" style="width: 80%" value="{{ field.value }}" onfocus="selectAllText(this); showOptions()">
+                <input class="form-select mb-2 {{ mandatory }}" autocomplete="off" id="{{ fieldid }}" style="width: 80%" value="{{ field.value }}" onfocus="selectAllText(this); showOptions()">
               </div>
 
                     <input type="hidden" class="hidden-input {{ mandatory }}" name="{{ field.fieldid }}" value="{{ field.recordid }}">
