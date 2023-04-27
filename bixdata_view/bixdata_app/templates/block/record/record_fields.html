@@ -47,7 +47,7 @@
     {% with fieldname=field.fieldid %}
     {% with fieldid='field-'|add:field.fieldid %}
         <div class="row">
-            <div class="col-lg-2" style="text-align: left">
+            <div class="col-lg-2" style="text-align: left" title="{{field.fieldid }}">
                 <p class="{{ tooltip }}" >{{field.description }}</p>
             </div>
             <div class="col field">
@@ -291,7 +291,7 @@ function save_record(el) {
             setTimeout(function() {
               if('{{ tableid }}'=='ticketbixdata')
               {
-                  alert('Grazie per la segnalazione, gentilissimo rompicoglioni. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
+                  alert('Grazie per la segnalazione. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
               }
               $("#saved-alert").css("display", "block");
               $("#saved-alert").fadeOut(1500);
