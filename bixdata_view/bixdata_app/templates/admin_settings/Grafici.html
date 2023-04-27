@@ -64,6 +64,48 @@
     <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
   </form>
 
+<div class="container text-center card card-body" style="margin-top: 2%">
+    <h4>Aggiungi</h4>
+        <div class="row">
+
+            <div class="col-md-4 d-flex flex-column">
+            <h4>Chart Names</h4>
+            <div class="flex-fill">
+              <input style="width: 100%" type="text">
+            </div>
+            </div>
+
+        <div class="col-md-4 d-flex flex-column">
+            <h4>Chart Names</h4>
+            <div class="flex-fill">
+              <input style="width: 100%" type="text">
+            </div>
+            </div>
+
+
+            <div class="col-md-4 d-flex flex-column">
+            <h4>View names</h4>
+                <select class="form-select" aria-label="Default select example">
+                {% for item in context.views %}
+                  <option value="{{ item.id }}">{{ item.name }} - {{ item.tableid }}</option>
+                {% endfor %}
+                </select>
+            </div>
+
+        <div class="col-md-4 d-flex flex-column">
+            <h4>Report names</h4>
+                <select class="form-select" aria-label="Default select example">
+                {% for item in context.reports %}
+                  <option value="{{ item.id }}">{{ item.name }} - {{ item.tableid }}</option>
+                {% endfor %}
+                </select>
+            </div>
+
+
+    </div>
+</div>
+<button style="float: right" type="submit" class="btn btn-primary">Salva</button>
+
 
 <div class="container text-center card card-body" style="margin-top: 2%">
     <h4>Nuovo grafico</h4>
