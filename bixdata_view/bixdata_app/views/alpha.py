@@ -1124,20 +1124,33 @@ def admin_page(request):
 
         names = [row['firstname'] + ' ' + row['lastname'] for row in rows2]
 
+    with connection.cursor() as cursor3:
+        cursor3.execute(
+            "SELECT * FROM v_sys_dashboard_block"
+                        )
+        rows3 = dictfetchall(cursor3)
+
+        chart_names = [row['name'] for row in rows3]
+        chart_dashboard_id = [row['dashboardid'] for row in rows3]
+
+
     context = {
         'userids': userids,
         'dashboardids': dashboardids,
-        'names': names
+        'names': names,
+        'chart_names': chart_names,
+        'chart_dashboard_id': chart_dashboard_id
     }
 
     return render(request, f'admin_settings/{page}.html', {'context': context})
 
-
 @login_required(login_url='/login/')
-def save_admin_settings(request):
+def save_chart_settings(request):
     if request.method == 'POST':
         userids = request.POST.getlist('userids[]')
         dashboardids = request.POST.getlist('dashboardids[]')
+        names = request.POST.getlist('chartnames[]')
+        chartdashboardids = request.POST.getlist('chartdashboardids[]')
 
         with connection.cursor() as cursor:
             for i in range(len(userids)):
@@ -1149,7 +1162,17 @@ def save_admin_settings(request):
                                 [dashboard_id, user_id])
 
 
+        with connection.cursor() as cursor:
+            for i in range(len(names)):
+                name = names[i]
+                dashboard_id = chartdashboardids[i]
+
+                cursor.execute('UPDATE v_sys_dashboard_block SET dashboardid = %s WHERE name = %s',
+                               [dashboard_id, name])
+
+
     return redirect('index')
+
 
 @login_required(login_url='/login/')
 def get_record_path(request, tableid, recordid):
@@ -1159,6 +1182,7 @@ def get_record_path(request, tableid, recordid):
     print(recordid)
 
     return render(request, 'other/path_page.html', {'tableid': tableid, 'recordid': recordid})
+
 
 
 

@@ -1,21 +1,20 @@
+<form method="post" action="{% url 'save_chart_settings' %}" class="container text-center" style="float: left">
 <div class="container text-center card card-body" style="margin-top: 2%">
-    <h3>Aggiorna dashboard</h3>
-  <form method="post" action="{% url 'save_admin_settings' %}">
+    <h3>Aggiorna dashboard degli utenti</h3>
     {% csrf_token %}
     <div class="row">
-      <div class="col-md-2 d-flex flex-column">
-        <h4>User id</h4>
+
         {% for item in context.userids %}
-        <div class="flex-fill">
-          <input type="text" name="userids[]" disabled value="{{ item }}">
+        <div class="flex-fill" style="display: none">
+          <input type="text" name="userids[]" hidden value="{{ item }}">
         </div>
         {% endfor %}
-      </div>
+
         <div class="col-md-2 d-flex flex-column">
             <h4>User Names</h4>
             {% for item in context.names %}
             <div class="flex-fill">
-              <input type="text" name="userids[]" disabled value="{{ item }}">
+              <input type="text" name="names[]" disabled value="{{ item }}">
             </div>
             {% endfor %}
           </div>
@@ -28,6 +27,44 @@
         {% endfor %}
       </div>
     </div>
-    <button type="submit" class="btn btn-primary">Salva</button>
+
+</div>
+
+
+<div class="container text-center card card-body" style="margin-top: 2%" style="float: left">
+    <h3>Aggiorna dashboard dei grafici</h3>
+    {% csrf_token %}
+    <div class="row">
+
+            {% for item in context.chart_names %}
+            <div class="flex-fill" style="display: none">
+              <input style="width: 100%" type="text" name="chartnames[]" hidden value="{{ item }}">
+            </div>
+            {% endfor %}
+
+            <div class="col-md-4 d-flex flex-column">
+            <h4>Chart Names</h4>
+            {% for item in context.chart_names %}
+            <div class="flex-fill">
+              <input style="width: 100%" type="text" disabled value="{{ item }}">
+            </div>
+            {% endfor %}
+          </div>
+
+        <div class="col-md-2 d-flex flex-column">
+            <h4>Dashboard id</h4>
+            {% for item in context.chart_dashboard_id %}
+            <div class="flex-fill">
+              <input type="text" name="chartdashboardids[]" value="{{ item }}">
+            </div>
+            {% endfor %}
+          </div>
+    </div>
+</div>
+    <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
   </form>
+
+
+<div class="container text-center card card-body" style="margin-top: 2%">
+    <h4>Nuovo grafico</h4>
 </div>

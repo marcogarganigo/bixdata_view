@@ -81,7 +81,7 @@ urlpatterns = [
     path('get_bixdata_updates/', alpha.get_bixdata_updates, name='get_bixdata_updates'),
     path('new_update/', alpha.new_update, name='new_update'),
     path('admin_page/', alpha.admin_page, name='admin_page'),
-    path('save_admin_settings/', alpha.save_admin_settings, name='save_admin_settings'),
+    path('save_chart_settings/', alpha.save_chart_settings, name='save_chart_settings'),
     path('get_record_path/<str:tableid>/<str:recordid>/', alpha.get_record_path, name='get_record_path'),
 ]
 
