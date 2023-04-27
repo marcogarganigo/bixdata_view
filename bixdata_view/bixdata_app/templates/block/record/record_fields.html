@@ -94,7 +94,11 @@
                   </label>
               {% endif %}
               {% if field.fieldtypeid == 'Memo' %}
-                  <textarea class="form-control mb-2 {{ mandatory }}" id="{{ fieldid }}" name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
+                  {% if fieldname == 'description' %}
+                  <textarea style="min-height: 250px" class="form-control mb-2 {{ mandatory }}" id="{{ fieldid }}" name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
+                  {% else %}
+                      <textarea class="form-control mb-2 {{ mandatory }}" id="{{ fieldid }}" name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
+                  {% endif %}
               {% endif %}
               {% if field.fieldtypeid == 'Ora' %}
                   <label>
