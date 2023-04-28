@@ -1,57 +1,57 @@
 <div id="chart{{ id }}"></div>
 
 <script>
-  var options = {
-    chart: {
-      height: 'auto',
-      type: 'line',
-    },
-   series: [
-        {% for val in value %}
-        {
-      name: '{{ fields }}',
-      data: {{ val|safe }}
-    },
-        {% endfor %}
-    ],
-    xaxis: {
-      categories: {{ labels|safe }},
-      labels: {
-        show: true,
-        style: {
-          fontSize: '12px',
+    var options = {
+        chart: {
+            height: 'auto',
+            type: 'line',
         },
-      },
-      tooltip: {
-        enabled: true,
-        offsetY: 8,
-      },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          labels: {
-            rotate: -90,
-          },
+        series: [
+            {% for val in value %}
+                {
+                    name: '{{ fields }}',
+                    data: {{ val|safe }}
+                },
+            {% endfor %}
+        ],
+        xaxis: {
+            categories: {{ labels|safe }},
+            labels: {
+                show: true,
+                style: {
+                    fontSize: '12px',
+                },
+            },
+            tooltip: {
+                enabled: true,
+                offsetY: 8,
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    labels: {
+                        rotate: -90,
+                    },
+                },
+            }],
         },
-      }],
-    },
         yaxis: {
-    labels: {
-      formatter: function(val) {
-        return Math.round(val);
-      }
-    }
-  },
-      dataLabels: {
-      enabled: false
-    },
-      title: {
-          text: '{{ name }}',
+            labels: {
+                formatter: function (val) {
+                    return Math.round(val);
+                }
+            }
         },
-       colors: ['#008ffbd9','#00e396d9','#ff4560d9'] // set color for each dataset
-  };
+        dataLabels: {
+            enabled: false
+        },
+        title: {
+            text: '{{ name }}',
+        },
+        colors: ['#008ffbd9', '#00e396d9', '#ff4560d9'] // set color for each dataset
+    };
 
-  var chart = new ApexCharts(document.querySelector("#chart{{ id }}"), options);
+    var chart = new ApexCharts(document.querySelector("#chart{{ id }}"), options);
 
-  chart.render();
+    chart.render();
 </script>

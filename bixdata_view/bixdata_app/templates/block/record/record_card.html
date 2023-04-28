@@ -7,13 +7,12 @@
 
 
 <script type="text/javascript">
-    $("#RecordCard").ready(function() {
+    $("#RecordCard").ready(function () {
 
         $('[data-bs-toggle="tooltip"]').tooltip();
 
     });
 
-   
 
     function closeModal() {
         $("#recordModal").modal("hide");
@@ -22,15 +21,13 @@
 
     //appena la card carica aprire collegato di default
     var recordtab = '{{user_table_settings.default_recordtab}}';
-    $('#block_record_card').ready(function() {
-        if ( recordtab === 'Linked' ) {
+    $('#block_record_card').ready(function () {
+        if (recordtab === 'Linked') {
             $('#linked-tab').click();
         } else {
             $('#fields-tab').click();
         }
     });
-
-    
 
 
     function caricaRis(el) {
@@ -69,11 +66,11 @@
             type: "POST",
             url: "{% url 'record_card_copy' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 //$("#bixdata_recordcard_container").html(response);
                 alert('copy')
             },
-            error: function() {
+            error: function () {
                 alert('copy')
             }
         });
@@ -82,38 +79,37 @@
     function deleteFunc() {
         if (confirm("Sei sicuro di voler eliminare questo record?")) {
 
-                    $.ajax({
-            type: "POST",
-            url: "{% url 'record_card_delete' %}",
-            data : {
-                'csrfmiddlewaretoken': '{{ csrf_token }}',
-                'tableid': '{{ tableid }}',
-                'recordid': '{{ recordid }}',
-            },
-            success: function(response) {
-                //$("#bixdata_recordcard_container").html(response);
-                reloadFunc();
-            },
-            error: function() {
-            }
+            $.ajax({
+                type: "POST",
+                url: "{% url 'record_card_delete' %}",
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'tableid': '{{ tableid }}',
+                    'recordid': '{{ recordid }}',
+                },
+                success: function (response) {
+                    //$("#bixdata_recordcard_container").html(response);
+                    reloadFunc();
+                },
+                error: function () {
+                }
             });
 
-                } else {
-               }
+        } else {
+        }
     }
 
-    function permissionsFunc()
-    {
+    function permissionsFunc() {
         var serialized_data = [];
         $.ajax({
             type: "POST",
             url: "{% url 'record_card_permissions' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 //$("#bixdata_recordcard_container").html(response);
                 alert('permissions')
             },
-            error: function() {
+            error: function () {
                 alert('permissions')
             }
         });
@@ -125,36 +121,35 @@
             type: "POST",
             url: "{% url 'record_card_pin' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 //$("#bixdata_recordcard_container").html(response);
                 alert('pin')
             },
-            error: function() {
+            error: function () {
                 alert('pin')
             }
         });
     }
 
     function backdropHide() {
-        if($('.modal-backdrop').attr('style') === 'hide'){
+        if ($('.modal-backdrop').attr('style') === 'hide') {
             $('.modal-backdrop').fadeIn(500);
         } else {
             $('.modal-backdrop').fadeOut(500);
         }
     }
 
-    function get_timesheet_serviceassets(el)
-    {
+    function get_timesheet_serviceassets(el) {
         var serialized_data = [];
         $('#modalMedium').modal('show');
         $.ajax({
             type: "POST",
             url: "{% url 'get_timesheet_serviceassets' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 $("#modalMedium-body").html(response);
             },
-            error: function() {
+            error: function () {
                 alert('pin')
             }
         });
@@ -166,49 +161,63 @@
     <div id="RecordCard" class="card RecordCard" style=" height: 100%; overflow: hidden">
         <div class="card-body" style="max-height: 95%">
             <p class="card-text">
-    
-            <div id="card-menu">
-    
-                <button type="button" id="close-button" class="btn-close button-recordcard" data-bs-dismiss="modal" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="chiudi" onclick="closeCard(this)"></button>
 
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="fissa"onclick="pinFunc()"><i class="mdi mdi-pin-outline"></i> </button>
-    
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="permessi" onclick="permissionsFunc()"><i class="mdi mdi-lock-outline"></i> </button>
-    
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="elimina" style="color: red"onclick="deleteFunc()"><i class=" mdi mdi-delete-outline"></i> </button>
-    
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="copia" onclick="copyFunc()"><i class="mdi mdi-content-copy"></i> </button>
-    
-    
+            <div id="card-menu">
+
+                <button type="button" id="close-button" class="btn-close button-recordcard" data-bs-dismiss="modal"
+                        aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="chiudi"
+                        onclick="closeCard(this)"></button>
+
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" data-bs-title="fissa" onclick="pinFunc()"><i
+                        class="mdi mdi-pin-outline"></i></button>
+
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" data-bs-title="permessi" onclick="permissionsFunc()"><i
+                        class="mdi mdi-lock-outline"></i></button>
+
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" data-bs-title="elimina" style="color: red" onclick="deleteFunc()"><i
+                        class=" mdi mdi-delete-outline"></i></button>
+
+                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" data-bs-title="copia" onclick="copyFunc()"><i
+                        class="mdi mdi-content-copy"></i></button>
+
+
                 <div class="dropdown" style="margin-top: -2.6%">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
                         Stampe
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Stampa scheda</a></li>
-                        <li><a class="dropdown-item" href="http://10.0.0.133:8822/bixdata/index.php/sys_viewcontroller/scarica_stampa_test">Stampa rapportino</a></li>
+                        <li><a class="dropdown-item"
+                               href="http://10.0.0.133:8822/bixdata/index.php/sys_viewcontroller/scarica_stampa_test">Stampa
+                            rapportino</a></li>
                     </ul>
                 </div>
-    
+
                 <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
                         Funzioni
                     </button>
                     <ul class="dropdown-menu">
                         {% if tableid == 'timesheet' %}
-                            <li><a class="dropdown-item" onclick="get_timesheet_serviceassets(this)">Servizi e risorse</a></li>
+                            <li><a class="dropdown-item" onclick="get_timesheet_serviceassets(this)">Servizi e
+                                risorse</a></li>
                         {% endif %}
-                       
+
                     </ul>
                 </div>
-    
+
                 <div style="clear:both;"></div>
             </div>
-    
-    
-    
+
+
             <div class="container" style="height:auto">
-                {{block_record_badge}}
+                {{ block_record_badge }}
             </div>
 
             <script>
@@ -218,70 +227,84 @@
                         type: "POST",
                         url: "{% url 'get_record_fields' %}",
                         data: {
-                            'http_response':'true',
+                            'http_response': 'true',
                             'csrfmiddlewaretoken': '{{ csrf_token }}',
                             'tableid': '{{ tableid }}',
                             'recordid': '{{ recordid }}',
                         },
-                        success: function(response) {
+                        success: function (response) {
                             $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
                         },
-                        error: function(response) {
+                        error: function (response) {
                             $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
                         }
                     });
                 }
             </script>
-    
-    
-    
+
+
             </br>
-    
-    
+
+
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="fields-tab" data-bs-toggle="tab" data-bs-target="#fields-tab-pane" type="button" role="tab" aria-controls="fields-tab-pane" aria-selected="true" onclick="load_fields(this)">
+                    <button class="nav-link active" id="fields-tab" data-bs-toggle="tab"
+                            data-bs-target="#fields-tab-pane" type="button" role="tab" aria-controls="fields-tab-pane"
+                            aria-selected="true" onclick="load_fields(this)">
 
                         <p class="tabs-title">Campi</p>
-                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="fields">
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
+                              data-bs-title="fields">
                             text_fields
                         </span>
 
                     </button>
-                    <button class="nav-link" id="linked-tab" data-bs-toggle="tab" data-bs-target="#linked-tab-pane" type="button" role="tab" aria-controls="linked-tab-pane" aria-selected="false">
+                    <button class="nav-link" id="linked-tab" data-bs-toggle="tab" data-bs-target="#linked-tab-pane"
+                            type="button" role="tab" aria-controls="linked-tab-pane" aria-selected="false">
 
                         <p class="tabs-title">Collegati</p>
-                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="linked">
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
+                              data-bs-title="linked">
                             link
                         </span>
 
                     </button>
-                    <button class="nav-link" id="attachment-tab" data-bs-toggle="tab" data-bs-target="#attachment-tab-pane" type="button" role="tab" aria-controls="attachment-tab-pane" aria-selected="false">
+                    <button class="nav-link" id="attachment-tab" data-bs-toggle="tab"
+                            data-bs-target="#attachment-tab-pane" type="button" role="tab"
+                            aria-controls="attachment-tab-pane" aria-selected="false">
 
                         <p class="tabs-title">Allegati</p>
-                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="attachment">
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
+                              data-bs-title="attachment">
                             attachment
                         </span>
                     </button>
-                    <button class="nav-link" id="statistics-tab" data-bs-toggle="tab" data-bs-target="#statistics-tab-pane" type="button" role="tab" aria-controls="statistics-tab-pane" aria-selected="false">
+                    <button class="nav-link" id="statistics-tab" data-bs-toggle="tab"
+                            data-bs-target="#statistics-tab-pane" type="button" role="tab"
+                            aria-controls="statistics-tab-pane" aria-selected="false">
 
                         <p class="tabs-title">Analitica</p>
-                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="analytics">
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
+                              data-bs-title="analytics">
                             analytics
                         </span>
                     </button>
-                    <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-tab-pane" type="button" role="tab" aria-controls="history-tab-pane" aria-selected="false">
+                    <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-tab-pane"
+                            type="button" role="tab" aria-controls="history-tab-pane" aria-selected="false">
 
                         <p class="tabs-title">Storico</p>
-                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="history">
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
+                              data-bs-title="history">
                             history
                         </span>
                     </button>
                     </button>
-                    <button class="nav-link" id="workflow-tab" data-bs-toggle="tab" data-bs-target="#workflow-tab-pane" type="button" role="tab" aria-controls="workflow-tab-pane" aria-selected="false">
+                    <button class="nav-link" id="workflow-tab" data-bs-toggle="tab" data-bs-target="#workflow-tab-pane"
+                            type="button" role="tab" aria-controls="workflow-tab-pane" aria-selected="false">
 
                         <p class="tabs-title">Flusso di lavoro</p>
-                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip" data-bs-title="workflow">
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
+                              data-bs-title="workflow">
                             rebase
                         </span>
                     </button>
@@ -289,20 +312,30 @@
             </nav>
 
             <div class="tab-content" id="myTabContent" style="height: 65%;">
-                <div class="tab-pane tab-pane-fields fade show active" id="fields-tab-pane" role="tabpanel" aria-labelledby="fields-tab" tabindex="0" style="height: 100%">
-                    {{block_record_fields}}
+                <div class="tab-pane tab-pane-fields fade show active" id="fields-tab-pane" role="tabpanel"
+                     aria-labelledby="fields-tab" tabindex="0" style="height: 100%">
+                    {{ block_record_fields }}
 
                 </div>
 
-                <div class="tab-pane fade" id="linked-tab-pane" role="tabpanel" aria-labelledby="linked-tab" tabindex="0" style="height: 100%; overflow:scroll">
-                        {{block_record_linked}}
+                <div class="tab-pane fade" id="linked-tab-pane" role="tabpanel" aria-labelledby="linked-tab"
+                     tabindex="0" style="height: 100%; overflow:scroll">
+                    {{ block_record_linked }}
                 </div>
 
-                <div class="tab-pane fade" id="attachment-tab-pane" role="tabpanel" aria-labelledby="attachment-tab" tabindex="0">...</div>
-                <div class="tab-pane fade" id="statistics-tab-pane" role="tabpanel" aria-labelledby="statistics-tab" tabindex="0">...</div>
-                <div class="tab-pane fade" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab" tabindex="0">...</div>
-                <div class="tab-pane fade" id="workflow-tab-pane" role="tabpanel" aria-labelledby="workflow-tab" tabindex="0">...</div>
-    
+                <div class="tab-pane fade" id="attachment-tab-pane" role="tabpanel" aria-labelledby="attachment-tab"
+                     tabindex="0">...
+                </div>
+                <div class="tab-pane fade" id="statistics-tab-pane" role="tabpanel" aria-labelledby="statistics-tab"
+                     tabindex="0">...
+                </div>
+                <div class="tab-pane fade" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab"
+                     tabindex="0">...
+                </div>
+                <div class="tab-pane fade" id="workflow-tab-pane" role="tabpanel" aria-labelledby="workflow-tab"
+                     tabindex="0">...
+                </div>
+
             </div>
         </div>
     </div>

@@ -1,15 +1,15 @@
 <script>
     function triggerCollapse(el, id, tablelinkid) {
-      var collapse = document.getElementById(id);
-      if ($(el).next('.div-collapse').attr('display') === 'none') {
-          $(el).css('background-color', '#e1dfdf');
-          $(el).css('color', 'black');
-      } else {
+        var collapse = document.getElementById(id);
+        if ($(el).next('.div-collapse').attr('display') === 'none') {
+            $(el).css('background-color', '#e1dfdf');
+            $(el).css('color', 'black');
+        } else {
             $(el).css('background-color', 'whitesmoke');
             $(el).css('color', '#074048');
-      }
+        }
 
-      load_linked(el,tablelinkid);
+        load_linked(el, tablelinkid);
 
     }
 
@@ -17,9 +17,8 @@
         $(el).next('.div-collapse').slideToggle(200);
     }
 
-    function load_linked(el,linkedtableid)
-    {
-      $.ajax({
+    function load_linked(el, linkedtableid) {
+        $.ajax({
             url: "{% url 'get_records_linked' %}",
             type: 'POST',
             data: {
@@ -29,52 +28,52 @@
                 'master_recordid': '{{recordid}}'
             },
             success: function (response) {
-              //$(collapse).find('.linked_container').html(response);
-              $("#linked-container-" + linkedtableid).html(response)
+                //$(collapse).find('.linked_container').html(response);
+                $("#linked-container-" + linkedtableid).html(response)
             }, error: function (response) {
             }
         });
     }
 
-            $('#newRecordModal').on('hide.bs.modal', function (e) {
-                $('.modal-backdrop').css('z-index', 1000)
-            });
+    $('#newRecordModal').on('hide.bs.modal', function (e) {
+        $('.modal-backdrop').css('z-index', 1000)
+    });
 
     function linked_newRecord(el, linkedtableid) {
         //console.info(el)
-        var master_tableid='{{tableid}}'
-        var master_recordid='{{recordid}}'
+        var master_tableid = '{{tableid}}'
+        var master_recordid = '{{recordid}}'
         $("#fullwidth_modal_newrecord").html("");
         $('#newRecordModal').modal('show');
         $('.modal-backdrop').css('z-index', '9000');
         var serialized_data = [];
-        serialized_data.push({name: 'master_tableid',value: master_tableid});
-        serialized_data.push({name: 'master_recordid',value: master_recordid});
-        serialized_data.push({name: 'tableid',value: linkedtableid});
-        serialized_data.push({name: 'function',value: 'insert'});
-        serialized_data.push({name: 'http_response',value: true});
+        serialized_data.push({name: 'master_tableid', value: master_tableid});
+        serialized_data.push({name: 'master_recordid', value: master_recordid});
+        serialized_data.push({name: 'tableid', value: linkedtableid});
+        serialized_data.push({name: 'function', value: 'insert'});
+        serialized_data.push({name: 'http_response', value: true});
         $.ajax({
             type: "POST",
             url: "{% url 'get_record_fields' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 $("#fullwidth_modal_newrecord").html(response);
 
             },
-            error: function() {
+            error: function () {
                 $("#bixdata_recordcard_container").html(response);
             }
         });
         //$("#linked-container-" + linkedtableid).load('/loading/')
-        load_linked(el,linkedtableid)
+        load_linked(el, linkedtableid)
     }
 
 </script>
 <style>
-  #top-label:hover {
-    background-color: #e1dfdf !important;
-    color: white;
-  }
+    #top-label:hover {
+        background-color: #e1dfdf !important;
+        color: white;
+    }
 </style>
 
 
@@ -91,48 +90,54 @@ $('#top-label').on('click', function(event) {
 </script>
 
 
-
-
 <div id="block_record_linked">
-  {% for linked_table in linked_tables %}
-  <button class="btn btn-primary" id="top-label" type="button" data-bs-toggle="collapse" data-bs-target="#{{linked_table.tableid}}" aria-expanded="false" aria-controls="{{linked_table.tableid}}" style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 2%" onclick="toggleCollapse(this); triggerCollapse(this,'{{linked_table.tableid}}', '{{ linked_table.tableid }}')">
+    {% for linked_table in linked_tables %}
+        <button class="btn btn-primary" id="top-label" type="button" data-bs-toggle="collapse"
+                data-bs-target="#{{ linked_table.tableid }}" aria-expanded="false"
+                aria-controls="{{ linked_table.tableid }}"
+                style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 2%"
+                onclick="toggleCollapse(this); triggerCollapse(this,'{{ linked_table.tableid }}', '{{ linked_table.tableid }}')">
       <span style="width: 97%; margin:auto; display: block ">
   {% if linked_table.table_count == 0 %}
       <div class="container">
       <div class="row">
       <div class="col-1" style="padding:5px; width: 2%">
-      <span class="badge bg-danger" style="float: left; color: #d9d4d4; background-color: red; border-radius: 7.5%; visibility: hidden">{{linked_table.table_count}}</span>
+      <span class="badge bg-danger"
+            style="float: left; color: #d9d4d4; background-color: red; border-radius: 7.5%; visibility: hidden">{{ linked_table.table_count }}</span>
       </div>
         <div class="col-11" style="padding: 0">
-          {{linked_table.table_name}}
+          {{ linked_table.table_name }}
         </div>
         </div>
       </div>
-      {% else %}
+  {% else %}
       <div class="container">
       <div class="row">
       <div class="col-1" style="padding:5px; width: 2%">
-    <span class="badge bg-danger" style=" color: #d9d4d4; background-color: red; border-radius: 7.5%; float:right">{{linked_table.table_count}}</span>
+    <span class="badge bg-danger"
+          style=" color: #d9d4d4; background-color: red; border-radius: 7.5%; float:right">{{ linked_table.table_count }}</span>
             </div>
         <div class="col-11" style="padding: 0">
-        {{linked_table.table_name}}
+        {{ linked_table.table_name }}
         </div>
       </div>
     </div>
-      {% endif %}
+  {% endif %}
       </span>
-  </button>
+        </button>
 
-  <div class="div-collapse" id="{{linked_table.tableid}}" style="margin-top: 10px; display: none">
-    <div class="card card-body">
-    <button class="btn btn-secondary d-flex justify-content-center align-items-center" onclick="linked_newRecord(this, '{{linked_table.tableid}}')" style="width: 5%;"><span class="material-symbols-outlined">add</span></button>
-      <div id="linked-container-{{ linked_table.tableid }}"  class="linked_container" >
+        <div class="div-collapse" id="{{ linked_table.tableid }}" style="margin-top: 10px; display: none">
+            <div class="card card-body">
+                <button class="btn btn-secondary d-flex justify-content-center align-items-center"
+                        onclick="linked_newRecord(this, '{{ linked_table.tableid }}')" style="width: 5%;"><span
+                        class="material-symbols-outlined">add</span></button>
+                <div id="linked-container-{{ linked_table.tableid }}" class="linked_container">
 
-      </div>
+                </div>
 
-    </div>
-  </div>
-  {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
 </div>
 
 

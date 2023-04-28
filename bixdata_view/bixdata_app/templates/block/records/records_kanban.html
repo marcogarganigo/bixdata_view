@@ -1,7 +1,4 @@
-
-
 <!-- dragula js-->
-
 
 
 <!--Demo
@@ -11,140 +8,148 @@
 
 <div id="#content_records_kanban" style="height: 100%;width: 100%">
 
-<div class="container-fluid kanban-container">
+    <div class="container-fluid kanban-container">
 
 
-    <div class="row">
-  <div class="col-12">
-    <div class="board">
-      {% for group in groups %}
-        <div class="tasks" data-plugin="dragula" data-containers='["task-list-one", "task-list-two", "task-list-three", "task-list-four"]' data-status="{{ group.description }}">
-          <h5 class="mt-0 task-header" data-column="{{ group.description }}">{{ group.description }}</h5>
-          <div id="task-list-{{ group.description }}" class="task-list-items">
-            {% for record in group.records %}
-              <div class="card mb-0 kanban-record" data-recordid="{{ record.recordid }}">
-                 <div class="card-body p-3">
-                    <small class="float-end text-muted">{{ record.date }}</small>
-                     <h5 class="mt-2 mb-2">
-                         <a href="#" data-bs-toggle="modal" data-bs-target="#task-detail-modal" class="text-body">{{ record.title }}</a>
-                     </h5>
-                     <p class="mb-0">
+        <div class="row">
+            <div class="col-12">
+                <div class="board">
+                    {% for group in groups %}
+                        <div class="tasks" data-plugin="dragula"
+                             data-containers='["task-list-one", "task-list-two", "task-list-three", "task-list-four"]'
+                             data-status="{{ group.description }}">
+                            <h5 class="mt-0 task-header"
+                                data-column="{{ group.description }}">{{ group.description }}</h5>
+                            <div id="task-list-{{ group.description }}" class="task-list-items">
+                                {% for record in group.records %}
+                                    <div class="card mb-0 kanban-record" data-recordid="{{ record.recordid }}">
+                                        <div class="card-body p-3">
+                                            <small class="float-end text-muted">{{ record.date }}</small>
+                                            <h5 class="mt-2 mb-2">
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#task-detail-modal"
+                                                   class="text-body">{{ record.title }}</a>
+                                            </h5>
+                                            <p class="mb-0">
                          <span class="pe-2 text-nowrap mb-2 d-inline-block">
                              <i class="mdi mdi-briefcase-outline text-muted"></i>
-                                {{ record.tag}}
+                                {{ record.tag }}
                          </span>
-                     </p>
-                      <p class="mb-0">
-                          <img src="assets/images/users/avatar-2.jpg" alt="user-img" class="avatar-xs rounded-circle me-1" />
-                          <span class="align-middle">{{ record.user }}</span>
-                      </p>
-                 </div>
-              </div>
-            {% endfor %}
-          </div>
+                                            </p>
+                                            <p class="mb-0">
+                                                <img src="assets/images/users/avatar-2.jpg" alt="user-img"
+                                                     class="avatar-xs rounded-circle me-1"/>
+                                                <span class="align-middle">{{ record.user }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div> <!-- end .board-->
+            </div> <!-- end col -->
         </div>
-      {% endfor %}
-    </div> <!-- end .board-->
-  </div> <!-- end col -->
-</div>
 
-    <!-- end row-->
+        <!-- end row-->
 
-</div>
+    </div>
 
-<div class="modal fade task-modal-content" id="add-new-task-modal" tabindex="-1" role="dialog" aria-labelledby="NewTaskModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="NewTaskModalLabel">Create New Task</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form class="p-2">
-                    <div class="mb-3">
-                        <label class="form-label">Project</label>
-                        <select class="form-select form-control-light">
-                            <option>Select</option>
-                            <option>Hyper - Admin Dashboard</option>
-                            <option>CRM - Design and Development</option>
-                            <option>iOS - App Design</option>
-                        </select>
-                    </div>
+    <div class="modal fade task-modal-content" id="add-new-task-modal" tabindex="-1" role="dialog"
+         aria-labelledby="NewTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="NewTaskModalLabel">Create New Task</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="p-2">
+                        <div class="mb-3">
+                            <label class="form-label">Project</label>
+                            <select class="form-select form-control-light">
+                                <option>Select</option>
+                                <option>Hyper - Admin Dashboard</option>
+                                <option>CRM - Design and Development</option>
+                                <option>iOS - App Design</option>
+                            </select>
+                        </div>
 
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="mb-3">
-                                <label for="task-title" class="form-label">Title</label>
-                                <input type="text" class="form-control form-control-light" id="task-title" placeholder="Enter title">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="task-title" class="form-label">Title</label>
+                                    <input type="text" class="form-control form-control-light" id="task-title"
+                                           placeholder="Enter title">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="task-priority2" class="form-label">Priority</label>
+                                    <select class="form-select form-control-light" id="task-priority2">
+                                        <option>Low</option>
+                                        <option>Medium</option>
+                                        <option>High</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="task-priority2" class="form-label">Priority</label>
-                                <select class="form-select form-control-light" id="task-priority2">
-                                    <option>Low</option>
-                                    <option>Medium</option>
-                                    <option>High</option>
-                                </select>
-                            </div>
+                        <div class="mb-3">
+                            <label for="task-description" class="form-label">Description</label>
+                            <textarea class="form-control form-control-light" id="task-description" rows="3"></textarea>
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label for="task-description" class="form-label">Description</label>
-                        <textarea class="form-control form-control-light" id="task-description" rows="3"></textarea>
-                    </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="task-title" class="form-label">Assign To</label>
+                                    <select class="form-select form-control-light" id="task-priority">
+                                        <option>Coderthemes</option>
+                                        <option>Robert Carlile</option>
+                                        <option>Louis Allen</option>
+                                        <option>Sean White</option>
+                                        <option>Riley Steele</option>
+                                        <option>Zak Turnbull</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="task-title" class="form-label">Assign To</label>
-                                <select class="form-select form-control-light" id="task-priority">
-                                    <option>Coderthemes</option>
-                                    <option>Robert Carlile</option>
-                                    <option>Louis Allen</option>
-                                    <option>Sean White</option>
-                                    <option>Riley Steele</option>
-                                    <option>Zak Turnbull</option>
-                                </select>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="task-priority" class="form-label">Due Date</label>
+                                    <input type="text" class="form-control form-control-light" id="birthdatepicker"
+                                           data-toggle="date-picker" data-single-date-picker="true">
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="task-priority" class="form-label">Due Date</label>
-                                <input type="text" class="form-control form-control-light" id="birthdatepicker" data-toggle="date-picker" data-single-date-picker="true">
-                            </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary">Create</button>
                         </div>
-                    </div>
-
-                    <div class="text-end">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Create</button>
-                    </div>
-                </form>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </div>
 
 <div class="pagination" id="my-pagination-kanban">
     <a href="#" class="first" data-action="first">&laquo;</a>
     <a href="#" class="previous" data-action="previous">&lsaquo;</a>
-    <input type="text" readonly="readonly" data-max-page="10" />
+    <input type="text" readonly="readonly" data-max-page="10"/>
     <a href="#" class="next" data-action="next">&rsaquo;</a>
     <a href="#" class="last" data-action="last">&raquo;</a>
 </div>
 
 <script>
-    $(function() {
+    $(function () {
         $('#my-pagination-kanban').jqPagination({
             current_page: 1,
             max_page: 10,
-            paged: function(page) {
-                 $.ajax({
+            paged: function (page) {
+                $.ajax({
                     type: "POST",
                     url: "{% url 'pagination' %}",
                     data: {
@@ -168,38 +173,35 @@
 </script>
 
 
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
 
+    .pagination a {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 0 5px;
+        border: 1px solid #dc3545;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #dc3545;
+    }
 
-    <style>
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
+    .pagination a:hover {
+        background-color: #dc3545;
+        color: #fff;
+    }
 
-.pagination a {
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 0 5px;
-  border: 1px solid #dc3545;
-  border-radius: 5px;
-  text-decoration: none;
-  color: #dc3545;
-}
-
-.pagination a:hover {
-  background-color: #dc3545;
-  color: #fff;
-}
-
-.pagination .current {
-  background-color: #dc3545;
-  color: #fff;
-}
-    </style>
-
+    .pagination .current {
+        background-color: #dc3545;
+        color: #fff;
+    }
+</style>
 
 
 <script>
@@ -210,25 +212,25 @@
 
     var tsi_id = [];
 
-    $(".task-list-items").each(function(index) {
+    $(".task-list-items").each(function (index) {
         var element_id = $(this).attr("id");
         tsi_id.push(document.getElementById(element_id));
     });
     console.log('Kanban debug:');
     console.log(tsi_id);
 
-    dragula(tsi_id).on('drop', function(el, target) {
-        update_db(this,'{{ tableid }}', $('.kanban-record').data('recordid'), $(target).closest('.tasks').data('status'))
+    dragula(tsi_id).on('drop', function (el, target) {
+        update_db(this, '{{ tableid }}', $('.kanban-record').data('recordid'), $(target).closest('.tasks').data('status'))
     });
 
     var cards = document.querySelectorAll('.kanban-record');
-    cards.forEach(function(card) {
-        card.addEventListener('click', function() {
-            open_record(this , '{{ tableid }}', $(this).data('recordid') );
+    cards.forEach(function (card) {
+        card.addEventListener('click', function () {
+            open_record(this, '{{ tableid }}', $(this).data('recordid'));
         });
     });
 
-    function update_db(el, recordid, tableid, listname ) {
+    function update_db(el, recordid, tableid, listname) {
         alert(el)
         console.info(listname)
         alert(recordid)

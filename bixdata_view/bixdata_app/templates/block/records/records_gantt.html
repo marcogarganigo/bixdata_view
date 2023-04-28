@@ -1,67 +1,66 @@
 <script type="text/javascript">
 
     //alert si apre con il doppio click sulla task
-        $("#content_records_gantt").ready(function() {
+    $("#content_records_gantt").ready(function () {
 
-            var today = new Date();
+        var today = new Date();
 
 
+        $(function () {
+            var tasks = '{{records_json|safe}}';
+            tasks = jQuery.parseJSON(tasks);
 
-            $(function(){
-                var tasks = '{{records_json|safe}}';
-                tasks=jQuery.parseJSON(tasks);
-
-                // Get the Gantt task elements
-                var gantt = new Gantt('#tasks-gantt',tasks, {
-                    //Add click event listener to tasks
-                    on_click: function(task) {
-                        alert("Task: " + task.name);
-                    }
-                });
+            // Get the Gantt task elements
+            var gantt = new Gantt('#tasks-gantt', tasks, {
+                //Add click event listener to tasks
+                on_click: function (task) {
+                    alert("Task: " + task.name);
+                }
             });
         });
+    });
 
-    </script>
+</script>
 
-        <style>
-            .gantt-container {
-                width: 100%;
-                overflow-x: hidden;
-            }
-        </style>
+<style>
+    .gantt-container {
+        width: 100%;
+        overflow-x: hidden;
+    }
+</style>
 
-    <div id="#content_records_gantt" style="height: 100%;width: 100%;">
+<div id="#content_records_gantt" style="height: 100%;width: 100%;">
 
-        <div id="gantt" class="container-fluid" style="width: 100%">
+    <div id="gantt" class="container-fluid" style="width: 100%">
 
-            <!-- start page title -->
-            <!-- end page title -->
+        <!-- start page title -->
+        <!-- end page title -->
 
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
 
-                        <!-- gantt view -->
-                        <div class="col-xxl-12 mt-12 mt-xl-12 col-lg-12">
-                            <div class="ps-xl-3">
-                                <div class="row">
+                    <!-- gantt view -->
+                    <div class="col-xxl-12 mt-12 mt-xl-12 col-lg-12">
+                        <div class="ps-xl-3">
+                            <div class="row">
 
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col mt-3">
-                                        <svg id="tasks-gantt"></svg>
-                                    </div>
-                                </div>
                             </div>
                         </div>
-                        <!-- end gantt view -->
+
+                        <div class="row">
+                            <div class="col mt-3">
+                                <svg id="tasks-gantt"></svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <!-- end gantt view -->
             </div>
+        </div>
+    </div>
 
-        </div> <!-- container -->
+</div> <!-- container -->
 
 
 
