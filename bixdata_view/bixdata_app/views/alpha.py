@@ -1196,6 +1196,15 @@ def save_chart_settings(request):
 
 @login_required(login_url='/login/')
 def new_chart_block(request):
+    if request.method == 'POST':
+        name = request.POST.get('block_name')
+        dashboard_id = request.POST.get('dashboard_id')
+        view_id = request.POST.get('view_id')
+        report_id = request.POST.get('report_id')
+
+        with connection.cursor() as cursor:
+            cursor.execute('INSERT INTO sys_dashboard_block (dashboardid, name, userid, viewid, reportid) VALUES (%s, %s, %s, %s, %s)',
+                           [dashboard_id, name, 1, view_id, report_id])
     return redirect('index')
 
 
