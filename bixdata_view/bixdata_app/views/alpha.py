@@ -1133,14 +1133,34 @@ def admin_page(request):
         chart_names = [row['name'] for row in rows3]
         chart_dashboard_id = [row['dashboardid'] for row in rows3]
 
+    with connection.cursor() as cursor4:
+        cursor4.execute(
+            "SELECT * FROM sys_view"
+                        )
+        rows4 = dictfetchall(cursor4)
+
+
+
+    with connection.cursor() as cursor5:
+        cursor5.execute(
+            "SELECT * FROM sys_report"
+        )
+        rows5 = dictfetchall(cursor5)
+
+
 
     context = {
         'userids': userids,
         'dashboardids': dashboardids,
         'names': names,
         'chart_names': chart_names,
-        'chart_dashboard_id': chart_dashboard_id
+        'chart_dashboard_id': chart_dashboard_id,
+        'views': rows4,
+        'reports': rows5,
+
     }
+
+
 
     return render(request, f'admin_settings/{page}.html', {'context': context})
 
@@ -1172,6 +1192,21 @@ def save_chart_settings(request):
 
 
     return redirect('index')
+
+
+@login_required(login_url='/login/')
+def new_chart_block(request):
+    if request.method == 'POST':
+        name = request.POST.get('block_name')
+        dashboard_id = request.POST.get('dashboard_id')
+        view_id = request.POST.get('view_id')
+        report_id = request.POST.get('report_id')
+
+        with connection.cursor() as cursor:
+            cursor.execute('INSERT INTO sys_dashboard_block (dashboardid, name, userid, viewid, reportid) VALUES (%s, %s, %s, %s, %s)',
+                           [dashboard_id, name, 1, view_id, report_id])
+    return redirect('index')
+
 
 
 @login_required(login_url='/login/')
