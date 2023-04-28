@@ -1,59 +1,50 @@
 <script type="text/javascript">
-    $("#tables").ready(function() {
-
-
+    $("#tables").ready(function () {
 
 
         $('[data-bs-toggle="popover"]').popover();
 
 
-        $('button[data-bs-toggle="tab"]').each(function(i){
-            if($(this).attr("id")=='gantt-tab')
-            {
+        $('button[data-bs-toggle="tab"]').each(function (i) {
+            if ($(this).attr("id") == 'gantt-tab') {
                 $(this)[0].addEventListener('shown.bs.tab', function (event) {
                     searchGantt()
                 })
             }
-            if($(this).attr("id")=='kanban-tab')
-            {
+            if ($(this).attr("id") == 'kanban-tab') {
                 $(this)[0].addEventListener('shown.bs.tab', function (event) {
                     searchKanban()
 
                 })
             }
-            if($(this).attr("id")=='calendar-tab')
-            {
+            if ($(this).attr("id") == 'calendar-tab') {
                 $(this)[0].addEventListener('shown.bs.tab', function (event) {
                     searchCalendar()
                 })
             }
-            if($(this).attr("id")=='chart-tab')
-            {
+            if ($(this).attr("id") == 'chart-tab') {
                 $(this)[0].addEventListener('shown.bs.tab', function (event) {
                     searchChart()
                 })
             }
         })
-        
+
         if (window.innerWidth <= min_width) {
-                $("#block-record-card-container").css('display', 'none');
-                $("#block-records-search-container").css('width', '100%');
-            }
+            $("#block-record-card-container").css('display', 'none');
+            $("#block-records-search-container").css('width', '100%');
+        }
 
 
         refresh()
     })
 
 
-
-
-
-    $(function() {
+    $(function () {
         $('#calendar-tab a:last').tab('show');
     });
 
 
-    function searchGantt(){
+    function searchGantt() {
         var serialized_data = [];
         serialized_data.push({
             name: 'table',
@@ -63,21 +54,21 @@
             name: 'searchTerm',
             value: $("#searchTerm").val()
         });
-        
+
         $.ajax({
             type: "POST",
             url: "{% url 'block_records_gantt' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 $("#gantt-tab-pane").html(response);
             },
-            error: function() {
+            error: function () {
                 $("#gantt-tab-pane").html(response);
             }
         });
     }
 
-    function searchKanban(){
+    function searchKanban() {
         var serialized_data = [];
         serialized_data.push({
             name: 'tableid',
@@ -87,10 +78,10 @@
             type: "POST",
             url: "{% url 'block_records_kanban' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 $("#kanban-tab-pane").html(response);
             },
-            error: function() {
+            error: function () {
                 $("#kanban-tab-pane").html(response);
             }
         });
@@ -99,16 +90,16 @@
     function searchCalendar() {
         var serialized_data = [];
         serialized_data.push(
-            {name: 'tableid',value: '{{tableid}}'}
+            {name: 'tableid', value: '{{tableid}}'}
         );
         $.ajax({
             type: "POST",
             url: "{% url 'block_records_calendar' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 $("#calendar-tab-pane").html(response);
             },
-            error: function() {
+            error: function () {
                 $("#calendar-tab-pane").html(response);
             }
         });
@@ -129,10 +120,10 @@
             type: "POST",
             url: "{% url 'block_records_chart' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 //$("#chart-tab-pane").html(response);
             },
-            error: function() {
+            error: function () {
                 //$("#chart-tab-pane").html(response);
             }
         });
@@ -154,25 +145,25 @@
             value: $("#viewid").val()
         });
         //$("#records_table_container").load('/loading/');
-        $("#records_table_container").load('/loading/', function() {
+        $("#records_table_container").load('/loading/', function () {
             $.ajax({
                 type: "POST",
                 url: "{% url 'block_records_table' %}",
                 data: serialized_data,
-                success: function(response) {
-                    
+                success: function (response) {
+
                     $("#records_table_container").html(response);
                 },
-                error: function() {
-                    
+                error: function () {
+
                     $("#records_table_container").html(response);
                 }
             });
         });
     }
 
-    $("#searchTerm").ready(function() {
-        $("input").keypress(function() {
+    $("#searchTerm").ready(function () {
+        $("input").keypress(function () {
             var keycode = (event.keyCode ? event.keyCode : event.which);
             if (keycode == '13') {
                 var serialized_data = [];
@@ -192,10 +183,10 @@
                     type: "POST",
                     url: "{% url 'block_records_table' %}",
                     data: serialized_data,
-                    success: function(response) {
+                    success: function (response) {
                         $("#records_table_container").html(response);
                     },
-                    error: function() {
+                    error: function () {
                         $("#records_table_container").html(response);
                     }
                 });
@@ -204,7 +195,6 @@
     });
 
 
-    
     function checkWidth(response) {
         if (window.innerWidth > min_width) {
             $("#bixdata_recordcard_container").html(response);
@@ -215,21 +205,21 @@
     }
 
     function newRecord() {
-        var tableid='{{tableid}}'
+        var tableid = '{{tableid}}'
         $('#newRecordModal').modal('show');
         var serialized_data = [];
-        serialized_data.push({name: 'tableid',value: tableid});
-        serialized_data.push({name: 'function',value: 'insert'});
-        serialized_data.push({name: 'http_response',value: true});
+        serialized_data.push({name: 'tableid', value: tableid});
+        serialized_data.push({name: 'function', value: 'insert'});
+        serialized_data.push({name: 'http_response', value: true});
         $.ajax({
             type: "POST",
             url: "{% url 'get_record_fields' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 $("#fullwidth_modal_newrecord").html(response);
 
             },
-            error: function() {
+            error: function () {
                 $("#bixdata_recordcard_container").html(response);
             }
         });
@@ -238,9 +228,7 @@
     }
 
 
-
-    function reloadFunc()
-    {
+    function reloadFunc() {
         getContentRecords('{{ tableid }}')
         var serialized_data = [];
         serialized_data.push({
@@ -251,19 +239,18 @@
             type: "POST",
             url: "{% url 'block_reload' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
             },
-            error: function() {
+            error: function () {
             }
         })
     }
 
 
-
-    function open_record(el,tableid,recordid) {
+    function open_record(el, tableid, recordid) {
         var serialized_data = [];
-        serialized_data.push({name: 'tableid',value: tableid});
-        serialized_data.push({name: 'recordid',value: recordid});
+        serialized_data.push({name: 'tableid', value: tableid});
+        serialized_data.push({name: 'recordid', value: recordid});
 
         /*
         $('#linked-table-modal').on('show.bs.modal', function () {
@@ -271,31 +258,29 @@
         });
         */
         {% if layout_setting == 'modal' %}
-        const min_width = 5000
+            const min_width = 5000
         {% endif %}
 
         if (window.innerWidth <= min_width) {
 
-        if ($(el).attr('data-fieldtype') === 'linked') {
-            $('#linked-table-modal').modal('show');
-            $(".modal-backdrop:last").css("z-index", 11200);
-            //$("#linked-table-modal-content").load('/loading/');
-        } else {
-
-            if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+            if ($(el).attr('data-fieldtype') === 'linked') {
                 $('#linked-table-modal').modal('show');
                 $(".modal-backdrop:last").css("z-index", 11200);
                 //$("#linked-table-modal-content").load('/loading/');
             } else {
-                $('#recordModal').modal('show');
-                //$("#record-modal-content").load('/loading/');
+
+                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                    $('#linked-table-modal').modal('show');
+                    $(".modal-backdrop:last").css("z-index", 11200);
+                    //$("#linked-table-modal-content").load('/loading/');
+                } else {
+                    $('#recordModal').modal('show');
+                    //$("#record-modal-content").load('/loading/');
+                }
             }
-        }
 
 
-        }
-        else
-        {
+        } else {
             if ($(el).attr('data-fieldtype') === 'linked') {
                 $('#linked-table-modal').modal('show');
                 $(".modal-backdrop:last").css("z-index", 11200);
@@ -317,7 +302,7 @@
             type: "POST",
             url: "{% url 'block_record_card' %}",
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 //if ($(el.closest('table')).attr('data-type') === 'linked') {
                 //if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
                 if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el).attr('data-fieldtype') === 'linked') {
@@ -335,7 +320,7 @@
                     }
                 }
             },
-            error: function(response) {
+            error: function (response) {
                 $("#bixdata_recordcard_container").html(response);
             }
         });
@@ -343,31 +328,29 @@
     }
 
     function closeCard(vrbl) {
-      $(vrbl).closest('.modal').modal('hide');
-      setTimeout(function() {
-      }, 1000);
+        $(vrbl).closest('.modal').modal('hide');
+        setTimeout(function () {
+        }, 1000);
         if (window.innerWidth > min_width) {
-          $(vrbl).closest("#RecordCard").slideToggle(200, function() {
-          });
+            $(vrbl).closest("#RecordCard").slideToggle(200, function () {
+            });
         }
     }
 
     $('.modal').on('hidden.bs.modal', function (e) {
-  // Remove the content of the component here
-  //$('#RecordCard').html('');
-  $('#bixdata_recordcard_container').html('');
-})
-
+        // Remove the content of the component here
+        //$('#RecordCard').html('');
+        $('#bixdata_recordcard_container').html('');
+    })
 
 
     $('#newRecordModal').on('hidden.bs.modal', function (e) {
         $("#fullwidth_modal_newrecord").html("");
     });
 
-        function closeNewRecordModal() {
-            $("#newRecordModal").modal("hide");
-        }
-
+    function closeNewRecordModal() {
+        $("#newRecordModal").modal("hide");
+    }
 
 
     function closeLinkedTableModal() {
@@ -380,10 +363,10 @@
             type: "POST",
             url: controller_url + 'ajax_get_kanban',
             data: serialized_data,
-            success: function(response) {
+            success: function (response) {
                 $("#bixdata_results_container").html(response);
             },
-            error: function() {
+            error: function () {
                 $("#bixdata_results_container").html(response);
             }
         });
@@ -403,30 +386,29 @@
 
 
 {% if layout_setting == 'modal' %}
-<style>
-#block-records-search-container {
-    width: 100% !important;
-}
-</style>
+    <style>
+        #block-records-search-container {
+            width: 100% !important;
+        }
+    </style>
 {% endif %}
 
 
 
-        <div class="modal fade" id="linked-table-modal" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%; z-index: 12000">
-        <div class="modal-dialog modal-fullscreen" style="width: 50%; margin: 2% auto auto;height: 85%">
-            <div class="modal-content" style="width: 100%">
-                <div class="modal-body" style="width: 100%; overflow: hidden">
-                    <div id="linked-table-modal-content" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
-                    </div>
+<div class="modal fade" id="linked-table-modal" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     style="width: 100%; z-index: 12000">
+    <div class="modal-dialog modal-fullscreen" style="width: 50%; margin: 2% auto auto;height: 85%">
+        <div class="modal-content" style="width: 100%">
+            <div class="modal-body" style="width: 100%; overflow: hidden">
+                <div id="linked-table-modal-content" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
-
-
-<div id="content-records"  style="height: 100%">
+<div id="content-records" style="height: 100%">
     <div class="row" style="width: 100%; height: 99%; margin-top: 1%">
 
         <!--Content tables start-->
@@ -442,7 +424,8 @@
                                 <div class="col filter-column">
 
                                     <div>
-                                        <select id="viewid" class="form-select" aria-label="Default select example" style="width: 20%; float: left" onchange="refresh()">
+                                        <select id="viewid" class="form-select" aria-label="Default select example"
+                                                style="width: 20%; float: left" onchange="refresh()">
                                             {% for view in views %}
                                                 {% if view.id == user_table_settings.default_viewid %}
                                                     <option selected value="{{ view.id }}">{{ view.name }}</option>
@@ -452,22 +435,36 @@
 
                                             {% endfor %}
                                         </select>
-                                            <input class="form-control me-2" type="search" placeholder="Ricerca" aria-label="Search" style="width: 50%; float: left" id="searchTerm" autocomplete="off" onkeydown="if(event.keyCode === 13) { event.preventDefault(); refresh(); }">
-                                            <button class="btn btn-outline-danger" type="button" style=" float: left" onclick="refresh()">Cerca</button>
+                                        <input class="form-control me-2" type="search" placeholder="Ricerca"
+                                               aria-label="Search" style="width: 50%; float: left" id="searchTerm"
+                                               autocomplete="off"
+                                               onkeydown="if(event.keyCode === 13) { event.preventDefault(); refresh(); }">
+                                        <button class="btn btn-outline-danger" type="button" style=" float: left"
+                                                onclick="refresh()">Cerca
+                                        </button>
 
                                     </div>
 
-                                    <button type="button" class="btn btn-outline-secondary" style=" margin-left: 1%; float: left" onclick="$('#hiddenCard').toggle(100);">Filtri</button>
+                                    <button type="button" class="btn btn-outline-secondary"
+                                            style=" margin-left: 1%; float: left"
+                                            onclick="$('#hiddenCard').toggle(100);">Filtri
+                                    </button>
 
                                 </div>
                                 <div class="col filter-column">
 
 
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
-                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="refresh()">Ricarica</button>
-                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()">Nuovo</button>
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end"
+                                         style="margin-top: 3px; margin-right: 3px">
+                                        <button class="btn btn-outline-danger me-md-2" type="button"
+                                                onclick="refresh()">Ricarica
+                                        </button>
+                                        <button class="btn btn-outline-danger me-md-2" type="button"
+                                                onclick="newRecord()">Nuovo
+                                        </button>
                                         <div class="dropdown">
-                                            <button class="btn btn-outline-secondary me md-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-outline-secondary me md-2 dropdown-toggle"
+                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 Esporta
                                             </button>
                                             <ul class="dropdown-menu">
@@ -483,9 +480,9 @@
                         </div>
 
 
-
                         <div id="hiddenCard" style="display: none;">
-                            <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="margin-left: 30px;margin-right: 30px;">
+                            <div class="card shadow-sm p-3 mb-5 bg-body rounded"
+                                 style="margin-left: 30px;margin-right: 30px;">
                                 <p class="card-text">
 
                                 <div class="container text-center">
@@ -494,7 +491,8 @@
 
                                             <div>
                                                 <form class=" d-flex" role="search">
-                                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                                    <input class="form-control me-2" type="search" placeholder="Search"
+                                                           aria-label="Search">
                                             </div>
                                             </form>
 
@@ -503,7 +501,8 @@
 
                                             <div>
                                                 <form class="d-flex" role="search">
-                                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                                    <input class="form-control me-2" type="search" placeholder="Search"
+                                                           aria-label="Search">
                                             </div>
                                             </form>
 
@@ -512,7 +511,8 @@
 
                                             <div>
                                                 <form class="d-flex" role="search">
-                                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                                    <input class="form-control me-2" type="search" placeholder="Search"
+                                                           aria-label="Search">
                                             </div>
                                             </form>
 
@@ -521,17 +521,19 @@
 
                                             <div>
                                                 <form class="d-flex" role="search">
-                                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                                    <input class="form-control me-2" type="search" placeholder="Search"
+                                                           aria-label="Search">
                                             </div>
                                             </form>
 
                                         </div>
 
                                         <div class="col">
-                                            <button type="button" class="btn btn-outline-secondary" onclick="$('#hiddenCardAF').toggle(100);">Filtri Avanzati</button>
+                                            <button type="button" class="btn btn-outline-secondary"
+                                                    onclick="$('#hiddenCardAF').toggle(100);">Filtri Avanzati
+                                            </button>
                                             </br>
                                         </div>
-
 
 
                                     </div>
@@ -541,7 +543,8 @@
                             </div>
 
                             <div id="hiddenCardAF" style="display: none; margin-top: -40px">
-                                <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="margin-left: 30px;margin-right: 30px;">
+                                <div class="card shadow-sm p-3 mb-5 bg-body rounded"
+                                     style="margin-left: 30px;margin-right: 30px;">
                                     <div class="card-body">
 
                                         <div class="container text-center">
@@ -555,7 +558,8 @@
                                                 <div class="col">
 
                                                     <div class="input-group mb-3">
-                                                        <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                                                        <label class="input-group-text"
+                                                               for="inputGroupSelect01">Options</label>
                                                         <select class="form-select" id="inputGroupSelect01">
                                                             <option selected>Choose...</option>
                                                             <option value="1">One</option>
@@ -573,12 +577,7 @@
                             </div>
 
 
-
-
-
-
                         </div>
-
 
 
                     </div>
@@ -589,7 +588,7 @@
                             $.ajax({
                                 url: "{% url 'under_construction' %}",
                                 type: "GET",
-                                success: function(data) {
+                                success: function (data) {
                                     $(el).html(data);
                                 }
                             });
@@ -597,68 +596,77 @@
                     </script>
 
 
-
                     <!-- Results start-->
                     <div id="result-tabs" style="height: 92%">
                         <!-- Nav menu start -->
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab" data-bs-target="#records_table_container" type="button" role="tab" aria-controls="records_table_container" aria-selected="true">Tabella</button>
+                                <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab"
+                                        data-bs-target="#records_table_container" type="button" role="tab"
+                                        aria-controls="records_table_container" aria-selected="true">Tabella
+                                </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button onclick="underConstruction('#chart-tab-pane')" class="nav-link" id="chart-tab" data-bs-toggle="tab" data-bs-target="#chart-tab-pane" type="button" role="tab" aria-controls="chart-tab-pane" href="chart" aria-selected="false">Grafico</button>
+                                <button onclick="underConstruction('#chart-tab-pane')" class="nav-link" id="chart-tab"
+                                        data-bs-toggle="tab" data-bs-target="#chart-tab-pane" type="button" role="tab"
+                                        aria-controls="chart-tab-pane" href="chart" aria-selected="false">Grafico
+                                </button>
                             </li>
                             <li id="nav-calendar" class="nav-item" role="presentation">
-                                <button onclick="underConstruction('#calendar-tab-pane')" class="nav-link" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane" type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar" aria-selected="false">Calendario</button>
+                                <button onclick="underConstruction('#calendar-tab-pane')" class="nav-link"
+                                        id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane"
+                                        type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar"
+                                        aria-selected="false">Calendario
+                                </button>
                             </li>
                             <li id="nav-kanban" class="nav-item" role="presentation">
-                                <button onclick="underConstruction('#kanban-tab-pane')" class="nav-link" id="kanban-tab" data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab" aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban</button>
+                                <button onclick="underConstruction('#kanban-tab-pane')" class="nav-link" id="kanban-tab"
+                                        data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab"
+                                        aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban
+                                </button>
                             </li>
                             <li id="nav-gantt" class="nav-item" role="presentation">
-                                <button onclick="underConstruction('#gantt-tab-pane')" class="nav-link" id="gantt-tab" data-bs-toggle="tab" data-bs-target="#gantt-tab-pane" type="button" role="tab" aria-controls="gantt-tab-pane" href="#gantt" aria-selected="false">Gantt</button>
+                                <button onclick="underConstruction('#gantt-tab-pane')" class="nav-link" id="gantt-tab"
+                                        data-bs-toggle="tab" data-bs-target="#gantt-tab-pane" type="button" role="tab"
+                                        aria-controls="gantt-tab-pane" href="#gantt" aria-selected="false">Gantt
+                                </button>
                             </li>
                         </ul>
                         <!-- Nav menu end -->
                         <!-- Nav content start-->
                         <div class="tab-content" id="myTabContent" style="height: 100%">
-                            <div class="tab-pane fade show active" id="records_table_container" role="tabpanel" aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
-                                {{records_table}}
-
-
-
-
-                            </div>
-
-                            <div class="tab-pane fade" id="report-tab-pane" style="height: 100%; width: 100%" role="tabpanel" aria-labelledby="report-tab" tabindex="0">
-
-
+                            <div class="tab-pane fade show active" id="records_table_container" role="tabpanel"
+                                 aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
+                                {{ records_table }}
 
 
                             </div>
 
-                            <div class="tab-pane fade " id="chart-tab-pane" role="tabpanel" aria-labelledby="chart-tab" tabindex="0" style="overflow: hidden">
-
-
-
-
+                            <div class="tab-pane fade" id="report-tab-pane" style="height: 100%; width: 100%"
+                                 role="tabpanel" aria-labelledby="report-tab" tabindex="0">
 
 
                             </div>
 
-                            <div class="tab-pane fade " id="calendar-tab-pane" role="tabpanel" aria-labelledby="calendar-tab" tabindex="0" style="overflow: hidden">
-
-
-
-
+                            <div class="tab-pane fade " id="chart-tab-pane" role="tabpanel" aria-labelledby="chart-tab"
+                                 tabindex="0" style="overflow: hidden">
 
 
                             </div>
 
-                            <div class="tab-pane fade" id="kanban-tab-pane" role="tabpanel" aria-labelledby="kanban-tab" tabindex="0">
+                            <div class="tab-pane fade " id="calendar-tab-pane" role="tabpanel"
+                                 aria-labelledby="calendar-tab" tabindex="0" style="overflow: hidden">
+
 
                             </div>
 
-                            <div class="tab-pane fade" id="gantt-tab-pane" role="tabpanel" aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow-x: scroll; overflow-y: scroll">
+                            <div class="tab-pane fade" id="kanban-tab-pane" role="tabpanel" aria-labelledby="kanban-tab"
+                                 tabindex="0">
+
+                            </div>
+
+                            <div class="tab-pane fade" id="gantt-tab-pane" role="tabpanel" aria-labelledby="tutti-tab"
+                                 tabindex="0" style="height: 100%;overflow-x: scroll; overflow-y: scroll">
 
                             </div>
 

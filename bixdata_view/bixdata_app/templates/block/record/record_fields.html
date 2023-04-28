@@ -1,330 +1,346 @@
 {% load define_action %}
- <!--JQuery UI-->
+<!--JQuery UI-->
 <script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
 
-<div class="container fields_container" style="height: 100%" id="fields_container_{{tableid}}_{{recordid}}">
+<div class="container fields_container" style="height: 100%" id="fields_container_{{ tableid }}_{{ recordid }}">
 
-<div id="fields-scroll-container" style="height: fit-content; max-height: 95%; overflow-y: scroll; overflow-x: hidden">
+    <div id="fields-scroll-container"
+         style="height: fit-content; max-height: 95%; overflow-y: scroll; overflow-x: hidden">
 
-<style>
-    #saved-alert {
-          position: unset;
-          float: right;
-          width: 20%;
-          height: 5%;
-          z-index: 9999;
-        }
-</style>
-
-
-
-{% for label,record_fields  in record_fields_labels.items %}
-    {% if label != 'Dati' %}
-    <button class="btn btn-secondary" type="button" onclick="toggleCollapse(this)">
-    {{ label }}
-  </button>
-    {% endif %}
-    {% if label != 'Dati' %}
-
-<div class="div-collapse" style="display: none" id="collapse-{{ label }}">
-  <div>
-  {% else %}
-<div class="div-collapse" id="collapse-{{ label }}">
-  <div>
-  {% endif %}
-  {% for field_key,field in record_fields.items %}
-        {% if field.settings.obbligatorio == 'true' %}
-          {% define 'necessary' as mandatory %}
-          {% define 'badge bg-danger fs-5' as tooltip %}
-        {% else %}
-          {% define '' as mandatory %}
-          {% define '' as tooltip %}
-        {% endif %}
+        <style>
+            #saved-alert {
+                position: unset;
+                float: right;
+                width: 20%;
+                height: 5%;
+                z-index: 9999;
+            }
+        </style>
 
 
 
-    {% with fieldname=field.fieldid %}
-    {% with fieldid='field-'|add:field.fieldid %}
-        <div class="row">
-            <div class="col-lg-2" style="text-align: left" title="{{field.fieldid }}">
-                <p class="{{ tooltip }}" >{{field.description }}</p>
-            </div>
-            <div class="col field">
-                {% if field.fieldtypeid == 'Parola' %}
-                    {% if field.lookuptableid  %}
-                        {% for valuecode in field.valuecode %}
-
-              <script>
-              document.getElementById("hidden-input").value = "{{ items.code }}";
-              document.getElementById("{{ fieldid }}").value = "{{ items.value }}";
-              </script>
-              <div class="input-group mb-2">
-                <select id="{{ fieldid }}" name="{{ fieldname }}" class="form-select {{ mandatory }}">
-                {% if field.lookupitems %}
-                  <option value=""></option>
-                      {% for item in field.lookupitems %}
-                          {% if item.itemcode == field.valuecode.0.code %}
-                              <option selected value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                              {% else %}
-                          <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                          {% endif %}
-                      {% endfor %}
-                {% endif %}
-                </select>
-              </div>
-              {% endfor %}
-              {% else %}
-                <label>
-                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2 {{ mandatory }}" type="text" value="{{ field.value }}">
-                  </label>
-              {% endif %}
-          {% endif %}
-              {% if field.fieldtypeid == 'Data' %}
-                  <label>
-                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2 {{ mandatory }}" type="date" value="{{ field.valuecode.0.code }}">
-                  </label>
-              {% endif %}
-              {% if field.fieldtypeid == 'Seriale' %}
-              <p>{{ field.value}}</p>
-              {% endif %}
-              {% if field.fieldtypeid == 'Numero' %}
-                  <label>
-                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2 {{ mandatory }}" type="number" value="{{ field.value }}">
-                  </label>
-              {% endif %}
-              {% if field.fieldtypeid == 'Memo' %}
-                  {% if fieldname == 'description' %}
-                  <textarea style="min-height: 250px" class="form-control mb-2 {{ mandatory }}" id="{{ fieldid }}" name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
-                  {% else %}
-                      <textarea class="form-control mb-2 {{ mandatory }}" id="{{ fieldid }}" name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
-                  {% endif %}
-              {% endif %}
-              {% if field.fieldtypeid == 'Ora' %}
-                  <label>
-                      <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2 {{ mandatory }}" type="time" value="{{ field.value }}">
-                  </label>
-              {% endif %}
-              {% if field.fieldtypeid == 'Utente' %}
-              <div class="input-group mb-2">
-                <select id="{{ fieldid }}" name="{{ fieldname }}" class="form-select {{ mandatory }}">
-                  <option id="" value=""></option>
-                    {% for items in field.lookupitems %}
-                      {% if items.id and items.firstname and items.lastname %}
-                          {% if items.id == field.valuecode.0.code %}
-                              <option selected id="{{ items.id }}" value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
-                              {% else %}
-                  <option id="{{ items.id }}" value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
-                              {% endif %}
-                    {% endif %}
-                    {% endfor %}
-                </select>
-              </div>
-              {% endif %}
-              {% if field.fieldtypeid == 'linkedmaster' %}
-              <div class="ui-widget">
-                <input class="form-select mb-2 {{ mandatory }}" autocomplete="off" id="{{ fieldid }}" style="width: 80%" value="{{ field.value }}" onfocus="selectAllText(this); showOptions()">
-              </div>
-
-                    <input type="hidden" class="hidden-input {{ mandatory }}" name="{{ field.fieldid }}" value="{{ field.recordid }}">
-
-                    <script>
-                      $(function() {
-                        function log( message ) {
-                          $( "<div>" ).text( message ).prependTo( "#log" );
-                          $( "#log" ).scrollTop( 0 );
-                        }
-                        $( "#{{ fieldid }}" ).autocomplete({
-                          source: function(request, response) {
-                            $.ajax({
-                              url: "{% url 'get_autocomplete_data' %}",
-                              data: {
-                                'term': request.term,
-                                'tableid': '{{tableid}}',
-                                'mastertableid': '{{ field.tablelink }}'
-                              },
-                              success: function(data) {
-                                console.info(data)
-                                response(data.data);
-                              }
-                            });
-                          },
-                          minLength: 2,
-                          select: function( event, ui ) {
-                            //console.log( "Selected: " + ui.item.id );
-                            $(this).closest('.field').find('.hidden-input').val(ui.item.id);
-                            $.ajax({
-                              url: "{% url 'get_badge' %}",
-                              data: {
-                                'recordid': ui.item.id,
-                                'tableid': '{{tableid}}',
-                              },
-                              success: function(data) {
-                                console.info(data)
-                                response(data.data);
-                              }
-                            });
-                          }
-                        });
-                      });
-
-
-                      function showOptions() {
-                        $( "#{{ fieldid }}" ).autocomplete({
-                          source: function(request, response) {
-                            $.ajax({
-                              url: "{% url 'get_autocomplete_data' %}",
-                              data: {
-                                'term': request.term,
-                                'tableid': '{{tableid}}',
-                                'mastertableid': '{{ field.tablelink }}'
-                              },
-                              success: function(data) {
-                                console.info(data)
-                                response(data.data);
-                              }
-                            });
-                          },
-                          minLength: 0,
-                          select: function( event, ui ) {
-                            //console.log( "Selected: " + ui.item.id );
-                            $(this).closest('.field').find('.hidden-input').val(ui.item.id);
-                          }
-                        });
-                      }
-                    </script>
-                {% endif %}
-
-            </div>
-        </div>
-            {% for items in field.valuecode %}
-            {% if items.value and items.code %}
-                <script>
-                document.getElementById("hidden-input").value = "{{ items.code }}";
-                document.getElementById("{{ fieldid }}").value = "{{ items.value }}";
-                </script>
+        {% for label,record_fields  in record_fields_labels.items %}
+            {% if label != 'Dati' %}
+                <button class="btn btn-secondary" type="button" onclick="toggleCollapse(this)">
+                    {{ label }}
+                </button>
             {% endif %}
+            {% if label != 'Dati' %}
+
+                <div class="div-collapse" style="display: none" id="collapse-{{ label }}">
+                <div>
+            {% else %}
+                <div class="div-collapse" id="collapse-{{ label }}">
+                <div>
+            {% endif %}
+        {% for field_key,field in record_fields.items %}
+            {% if field.settings.obbligatorio == 'true' %}
+                {% define 'necessary' as mandatory %}
+                {% define 'badge bg-danger fs-5' as tooltip %}
+            {% else %}
+                {% define '' as mandatory %}
+                {% define '' as tooltip %}
+            {% endif %}
+
+
+
+            {% with fieldname=field.fieldid %}
+                {% with fieldid='field-'|add:field.fieldid %}
+                    <div class="row">
+                        <div class="col-lg-2" style="text-align: left" title="{{ field.fieldid }}">
+                            <p class="{{ tooltip }}">{{ field.description }}</p>
+                        </div>
+                        <div class="col field">
+                            {% if field.fieldtypeid == 'Parola' %}
+                                {% if field.lookuptableid %}
+                                    {% for valuecode in field.valuecode %}
+
+                                        <script>
+                                            document.getElementById("hidden-input").value = "{{ items.code }}";
+                                            document.getElementById("{{ fieldid }}").value = "{{ items.value }}";
+                                        </script>
+                                        <div class="input-group mb-2">
+                                            <select id="{{ fieldid }}" name="{{ fieldname }}"
+                                                    class="form-select {{ mandatory }}">
+                                                {% if field.lookupitems %}
+                                                    <option value=""></option>
+                                                    {% for item in field.lookupitems %}
+                                                        {% if item.itemcode == field.valuecode.0.code %}
+                                                            <option selected
+                                                                    value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                                                        {% else %}
+                                                            <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <label>
+                                        <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                               class="form-control mb-2 {{ mandatory }}" type="text"
+                                               value="{{ field.value }}">
+                                    </label>
+                                {% endif %}
+                            {% endif %}
+                            {% if field.fieldtypeid == 'Data' %}
+                                <label>
+                                    <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                           class="form-control mb-2 {{ mandatory }}" type="date"
+                                           value="{{ field.valuecode.0.code }}">
+                                </label>
+                            {% endif %}
+                            {% if field.fieldtypeid == 'Seriale' %}
+                                <p>{{ field.value }}</p>
+                            {% endif %}
+                            {% if field.fieldtypeid == 'Numero' %}
+                                <label>
+                                    <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                           class="form-control mb-2 {{ mandatory }}" type="number"
+                                           value="{{ field.value }}">
+                                </label>
+                            {% endif %}
+                            {% if field.fieldtypeid == 'Memo' %}
+                                {% if fieldname == 'description' %}
+                                    <textarea style="min-height: 250px" class="form-control mb-2 {{ mandatory }}"
+                                              id="{{ fieldid }}" name="{{ fieldname }}"
+                                              rows="3">{{ field.value }}</textarea>
+                                {% else %}
+                                    <textarea class="form-control mb-2 {{ mandatory }}" id="{{ fieldid }}"
+                                              name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
+                                {% endif %}
+                            {% endif %}
+                            {% if field.fieldtypeid == 'Ora' %}
+                                <label>
+                                    <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                           class="form-control mb-2 {{ mandatory }}" type="time"
+                                           value="{{ field.value }}">
+                                </label>
+                            {% endif %}
+                            {% if field.fieldtypeid == 'Utente' %}
+                                <div class="input-group mb-2">
+                                    <select id="{{ fieldid }}" name="{{ fieldname }}"
+                                            class="form-select {{ mandatory }}">
+                                        <option id="" value=""></option>
+                                        {% for items in field.lookupitems %}
+                                            {% if items.id and items.firstname and items.lastname %}
+                                                {% if items.id == field.valuecode.0.code %}
+                                                    <option selected id="{{ items.id }}"
+                                                            value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                                                {% else %}
+                                                    <option id="{{ items.id }}"
+                                                            value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
+                            {% if field.fieldtypeid == 'linkedmaster' %}
+                                <div class="ui-widget">
+                                    <input class="form-select mb-2 {{ mandatory }}" autocomplete="off"
+                                           id="{{ fieldid }}" style="width: 80%" value="{{ field.value }}"
+                                           onfocus="selectAllText(this); showOptions()">
+                                </div>
+
+                                <input type="hidden" class="hidden-input {{ mandatory }}" name="{{ field.fieldid }}"
+                                       value="{{ field.recordid }}">
+
+                                <script>
+                                    $(function () {
+                                        function log(message) {
+                                            $("<div>").text(message).prependTo("#log");
+                                            $("#log").scrollTop(0);
+                                        }
+
+                                        $("#{{ fieldid }}").autocomplete({
+                                            source: function (request, response) {
+                                                $.ajax({
+                                                    url: "{% url 'get_autocomplete_data' %}",
+                                                    data: {
+                                                        'term': request.term,
+                                                        'tableid': '{{tableid}}',
+                                                        'mastertableid': '{{ field.tablelink }}'
+                                                    },
+                                                    success: function (data) {
+                                                        console.info(data)
+                                                        response(data.data);
+                                                    }
+                                                });
+                                            },
+                                            minLength: 2,
+                                            select: function (event, ui) {
+                                                //console.log( "Selected: " + ui.item.id );
+                                                $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+                                                $.ajax({
+                                                    url: "{% url 'get_badge' %}",
+                                                    data: {
+                                                        'recordid': ui.item.id,
+                                                        'tableid': '{{tableid}}',
+                                                    },
+                                                    success: function (data) {
+                                                        console.info(data)
+                                                        response(data.data);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    });
+
+
+                                    function showOptions() {
+                                        $("#{{ fieldid }}").autocomplete({
+                                            source: function (request, response) {
+                                                $.ajax({
+                                                    url: "{% url 'get_autocomplete_data' %}",
+                                                    data: {
+                                                        'term': request.term,
+                                                        'tableid': '{{tableid}}',
+                                                        'mastertableid': '{{ field.tablelink }}'
+                                                    },
+                                                    success: function (data) {
+                                                        console.info(data)
+                                                        response(data.data);
+                                                    }
+                                                });
+                                            },
+                                            minLength: 0,
+                                            select: function (event, ui) {
+                                                //console.log( "Selected: " + ui.item.id );
+                                                $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+                                            }
+                                        });
+                                    }
+                                </script>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    {% for items in field.valuecode %}
+                        {% if items.value and items.code %}
+                            <script>
+                                document.getElementById("hidden-input").value = "{{ items.code }}";
+                                document.getElementById("{{ fieldid }}").value = "{{ items.value }}";
+                            </script>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+            {% endwith %}
         {% endfor %}
-        {% endwith %}
-        {% endwith %}
-  {% endfor %}
 
+        </div>
+        </div>
+            <br></br>
+        {% endfor %}
+
+        </div>
+
+
+        <button id="save-button" type="button" class="btn btn-primary" onclick=" save_record(this)">Salva</button>
+        <div class="alert alert-success" role="alert" id="saved-alert" style="display: none">
+            Salvato
+        </div>
+        </div>
     </div>
-    </div>
-<br></br>
-{% endfor %}
-
-</div>
-
-
- <button id="save-button" type="button" class="btn btn-primary" onclick=" save_record(this)">Salva</button>
-      <div class="alert alert-success" role="alert" id="saved-alert" style="display: none">
-    Salvato
-</div>
-</div>
-</div>
 </div>
 
 <!--save alert-->
 
 {% if function == "view" %}
-  <script>
-    $(document).ready(function(){
-      $("input").attr("disabled", true);
-      $("select").attr("disabled", true);
-      $("textarea").attr("disabled", true);
-      document.getElementById("save-button").style.display = "none";
-    });
-  </script>
+    <script>
+        $(document).ready(function () {
+            $("input").attr("disabled", true);
+            $("select").attr("disabled", true);
+            $("textarea").attr("disabled", true);
+            document.getElementById("save-button").style.display = "none";
+        });
+    </script>
 {% else %}
-  <script>
-    $(document).ready(function(){
-      $("input").attr("disabled", false);
-      $("select").attr("disabled", false);
-      $("textarea").attr("disabled", false);
-    });
-  </script>
+    <script>
+        $(document).ready(function () {
+            $("input").attr("disabled", false);
+            $("select").attr("disabled", false);
+            $("textarea").attr("disabled", false);
+        });
+    </script>
 {% endif %}
 
 
 <style>
-input:disabled, select:disabled, textarea:disabled {
-  opacity: 1;
-  cursor: default;
-  background-color: #fff !important;
-  color: #000;
-}
+    input:disabled, select:disabled, textarea:disabled {
+        opacity: 1;
+        cursor: default;
+        background-color: #fff !important;
+        color: #000;
+    }
 </style>
 
 <script>
-function save_record(el) {
+    function save_record(el) {
 
-    let necessaryFields = document.querySelectorAll('.necessary');
-    let hasNecessaryFields = false;
+        let necessaryFields = document.querySelectorAll('.necessary');
+        let hasNecessaryFields = false;
 
-    necessaryFields.forEach(function(field) {
-      if (field.value === null || field.value === "" || field.value === "None") {
-        hasNecessaryFields = true;
-      }
-    });
+        necessaryFields.forEach(function (field) {
+            if (field.value === null || field.value === "" || field.value === "None") {
+                hasNecessaryFields = true;
+            }
+        });
 
-    if (hasNecessaryFields === true) {
-      alert('Compila tutti i campi obbligatori prima di salvare');
-    } else {
-
-
+        if (hasNecessaryFields === true) {
+            alert('Compila tutti i campi obbligatori prima di salvare');
+        } else {
 
 
+            closeNewRecordModal()
+            var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
+            var serialized_json = convertFormToJSON(serialized_array);
+            var post_data = [];
+            post_data.push({name: 'tableid', value: '{{ tableid }}'});
+            post_data.push({name: 'recordid', value: '{{ recordid }}'});
+            post_data.push({name: 'fields', value: serialized_json});
 
 
-    closeNewRecordModal()
-    var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
-    var serialized_json=convertFormToJSON(serialized_array);
-    var post_data=[];
-    post_data.push({name: 'tableid',value: '{{ tableid }}'});
-    post_data.push({name: 'recordid',value: '{{ recordid }}'});
-    post_data.push({name: 'fields',value: serialized_json});
+            $.ajax({
+                type: "POST",
+                url: "{% url 'save_record_fields' %}",
+                data: post_data,
+                success: function (response) {
+                    refresh();
+                    setTimeout(function () {
+                        if ('{{ tableid }}' == 'ticketbixdata') {
+                            alert('Grazie per la segnalazione. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
+                        }
+                        $("#saved-alert").css("display", "block");
+                        $("#saved-alert").fadeOut(1500);
+                        //getContentRecords('{{ tableid }}')
+                        //$("#linked-container-{{ tableid }}").load('/loading/')
+                        load_linked(this, '{{ tableid }}')
 
+                    });
 
-    $.ajax({
-        type: "POST",
-        url: "{% url 'save_record_fields' %}",
-        data: post_data,
-        success: function(response) {
-            refresh();
-            setTimeout(function() {
-              if('{{ tableid }}'=='ticketbixdata')
-              {
-                  alert('Grazie per la segnalazione. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
-              }
-              $("#saved-alert").css("display", "block");
-              $("#saved-alert").fadeOut(1500);
-              //getContentRecords('{{ tableid }}')
-              //$("#linked-container-{{ tableid }}").load('/loading/')
-              load_linked(this,'{{ tableid }}')
-
+                },
+                error: function () {
+                    alert('ko')
+                }
             });
-
-        },
-        error: function() {
-            alert('ko')
         }
-    });
     }
-}
 
 
-function selectAllText(input) {
-  input.setSelectionRange(0, input.value.length);
-}
+    function selectAllText(input) {
+        input.setSelectionRange(0, input.value.length);
+    }
 
 
 </script>
 
 <style>
-ul.ui-autocomplete{
-  z-index: 11000;
-}
+    ul.ui-autocomplete {
+        z-index: 11000;
+    }
 
 </style>
 
