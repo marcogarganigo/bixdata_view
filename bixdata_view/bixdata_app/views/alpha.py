@@ -1214,11 +1214,28 @@ def new_chart_block(request):
 @login_required(login_url='/login/')
 def get_record_path(request, tableid, recordid):
     userid=request.user.id
-    content=get_block_record_card(tableid,recordid,userid)
-    
-
+    content=get_block_timesheetinvoice(recordid,userid)
     return get_render_index(request,content)
 
+def get_block_timesheetinvoice(recordid_timesheet,userid):
+    timesheet_block=get_block_record_card('timesheet',recordid_timesheet,userid)
+    company_block=''
+    project_block=''
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM user_timesheet WHERE recordid_='{recordid_timesheet}'"
+                       )
+        rows = dictfetchall(cursor)
+    if(rows):
+        recordid_company=rows[0]['recordidcompany_'];
+        company_block=get_block_record_card('company',recordid_company,userid)
+
+    
+    context=dict()
+    context['timesheet_block']=timesheet_block
+    context['company_block']=company_block
+    content=render_to_string('other/check_timesheetinvoice.html',context)
+    return content;
 
 @login_required(login_url='/login/')
 def get_badge(request):
