@@ -1215,8 +1215,8 @@ def get_record_path(request, tableid, recordid):
     recordid = request.GET.get('recordid')
     print(tableid)
     print(recordid)
-
-    return render(request, 'other/path_page.html', {'tableid': tableid, 'recordid': recordid})
+    
+    return get_render_index(request,'test')
 
 
 
