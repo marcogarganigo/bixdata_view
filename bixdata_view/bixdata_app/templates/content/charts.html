@@ -1,46 +1,46 @@
- <div id="content_chart" style="height: 100%;width: 100%;overflow: scroll;">
-        <div style="">
-            <div>
-                <canvas id="myChart"></canvas>
-            </div>
-            <div onclick="trigger()" id="chart_div" style="width: 400px; height: 2000px;"></div>
-
-            <script>
-
-</script>
-
-            <script>
-          const ctx = document.getElementById('myChart');
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{
-        label: '# of Votes',
-        data: [12, 29, 3, 5, 2, 3],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-            </script>
+<div id="content_chart" style="height: 100%;width: 100%;overflow: scroll;">
+    <div style="">
+        <div>
+            <canvas id="myChart"></canvas>
         </div>
-        <!--
-        <div id="bixdata_results_container" class="col-xl-8 col-md-8 mb-4"
-            style="height: 100%; margin-bottom: 0px">
-        </div>
-        <div id="bixdata_recordcard_container" class="col-xl-4 col-md-4 mb-4" style="height: 100%">
-        </div>
-        -->
+        <div onclick="trigger()" id="chart_div" style="width: 400px; height: 2000px;"></div>
 
+        <script>
+
+        </script>
+
+        <script>
+            const ctx = document.getElementById('myChart');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: [12, 29, 3, 5, 2, 3],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
     </div>
+    <!--
+    <div id="bixdata_results_container" class="col-xl-8 col-md-8 mb-4"
+        style="height: 100%; margin-bottom: 0px">
+    </div>
+    <div id="bixdata_recordcard_container" class="col-xl-4 col-md-4 mb-4" style="height: 100%">
+    </div>
+    -->
+
+</div>
 
 <script>
 

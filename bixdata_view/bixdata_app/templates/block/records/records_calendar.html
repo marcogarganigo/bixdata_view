@@ -1,68 +1,64 @@
 <script>
-    $(document).ready(function() {
-      var jsonEvents=[
-        {
-            "title": "Event 1",
-            "start": "2023-01-01T10:00:00",
-            "end": "2023-02-01T12:00:00",
-            "allDay": false
-        },
-        {
-            "title": "Event 2",
-            "start": "2023-01-03",
-            "allDay": true
-        },
-        {
-            "title": "New Event",
-            "start": "2023-01-23",
-            "allDay": true
-        }
-    ]
-      $('#calendar').fullCalendar({
-        
-          events: jsonEvents,
-          header: {
-              left: 'prev,next today',
-              center: 'title',
-              right: 'month,agendaWeek,agendaDay'
-          },
-          editable: true,
-          Boolean, default: true,
-          eventDrop: function(event, delta, revertFunc) {
-              // code to handle event drop
-          },
-          eventResize: function(event, delta, revertFunc) {
-              // code to handle event resize
-          },
-          eventClick: function(event) {
-              // Open an alert when the event is clicked
-              alert("alert");
-          },
-          eventRender: function(event, element) {
-              // code to customize event rendering
-          }
-      });
-  });
-  
-  
-  
-  
-  </script>
-  
-  
-  
-  <div id="#content_records_calendar" style="width: 65%;">
-        <div id="calendar"></div>
-  </div>
-  
-  
-  
-  <style>
-   
-  </style>
-   
-  
-  <style>
-    
-  </style>
+    $(document).ready(function () {
+        var jsonEvents = [
+            {
+                "title": "Event 1",
+                "start": "2023-01-01T10:00:00",
+                "end": "2023-02-01T12:00:00",
+                "allDay": false
+            },
+            {
+                "title": "Event 2",
+                "start": "2023-01-03",
+                "allDay": true
+            },
+            {
+                "title": "New Event",
+                "start": "2023-01-23",
+                "allDay": true
+            }
+        ]
+        $('#calendar').fullCalendar({
+
+            events: jsonEvents,
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            editable: true,
+            Boolean, default: true,
+            eventDrop: function (event, delta, revertFunc) {
+                // code to handle event drop
+            },
+            eventResize: function (event, delta, revertFunc) {
+                // code to handle event resize
+            },
+            eventClick: function (event) {
+                // Open an alert when the event is clicked
+                alert("alert");
+            },
+            eventRender: function (event, element) {
+                // code to customize event rendering
+            }
+        });
+    });
+
+
+</script>
+
+
+<div id="#content_records_calendar" style="width: 65%;">
+    <div id="calendar"></div>
+</div>
+
+
+<style>
+
+</style>
+
+
+<style>
+
+</style>
   

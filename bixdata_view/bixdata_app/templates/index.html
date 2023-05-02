@@ -4,199 +4,191 @@
 {% block body %}
 
 
-<div class="wrapper" style="height: 100%">
-    <style>
-        .content-page{
-            height:calc(100% - 90px);
-        }
-    </style>
-    <script type="text/javascript">
+    <div class="wrapper" style="height: 100%">
+        <style>
+            .content-page {
+                height: calc(100% - 90px);
+            }
+        </style>
+        <script type="text/javascript">
 
-        const min_width = 1920;
-        const fhd_width = 1920;
-
-
-
-        if (window.innerWidth <= min_width) {
-            $("html").attr("data-sidenav-size", "condensed");
-            $(".tabs-title").attr("display", "none");
-            $(".tabs-icon").attr("display", "visible");
-            $(".card-body").attr("display", "none");
-        }
+            const min_width = 1920;
+            const fhd_width = 1920;
 
 
+            if (window.innerWidth <= min_width) {
+                $("html").attr("data-sidenav-size", "condensed");
+                $(".tabs-title").attr("display", "none");
+                $(".tabs-icon").attr("display", "visible");
+                $(".card-body").attr("display", "none");
+            }
 
 
+            $("#bixdata2").ready(function () {
+                {% if content == '' %}
+                    getDashboard();
+                {% endif %}
 
-        $("#bixdata2").ready(function () {
-            {% if content == '' %}
-            getDashboard();
-            {% endif %}
+                $("#toggle-menu").click(function () {
+                    //$("#content_container").load('/loading/');
 
-            $("#toggle-menu").click(function () {
+                    var current_sidenav_size = $("html").attr("data-sidenav-size");
+                    if (current_sidenav_size == 'default') {
+                        $("html").attr("data-sidenav-size", "condensed");
+                    } else {
+                        $("html").attr("data-sidenav-size", "default");
+                    }
+
+                });
+
+
+            });
+
+            function getContentRecords(tableid) {
+                var serialized_data = [];
                 //$("#content_container").load('/loading/');
 
-                var current_sidenav_size = $("html").attr("data-sidenav-size");
-                if (current_sidenav_size == 'default') {
-                    $("html").attr("data-sidenav-size", "condensed");
-                } else {
-                    $("html").attr("data-sidenav-size", "default");
-                }
+                serialized_data.push({name: 'tableid', value: tableid});
+                serialized_data.push({name: 'searchTerm', value: ''});
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'content_records' %}",
+                    data: serialized_data,
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
 
-            });
+            function getContentRecordsAdmin(page) {
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'admin_page' %}",
+                    data: {
+                        'page': page
+                    },
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
 
 
+            function getRenderChartsView() {
+                var serialized_data = [];
 
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'charts_view' %}",
+                    data: serialized_data,
+                    success: function (response) {
+                        //$("#content_container").load('/loading/');
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function () {
+                        //$("#content_container").load('/loading/');
+                        $("#content_container").html(response);
+                    }
+                });
+            }
 
-        });
-
-        function getContentRecords(tableid) {
-            var serialized_data = [];
+            function getDashboard() {
+                var serialized_data = [];
                 //$("#content_container").load('/loading/');
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'dashboard' %}",
+                    data: serialized_data,
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
 
-                serialized_data.push({ name: 'tableid', value: tableid });
-            serialized_data.push({ name: 'searchTerm', value: '' });
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'content_records' %}",
-                data: serialized_data,
-                success: function (response) {
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
-                error: function (response) {
-                    $("#content_container").html(response);
-                }
-            });
-        }
+            function get_settings() {
+                //$("#content_container").load('/loading/');
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'get_settings' %}",
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
 
-        function getContentRecordsAdmin(page) {
-             $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'admin_page' %}",
-                data: {
-                    'page': page
-                },
-                success: function (response) {
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
-                error: function (response) {
-                    $("#content_container").html(response);
-                }
-            });
-        }
+            function get_bixdata_updates() {
+                //$("#content_container").load('/loading/');
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'get_bixdata_updates' %}",
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
 
-
-
-        function getRenderChartsView() {
-            var serialized_data = [];
-
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'charts_view' %}",
-                data: serialized_data,
-                success: function (response) {
-                    //$("#content_container").load('/loading/');
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
-                error: function () {
-                    //$("#content_container").load('/loading/');
-                    $("#content_container") .html(response);
-                }
-            });
-        }
-
-        function getDashboard()
-        {
-            var serialized_data = [];
-            //$("#content_container").load('/loading/');
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'dashboard' %}",
-                data: serialized_data,
-                success: function (response) {
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
-                error: function (response) {
-                    $("#content_container").html(response);
-                }
-            });
-        }
-
-        function get_settings() {
-            //$("#content_container").load('/loading/');
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'get_settings' %}",
-                success: function (response) {
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
-                error: function (response) {
-                    $("#content_container").html(response);
-                }
-            });
-        }
-
-        function get_bixdata_updates() {
-            //$("#content_container").load('/loading/');
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'get_bixdata_updates' %}",
-                success: function (response) {
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
-                error: function (response) {
-                    $("#content_container").html(response);
-                }
-            });
-        }
-
-        function get_account() {
-            //$("#content_container").load('/loading/');
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'get_account' %}",
-                success: function (response) {
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
-                error: function (response) {
-                    $("#content_container").html(response);
-                }
-            });
-        }
+            function get_account() {
+                //$("#content_container").load('/loading/');
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'get_account' %}",
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
 
 
-        function open_record(el,tableid,recordid) {
-            
-            var serialized_data = [];
-            serialized_data.push({name: 'tableid',value: tableid});
-            serialized_data.push({name: 'recordid',value: recordid});
+            function open_record(el, tableid, recordid) {
 
-            
-            /*
-            $('#linked-table-modal').on('show.bs.modal', function () {
-            $('this').closest(".modal-backdrop").css("z-index", 11200);
-            });
-            */
-           
-            {% if layout_setting == 'modal' %}
-            const min_width = 5000
-            {% endif %}
+                var serialized_data = [];
+                serialized_data.push({name: 'tableid', value: tableid});
+                serialized_data.push({name: 'recordid', value: recordid});
 
-            $('#modalMedium').modal('show');
+
+                /*
+                $('#linked-table-modal').on('show.bs.modal', function () {
+                $('this').closest(".modal-backdrop").css("z-index", 11200);
+                });
+                */
+
+                {% if layout_setting == 'modal' %}
+                    const min_width = 5000
+                {% endif %}
+
+                $('#modalMedium').modal('show');
                 /*     
                 if (window.innerWidth <= min_width) {
                     if ($(el.closest('td')).attr('data-fieldtype') === 'linked') {
@@ -239,7 +231,7 @@
                     type: "POST",
                     url: "{% url 'block_record_card' %}",
                     data: serialized_data,
-                    success: function(response) {
+                    success: function (response) {
                         if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el.closest('td')).attr('data-fieldtype') === 'linked') {
                             $("#linked-table-modal-content").html(response);
                         } else {
@@ -252,7 +244,7 @@
                             }
                         }
                     },
-                    error: function(response) {
+                    error: function (response) {
                         $("#bixdata_recordcard_container").html(response);
                     }
                 });
@@ -260,42 +252,38 @@
             }
 
 
-    function closeCard(vrbl) {
-        $(vrbl).closest('.modal').modal('hide');
-            setTimeout(function() {
-            }, 1000);
+            function closeCard(vrbl) {
+                $(vrbl).closest('.modal').modal('hide');
+                setTimeout(function () {
+                }, 1000);
                 if (window.innerWidth > min_width) {
-                $(vrbl).closest("#RecordCard").slideToggle(200, function() {
-                });
+                    $(vrbl).closest("#RecordCard").slideToggle(200, function () {
+                    });
                 }
             }
 
             $('.modal').on('hidden.bs.modal', function (e) {
-        // Remove the content of the component here
-        //$('#RecordCard').html('');
-        $('#bixdata_recordcard_container').html('');
-        })
+                // Remove the content of the component here
+                //$('#RecordCard').html('');
+                $('#bixdata_recordcard_container').html('');
+            })
 
 
+            $('#newRecordModal').on('hidden.bs.modal', function (e) {
+                $("#fullwidth_modal_newrecord").html("");
+            });
 
-    $('#newRecordModal').on('hidden.bs.modal', function (e) {
-        $("#fullwidth_modal_newrecord").html("");
-    });
-
-        function closeNewRecordModal() {
-            $("#newRecordModal").modal("hide");
-        }
-
+            function closeNewRecordModal() {
+                $("#newRecordModal").modal("hide");
+            }
 
 
-    function closeLinkedTableModal() {
-        $("#linked-table-modal").modal("hide");
-    }
+            function closeLinkedTableModal() {
+                $("#linked-table-modal").modal("hide");
+            }
 
 
-    
-
-    </script>
+        </script>
 
 
         <style>
@@ -312,24 +300,28 @@
             }
         </style>
 
-    <div id="bixdata2" style="height: 100%;">
-        <!-- ========== Topbar Start ========== -->
+        <div id="bixdata2" style="height: 100%;">
+            <!-- ========== Topbar Start ========== -->
             <div class="navbar-custom topnav-navbar">
                 <div class="container-fluid detached-nav">
 
                     <!-- Topbar Logo -->
                     <div class="logo-topbar">
                         <!-- Logo light -->
-                        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ index.html }}">
+                        <a class="sidebar-brand d-flex align-items-center justify-content-center"
+                           href="{{ index.html }}">
 
                             <p class="shadow-sm p-0 mb-0 bg-white rounded"
-                                style="width: 50px; color: red; margin-right: 1px;"> <span class="logo-sm">
-                            <img src="{% static 'images/logos/logo_grosso_' %}{{ theme }}.jpg" alt="small logo" height="55">
+                               style="width: 50px; color: red; margin-right: 1px;"> <span class="logo-sm">
+                            <img src="{% static 'images/logos/logo_grosso_' %}{{ theme }}.jpg" alt="small logo"
+                                 height="55">
 
                         </span></p>
 
-                            <p class=" mb-0" style="width: 50px; color: white; margin-left: 0px;"> <span class="logo-sm">
-                           <img src="{% static 'images/logos/logo_grosso_' %}{{ theme }}.jpg" alt="small logo" height="55">
+                            <p class=" mb-0" style="width: 50px; color: white; margin-left: 0px;"> <span
+                                    class="logo-sm">
+                           <img src="{% static 'images/logos/logo_grosso_' %}{{ theme }}.jpg" alt="small logo"
+                                height="55">
                         </span></p>
                         </a>
 
@@ -361,18 +353,18 @@
                     <ul class="list-unstyled topbar-menu float-end mb-0">
                         <li class="dropdown notification-list d-lg-none">
                             <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#"
-                                role="button" aria-haspopup="false" aria-expanded="false">
+                               role="button" aria-haspopup="false" aria-expanded="false">
                                 <i class="ri-search-line noti-icon"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
                                 <form class="p-3">
                                     <input type="search" class="form-control" placeholder="Search ..."
-                                        aria-label="Recipient's username">
+                                           aria-label="Recipient's username">
                                 </form>
                             </div>
                         </li>
 
-                    <!--
+                        <!--
                         <li class="dropdown notification-list">
                             <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="{% url 'under_construction' %}">
                                 <i class="ri-notification-3-line noti-icon"></i>
@@ -384,13 +376,15 @@
 
                         <li onclick="get_settings()" class="notification-list d-none d-sm-inline-block">
                             <a class="nav-link" data-bs-toggle="offcanvas" href="#theme-settings-offcanvas">
-                                <i class="ri-settings-3-line noti-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Impostazioni"></i>
+                                <i class="ri-settings-3-line noti-icon" data-bs-toggle="tooltip"
+                                   data-bs-placement="bottom" data-bs-title="Impostazioni"></i>
                             </a>
                         </li>
 
                         <li onclick="get_bixdata_updates()" class="notification-list d-none d-sm-inline-block">
                             <a class="nav-link" data-bs-toggle="offcanvas" href="#theme-settings-offcanvas">
-                                <i class="ri-notification-badge-line noti-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Aggiornamenti bixdata"></i>
+                                <i class="ri-notification-badge-line noti-icon" data-bs-toggle="tooltip"
+                                   data-bs-placement="bottom" data-bs-title="Aggiornamenti bixdata"></i>
                             </a>
                         </li>
 
@@ -400,9 +394,10 @@
 
                         <li class="dropdown notification-list">
                             <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown"
-                                href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                               href="#" role="button" aria-haspopup="false" aria-expanded="false">
                                 <span class="account-user-avatar">
-                                    <img src="{% static 'images/users/' %}{{ username }}.png?v=" + time alt="" class="rounded-circle">
+                                    <img src="{% static 'images/users/' %}{{ username }}.png?v=" + time alt=""
+                                         class="rounded-circle">
                                 </span>
                                 <span>
                                     <span class="user-hover">
@@ -412,7 +407,7 @@
                                 </span>
                             </a>
                             <div
-                                class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
+                                    class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
                                 <!-- item-->
                                 <div class=" dropdown-header noti-title">
                                     <h6 class="text-overflow m-0">Welcome !</h6>
@@ -431,8 +426,6 @@
                                 </a>
 
 
-
-
                                 <!-- item-->
                                 <a class="dropdown-item notify-item" onclick="support('ticketbixdata')">
                                     <i class="mdi mdi-lifebuoy me-1"></i>
@@ -442,28 +435,28 @@
 
 
                                 <script>
-                                        function support(tableid) {
-                                            $('#newRecordModal').modal('show');
-                                            var serialized_data = [];
-                                            serialized_data.push({name: 'tableid',value: tableid});
-                                            serialized_data.push({name: 'function',value: 'insert'});
-                                            serialized_data.push({name: 'http_response',value: true});
-                                            $.ajax({
-                                                type: "POST",
-                                                url: "{% url 'get_record_fields' %}",
-                                                data: serialized_data,
-                                                success: function(response) {
-                                                    $("#fullwidth_modal_newrecord").html(response);
+                                    function support(tableid) {
+                                        $('#newRecordModal').modal('show');
+                                        var serialized_data = [];
+                                        serialized_data.push({name: 'tableid', value: tableid});
+                                        serialized_data.push({name: 'function', value: 'insert'});
+                                        serialized_data.push({name: 'http_response', value: true});
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "{% url 'get_record_fields' %}",
+                                            data: serialized_data,
+                                            success: function (response) {
+                                                $("#fullwidth_modal_newrecord").html(response);
 
-                                                },
-                                                error: function() {
-                                                    $("#bixdata_recordcard_container").html(response);
-                                                }
-                                            });
+                                            },
+                                            error: function () {
+                                                $("#bixdata_recordcard_container").html(response);
+                                            }
+                                        });
 
 
-                                        }
-                                    </script>
+                                    }
+                                </script>
 
 
                                 <script>
@@ -487,126 +480,133 @@
                         <form>
                             <div class="input-group">
                                 <input type="search" class="form-control dropdown-toggle" placeholder="Search..."
-                                    id="top-search" autocomplete="off">
+                                       id="top-search" autocomplete="off">
                                 <span class="mdi mdi-magnify search-icon"></span>
                                 <button class="input-group-text btn btn-primary" type="submit"
-                                    style="background-color: #ff5b5b; border: #ff5b5b">Cerca</button>
+                                        style="background-color: #ff5b5b; border: #ff5b5b">Cerca
+                                </button>
                             </div>
                         </form>
 
 
                         <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
                             <h4>Qui non c'è ancora niente ma ci stiamo lavorando</h4>
-                           <img src="{% static 'images/mauro&lorenzo.jpg' %}" width="300px">
+                            <img src="{% static 'images/mauro&lorenzo.jpg' %}" width="300px">
                         </div>
                     </div>
                 </div>
             </div>
-        <!-- ========== Topbar End ========== -->
+            <!-- ========== Topbar End ========== -->
 
-        <!-- ========== Left Sidebar Start ========== -->
-        <div class="leftside-menu">
+            <!-- ========== Left Sidebar Start ========== -->
+            <div class="leftside-menu">
 
-            <!-- Logo Light -->
-            <div class="logo-topbar" style="height: 100%;">
-                <!-- Logo light -->
+                <!-- Logo Light -->
+                <div class="logo-topbar" style="height: 100%;">
+                    <!-- Logo light -->
 
 
-                <!-- Logo Dark -->
-                <div id="logo-leftside" href="{{ index.html }}" class="logo logo-dark" style="height: 6%">
+                    <!-- Logo Dark -->
+                    <div id="logo-leftside" href="{{ index.html }}" class="logo logo-dark" style="height: 6%">
                     <span class="logo-lg sidebar-brand d-flex align-items-center justify-content-center">
-                        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ index.html }}">
+                        <a class="sidebar-brand d-flex align-items-center justify-content-center"
+                           href="{{ index.html }}">
 
 
 
                              <span id="logo-leftside-bix">
-                             <img src="{% static 'images/logos/logo_grosso_' %}{{ theme }}.jpg" alt="small logo" height="59" style="margin-top: 3%">
+                             <img src="{% static 'images/logos/logo_grosso_' %}{{ theme }}.jpg" alt="small logo"
+                                  height="59" style="margin-top: 3%">
                         </span>
                         </a>
                     </span>
 
-                    <span class="logo-sm sidebar-brand d-flex align-items-center justify-content-center">
-                        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ index.html }}">
+                        <span class="logo-sm sidebar-brand d-flex align-items-center justify-content-center">
+                        <a class="sidebar-brand d-flex align-items-center justify-content-center"
+                           href="{{ index.html }}">
 
 
 
 
                              <span id="logo-leftside-bix" style="margin-top: 30%">
-                            <img src="{% static 'images/logos/logo_piccolo_' %}{{ theme }}.jpg" alt="small logo" height="32">
+                            <img src="{% static 'images/logos/logo_piccolo_' %}{{ theme }}.jpg" alt="small logo"
+                                 height="32">
 
                             </span>
 
                         </a>
                     </span>
-                </div>
+                    </div>
 
-                <!-- Sidebar Hover Menu Toggle Button -->
-                <button type="button" class="bg-transparent button-sm-hover p-0" data-bs-toggle="tooltip"
-                    data-bs-placement="right" title="Show Full Sidebar">
-                    <i class="ri-checkbox-blank-circle-line align-middle"></i>
-                </button>
+                    <!-- Sidebar Hover Menu Toggle Button -->
+                    <button type="button" class="bg-transparent button-sm-hover p-0" data-bs-toggle="tooltip"
+                            data-bs-placement="right" title="Show Full Sidebar">
+                        <i class="ri-checkbox-blank-circle-line align-middle"></i>
+                    </button>
 
-                <!-- Sidebar -left -->
-                <div class="h-100" id="leftside-menu-container" data-simplebar>
+                    <!-- Sidebar -left -->
+                    <div class="h-100" id="leftside-menu-container" data-simplebar>
 
-                    <!--- Sidemenu -->
-                    <ul class="side-nav">
+                        <!--- Sidemenu -->
+                        <ul class="side-nav">
 
-                    <li class="side-nav-item">
-                            <a data-bs-toggle="collapse" onclick="getDashboard()" aria-expanded="false"
-                                aria-controls="sidebarDashboards2" class="side-nav-link">
-                                <i class="uil-home-alt"></i>
-                                <span> Dashboard </span>
-                            </a>
-                            <div class="collapse" id="sidebarDashboards2">
-                                <ul class="side-nav-second-level">
-                                    <li>
-                                        <a onclick="getDashboard()">Analytics</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
+                            <li class="side-nav-item">
+                                <a data-bs-toggle="collapse" onclick="getDashboard()" aria-expanded="false"
+                                   aria-controls="sidebarDashboards2" class="side-nav-link">
+                                    <i class="uil-home-alt"></i>
+                                    <span> Dashboard </span>
+                                </a>
+                                <div class="collapse" id="sidebarDashboards2">
+                                    <ul class="side-nav-second-level">
+                                        <li>
+                                            <a onclick="getDashboard()">Analytics</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
 
-                        <script>
-                          function setColor(el) {
-                            var els = document.querySelectorAll('.side-nav-txt');
-                            els.forEach(function(el) {
-                              el.classList.remove('active');
-                              el.style.color = '#d3cfcf';
-                            });
-                            el.classList.add('active');
-                            el.style.color = 'red';
-                          }
+                            <script>
+                                function setColor(el) {
+                                    var els = document.querySelectorAll('.side-nav-txt');
+                                    els.forEach(function (el) {
+                                        el.classList.remove('active');
+                                        el.style.color = '#d3cfcf';
+                                    });
+                                    el.classList.add('active');
+                                    el.style.color = 'red';
+                                }
 
-                          var els = document.querySelectorAll('.side-nav-txt');
-                          els.forEach(function(el) {
-                            el.addEventListener('click', function() {
-                              setColor(el);
-                            });
-                          });
-                        </script>
+                                var els = document.querySelectorAll('.side-nav-txt');
+                                els.forEach(function (el) {
+                                    el.addEventListener('click', function () {
+                                        setColor(el);
+                                    });
+                                });
+                            </script>
 
-                        <li class="side-nav-title side-nav-item">Tables</li>
-                        {% for key, menu_list_value in menu_list.items %}
-                        <li class="side-nav-item">
-                          <a data-bs-toggle="collapse" href="#sidebar{{key}}" aria-expanded="false" aria-controls="sidebar{{key}}" class="side-nav-link">
-                            <i class="uil-briefcase"></i>
-                            <span>{{key}}</span>
-                            <span class="menu-arrow"></span>
-                          </a>
-                          <div class="collapse" id="sidebar{{key}}">
-                            <ul class="side-nav-second-level">
-                              {% for value in menu_list_value %}
-                              <li onclick="getContentRecords('{{value.id}}')">
-                                <a href="#" class="side-nav-txt" onclick="setColor(this)">{{value.description}}</a>
-                              </li>
-                              {% endfor %}
-                                </ul>
-                            </div>
+                            <li class="side-nav-title side-nav-item">Tables</li>
+                            {% for key, menu_list_value in menu_list.items %}
+                                <li class="side-nav-item">
+                                    <a data-bs-toggle="collapse" href="#sidebar{{ key }}" aria-expanded="false"
+                                       aria-controls="sidebar{{ key }}" class="side-nav-link">
+                                        <i class="uil-briefcase"></i>
+                                        <span>{{ key }}</span>
+                                        <span class="menu-arrow"></span>
+                                    </a>
+                                    <div class="collapse" id="sidebar{{ key }}">
+                                        <ul class="side-nav-second-level">
+                                            {% for value in menu_list_value %}
+                                                <li onclick="getContentRecords('{{ value.id }}')">
+                                                    <a href="#" class="side-nav-txt"
+                                                       onclick="setColor(this)">{{ value.description }}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
 
-                        </li>
-                        {% endfor %}
-                    <!---
+                                </li>
+                            {% endfor %}
+                            <!---
                     <li class="side-nav-title side-nav-item">Tables</li>
                         <li class="side-nav-item">
                           <a data-bs-toggle="collapse" href="#sidebarcalendar" aria-expanded="false" aria-controls="sidebarcalendar" class="side-nav-link">
@@ -647,127 +647,132 @@
 
 
 
-                    {% if username|lower == "admin" %}
-                        <li class="side-nav-title side-nav-item">Systems</li>
+                            {% if username|lower == "admin" %}
+                                <li class="side-nav-title side-nav-item">Systems</li>
 
-                        <li class="side-nav-item">
-                          <a data-bs-toggle="collapse" href="#sidebarAdmin" aria-expanded="false" aria-controls="sidebarAdmin" class="side-nav-link">
-                            <i class="uil-briefcase"></i>
-                            <span>Admin settings</span>
-                            <span class="menu-arrow"></span>
-                          </a>
-                          <div class="collapse" id="sidebarAdmin">
-                            <ul class="side-nav-second-level">
-                              <li onclick="getContentRecordsAdmin($(this).find('a').text())">
-                                  <a href="#" class="side-nav-txt" onclick="setColor(this)">Grafici</a>
+                                <li class="side-nav-item">
+                                    <a data-bs-toggle="collapse" href="#sidebarAdmin" aria-expanded="false"
+                                       aria-controls="sidebarAdmin" class="side-nav-link">
+                                        <i class="uil-briefcase"></i>
+                                        <span>Admin settings</span>
+                                        <span class="menu-arrow"></span>
+                                    </a>
+                                    <div class="collapse" id="sidebarAdmin">
+                                        <ul class="side-nav-second-level">
+                                            <li onclick="getContentRecordsAdmin($(this).find('a').text())">
+                                                <a href="#" class="side-nav-txt" onclick="setColor(this)">Grafici</a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
                                 </li>
+                            {% endif %}
 
-                                </ul>
-                            </div>
+                            {% if username|lower == 'martina.panetta' or username|lower == 'alessandro.galli' %}
+                                <li class="side-nav-item">
+                                    <a data-bs-toggle="collapse" href="#sidebarFatturazione" aria-expanded="false"
+                                       aria-controls="sidebarAdmin" class="side-nav-link">
+                                        <i class="uil-briefcase"></i>
+                                        <span>Fatturazione</span>
+                                        <span class="menu-arrow"></span>
+                                    </a>
+                                    <div class="collapse" id="sidebarFatturazione">
+                                        <ul class="side-nav-second-level">
+                                            <li>
+                                                <a href="http://bixcrm01:8822/bixdata/custom/invoices.php"
+                                                   class="side-nav-txt" onclick="setColor(this)" target="_blank">Fatturazione</a>
+                                            </li>
 
-                        </li>
-                    {% endif %}
+                                        </ul>
+                                    </div>
 
-                    {% if username|lower == 'martina.panetta' or username|lower == 'alessandro.galli' %}
-                         <li class="side-nav-item">
-                          <a data-bs-toggle="collapse" href="#sidebarFatturazione" aria-expanded="false" aria-controls="sidebarAdmin" class="side-nav-link">
-                            <i class="uil-briefcase"></i>
-                            <span>Fatturazione</span>
-                            <span class="menu-arrow"></span>
-                          </a>
-                          <div class="collapse" id="sidebarFatturazione">
-                            <ul class="side-nav-second-level">
-                              <li>
-                                  <a href="http://bixcrm01:8822/bixdata/custom/invoices.php" class="side-nav-txt" onclick="setColor(this)" target="_blank">Fatturazione</a>
                                 </li>
+                            {% endif %}
 
-                                </ul>
-                            </div>
-
-                        </li>
-                    {% endif %}
-
-                        <div class="clearfix"></div>
-                    </ul>
+                            <div class="clearfix"></div>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- ========== Left Sidebar End ========== -->
-        <!-- ============================================================== -->
-        <!-- Start Page Content here -->
-        <!-- ============================================================== -->
+            <!-- ========== Left Sidebar End ========== -->
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
 
-        <div class="content-page" style="min-height:0px; margin-top:70px;">
-            <!-- Start Content-->
-            <div class="row" style="height: 100%;">
-                <div id="content_container" style="height: 100%">
-                    {{ content }}
+            <div class="content-page" style="min-height:0px; margin-top:70px;">
+                <!-- Start Content-->
+                <div class="row" style="height: 100%;">
+                    <div id="content_container" style="height: 100%">
+                        {{ content }}
 
+                    </div>
                 </div>
             </div>
-        </div>
 
 
             <div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="supportModal" aria-hidden="true">
-          <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Bixdata support</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div id="support-modal-content" class="modal-body">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Bixdata support</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div id="support-modal-content" class="modal-body">
 
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-
-        <style>
-            #newRecordModal {
-                z-index: 9999;
-            }
-        </style>
-        
-        <script>
-            $('#newRecordModal').on('shown.bs.modal', function (e) {
-                $('#newRecordModal').css('z-index', 9000)
-                //alert('test')
-            });
-
-            $('#newRecordModal').on('hide.bs.modal', function (e) {
-                $('.modal-backdrop').css('z-index', 1000)
-            });
-        </script>
-
-        <!-- new record modal-->
-        <div class="modal fade" id="newRecordModal" aria-hidden="true" style="width: 100%;">
-            <div class="modal-dialog modal-fullscreen" style="width: 50%; margin: 2% auto auto;height: 85%">
-                <div class="modal-content" style="width: 100%">
-                    <div class="modal-body" style="width: 100%; overflow: hidden">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeNewRecordModal()"></button>
-                        <div id="fullwidth_modal_newrecord"  style="height: 100%; width: 100%;">
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!--record modal start-->
-        <div class="modal fade" id="recordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%;">
-            <div class="modal-dialog  modal-fullscreen" style="width: 80%; height: 90%; margin: 1% auto auto;">
-                <div class="modal-content" style="width: 100%">
-                    <div class="modal-body" style="width: 100%; overflow: hidden">
-                        <div id="record-modal-content" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
+
+            <style>
+                #newRecordModal {
+                    z-index: 9999;
+                }
+            </style>
+
+            <script>
+                $('#newRecordModal').on('shown.bs.modal', function (e) {
+                    $('#newRecordModal').css('z-index', 9000)
+                    //alert('test')
+                });
+
+                $('#newRecordModal').on('hide.bs.modal', function (e) {
+                    $('.modal-backdrop').css('z-index', 1000)
+                });
+            </script>
+
+            <!-- new record modal-->
+            <div class="modal fade" id="newRecordModal" aria-hidden="true" style="width: 100%;">
+                <div class="modal-dialog modal-fullscreen" style="width: 50%; margin: 2% auto auto;height: 85%">
+                    <div class="modal-content" style="width: 100%">
+                        <div class="modal-body" style="width: 100%; overflow: hidden">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                    onclick="closeNewRecordModal()"></button>
+                            <div id="fullwidth_modal_newrecord" style="height: 100%; width: 100%;">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--record modal end-->
 
-        <!--
+            <!--record modal start-->
+            <div class="modal fade" id="recordModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true" style="width: 100%;">
+                <div class="modal-dialog  modal-fullscreen" style="width: 80%; height: 90%; margin: 1% auto auto;">
+                    <div class="modal-content" style="width: 100%">
+                        <div class="modal-body" style="width: 100%; overflow: hidden">
+                            <div id="record-modal-content" class="col-xl-4 col-md-4 mb-4"
+                                 style="height: 100%; width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--record modal end-->
+
+            <!--
         <div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -808,101 +813,103 @@
         </div>
 
          <!--record modal big start-->
-         <div id="modalBig" class="modal fade"  tabindex="-1" >
-            <div class="modal-dialog modal-fullscreen" style="width: 80%; height: 90%; margin: auto; margin-top: 1%">
-                <div class="modal-content" style="width: 100%">
-                    <div id="modalBig-body" class="modal-body" style="width: 100%;background-color: blue;">
-                        big
+            <div id="modalBig" class="modal fade" tabindex="-1">
+                <div class="modal-dialog modal-fullscreen"
+                     style="width: 80%; height: 90%; margin: auto; margin-top: 1%">
+                    <div class="modal-content" style="width: 100%">
+                        <div id="modalBig-body" class="modal-body" style="width: 100%;background-color: blue;">
+                            big
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--record modal big end-->
-        
-        <!--record modal medium start-->
-        <div id="modalMedium" class="modal fade"  tabindex="-1" >
-            <div class="modal-dialog modal-fullscreen" style="width: 50%; height: 90%; margin: auto; margin-top: 1%">
-                <div class="modal-content" style="width: 100%">
-                    <div id="modalMedium-body" class="modal-body" style="width: 100%;">
-                        
+            <!--record modal big end-->
+
+            <!--record modal medium start-->
+            <div id="modalMedium" class="modal fade" tabindex="-1">
+                <div class="modal-dialog modal-fullscreen"
+                     style="width: 50%; height: 90%; margin: auto; margin-top: 1%">
+                    <div class="modal-content" style="width: 100%">
+                        <div id="modalMedium-body" class="modal-body" style="width: 100%;">
+
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!--record modal medium end-->
+            <!--record modal medium end-->
 
-        <!--record modal small start-->
-        <div id="modalSmall" class="modal fade" tabindex="-1" >
-            <div class="modal-dialog modal-fullscreen" style="width: 20%; height: 90%; margin: auto; margin-top: 1%">
-                <div class="modal-content" style="width: 100%">
-                    <div id="modalSmall-body" class="modal-body" style="width: 100%;background-color:yellow">
-                        small
-                        <textarea></textarea>
+            <!--record modal small start-->
+            <div id="modalSmall" class="modal fade" tabindex="-1">
+                <div class="modal-dialog modal-fullscreen"
+                     style="width: 20%; height: 90%; margin: auto; margin-top: 1%">
+                    <div class="modal-content" style="width: 100%">
+                        <div id="modalSmall-body" class="modal-body" style="width: 100%;background-color:yellow">
+                            small
+                            <textarea></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!--record modal small end-->
+            -->
+            <script>
+                var imageDropArea = document.getElementById('image-drop-area');
+
+                // Handle drag and drop events
+                imageDropArea.addEventListener('dragenter', function (e) {
+                    e.preventDefault();
+                    imageDropArea.style.backgroundColor = '#eee';
+                });
+
+                imageDropArea.addEventListener('dragover', function (e) {
+                    e.preventDefault();
+                });
+
+                imageDropArea.addEventListener('dragleave', function (e) {
+                    imageDropArea.style.backgroundColor = '#fff';
+                });
+
+                imageDropArea.addEventListener('drop', function (e) {
+                    e.preventDefault();
+                    imageDropArea.style.backgroundColor = '#fff';
+
+                    // Handle dropped image
+                    var file = e.dataTransfer.files[0];
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var img = document.createElement('img');
+                        img.src = e.target.result;
+                        imageDropArea.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                });
+
+                // Handle paste event
+                imageDropArea.addEventListener('paste', function (e) {
+                    e.preventDefault();
+
+                    // Handle pasted image
+                    var file = e.clipboardData.items[0].getAsFile();
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var img = document.createElement('img');
+                        img.src = e.target.result;
+                        imageDropArea.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            </script>
+
+            <style>
+                #image-drop-area img {
+                    max-width: 100px;
+                    max-height: 100px;
+                    margin: 5px;
+                }
+            </style>
+
+
         </div>
-        <!--record modal small end-->
--->
-    <script>
-  var imageDropArea = document.getElementById('image-drop-area');
-
-  // Handle drag and drop events
-  imageDropArea.addEventListener('dragenter', function(e) {
-    e.preventDefault();
-    imageDropArea.style.backgroundColor = '#eee';
-  });
-
-  imageDropArea.addEventListener('dragover', function(e) {
-    e.preventDefault();
-  });
-
-  imageDropArea.addEventListener('dragleave', function(e) {
-    imageDropArea.style.backgroundColor = '#fff';
-  });
-
-  imageDropArea.addEventListener('drop', function(e) {
-    e.preventDefault();
-    imageDropArea.style.backgroundColor = '#fff';
-
-    // Handle dropped image
-    var file = e.dataTransfer.files[0];
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var img = document.createElement('img');
-      img.src = e.target.result;
-      imageDropArea.appendChild(img);
-    };
-    reader.readAsDataURL(file);
-  });
-
-  // Handle paste event
-  imageDropArea.addEventListener('paste', function(e) {
-    e.preventDefault();
-
-    // Handle pasted image
-    var file = e.clipboardData.items[0].getAsFile();
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var img = document.createElement('img');
-      img.src = e.target.result;
-      imageDropArea.appendChild(img);
-    };
-    reader.readAsDataURL(file);
-  });
-</script>
-
-<style>
-    #image-drop-area img {
-  max-width: 100px;
-  max-height: 100px;
-  margin: 5px;
-}
-</style>
-
-
-
-</div>
 
 
 

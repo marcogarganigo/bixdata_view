@@ -1,138 +1,135 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-$(document).ready(function () {
-  var serialized_data = [];
-  $("#content-container").load('http://127.0.0.1:8000/loading/');
-  $.ajax({
-    type: "POST",
-    crossDomain: true,
-    url: "{% url 'test_query' %}",
-    data: serialized_data,
-    success: function (response) {
-      // Clear the existing chart if it exists
-      if (window.myChart) {
-        window.myChart.destroy();
-      }
+    $(document).ready(function () {
+        var serialized_data = [];
+        $("#content-container").load('http://127.0.0.1:8000/loading/');
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'test_query' %}",
+            data: serialized_data,
+            success: function (response) {
+                // Clear the existing chart if it exists
+                if (window.myChart) {
+                    window.myChart.destroy();
+                }
 
-      $("#chart-1").html(response);
+                $("#chart-1").html(response);
 
-      // Create the chart
+                // Create the chart
 
-    },
-    error: function () {
-      $("#chart-1").html(response);
-    }
-  });
-});
+            },
+            error: function () {
+                $("#chart-1").html(response);
+            }
+        });
+    });
 
-$(document).ready(function () {
-  var serialized_data = [];
-  $("#content-container").load('http://127.0.0.1:8000/loading/');
-  $.ajax({
-    type: "POST",
-    crossDomain: true,
-    url: "{% url 'test_query2' %}",
-    data: serialized_data,
-    success: function (response) {
-      // Clear the existing chart if it exists
+    $(document).ready(function () {
+        var serialized_data = [];
+        $("#content-container").load('http://127.0.0.1:8000/loading/');
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'test_query2' %}",
+            data: serialized_data,
+            success: function (response) {
+                // Clear the existing chart if it exists
 
-      $("#chart-2").html(response);
+                $("#chart-2").html(response);
 
-      // Create the chart
+                // Create the chart
 
-    },
-    error: function () {
-      $("#chart-2").html(response);
-    }
-  });
-});
+            },
+            error: function () {
+                $("#chart-2").html(response);
+            }
+        });
+    });
 
-$(document).ready(function () {
-  var serialized_data = [];
-  $("#content-container").load('http://127.0.0.1:8000/loading/');
-  $.ajax({
-    type: "POST",
-    crossDomain: true,
-    url: "{% url 'get_chart3' %}",
-    data: serialized_data,
-    success: function (response) {
+    $(document).ready(function () {
+        var serialized_data = [];
+        $("#content-container").load('http://127.0.0.1:8000/loading/');
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'get_chart3' %}",
+            data: serialized_data,
+            success: function (response) {
 
-      $("#chart-3").html(response);
+                $("#chart-3").html(response);
 
-      // Create the chart
+                // Create the chart
 
-    },
-    error: function () {
-      $("#chart-3").html(response);
-    }
-  });
-});
+            },
+            error: function () {
+                $("#chart-3").html(response);
+            }
+        });
+    });
 
-$(document).ready(function () {
-  var serialized_data = [];
-  $("#content-container").load('http://127.0.0.1:8000/loading/');
-  $.ajax({
-    type: "POST",
-    crossDomain: true,
-    url: "{% url 'get_chart4' %}",
-    data: serialized_data,
-    success: function (response) {
+    $(document).ready(function () {
+        var serialized_data = [];
+        $("#content-container").load('http://127.0.0.1:8000/loading/');
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'get_chart4' %}",
+            data: serialized_data,
+            success: function (response) {
 
-      $("#chart-4").html(response);
+                $("#chart-4").html(response);
 
-      // Create the chart
+                // Create the chart
 
-    },
-    error: function () {
-      $("#chart-4").html(response);
-    }
-  });
-});
-
-
+            },
+            error: function () {
+                $("#chart-4").html(response);
+            }
+        });
+    });
 
 
 </script>
-
 
 
 <div id="content_dashboard" style="height: 100%;width: 100%; margin-top: 3%; overflow: scroll">
 
 
     <div class="card no-padding" style="width: 100%;">
-  <div class="card-body">
-    <div id="chart-1" style="width: 100%; height: 100%">
+        <div class="card-body">
+            <div id="chart-1" style="width: 100%; height: 100%">
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
 
     <div class="card no-padding" style="width: 100%">
-  <div class="card-body">
-    <div id="chart-2" style="width: 100%; height: 100%">
+        <div class="card-body">
+            <div id="chart-2" style="width: 100%; height: 100%">
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
     <div class="card no-padding" style="width: 100%">
-  <div class="card-body">
-    <div id="chart-3" style="width: 100%; height: 100%">
+        <div class="card-body">
+            <div id="chart-3" style="width: 100%; height: 100%">
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
     <div class="card no-padding" style="width: 100%">
-  <div class="card-body">
-    <div id="chart-4" style="width: 100%; height: 100%">
+        <div class="card-body">
+            <div id="chart-4" style="width: 100%; height: 100%">
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
 </div>
 <style>
     .no-padding .card-body {
-  padding: 0;
-}
+        padding: 0;
+    }
 
-}
+    }
 </style>

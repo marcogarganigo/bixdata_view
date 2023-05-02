@@ -1105,6 +1105,7 @@ def update_profile_pic(request):
 
     return redirect('index')
 
+
 @login_required(login_url='/login/')
 def admin_page(request):
     page = request.POST.get('page')
@@ -1119,7 +1120,7 @@ def admin_page(request):
     with connection.cursor() as cursor2:
         cursor2.execute(
             "SELECT firstname, lastname FROM sys_user where id in (SELECT userid FROM sys_user_dashboard)"
-                        )
+        )
         rows2 = dictfetchall(cursor2)
 
         names = [row['firstname'] + ' ' + row['lastname'] for row in rows2]
@@ -1127,7 +1128,7 @@ def admin_page(request):
     with connection.cursor() as cursor3:
         cursor3.execute(
             "SELECT * FROM v_sys_dashboard_block"
-                        )
+        )
         rows3 = dictfetchall(cursor3)
 
         chart_names = [row['name'] for row in rows3]
@@ -1136,18 +1137,14 @@ def admin_page(request):
     with connection.cursor() as cursor4:
         cursor4.execute(
             "SELECT * FROM sys_view"
-                        )
+        )
         rows4 = dictfetchall(cursor4)
-
-
 
     with connection.cursor() as cursor5:
         cursor5.execute(
             "SELECT * FROM sys_report"
         )
         rows5 = dictfetchall(cursor5)
-
-
 
     context = {
         'userids': userids,
@@ -1160,9 +1157,8 @@ def admin_page(request):
 
     }
 
-
-
     return render(request, f'admin_settings/{page}.html', {'context': context})
+
 
 @login_required(login_url='/login/')
 def save_chart_settings(request):
@@ -1177,10 +1173,8 @@ def save_chart_settings(request):
                 user_id = userids[i]
                 dashboard_id = dashboardids[i]
 
-
                 cursor.execute('UPDATE sys_user_dashboard SET dashboardid = %s WHERE userid = %s',
-                                [dashboard_id, user_id])
-
+                               [dashboard_id, user_id])
 
         with connection.cursor() as cursor:
             for i in range(len(names)):
@@ -1189,7 +1183,6 @@ def save_chart_settings(request):
 
                 cursor.execute('UPDATE v_sys_dashboard_block SET dashboardid = %s WHERE name = %s',
                                [dashboard_id, name])
-
 
     return redirect('index')
 
@@ -1203,10 +1196,10 @@ def new_chart_block(request):
         report_id = request.POST.get('report_id')
 
         with connection.cursor() as cursor:
-            cursor.execute('INSERT INTO sys_dashboard_block (dashboardid, name, userid, viewid, reportid) VALUES (%s, %s, %s, %s, %s)',
-                           [dashboard_id, name, 1, view_id, report_id])
+            cursor.execute(
+                'INSERT INTO sys_dashboard_block (dashboardid, name, userid, viewid, reportid) VALUES (%s, %s, %s, %s, %s)',
+                [dashboard_id, name, 1, view_id, report_id])
     return redirect('index')
-
 
 
 @login_required(login_url='/login/')
@@ -1217,9 +1210,6 @@ def get_record_path(request, tableid, recordid):
     print(recordid)
     
     return get_render_index(request,'test')
-
-
-
 
 
 @login_required(login_url='/login/')

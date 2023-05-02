@@ -1,19 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" data-layout-mode="detached" data-topbar-color="dark" data-sidenav-color="light"
-    data-sidenav-user="true">
+      data-sidenav-user="true">
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>BixData</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
-    <meta content="Coderthemes" name="author" />
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description"/>
+    <meta content="Coderthemes" name="author"/>
     <link href="{% static 'css/base_mobile.css' %}" rel="stylesheet">
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
-
 
 
     <!-- Vector Map css -->
@@ -23,12 +22,12 @@
     <script src="{% static 'js/hyper-config.js' %}"></script>
 
     <!-- Icons css -->
-    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css"/>
 
     <!-- App css -->
-    <link href="{% static 'css/app-modern.min.css' %}" rel="stylesheet" type="text/css" id="app-style" />
+    <link href="{% static 'css/app-modern.min.css' %}" rel="stylesheet" type="text/css" id="app-style"/>
 
-        <!--JQuery-->
+    <!--JQuery-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
@@ -36,591 +35,581 @@
 
 <style>
     html[data-topbar-color=dark] .navbar-custom {
-    /* background-color: #465870; */
-    background-image: linear-gradient(90deg, #074048 100%, #ede4e4 200%) !important;
-}
+        /* background-color: #465870; */
+        background-image: linear-gradient(90deg, #074048 100%, #ede4e4 200%) !important;
+    }
 
     html[data-topbar-color=dark] .navbar-custom .nav-user {
-    background-image: linear-gradient(90deg, #074048 100%, #ede4e4 200%) !important;
-    border: 0px !important;
-}
+        background-image: linear-gradient(90deg, #074048 100%, #ede4e4 200%) !important;
+        border: 0px !important;
+    }
 </style>
 
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
-        const min_width = 1280;
-        const fhd_width = 1920;
-
-
+    const min_width = 1280;
+    const fhd_width = 1920;
 
 
+    $("#content_container").ready(function () {
+        getDashboard();
+    });
 
-
-        $("#content_container").ready(function () {
-            getDashboard();
+    function getContentRecords(tableid) {
+        var serialized_data = [];
+        $("#content-container").load('http://127.0.0.1:8000/loading/');
+        serialized_data.push({name: 'tableid', value: tableid});
+        serialized_data.push({name: 'searchTerm', value: ''});
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'content_records' %}",
+            data: serialized_data,
+            success: function (response) {
+                $("#content_container").html(response);
+                $('[data-toggle="tooltip"]').tooltip();
+            },
+            error: function () {
+                $("#content_container").html(response);
+            }
         });
+    }
 
-        function getContentRecords(tableid) {
-            var serialized_data = [];
-            $("#content-container").load('http://127.0.0.1:8000/loading/');
-            serialized_data.push({ name: 'tableid', value: tableid });
-            serialized_data.push({ name: 'searchTerm', value: '' });
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'content_records' %}",
-                data: serialized_data,
-                success: function (response) {
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
-                error: function () {
-                    $("#content_container").html(response);
-                }
-            });
-        }
+    function getRenderChartsView() {
+        var serialized_data = [];
 
-        function getRenderChartsView() {
-            var serialized_data = [];
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'charts_view' %}",
+            data: serialized_data,
+            success: function (response) {
+                $("#content-container").load('http://127.0.0.1:8000/loading/');
+                $("#content_container").html(response);
+                $('[data-toggle="tooltip"]').tooltip();
+            },
+            error: function () {
+                $("#content-container").load('http://127.0.0.1:8000/loading/');
+                $("#content_container").html(response);
+            }
+        });
+    }
 
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'charts_view' %}",
-                data: serialized_data,
-                success: function (response) {
-                    $("#content-container").load('http://127.0.0.1:8000/loading/');
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
-                error: function () {
-                    $("#content-container").load('http://127.0.0.1:8000/loading/');
-                    $("#content_container") .html(response);
-                }
-            });
-        }
-
-        function getDashboard()
-        {
-            var serialized_data = [];
-            $("#content-container").load('http://127.0.0.1:8000/loading/');
-            $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'dashboard' %}",
-                data: serialized_data,
-                success: function (response) {
-                    $("#content_container").html(response);
-                    $('[data-toggle="tooltip"]').tooltip();
-                },
-                error: function () {
-                    $("#content_container").html(response);
-                }
-            });
-        }
+    function getDashboard() {
+        var serialized_data = [];
+        $("#content-container").load('http://127.0.0.1:8000/loading/');
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'dashboard' %}",
+            data: serialized_data,
+            success: function (response) {
+                $("#content_container").html(response);
+                $('[data-toggle="tooltip"]').tooltip();
+            },
+            error: function () {
+                $("#content_container").html(response);
+            }
+        });
+    }
 
 
+</script>
+<!-- Begin page -->
+<div class="wrapper">
 
 
-    </script>
-    <!-- Begin page -->
-    <div class="wrapper">
+    <!-- ========== Topbar Start ========== -->
+    <div class="navbar-custom topnav-navbar">
+        <div class="container-fluid detached-nav">
 
-
-        <!-- ========== Topbar Start ========== -->
-        <div class="navbar-custom topnav-navbar">
-            <div class="container-fluid detached-nav">
-
-                <!-- Topbar Logo -->
-                <div class="logo-topbar">
-                    <!-- Logo light -->
-                    <a href="{{ index2.html }}" class="logo-light">
+            <!-- Topbar Logo -->
+            <div class="logo-topbar">
+                <!-- Logo light -->
+                <a href="{{ index2.html }}" class="logo-light">
                         <span class="logo-lg">
                             <img src="{% static 'images/logos/logo_bix_pulito.jpg' %}" alt="logo" height="22">
                         </span>
-                        <span class="logo-sm">
+                    <span class="logo-sm">
                             <img src="{% static 'images/logos/logo_bix_pulito.jpg' %}" alt="small logo" height="22">
                         </span>
-                    </a>
+                </a>
 
 
+            </div>
+
+            <!-- Sidebar Menu Toggle Button -->
+            <button class="button-toggle-menu">
+                <i class="mdi mdi-menu"></i>
+            </button>
+
+            <!-- Horizontal Menu Toggle Button -->
+            <button class="navbar-toggle" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+                <div class="lines">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
+            </button>
 
-                <!-- Sidebar Menu Toggle Button -->
-                <button class="button-toggle-menu">
-                    <i class="mdi mdi-menu"></i>
-                </button>
-
-                <!-- Horizontal Menu Toggle Button -->
-                <button class="navbar-toggle" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
-                    <div class="lines">
-                        <span></span>
-                        <span></span>
-                        <span></span>
+            <ul class="list-unstyled topbar-menu float-end mb-0">
+                <li class="dropdown notification-list d-lg-none">
+                    <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="false" aria-expanded="false">
+                        <i class="ri-search-line noti-icon"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
+                        <form class="p-3">
+                            <input type="search" class="form-control" placeholder="Search ..."
+                                   aria-label="Recipient's username">
+                        </form>
                     </div>
-                </button>
+                </li>
 
-                    <ul class="list-unstyled topbar-menu float-end mb-0">
-                    <li class="dropdown notification-list d-lg-none">
-                        <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"
-                            aria-haspopup="false" aria-expanded="false">
-                            <i class="ri-search-line noti-icon"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
-                            <form class="p-3">
-                                <input type="search" class="form-control" placeholder="Search ..."
-                                    aria-label="Recipient's username">
-                            </form>
+                <li class="dropdown notification-list">
+                    <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="false" aria-expanded="false">
+                        <i class="ri-notification-3-line noti-icon"></i>
+                        <span class="noti-icon-badge"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg py-0">
+                        <div class="p-2 border-top-0 border-start-0 border-end-0 border-dashed border">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="m-0 font-16 fw-semibold"> Notification</h6>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="javascript: void(0);" class="text-dark text-decoration-underline">
+                                        <small>Clear All</small>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </li>
 
-                    <li class="dropdown notification-list">
-                        <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"
-                            aria-haspopup="false" aria-expanded="false">
-                            <i class="ri-notification-3-line noti-icon"></i>
-                            <span class="noti-icon-badge"></span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg py-0">
-                            <div class="p-2 border-top-0 border-start-0 border-end-0 border-dashed border">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <h6 class="m-0 font-16 fw-semibold"> Notification</h6>
-                                    </div>
-                                    <div class="col-auto">
-                                        <a href="javascript: void(0);" class="text-dark text-decoration-underline">
-                                            <small>Clear All</small>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="px-3" style="max-height: 300px;" data-simplebar>
 
-                            <div class="px-3" style="max-height: 300px;" data-simplebar>
+                            <h5 class="text-muted font-13 fw-normal mt-2">Today</h5>
+                            <!-- item-->
 
-                                <h5 class="text-muted font-13 fw-normal mt-2">Today</h5>
-                                <!-- item-->
-
-                                <a href="javascript:void(0);"
-                                    class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-2">
-                                    <div class="card-body">
-                                        <span class="float-end noti-close-btn text-muted"><i
-                                                class="mdi mdi-close"></i></span>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <div class="notify-icon bg-primary">
-                                                    <i class="mdi mdi-comment-account-outline"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 text-truncate ms-2">
-                                                <h5 class="noti-item-title fw-semibold font-14">Datacorp <small
-                                                        class="fw-normal text-muted ms-1">1 min ago</small></h5>
-                                                <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on
-                                                    Admin</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);"
-                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                    <div class="card-body">
-                                        <span class="float-end noti-close-btn text-muted"><i
-                                                class="mdi mdi-close"></i></span>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <div class="notify-icon bg-info">
-                                                    <i class="mdi mdi-account-plus"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 text-truncate ms-2">
-                                                <h5 class="noti-item-title fw-semibold font-14">Admin <small
-                                                        class="fw-normal text-muted ms-1">1 hours ago</small></h5>
-                                                <small class="noti-item-subtitle text-muted">New user registered</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <h5 class="text-muted font-13 fw-normal mt-0">Yesterday</h5>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);"
-                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                    <div class="card-body">
-                                        <span class="float-end noti-close-btn text-muted"><i
-                                                class="mdi mdi-close"></i></span>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <div class="notify-icon">
-                                                    <img src="assets/images/users/avatar-2.jpg"
-                                                        class="img-fluid rounded-circle" alt="" />
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 text-truncate ms-2">
-                                                <h5 class="noti-item-title fw-semibold font-14">Cristina Pride <small
-                                                        class="fw-normal text-muted ms-1">1 day ago</small></h5>
-                                                <small class="noti-item-subtitle text-muted">Hi, How are you? What about
-                                                    our next meeting</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <h5 class="text-muted font-13 fw-normal mt-0">30 Dec 2021</h5>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);"
-                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                    <div class="card-body">
-                                        <span class="float-end noti-close-btn text-muted"><i
-                                                class="mdi mdi-close"></i></span>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <div class="notify-icon bg-primary">
-                                                    <i class="mdi mdi-comment-account-outline"></i>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 text-truncate ms-2">
-                                                <h5 class="noti-item-title fw-semibold font-14">Datacorp</h5>
-                                                <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on
-                                                    Admin</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <!-- item-->
-                                <a href="javascript:void(0);"
-                                    class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                    <div class="card-body">
-                                        <span class="float-end noti-close-btn text-muted"><i
-                                                class="mdi mdi-close"></i></span>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <div class="notify-icon">
-                                                    <img src="assets/images/users/avatar-4.jpg"
-                                                        class="img-fluid rounded-circle" alt="" />
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1 text-truncate ms-2">
-                                                <h5 class="noti-item-title fw-semibold font-14">Karen Robinson</h5>
-                                                <small class="noti-item-subtitle text-muted">Wow ! this admin looks good
-                                                    and awesome design</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-
-                                <div class="text-center">
-                                    <i class="mdi mdi-dots-circle mdi-spin text-muted h3 mt-0"></i>
-                                </div>
-                            </div>
-
-                            <!-- All-->
                             <a href="javascript:void(0);"
-                                class="dropdown-item text-center text-primary notify-item border-top border-light py-2">
-                                View All
+                               class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-2">
+                                <div class="card-body">
+                                        <span class="float-end noti-close-btn text-muted"><i
+                                                class="mdi mdi-close"></i></span>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0">
+                                            <div class="notify-icon bg-primary">
+                                                <i class="mdi mdi-comment-account-outline"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 text-truncate ms-2">
+                                            <h5 class="noti-item-title fw-semibold font-14">Datacorp <small
+                                                    class="fw-normal text-muted ms-1">1 min ago</small></h5>
+                                            <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on
+                                                Admin</small>
+                                        </div>
+                                    </div>
+                                </div>
                             </a>
 
-                        </div>
-                    </li>
-
-                    <li class="dropdown notification-list d-none d-sm-inline-block">
-                        <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"
-                            aria-haspopup="false" aria-expanded="false">
-                            <i class="ri-apps-2-line noti-icon"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg p-0">
-
-                            <div class="p-2">
-                                <div class="row g-0">
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/slack.png" alt="slack">
-                                            <span>Slack</span>
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/github.png" alt="Github">
-                                            <span>GitHub</span>
-                                        </a>
-                                    </div>
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/dribbble.png" alt="dribbble">
-                                            <span>Dribbble</span>
-                                        </a>
+                            <!-- item-->
+                            <a href="javascript:void(0);"
+                               class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                <div class="card-body">
+                                        <span class="float-end noti-close-btn text-muted"><i
+                                                class="mdi mdi-close"></i></span>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0">
+                                            <div class="notify-icon bg-info">
+                                                <i class="mdi mdi-account-plus"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 text-truncate ms-2">
+                                            <h5 class="noti-item-title fw-semibold font-14">Admin <small
+                                                    class="fw-normal text-muted ms-1">1 hours ago</small></h5>
+                                            <small class="noti-item-subtitle text-muted">New user registered</small>
+                                        </div>
                                     </div>
                                 </div>
+                            </a>
 
-                                <div class="row g-0">
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/bitbucket.png" alt="bitbucket">
-                                            <span>Bitbucket</span>
-                                        </a>
+                            <h5 class="text-muted font-13 fw-normal mt-0">Yesterday</h5>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);"
+                               class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                <div class="card-body">
+                                        <span class="float-end noti-close-btn text-muted"><i
+                                                class="mdi mdi-close"></i></span>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0">
+                                            <div class="notify-icon">
+                                                <img src="assets/images/users/avatar-2.jpg"
+                                                     class="img-fluid rounded-circle" alt=""/>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 text-truncate ms-2">
+                                            <h5 class="noti-item-title fw-semibold font-14">Cristina Pride <small
+                                                    class="fw-normal text-muted ms-1">1 day ago</small></h5>
+                                            <small class="noti-item-subtitle text-muted">Hi, How are you? What about
+                                                our next meeting</small>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/dropbox.png" alt="dropbox">
-                                            <span>Dropbox</span>
-                                        </a>
+                                </div>
+                            </a>
+
+                            <h5 class="text-muted font-13 fw-normal mt-0">30 Dec 2021</h5>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);"
+                               class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                <div class="card-body">
+                                        <span class="float-end noti-close-btn text-muted"><i
+                                                class="mdi mdi-close"></i></span>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0">
+                                            <div class="notify-icon bg-primary">
+                                                <i class="mdi mdi-comment-account-outline"></i>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 text-truncate ms-2">
+                                            <h5 class="noti-item-title fw-semibold font-14">Datacorp</h5>
+                                            <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on
+                                                Admin</small>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        <a class="dropdown-icon-item" href="#">
-                                            <img src="assets/images/brands/g-suite.png" alt="G Suite">
-                                            <span>G Suite</span>
-                                        </a>
+                                </div>
+                            </a>
+
+                            <!-- item-->
+                            <a href="javascript:void(0);"
+                               class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
+                                <div class="card-body">
+                                        <span class="float-end noti-close-btn text-muted"><i
+                                                class="mdi mdi-close"></i></span>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0">
+                                            <div class="notify-icon">
+                                                <img src="assets/images/users/avatar-4.jpg"
+                                                     class="img-fluid rounded-circle" alt=""/>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1 text-truncate ms-2">
+                                            <h5 class="noti-item-title fw-semibold font-14">Karen Robinson</h5>
+                                            <small class="noti-item-subtitle text-muted">Wow ! this admin looks good
+                                                and awesome design</small>
+                                        </div>
                                     </div>
-                                </div> <!-- end row-->
+                                </div>
+                            </a>
+
+                            <div class="text-center">
+                                <i class="mdi mdi-dots-circle mdi-spin text-muted h3 mt-0"></i>
+                            </div>
+                        </div>
+
+                        <!-- All-->
+                        <a href="javascript:void(0);"
+                           class="dropdown-item text-center text-primary notify-item border-top border-light py-2">
+                            View All
+                        </a>
+
+                    </div>
+                </li>
+
+                <li class="dropdown notification-list d-none d-sm-inline-block">
+                    <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="false" aria-expanded="false">
+                        <i class="ri-apps-2-line noti-icon"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg p-0">
+
+                        <div class="p-2">
+                            <div class="row g-0">
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="assets/images/brands/slack.png" alt="slack">
+                                        <span>Slack</span>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="assets/images/brands/github.png" alt="Github">
+                                        <span>GitHub</span>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="assets/images/brands/dribbble.png" alt="dribbble">
+                                        <span>Dribbble</span>
+                                    </a>
+                                </div>
                             </div>
 
+                            <div class="row g-0">
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="assets/images/brands/bitbucket.png" alt="bitbucket">
+                                        <span>Bitbucket</span>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="assets/images/brands/dropbox.png" alt="dropbox">
+                                        <span>Dropbox</span>
+                                    </a>
+                                </div>
+                                <div class="col">
+                                    <a class="dropdown-icon-item" href="#">
+                                        <img src="assets/images/brands/g-suite.png" alt="G Suite">
+                                        <span>G Suite</span>
+                                    </a>
+                                </div>
+                            </div> <!-- end row-->
                         </div>
-                    </li>
 
-                    <li class="notification-list d-none d-sm-inline-block">
-                        <a class="nav-link" data-bs-toggle="offcanvas" href="#theme-settings-offcanvas">
-                            <i class="ri-settings-3-line noti-icon"></i>
-                        </a>
-                    </li>
+                    </div>
+                </li>
 
-                    <li class="notification-list d-none d-sm-inline-block">
-                        <a class="nav-link" href="javascript:void(0)" id="light-dark-mode">
-                            <i class="ri-moon-line noti-icon"></i>
-                        </a>
-                    </li>
+                <li class="notification-list d-none d-sm-inline-block">
+                    <a class="nav-link" data-bs-toggle="offcanvas" href="#theme-settings-offcanvas">
+                        <i class="ri-settings-3-line noti-icon"></i>
+                    </a>
+                </li>
 
-                    <li class="notification-list d-none d-md-inline-block">
-                        <a class="nav-link" href="" data-toggle="fullscreen">
-                            <i class="ri-fullscreen-line noti-icon"></i>
-                        </a>
-                    </li>
+                <li class="notification-list d-none d-sm-inline-block">
+                    <a class="nav-link" href="javascript:void(0)" id="light-dark-mode">
+                        <i class="ri-moon-line noti-icon"></i>
+                    </a>
+                </li>
 
-                    <li class="dropdown notification-list">
-                        <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown" href="#"
-                            role="button" aria-haspopup="false" aria-expanded="false">
+                <li class="notification-list d-none d-md-inline-block">
+                    <a class="nav-link" href="" data-toggle="fullscreen">
+                        <i class="ri-fullscreen-line noti-icon"></i>
+                    </a>
+                </li>
+
+                <li class="dropdown notification-list">
+                    <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown" href="#"
+                       role="button" aria-haspopup="false" aria-expanded="false">
                             <span class="account-user-avatar">
-                                <img src="{% static 'images/users/' %}{{ username }}.png" alt="user-image" class="rounded-circle">
+                                <img src="{% static 'images/users/' %}{{ username }}.png" alt="user-image"
+                                     class="rounded-circle">
                             </span>
-                            <span>
+                        <span>
                                 <span class="account-user-name">{{ username }}</span>
                                 <span class="account-position">Founder</span>
                             </span>
-                        </a>
-                        <div
+                    </a>
+                    <div
                             class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
-                            <!-- item-->
-                            <div class=" dropdown-header noti-title">
-                                <h6 class="text-overflow m-0">Welcome !</h6>
+                        <!-- item-->
+                        <div class=" dropdown-header noti-title">
+                            <h6 class="text-overflow m-0">Welcome !</h6>
+                        </div>
+
+                        <!-- item-->
+                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            <i class="mdi mdi-account-circle me-1"></i>
+                            <span>My Account</span>
+                        </a>
+
+                        <!-- item-->
+                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            <i class="mdi mdi-account-edit me-1"></i>
+                            <span>Settings</span>
+                        </a>
+
+                        <!-- item-->
+                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            <i class="mdi mdi-lifebuoy me-1"></i>
+                            <span>Support</span>
+                        </a>
+
+                        <!-- item-->
+                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            <i class="mdi mdi-lock-outline me-1"></i>
+                            <span>Lock Screen</span>
+                        </a>
+
+                        <!-- item-->
+                        <a href="{% url 'logout' %}" class="dropdown-item notify-item">
+                            <i class="mdi mdi-logout me-1"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- Topbar Search Form -->
+            <div class="app-search dropdown">
+                <form>
+                    <div class="input-group">
+                        <input type="search" class="form-control dropdown-toggle" placeholder="Search..."
+                               id="top-search">
+                        <span class="mdi mdi-magnify search-icon"></span>
+                        <button class="input-group-text btn btn-primary" type="submit">Search</button>
+                    </div>
+                </form>
+
+                <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
+                    <!-- item-->
+                    <div class="dropdown-header noti-title">
+                        <h5 class="text-overflow mb-2">Found <span class="text-danger">17</span> results</h5>
+                    </div>
+
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <i class="uil-notes font-16 me-1"></i>
+                        <span>Analytics Report</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <i class="uil-life-ring font-16 me-1"></i>
+                        <span>How can I help you?</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <i class="uil-cog font-16 me-1"></i>
+                        <span>User profile settings</span>
+                    </a>
+
+                    <!-- item-->
+                    <div class="dropdown-header noti-title">
+                        <h6 class="text-overflow mb-2 text-uppercase">Users</h6>
+                    </div>
+
+                    <div class="notification-list">
+                        <!-- item-->
+                        <a href="javascript:void(0);" class="dropdown-item notify-item">
+                            <div class="d-flex">
+                                <img class="d-flex me-2 rounded-circle" src="assets/images/users/avatar-2.jpg"
+                                     alt="Generic placeholder image" height="32">
+                                <div class="w-100">
+                                    <h5 class="m-0 font-14">Erwin Brown</h5>
+                                    <span class="font-12 mb-0">UI Designer</span>
+                                </div>
                             </div>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="mdi mdi-account-circle me-1"></i>
-                                <span>My Account</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="mdi mdi-account-edit me-1"></i>
-                                <span>Settings</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="mdi mdi-lifebuoy me-1"></i>
-                                <span>Support</span>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <i class="mdi mdi-lock-outline me-1"></i>
-                                <span>Lock Screen</span>
-                            </a>
-
-                            <!-- item-->
-                              <a href="{% url 'logout' %}" class="dropdown-item notify-item">
-                                <i class="mdi mdi-logout me-1"></i>
-                                <span>Logout</span>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-
-                <!-- Topbar Search Form -->
-                <div class="app-search dropdown">
-                    <form>
-                        <div class="input-group">
-                            <input type="search" class="form-control dropdown-toggle" placeholder="Search..."
-                                id="top-search">
-                            <span class="mdi mdi-magnify search-icon"></span>
-                            <button class="input-group-text btn btn-primary" type="submit">Search</button>
-                        </div>
-                    </form>
-
-                    <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
-                        <!-- item-->
-                        <div class="dropdown-header noti-title">
-                            <h5 class="text-overflow mb-2">Found <span class="text-danger">17</span> results</h5>
-                        </div>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <i class="uil-notes font-16 me-1"></i>
-                            <span>Analytics Report</span>
                         </a>
 
                         <!-- item-->
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <i class="uil-life-ring font-16 me-1"></i>
-                            <span>How can I help you?</span>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <i class="uil-cog font-16 me-1"></i>
-                            <span>User profile settings</span>
-                        </a>
-
-                        <!-- item-->
-                        <div class="dropdown-header noti-title">
-                            <h6 class="text-overflow mb-2 text-uppercase">Users</h6>
-                        </div>
-
-                        <div class="notification-list">
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <div class="d-flex">
-                                    <img class="d-flex me-2 rounded-circle" src="assets/images/users/avatar-2.jpg"
-                                        alt="Generic placeholder image" height="32">
-                                    <div class="w-100">
-                                        <h5 class="m-0 font-14">Erwin Brown</h5>
-                                        <span class="font-12 mb-0">UI Designer</span>
-                                    </div>
+                            <div class="d-flex">
+                                <img class="d-flex me-2 rounded-circle" src="assets/images/users/avatar-5.jpg"
+                                     alt="Generic placeholder image" height="32">
+                                <div class="w-100">
+                                    <h5 class="m-0 font-14">Jacob Deo</h5>
+                                    <span class="font-12 mb-0">Developer</span>
                                 </div>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                <div class="d-flex">
-                                    <img class="d-flex me-2 rounded-circle" src="assets/images/users/avatar-5.jpg"
-                                        alt="Generic placeholder image" height="32">
-                                    <div class="w-100">
-                                        <h5 class="m-0 font-14">Jacob Deo</h5>
-                                        <span class="font-12 mb-0">Developer</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- ========== Topbar End ========== -->
+    </div>
+    <!-- ========== Topbar End ========== -->
 
-        <!-- ========== Left Sidebar Start ========== -->
-        <div class="leftside-menu">
+    <!-- ========== Left Sidebar Start ========== -->
+    <div class="leftside-menu">
 
-            <!-- Logo Light -->
+        <!-- Logo Light -->
 
-            <!-- Sidebar Hover Menu Toggle Button -->
-            <button type="button" class="bg-transparent button-sm-hover p-0" data-bs-toggle="tooltip"
+        <!-- Sidebar Hover Menu Toggle Button -->
+        <button type="button" class="bg-transparent button-sm-hover p-0" data-bs-toggle="tooltip"
                 data-bs-placement="right" title="Show Full Sidebar">
-                <i class="ri-checkbox-blank-circle-line align-middle"></i>
-            </button>
+            <i class="ri-checkbox-blank-circle-line align-middle"></i>
+        </button>
 
-            <!-- Sidebar -left -->
-            <div class="h-100" id="leftside-menu-container" data-simplebar>
-                <!-- Leftbar User -->
-                <div class="leftbar-user">
-                    <a href="pages-profile.html">
-                        <img src="{% static 'images/users/' %}{{ username }}.png" alt="user-image" height="42" class="rounded-circle shadow-sm">
-                        <span class="leftbar-user-name">{{ username }}</span>
+        <!-- Sidebar -left -->
+        <div class="h-100" id="leftside-menu-container" data-simplebar>
+            <!-- Leftbar User -->
+            <div class="leftbar-user">
+                <a href="pages-profile.html">
+                    <img src="{% static 'images/users/' %}{{ username }}.png" alt="user-image" height="42"
+                         class="rounded-circle shadow-sm">
+                    <span class="leftbar-user-name">{{ username }}</span>
+                </a>
+            </div>
+
+            <!--- Sidemenu -->
+            <ul class="side-nav">
+
+                <li class="side-nav-title side-nav-item">Navigation</li>
+
+                <li class="side-nav-item">
+                    <a data-bs-toggle="collapse" onclick="getDashboard()" aria-expanded="false"
+                       aria-controls="sidebarDashboards" class="side-nav-link">
+                        <i class="uil-home-alt"></i>
+                        <span> Dashboards </span>
                     </a>
-                </div>
+                    <div class="collapse" id="sidebarDashboards">
+                        <ul class="side-nav-second-level">
+                            <li>
+                                <a onclick="getDashboard()">Analytics</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
 
-                <!--- Sidemenu -->
-                <ul class="side-nav">
-
-                    <li class="side-nav-title side-nav-item">Navigation</li>
-
-                     <li class="side-nav-item">
-                            <a data-bs-toggle="collapse" onclick="getDashboard()" aria-expanded="false"
-                                aria-controls="sidebarDashboards" class="side-nav-link">
-                                <i class="uil-home-alt"></i>
-                                <span> Dashboards </span>
-                            </a>
-                            <div class="collapse" id="sidebarDashboards">
-                                <ul class="side-nav-second-level">
-                                    <li>
-                                        <a onclick="getDashboard()">Analytics</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-
-                    <li class="side-nav-title side-nav-item">Tables</li>
-                        {% for key, menu_list_value in menu_list.items %}
-                        <li class="side-nav-item">
-                          <a data-bs-toggle="collapse" href="#sidebar{{key}}" aria-expanded="false" aria-controls="sidebar{{key}}" class="side-nav-link">
+                <li class="side-nav-title side-nav-item">Tables</li>
+                {% for key, menu_list_value in menu_list.items %}
+                    <li class="side-nav-item">
+                        <a data-bs-toggle="collapse" href="#sidebar{{ key }}" aria-expanded="false"
+                           aria-controls="sidebar{{ key }}" class="side-nav-link">
                             <i class="uil-briefcase"></i>
-                            <span>{{key}}</span>
+                            <span>{{ key }}</span>
                             <span class="menu-arrow"></span>
-                          </a>
-                          <div class="collapse" id="sidebar{{key}}">
+                        </a>
+                        <div class="collapse" id="sidebar{{ key }}">
                             <ul class="side-nav-second-level">
-                              {% for value in menu_list_value %}
-                              <li onclick="getContentRecords('{{value.id}}')">
-                                <a href="#" class="side-nav-txt" onclick="document.documentElement.style.color = 'red'">{{value.id}}</a>
-                              </li>
-                              {% endfor %}
-                                </ul>
-                            </div>
+                                {% for value in menu_list_value %}
+                                    <li onclick="getContentRecords('{{ value.id }}')">
+                                        <a href="#" class="side-nav-txt"
+                                           onclick="document.documentElement.style.color = 'red'">{{ value.id }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
 
-                        </li>
-                        {% endfor %}
-
-
-
+                    </li>
+                {% endfor %}
 
 
+            </ul>
+            <!--- End Sidemenu -->
+
+            <!-- Help Box -->
+
+            <!-- end Help Box -->
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!-- ========== Left Sidebar End ========== -->
 
 
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+
+        <!-- Start Content-->
+        <div class="row" style="height: 100%;">
+            <div id="content_container" style="height: 100%">
 
 
-                </ul>
-                <!--- End Sidemenu -->
-
-                <!-- Help Box -->
-
-                <!-- end Help Box -->
-
-                <div class="clearfix"></div>
             </div>
         </div>
-        <!-- ========== Left Sidebar End ========== -->
+    </div>
 
-
-
-        <!-- ============================================================== -->
-        <!-- Start Page Content here -->
-        <!-- ============================================================== -->
-
-        <div class="content-page">
-
-            <!-- Start Content-->
-            <div class="row" style="height: 100%;">
-                <div id="content_container" style="height: 100%">
-
-
-                </div>
-            </div>
-        </div>
-
-        <!--record modal-->
-        <div class="modal fade" id="recordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 100%;">
+    <!--record modal-->
+    <div class="modal fade" id="recordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+         style="width: 100%;">
         <div class="modal-dialog modal-sm" style="width: 100%;">
             <div class="modal-content" style="width: 100%">
                 <div class="modal-body" style="width: 100%">
@@ -629,45 +618,40 @@
                 </div>
             </div>
         </div>
-                <!-- container -->
-
-            </div>
-            <!-- content -->
-
-
-        </div>
-
-        <!-- ============================================================== -->
-        <!-- End Page content -->
-        <!-- ============================================================== -->
+        <!-- container -->
 
     </div>
-    <!-- END wrapper -->
-
-    <!-- Theme Settings -->
+    <!-- content -->
 
 
+</div>
 
-    <!-- Vendor js -->
-    <script src="{% static 'js/vendor.min.js' %}"></script>
+<!-- ============================================================== -->
+<!-- End Page content -->
+<!-- ============================================================== -->
+
+</div>
+<!-- END wrapper -->
+
+<!-- Theme Settings -->
 
 
+<!-- Vendor js -->
+<script src="{% static 'js/vendor.min.js' %}"></script>
 
 
+<!-- Vector Map js -->
+<script src=" {% static 'vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js' %}"></script>
+<script src="{% static 'vendor/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js' %}"></script>
 
-    <!-- Vector Map js -->
-    <script src=" {% static 'vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js' %}"></script>
-    <script src="{% static 'vendor/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js' %}"></script>
+<!-- Dashboard App js -->
+<script src="{% static 'js/pages/demo.dashboard.js' %}"></script>
 
-    <!-- Dashboard App js -->
-    <script src="{% static 'js/pages/demo.dashboard.js' %}"></script>
+<!-- App js -->
+<script src="{% static 'js/app.min.js' %}"></script>
 
-    <!-- App js -->
-    <script src="{% static 'js/app.min.js' %}"></script>
-
- <!--Chart.js-->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
-
+<!--Chart.js-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
 
 
 </body>
