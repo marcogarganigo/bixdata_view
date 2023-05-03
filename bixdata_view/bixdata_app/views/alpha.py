@@ -870,7 +870,7 @@ def get_block_record_badge(tableid,recordid):
     #    records_table = render_to_string('block/record/custom/record_badge_project.html', context)
 
     #else:
-    records_table = render_to_string('block/record/record_badge.html', context)
+    records_table = ""#render_to_string('block/record/record_badge.html', context)
 
     return records_table
 
