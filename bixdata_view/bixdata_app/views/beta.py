@@ -161,6 +161,3 @@ def db_get_count(table, condition, order=''):
         return rows[0]['counter']
     else:
         return None
-
-
-

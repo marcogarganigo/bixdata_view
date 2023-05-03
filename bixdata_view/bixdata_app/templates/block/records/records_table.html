@@ -30,7 +30,7 @@
         height: 92%;
     }
 
-        @media screen and (max-width: 1400px) {
+    @media screen and (max-width: 1400px) {
         #pagination-container {
             height: 70%;
         }
@@ -40,18 +40,18 @@
 </style>
 
 {% if table_type == 'linked' %}
-  <style>
+    <style>
 
-   .linked_container #block_records_table {
-      border-collapse: collapse;
-      width: 100%;
-       height: 500px !important;
-    }
+        .linked_container #block_records_table {
+            border-collapse: collapse;
+            width: 100%;
+            height: 500px !important;
+        }
 
-  </style>
-  <script>
+    </style>
+    <script>
 
-  </script>
+    </script>
 {% endif %}
 
 
@@ -64,94 +64,91 @@
 <script>
     function modalShow() {
         //$("#recordModal").load('/loading/');
-        $("results-row").click(function(){
+        $("results-row").click(function () {
             if (screen.width <= min_width) {
-              $("#recordModal").modal("show");
+                $("#recordModal").modal("show");
             }
-          });
+        });
     }
 
 
-    function popoverContent() { 
-var responseblock='response block';
+    function popoverContent() {
+        var responseblock = 'response block';
         $.ajax({
-            method: "POST",  
-			async: false,
-                        url: "{% url 'get_block_record_badge' %}",
-                        data: {
-                            'http_response':'true',
-                            'csrfmiddlewaretoken': '{{ csrf_token }}',
-                            'tableid': $(this).data("linkedtableid"),
-                            'recordid': $(this).data("linkedrecordid"),
-                        },
-                        success: function(response) {
-                            responseblock= response;
-                        },
-                        error: function(response) {
-                            $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
-                            responseblock= 'error';
-                        }
-                    });
-                            
-                    return responseblock;  
+            method: "POST",
+            async: false,
+            url: "{% url 'get_block_record_badge' %}",
+            data: {
+                'http_response': 'true',
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'tableid': $(this).data("linkedtableid"),
+                'recordid': $(this).data("linkedrecordid"),
+            },
+            success: function (response) {
+                responseblock = response;
+            },
+            error: function (response) {
+                $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
+                responseblock = 'error';
+            }
+        });
+
+        return responseblock;
     }
 </script>
 
-  <style>
+<style>
 
-        .records-standard {
-            cursor: context-menu;
-        }
+    .records-standard {
+        cursor: context-menu;
+    }
 
-        .linked-field:hover {
-            text-decoration: underline;
-            cursor: pointer;
-        }
+    .linked-field:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
 
-        .linked-field {
-            color: #7cc4ef;
+    .linked-field {
+        color: #7cc4ef;
 
-        }
-
-
-  </style>
+    }
 
 
+</style>
 
 
 <div id="block_records_table" style="width: 100%;" data-type="{{ table_type }}">
 
 
-
-
-    
     <div class="col s12 m6 l6" id="pagination-container">
         <table id="results-table" class="table">
             <thead id="results-head">
-                <tr id="results-row">
-                    {% for column in columns %}
-                        {% if column.desc != 'recordid_' and column.desc != 'recordstatus_' and column.desc != 'recordcss_' %}
-                            {% if column.fieldtypeid == 'Numero' %}
-                            <th style="text-align: right">{{column.desc}}</th>
-                                {% else %}
-                                <th>{{column.desc}}</th>
-                                {% endif %}
+            <tr id="results-row">
+                {% for column in columns %}
+                    {% if column.desc != 'recordid_' and column.desc != 'recordstatus_' and column.desc != 'recordcss_' %}
+                        {% if column.fieldtypeid == 'Numero' %}
+                            <th style="text-align: right">{{ column.desc }}</th>
+                        {% else %}
+                            <th>{{ column.desc }}</th>
                         {% endif %}
-                    {% endfor %}
-                </tr>
+                    {% endif %}
+                {% endfor %}
+            </tr>
             </thead id="results-head">
             <tbody id="results-body">
-                {% for record in records %}
-                    {% if record.2 %}
-                    <tr style="{{ record.2.value }};" id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
-                    {% else %}
+            {% for record in records %}
+                {% if record.2 %}
+                    <tr style="{{ record.2.value }};" id="results-row"
+                        onclick="activeRow(this, '{{ column_value.link_tableid }}')">
+                        {% else %}
                     <tr id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
-                    {% endif %}
-                        {% for column_value in record %}
-                            {% if forloop.counter0 > 2 %}
-                                {% if column_value.fieldtype == 'linked' %}
-                                    <td class="records-linked" onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="standard" style="font-weight: bold !important;" >
-                                        <!--
+                {% endif %}
+            {% for column_value in record %}
+                {% if forloop.counter0 > 2 %}
+                    {% if column_value.fieldtype == 'linked' %}
+                        <td class="records-linked" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                            data-fieldtype="standard" style="font-weight: bold !important;">
+                            <!--
                                         <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')"
                                             data-fieldtype="{{ column_value.fieldtype }}"
                                             class="linked-field popover-linked"
@@ -166,148 +163,154 @@ var responseblock='response block';
 
                                         <script>$('.popover-linked').popover();</script>
                                         -->
-                                        <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')" data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked" data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom" data-linkedtableid="{{column_value.link_tableid}}" data-linkedrecordid="{{column_value.link_recordid}}" >{{column_value.value}}</span>
-                                        <script>
-                                            $('.popover-linked').popover({  
-        content: popoverContent,
-		html: true,  
-		placement: 'right',  
-		trigger: 'hover focus'
-	});
-                                        </script>
-                            
-                                    <style>
-                                        .popover-custom {
-                                            max-width: 500px;
-                                        }
-                                    </style>
+                            <span onclick="event.stopPropagation(); open_record(this,'{{ column_value.link_tableid }}','{{ column_value.link_recordid }}')"
+                                  data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
+                                  data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
+                                  data-linkedtableid="{{ column_value.link_tableid }}"
+                                  data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value }}</span>
+                            <script>
+                                $('.popover-linked').popover({
+                                    content: popoverContent,
+                                    html: true,
+                                    placement: 'right',
+                                    trigger: 'hover focus'
+                                });
+                            </script>
+
+                            <style>
+                                .popover-custom {
+                                    max-width: 500px;
+                                }
+                            </style>
 
 
-                                </td>
+                        </td>
 
-                                    {% elif column_value.fieldtype == 'Numero' %}
-                                        <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number" style="text-align: right;">
-                                    {{column_value.value}}
-                                </td>
+                    {% elif column_value.fieldtype == 'Numero' %}
+                        <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number"
+                            style="text-align: right;">
+                            {{ column_value.value }}
+                        </td>
 
-                                    {% elif column_value.fieldtype == 'Utente' %}
-                                    {% if column_value.value %}
-                                        <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                                            <img src="{% static 'images/users/' %}{{ column_value.code }}.png?v={{ date }}"  alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
-                                    {{column_value.value}}
-                                            {% else %}
-                                      <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                                    {{column_value.value}}
-                                    {% endif %}
-                                        {% elif column_value.fieldtype == 'lookup' %}
-                                        <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                                            <div class="badge" style="background-color: {{ column_value.fieldbackground }}; font-size: 10.5pt">{{column_value.value}}</div>
+                    {% elif column_value.fieldtype == 'Utente' %}
+                        {% if column_value.value %}
+                            <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                                <img src="{% static 'images/users/' %}{{ column_value.code }}.png?v={{ date }}"
+                                     alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
+                                {{ column_value.value }}
+                                {% else %}
+                            <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                            {{ column_value.value }}
+                        {% endif %}
+                    {% elif column_value.fieldtype == 'lookup' %}
+                        <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                            <div class="badge"
+                                 style="background-color: {{ column_value.fieldbackground }}; font-size: 10.5pt">{{ column_value.value }}</div>
 
 
-                                </td>
+                        </td>
 
-                                    {% else %}
-                                <td onclick="open_record(this,'{{tableid}}','{{record.0.value}}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
-                                    {{column_value.value}}
-                                </td>
+                    {% else %}
+                        <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                            data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
+                            {{ column_value.value }}
+                        </td>
 
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
 
-<div class="pagination" id="my-pagination">
-    <a href="#" class="first" data-action="first">&laquo;</a>
-    <a href="#" class="previous" data-action="previous">&lsaquo;</a>
-    <input type="text" readonly="readonly" data-max-page="10" />
-    <a href="#" class="next" data-action="next">&rsaquo;</a>
-    <a href="#" class="last" data-action="last">&raquo;</a>
-</div>
+    <div class="pagination" id="my-pagination">
+        <a href="#" class="first" data-action="first">&laquo;</a>
+        <a href="#" class="previous" data-action="previous">&lsaquo;</a>
+        <input type="text" readonly="readonly" data-max-page="10"/>
+        <a href="#" class="next" data-action="next">&rsaquo;</a>
+        <a href="#" class="last" data-action="last">&raquo;</a>
+    </div>
 
-<script>
-	$(function() {
-		$('#my-pagination').jqPagination({
-			current_page: 1,
-			max_page: 10,
-			paged: function(page) {
-                 $.ajax({
-                type: "POST",
-                crossDomain: true,
-                url: "{% url 'pagination' %}",
-                data: {
-                    'page': page,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
-                },
-                success: function (response) {
-                    refresh();
-                },
-                error: function (response) {
-                    refresh()
+    <script>
+        $(function () {
+            $('#my-pagination').jqPagination({
+                current_page: 1,
+                max_page: 10,
+                paged: function (page) {
+                    $.ajax({
+                        type: "POST",
+                        crossDomain: true,
+                        url: "{% url 'pagination' %}",
+                        data: {
+                            'page': page,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function (response) {
+                            refresh();
+                        },
+                        error: function (response) {
+                            refresh()
+                        }
+                    });
                 }
             });
-			}
-		});
-	});
+        });
 
 
+        function activeRow(el, id) {
+            /*
+          var row = document.getElementById(id);
+          var els = document.querySelectorAll('.clicked');
+          els.forEach(function(e) {
+            e.classList.remove('clicked');
+            e.style.backgroundColor = 'white';
+          });
+          el.classList.add('clicked');
+          if (el.classList.contains('clicked')) {
+            el.style.backgroundColor = '#e1dfdf';
+          } else {
+
+          }
+          */
+        }
 
 
-
-
-function activeRow(el, id) {
-    /*
-  var row = document.getElementById(id);
-  var els = document.querySelectorAll('.clicked');
-  els.forEach(function(e) {
-    e.classList.remove('clicked');
-    e.style.backgroundColor = 'white';
-  });
-  el.classList.add('clicked');
-  if (el.classList.contains('clicked')) {
-    el.style.backgroundColor = '#e1dfdf';
-  } else {
-
-  }
-  */
-}
-
-
-
-</script>
-
+    </script>
 
 
     <style>
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
 
-.pagination a {
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 0 5px;
-  border: 1px solid #dc3545;
-  border-radius: 5px;
-  text-decoration: none;
-  color: #dc3545;
-}
+        .pagination a {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 0 5px;
+            border: 1px solid #dc3545;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #dc3545;
+        }
 
-.pagination a:hover {
-  background-color: #dc3545;
-  color: #fff;
-}
+        .pagination a:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
 
-.pagination .current {
-  background-color: #dc3545;
-  color: #fff;
-}
+        .pagination .current {
+            background-color: #dc3545;
+            color: #fff;
+        }
     </style>
 </div>

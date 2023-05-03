@@ -1,36 +1,36 @@
 <div id="#content_records_chart" style="height: 100%;width: 100%">
     <div>
-  <canvas id="myChart"></canvas>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-  var labels = '{{labels|safe}}';
-  labels=jQuery.parseJSON(labels);
-
-  var data = '{{data|safe}}';
-  data=jQuery.parseJSON(data);
-
-  const ctx = document.getElementById('myChart');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: '{{label}}',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-</script>
-
+        <canvas id="myChart"></canvas>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var labels = '{{labels|safe}}';
+        labels = jQuery.parseJSON(labels);
+
+        var data = '{{data|safe}}';
+        data = jQuery.parseJSON(data);
+
+        const ctx = document.getElementById('myChart');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '{{label}}',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+</div>

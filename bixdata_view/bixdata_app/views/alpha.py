@@ -21,7 +21,9 @@ from bixdata_app.models import MyModel
 from bixdata_app.models import CustomUser
 import os
 from django.conf import settings
+from django.views.decorators.clickjacking import xframe_options_exempt
 from .beta import *
+
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -264,6 +266,7 @@ def get_chart4(request):
         return render(request, 'other/chart4.html', {'data': data})
 
 
+@xframe_options_exempt
 @login_required(login_url='/login/')
 def get_render_index(request, content=''):
     response = requests.get(
@@ -810,27 +813,35 @@ def get_block_record(request):
         'block/records_table.html', context, request=request)
     return records_table
 
-
 @login_required(login_url='/login/')
-def get_block_record_card(request):
-    context = dict()
-    context['block_record_badge'] = get_block_record_badge(request)
-    context['block_record_linked'] = get_block_record_linked(request)
-    # context['block_record_linked'] = get_block_record_linked(request)
-    context['block_record_fields'] = ""  # get_block_record_fields(request)
-    context['recordid'] = request.POST.get('recordid')
+def request_block_record_card(request):
     tableid = request.POST.get('tableid')
-    context['tableid'] = tableid
-    context['user_table_settings'] = get_user_table_settings(request.user.id, tableid)
-    returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
-    return HttpResponse(returned)
+    recordid=request.POST.get('recordid')
+    userid=request.user.id
+    return HttpResponse(get_block_record_card(tableid,recordid,userid))
 
+def get_block_record_card(tableid,recordid,userid):
+    
+    context = dict()
+    context['block_record_badge'] = get_block_record_badge(tableid,recordid)
+    context['block_record_linked'] = get_block_record_linked(tableid,recordid)
+    context['block_record_fields'] = ""  
+    context['recordid'] = recordid
+    context['tableid'] = tableid
+    context['user_table_settings'] = get_user_table_settings(userid, tableid)
+    #returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
+    return render_to_string('block/record/record_card.html', context)
 
 @login_required(login_url='/login/')
-def get_block_record_badge(request, http_response=False):
-    context = dict()
+def request_block_record_badge(request, http_response=False):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
+    return get_block_record_badge(tableid,recordid)
+
+def get_block_record_badge(tableid,recordid):
+    context = dict()
+    
+    
     post = {
         'tableid': tableid,
         'recordid': recordid,
@@ -852,19 +863,15 @@ def get_block_record_badge(request, http_response=False):
 
     context['fields'] = context_fields
 
-    if tableid == 'company':
-        records_table = render_to_string('block/record/custom/record_badge_company.html', context, request=request)
+    #if tableid == 'company':
+    #    records_table = render_to_string('block/record/custom/record_badge_company.html', context)
 
-    elif tableid == 'project':
-        records_table = render_to_string('block/record/custom/record_badge_project.html', context, request=request)
+   # elif tableid == 'project':
+    #    records_table = render_to_string('block/record/custom/record_badge_project.html', context)
 
-    else:
-        records_table = render_to_string('block/record/record_badge.html', context, request=request)
+    #else:
+    records_table = ""#render_to_string('block/record/record_badge.html', context)
 
-    if (http_response):
-        return HttpResponse(records_table)
-    else:
-        return records_table
     return records_table
 
 
@@ -925,12 +932,15 @@ def get_block_record_linked_OLD(request):
         'block/record/record_linked.html', context, request=request)
     return record_linked_labels
 
-
 @login_required(login_url='/login/')
-def get_block_record_linked(request):
-    context = dict()
+def request_block_record_linked(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
+    return HttpResponse(get_block_record_linked(tableid,recordid))
+
+def get_block_record_linked(tableid,recordid):
+    context = dict()
+    
 
     rows = db_query_sql("SELECT * FROM sys_table_link WHERE tableid = '" + tableid + "'")
 
@@ -949,8 +959,7 @@ def get_block_record_linked(request):
     context['tableid'] = tableid
     context['recordid'] = recordid
 
-    record_linked_labels = render_to_string(
-        'block/record/record_linked.html', context, request=request)
+    record_linked_labels = render_to_string('block/record/record_linked.html', context)
     return record_linked_labels
 
 
@@ -1105,6 +1114,7 @@ def update_profile_pic(request):
 
     return redirect('index')
 
+
 @login_required(login_url='/login/')
 def admin_page(request):
     page = request.POST.get('page')
@@ -1119,7 +1129,7 @@ def admin_page(request):
     with connection.cursor() as cursor2:
         cursor2.execute(
             "SELECT firstname, lastname FROM sys_user where id in (SELECT userid FROM sys_user_dashboard)"
-                        )
+        )
         rows2 = dictfetchall(cursor2)
 
         names = [row['firstname'] + ' ' + row['lastname'] for row in rows2]
@@ -1127,22 +1137,37 @@ def admin_page(request):
     with connection.cursor() as cursor3:
         cursor3.execute(
             "SELECT * FROM v_sys_dashboard_block"
-                        )
+        )
         rows3 = dictfetchall(cursor3)
 
         chart_names = [row['name'] for row in rows3]
         chart_dashboard_id = [row['dashboardid'] for row in rows3]
 
+    with connection.cursor() as cursor4:
+        cursor4.execute(
+            "SELECT * FROM sys_view"
+        )
+        rows4 = dictfetchall(cursor4)
+
+    with connection.cursor() as cursor5:
+        cursor5.execute(
+            "SELECT * FROM sys_report"
+        )
+        rows5 = dictfetchall(cursor5)
 
     context = {
         'userids': userids,
         'dashboardids': dashboardids,
         'names': names,
         'chart_names': chart_names,
-        'chart_dashboard_id': chart_dashboard_id
+        'chart_dashboard_id': chart_dashboard_id,
+        'views': rows4,
+        'reports': rows5,
+
     }
 
     return render(request, f'admin_settings/{page}.html', {'context': context})
+
 
 @login_required(login_url='/login/')
 def save_chart_settings(request):
@@ -1157,10 +1182,8 @@ def save_chart_settings(request):
                 user_id = userids[i]
                 dashboard_id = dashboardids[i]
 
-
                 cursor.execute('UPDATE sys_user_dashboard SET dashboardid = %s WHERE userid = %s',
-                                [dashboard_id, user_id])
-
+                               [dashboard_id, user_id])
 
         with connection.cursor() as cursor:
             for i in range(len(names)):
@@ -1170,22 +1193,49 @@ def save_chart_settings(request):
                 cursor.execute('UPDATE v_sys_dashboard_block SET dashboardid = %s WHERE name = %s',
                                [dashboard_id, name])
 
+    return redirect('index')
 
+
+@login_required(login_url='/login/')
+def new_chart_block(request):
+    if request.method == 'POST':
+        name = request.POST.get('block_name')
+        dashboard_id = request.POST.get('dashboard_id')
+        view_id = request.POST.get('view_id')
+        report_id = request.POST.get('report_id')
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                'INSERT INTO sys_dashboard_block (dashboardid, name, userid, viewid, reportid) VALUES (%s, %s, %s, %s, %s)',
+                [dashboard_id, name, 1, view_id, report_id])
     return redirect('index')
 
 
 @login_required(login_url='/login/')
 def get_record_path(request, tableid, recordid):
-    tableid = request.GET.get('tableid')
-    recordid = request.GET.get('recordid')
-    print(tableid)
-    print(recordid)
+    userid=request.user.id
+    content=get_block_timesheetinvoice(recordid,userid)
+    return get_render_index(request,content)
 
-    return render(request, 'other/path_page.html', {'tableid': tableid, 'recordid': recordid})
+def get_block_timesheetinvoice(recordid_timesheet,userid):
+    timesheet_block=get_block_record_card('timesheet',recordid_timesheet,userid)
+    company_block=''
+    project_block=''
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM user_timesheet WHERE recordid_='{recordid_timesheet}'"
+                       )
+        rows = dictfetchall(cursor)
+    if(rows):
+        recordid_company=rows[0]['recordidcompany_'];
+        company_block=get_block_record_card('company',recordid_company,userid)
 
-
-
-
+    
+    context=dict()
+    context['timesheet_block']=timesheet_block
+    context['company_block']=company_block
+    content=render_to_string('other/check_timesheetinvoice.html',context)
+    return content;
 
 @login_required(login_url='/login/')
 def get_badge(request):

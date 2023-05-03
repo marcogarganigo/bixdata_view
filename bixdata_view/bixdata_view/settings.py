@@ -45,8 +45,6 @@ LOGIN_REDIRECT_URL = 'index'
 LOGOUT_URL = '/logout/'
 LOGOUT_REDIRECT_URL = 'login'
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -61,7 +59,7 @@ INSTALLED_APPS = [
     'bixdata_app',
 ]
 
-#AUTH_USER_MODEL = 'bixdata_app.CustomUser'
+# AUTH_USER_MODEL = 'bixdata_app.CustomUser'
 
 MIGRATION_MODULES = {
     'bixdata_app': 'bixdata_app.migrations',
@@ -152,7 +150,7 @@ STATIC_URL = 'static/'
 
 MEDIA_ROOT = '..static/images/users/'
 
-#MEDIA_ROOT = 'static/images/users/'
+# MEDIA_ROOT = 'static/images/users/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

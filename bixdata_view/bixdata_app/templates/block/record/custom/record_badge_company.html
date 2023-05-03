@@ -1,18 +1,87 @@
-<div id="block_record_badge" class="card shadow-shadow-sm" style="height: 100%; width: 100%; margin-top: 2%; background-color: #074048 ">
-<div class="card-body">
-    <div class="row row-cols-3 row-cols-md-2 row-cols-sm-1">
-        {% for key, field in fields.items %}
-            {% if field.fieldid != 'recordid_jdoc' %}
-                {% if field.description == 'Email' or field.description == 'id' %}
-                <div class="col">
+<div id="block_record_badge" class="card shadow-shadow-sm"
+     style="height: 100%; width: 100%; margin-top: 2%; background-color: #074048 ">
+    <div class="card-body">
+        <div class="row row-cols-3 row-cols-md-2 row-cols-sm-1">
+            <div class="col">
                 <div class="row">
-                    <div class="col-lg-12" style="margin-bottom: 1%; color: white"><b>{{ field.description }}:</b> {{ field.value }}</div><div class="col"></div>
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                        {{ fields.company.description }}: <span style="color:red">{{ fields.company.value }}</span>
+                        <div class="col"></div>
+                    </div>
                 </div>
-                </div>
+            </div>
 
-            {% endif %}
-            {% endif %}
-        {% endfor %}
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                        {{ fields.phonenumber.description }}: <span
+                            style="color:red">{{ fields.phonenumber.value }}</span>
+                        <div class="col"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                        {{ fields.city.description }}: <span style="color:red">{{ fields.city.value }}</span>
+                        <div class="col"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                        {{ fields.address.description }}: <span style="color:red">{{ fields.address.value }}</span>
+                        <div class="col"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                        {{ fields.salesperson_text.description }}: <span
+                            style="color:red">{{ fields.salesperson_text    .value }}</span>
+                        <div class="col"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                        {{ fields.servizitxt.description }}: <span
+                            style="color:red">{{ fields.servizitxt.value }}</span>
+                        <div class="col"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                        {{ fields.paymentstatus.description }}: <span
+                            style="color:red">{{ fields.paymentstatus.value }}</span>
+                        <div class="col"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                        {{ fields.customertype.description }}: <span
+                            style="color:red">{{ fields.customertype.value }}</span>
+                        <div class="col"></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
     </div>
-</div>
-</div>
+
+
+    <!--if field.description == 'Nome azienda' or field.description == 'Numero di telefono' or field.description == 'Città' or field.description == 'Indirizzo' or field.description == 'Venditore' or field.description == 'Servizi' or field.description == 'Stato pagamenti' or field.description == 'Tipo cliente'  -->

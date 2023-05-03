@@ -1,7 +1,79 @@
-<div id="block_record_badge" class="card shadow-shadow-sm" style="height: 100%; width: 100%; margin-top: 2%; background-color: #074048 ">
+<div id="block_record_badge" class="card shadow-shadow-sm"
+     style="height: 100%; width: 100%; margin-top: 2%; background-color: #074048 ">
     <div class="card-body">
         <div class="row row-cols-3 row-cols-md-2 row-cols-sm-1">
-            BADGE COMPANY CUSTOM
+
+
+
+
+
+
+
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                        {{ fields.projectname.description }}: <span style="color:red">{{ fields.projectname.value }}</span>
+                    <div class="col"></div>
+                </div>
+            </div>
         </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                        {{ fields.description.description }}: <span style="color:red">{{ fields.description.value }}</span>
+                    <div class="col"></div>
+                </div>
+            </div>
+        </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                         {{ fields.company.description }}: <span style="color:red">{{ fields.company.value }}</span>
+                    <div class="col"></div>
+                </div>
+            </div>
+        </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                          {{ fields.status.description }}: <span style="color:red">{{ fields.status.value }}</span>
+                    <div class="col"></div>
+                </div>
+            </div>
+        </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                          {{ fields.assignedto.description }}: <span style="color:red">{{ fields.assignedto.value }}</span>
+                    <div class="col"></div>
+                </div>
+            </div>
+        </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                          {{ fields.expectedhours.description }}: <span style="color:red">{{ fields.expectedhours.value }}</span>
+                    <div class="col"></div>
+                </div>
+            </div>
+        </div>
+
+            <div class="col">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-bottom: 1%; color: white">
+                           {{ fields.usedhours.description }}: <span style="color:red">{{ fields.usedhours.value }}</span>
+                    <div class="col"></div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
-    </div>
+</div>
