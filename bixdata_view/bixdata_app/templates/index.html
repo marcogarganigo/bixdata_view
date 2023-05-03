@@ -170,77 +170,71 @@
                 });
             }
 
-
             function open_record(el, tableid, recordid) {
-
                 var serialized_data = [];
                 serialized_data.push({name: 'tableid', value: tableid});
                 serialized_data.push({name: 'recordid', value: recordid});
 
-
-                /*
-                $('#linked-table-modal').on('show.bs.modal', function () {
-                $('this').closest(".modal-backdrop").css("z-index", 11200);
-                });
-                */
-
+                
                 {% if layout_setting == 'modal' %}
                     const min_width = 5000
                 {% endif %}
 
-                $('#modalMedium').modal('show');
-                /*     
                 if (window.innerWidth <= min_width) {
-                    if ($(el.closest('td')).attr('data-fieldtype') === 'linked') {
+
+                    if ($(el).attr('data-fieldtype') === 'linked') {
                         $('#linked-table-modal').modal('show');
                         $(".modal-backdrop:last").css("z-index", 11200);
-                        $("#linked-table-modal-content").load('/loading/');
+                        //$("#linked-table-modal-content").load('/loading/');
                     } else {
 
                         if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
                             $('#linked-table-modal').modal('show');
                             $(".modal-backdrop:last").css("z-index", 11200);
-                            $("#linked-table-modal-content").load('/loading/');
+                            //$("#linked-table-modal-content").load('/loading/');
                         } else {
                             $('#recordModal').modal('show');
-                            $("#record-modal-content").load('/loading/');
+                            //$("#record-modal-content").load('/loading/');
                         }
                     }
 
 
-                }
-                else
-                {
-                    if ($(el.closest('td')).attr('data-fieldtype') === 'linked') {
+                } else {
+                    if ($(el).attr('data-fieldtype') === 'linked') {
                         $('#linked-table-modal').modal('show');
                         $(".modal-backdrop:last").css("z-index", 11200);
-                        $("#linked-table-modal-content").load('/loading/');
+                        //$("#linked-table-modal-content").load('/loading/');
                     } else {
                         if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
                             $('#linked-table-modal').modal('show');
-                            $("#linked-table-modal-content").load('/loading/');
+                            //$("#linked-table-modal-content").load('/loading/');
                         } else {
                             if (window.innerWidth > min_width) {
-                                $("#block-record-card-container").load('/loading/');
+                                //$("#block-record-card-container").load('/loading/');
                             }
                         }
                     }
                 }
-                */
+                //$("#block-record-card-container").html('caricamento');
+
                 $.ajax({
                     type: "POST",
                     url: "{% url 'block_record_card' %}",
                     data: serialized_data,
                     success: function (response) {
-                        if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el.closest('td')).attr('data-fieldtype') === 'linked') {
+                        //if ($(el.closest('table')).attr('data-type') === 'linked') {
+                        //if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                        if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el).attr('data-fieldtype') === 'linked') {
+                            //$("#linked-table-modal").html(response);
+                            //$("#linked-table-modal").modal("show");
+                            //$('.modal-backdrop').hide()
+                            //$(".modal-backdrop").css("z-index", 11200);
                             $("#linked-table-modal-content").html(response);
                         } else {
                             if (window.innerWidth > min_width) {
-                                //$("#block-record-card-container").html(response);
-                                $("#modalMedium-body").html(response);
+                                $("#block-record-card-container").html(response);
                             } else {
-                                //$("#record-modal-content").html(response);
-                                $("#modalMedium-body").html(response);
+                                $("#record-modal-content").html(response);
                             }
                         }
                     },
@@ -735,7 +729,6 @@
             <script>
                 $('#newRecordModal').on('shown.bs.modal', function (e) {
                     $('#newRecordModal').css('z-index', 9000)
-                    //alert('test')
                 });
 
                 $('#newRecordModal').on('hide.bs.modal', function (e) {
@@ -811,7 +804,9 @@
                 </div>
             </div>
         </div>
+    -->
 
+            
          <!--record modal big start-->
             <div id="modalBig" class="modal fade" tabindex="-1">
                 <div class="modal-dialog modal-fullscreen"

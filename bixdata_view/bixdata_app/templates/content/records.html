@@ -34,6 +34,9 @@
             $("#block-records-search-container").css('width', '100%');
         }
 
+        $("#linked-table-modal").on("hidden.bs.modal", function () {
+            $(this).find('#linked-table-modal-content').html("");
+        });
 
         refresh()
     })
@@ -247,85 +250,7 @@
     }
 
 
-    function open_record(el, tableid, recordid) {
-        var serialized_data = [];
-        serialized_data.push({name: 'tableid', value: tableid});
-        serialized_data.push({name: 'recordid', value: recordid});
-
-        /*
-        $('#linked-table-modal').on('show.bs.modal', function () {
-        $('this').closest(".modal-backdrop").css("z-index", 11200);
-        });
-        */
-        {% if layout_setting == 'modal' %}
-            const min_width = 5000
-        {% endif %}
-
-        if (window.innerWidth <= min_width) {
-
-            if ($(el).attr('data-fieldtype') === 'linked') {
-                $('#linked-table-modal').modal('show');
-                $(".modal-backdrop:last").css("z-index", 11200);
-                //$("#linked-table-modal-content").load('/loading/');
-            } else {
-
-                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
-                    $('#linked-table-modal').modal('show');
-                    $(".modal-backdrop:last").css("z-index", 11200);
-                    //$("#linked-table-modal-content").load('/loading/');
-                } else {
-                    $('#recordModal').modal('show');
-                    //$("#record-modal-content").load('/loading/');
-                }
-            }
-
-
-        } else {
-            if ($(el).attr('data-fieldtype') === 'linked') {
-                $('#linked-table-modal').modal('show');
-                $(".modal-backdrop:last").css("z-index", 11200);
-                //$("#linked-table-modal-content").load('/loading/');
-            } else {
-                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
-                    $('#linked-table-modal').modal('show');
-                    //$("#linked-table-modal-content").load('/loading/');
-                } else {
-                    if (window.innerWidth > min_width) {
-                        //$("#block-record-card-container").load('/loading/');
-                    }
-                }
-            }
-        }
-        //$("#block-record-card-container").html('caricamento');
-
-        $.ajax({
-            type: "POST",
-            url: "{% url 'block_record_card' %}",
-            data: serialized_data,
-            success: function (response) {
-                //if ($(el.closest('table')).attr('data-type') === 'linked') {
-                //if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
-                if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el).attr('data-fieldtype') === 'linked') {
-                    //$("#linked-table-modal").html(response);
-                    //$("#linked-table-modal").modal("show");
-                    //$('.modal-backdrop').hide()
-                    $('#linked-table-modal').modal('show');
-                    //$(".modal-backdrop").css("z-index", 11200);
-                    $("#linked-table-modal-content").html(response);
-                } else {
-                    if (window.innerWidth > min_width) {
-                        $("#block-record-card-container").html(response);
-                    } else {
-                        $("#record-modal-content").html(response);
-                    }
-                }
-            },
-            error: function (response) {
-                $("#bixdata_recordcard_container").html(response);
-            }
-        });
-
-    }
+    
 
     function closeCard(vrbl) {
         $(vrbl).closest('.modal').modal('hide');
