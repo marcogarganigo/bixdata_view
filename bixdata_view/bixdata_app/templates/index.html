@@ -170,10 +170,12 @@
                 });
             }
 
-            function open_record(el, tableid, recordid) {
+            function open_record(el, tableid, recordid, contextfunction='edit') {
+                
                 var serialized_data = [];
                 serialized_data.push({name: 'tableid', value: tableid});
                 serialized_data.push({name: 'recordid', value: recordid});
+                serialized_data.push({name: 'contextfunction', value: contextfunction});
 
                 
                 {% if layout_setting == 'modal' %}

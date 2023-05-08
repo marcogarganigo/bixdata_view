@@ -208,8 +208,7 @@
                     {% elif column_value.fieldtype == 'lookup' %}
                         <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                             data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                            <div class="badge"
-                                 style="background-color: {{ column_value.fieldbackground }}; font-size: 10.5pt">{{ column_value.value }}</div>
+                            <div class="badge" style="background-color: {{ column_value.fieldbackground }}; font-size: 10.5pt">{{ column_value.value }}</div>
 
 
                         </td>

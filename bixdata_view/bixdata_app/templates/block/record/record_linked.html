@@ -50,7 +50,7 @@
         serialized_data.push({name: 'master_tableid', value: master_tableid});
         serialized_data.push({name: 'master_recordid', value: master_recordid});
         serialized_data.push({name: 'tableid', value: linkedtableid});
-        serialized_data.push({name: 'function', value: 'insert'});
+        serialized_data.push({name: 'contextfunction', value: 'insert'});
         serialized_data.push({name: 'http_response', value: true});
         $.ajax({
             type: "POST",
