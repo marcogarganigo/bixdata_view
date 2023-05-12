@@ -216,7 +216,9 @@
                     {% else %}
                         <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                             data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
-                            {{ column_value.value }}
+                            {% autoescape off %}
+                                {{ column_value.value }}
+                            {% endautoescape %}
                         </td>
 
                     {% endif %}
