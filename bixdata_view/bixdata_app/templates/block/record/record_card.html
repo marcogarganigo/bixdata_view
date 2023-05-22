@@ -23,9 +23,9 @@
     var recordtab = '{{user_table_settings.default_recordtab}}';
     $('#block_record_card').ready(function () {
         if (recordtab === 'Linked') {
-            $('#linked-tab').click();
+            $('#linked-tab-{{ recordid }}').click();
         } else {
-            $('#fields-tab').click();
+            $('#fields-tab-{{ recordid }}').click();
         }
     });
 
@@ -249,8 +249,8 @@
 
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="fields-tab" data-bs-toggle="tab"
-                            data-bs-target="#fields-tab-pane" type="button" role="tab" aria-controls="fields-tab-pane"
+                    <button class="nav-link active" id="fields-tab-{{ recordid }}" data-bs-toggle="tab"
+                            data-bs-target="#fields-tab-pane-{{ recordid }}" type="button" role="tab" aria-controls="fields-tab-pane-{{ recordid }}"
                             aria-selected="true" onclick="load_fields(this)">
 
                         <p class="tabs-title">Campi</p>
@@ -260,8 +260,8 @@
                         </span>
 
                     </button>
-                    <button class="nav-link" id="linked-tab" data-bs-toggle="tab" data-bs-target="#linked-tab-pane"
-                            type="button" role="tab" aria-controls="linked-tab-pane" aria-selected="false">
+                    <button class="nav-link" id="linked-tab-{{ recordid }}" data-bs-toggle="tab" data-bs-target="#linked-tab-pane-{{ recordid }}"
+                            type="button" role="tab" aria-controls="linked-tab-pane-{{ recordid }}" aria-selected="false">
 
                         <p class="tabs-title">Collegati</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
@@ -270,9 +270,9 @@
                         </span>
 
                     </button>
-                    <button class="nav-link" id="attachment-tab" data-bs-toggle="tab"
-                            data-bs-target="#attachment-tab-pane" type="button" role="tab"
-                            aria-controls="attachment-tab-pane" aria-selected="false">
+                    <button class="nav-link" id="attachment-tab-{{ recordid }}" data-bs-toggle="tab"
+                            data-bs-target="#attachment-tab-pane-{{ recordid }}" type="button" role="tab"
+                            aria-controls="attachment-tab-pane-{{ recordid }}" aria-selected="false">
 
                         <p class="tabs-title">Allegati</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
@@ -280,9 +280,9 @@
                             attachment
                         </span>
                     </button>
-                    <button class="nav-link" id="statistics-tab" data-bs-toggle="tab"
-                            data-bs-target="#statistics-tab-pane" type="button" role="tab"
-                            aria-controls="statistics-tab-pane" aria-selected="false">
+                    <button class="nav-link" id="statistics-tab-{{ recordid }}" data-bs-toggle="tab"
+                            data-bs-target="#statistics-tab-pane-{{ recordid }}" type="button" role="tab"
+                            aria-controls="statistics-tab-pane-{{ recordid }}" aria-selected="false">
 
                         <p class="tabs-title">Analitica</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
@@ -290,8 +290,8 @@
                             analytics
                         </span>
                     </button>
-                    <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-tab-pane"
-                            type="button" role="tab" aria-controls="history-tab-pane" aria-selected="false">
+                    <button class="nav-link" id="history-tab-{{ recordid }}" data-bs-toggle="tab" data-bs-target="#history-tab-pane-{{ recordid }}"
+                            type="button" role="tab" aria-controls="history-tab-pane-{{ recordid }}" aria-selected="false">
 
                         <p class="tabs-title">Storico</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
@@ -300,8 +300,8 @@
                         </span>
                     </button>
                     </button>
-                    <button class="nav-link" id="workflow-tab" data-bs-toggle="tab" data-bs-target="#workflow-tab-pane"
-                            type="button" role="tab" aria-controls="workflow-tab-pane" aria-selected="false">
+                    <button class="nav-link" id="workflow-tab-{{ recordid }}" data-bs-toggle="tab" data-bs-target="#workflow-tab-pane-{{ recordid }}"
+                            type="button" role="tab" aria-controls="workflow-tab-pane-{{ recordid }}" aria-selected="false">
 
                         <p class="tabs-title">Flusso di lavoro</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
@@ -313,27 +313,27 @@
             </nav>
 
             <div class="tab-content" id="myTabContent" style="height: 80%;">
-                <div class="tab-pane tab-pane-fields fade show active" id="fields-tab-pane" role="tabpanel"
+                <div class="tab-pane tab-pane-fields fade show active" id="fields-tab-pane-{{ recordid }}" role="tabpanel"
                      aria-labelledby="fields-tab" tabindex="0" style="height: 100%">
                     {{ block_record_fields }}
 
                 </div>
 
-                <div class="tab-pane fade" id="linked-tab-pane" role="tabpanel" aria-labelledby="linked-tab"
+                <div class="tab-pane fade" id="linked-tab-pane-{{ recordid }}" role="tabpanel" aria-labelledby="linked-tab"
                      tabindex="0" style="height: 100%; overflow:scroll">
                     {{ block_record_linked }}
                 </div>
 
-                <div class="tab-pane fade" id="attachment-tab-pane" role="tabpanel" aria-labelledby="attachment-tab"
+                <div class="tab-pane fade" id="attachment-tab-pane-{{ recordid }}" role="tabpanel" aria-labelledby="attachment-tab"
                      tabindex="0">...
                 </div>
-                <div class="tab-pane fade" id="statistics-tab-pane" role="tabpanel" aria-labelledby="statistics-tab"
+                <div class="tab-pane fade" id="statistics-tab-pane-{{ recordid }}" role="tabpanel" aria-labelledby="statistics-tab"
                      tabindex="0">...
                 </div>
-                <div class="tab-pane fade" id="history-tab-pane" role="tabpanel" aria-labelledby="history-tab"
+                <div class="tab-pane fade" id="history-tab-pane-{{ recordid }}" role="tabpanel" aria-labelledby="history-tab"
                      tabindex="0">...
                 </div>
-                <div class="tab-pane fade" id="workflow-tab-pane" role="tabpanel" aria-labelledby="workflow-tab"
+                <div class="tab-pane fade" id="workflow-tab-pane-{{ recordid }}" role="tabpanel" aria-labelledby="workflow-tab"
                      tabindex="0">...
                 </div>
 
