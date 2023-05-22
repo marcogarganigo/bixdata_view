@@ -20,7 +20,6 @@
     }
 
     /*calendar */
-
     .small-header .fc-header {
         font-size: 12px;
         width: 10px;
@@ -72,6 +71,10 @@
     }
 
     #fields-scroll-container {
+        font-size: 10pt;
+    }
+
+    ul.ui-autocomplete {
         font-size: 10pt;
     }
 
