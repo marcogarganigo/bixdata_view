@@ -69,11 +69,9 @@
 {% endif %}
 
 
-<script>
 
-</script>
 
-<script src="https://cdn.jsdelivr.net/npm/jq-pagination/js/jquery.jqpagination.min.js"></script>
+
 
 <script>
     function modalShow() {
@@ -244,7 +242,7 @@
         </table>
     </div>
 
-    <div class="pagination" id="my-pagination">
+    <div class="pagination" id="my-pagination" data-currentpage=1>
         <a href="#" class="first" data-action="first">&laquo;</a>
         <a href="#" class="previous" data-action="previous">&lsaquo;</a>
         <input type="text" readonly="readonly" data-max-page="10"/>
@@ -255,9 +253,10 @@
     <script>
         $(function () {
             $('#my-pagination').jqPagination({
-                current_page: 1,
+                current_page: {{currentpage}},
                 max_page: 10,
                 paged: function (page) {
+                    $('#my-pagination').data('currentpage',page);
                     $.ajax({
                         type: "POST",
                         crossDomain: true,

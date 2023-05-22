@@ -559,12 +559,15 @@ def get_records_table_render(request):
     master_recordid = request.POST.get('master_recordid')
     searchTerm = request.POST.get('searchTerm')
     viewid = request.POST.get('viewid')
-    render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid)
+    currentpage= request.POST.get('currentpage')
+    if(currentpage==''):
+        currentpage=1
+    render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid, currentpage)
     return HttpResponse(render)
 
 
 @login_required(login_url='/login/')
-def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid=''):
+def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=''):
     userid = get_userid(request.user.id)
     table_type = 'standard'
     table_height = '100%'
@@ -576,6 +579,7 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
         'tableid': tableid,
         'searchTerm': searchTerm,
         'viewid': viewid,
+        'currentpage':currentpage,
         'master_tableid': master_tableid,
         'master_recordid': master_recordid,
         'userid': userid
@@ -593,6 +597,7 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
         'table_height': table_height,
         'table_type': table_type,
         'other_values': other_values,
+        'currentpage':currentpage
     }
 
     for records_index, record in enumerate(records):

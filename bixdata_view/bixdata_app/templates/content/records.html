@@ -1,3 +1,5 @@
+<script src="https://cdn.jsdelivr.net/npm/jq-pagination/js/jquery.jqpagination.min.js"></script>
+
 <script type="text/javascript">
     $("#tables").ready(function () {
 
@@ -134,6 +136,7 @@
 
 
     function refresh() {
+             
         var serialized_data = [];
         serialized_data.push({
             name: 'tableid',
@@ -146,6 +149,10 @@
         serialized_data.push({
             name: 'viewid',
             value: $("#viewid").val()
+        });
+        serialized_data.push({
+            name: 'currentpage',
+            value: $('#my-pagination').data('currentpage')   
         });
         //$("#records_table_container").load('/loading/');
         $("#records_table_container").load('/loading/', function () {
