@@ -589,9 +589,11 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
     response_dict = json.loads(response.text)
     columns = response_dict['columns']
     records = response_dict['records']
+    reports = response_dict['reports']
     other_values = dict()
     context = {
         'records': records,
+        'reports': reports,
         'columns': columns,
         'tableid': tableid,
         'table_height': table_height,

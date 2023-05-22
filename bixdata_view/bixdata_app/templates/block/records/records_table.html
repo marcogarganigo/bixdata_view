@@ -241,7 +241,9 @@
             </tbody>
         </table>
     </div>
-
+    {% for report in reports %}
+        {{report.description}}: {{report.value}}
+    {% endfor %}
     <div class="pagination" id="my-pagination" data-currentpage=1>
         <a href="#" class="first" data-action="first">&laquo;</a>
         <a href="#" class="previous" data-action="previous">&lsaquo;</a>
