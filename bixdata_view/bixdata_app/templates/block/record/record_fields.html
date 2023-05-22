@@ -57,8 +57,8 @@
                                     {% for valuecode in field.valuecode %}
 
                                         <script>
-                                            document.getElementById("hidden-input").value = "{{ items.code }}";
-                                            document.getElementById("{{ fieldid }}").value = "{{ items.value }}";
+                                            document.getElementById("hidden-input-{{ recordid }}").value = "{{ items.code }}";
+                                            document.getElementById("{{ fieldid }}-{{ recordid }}").value = "{{ items.value }}";
                                         </script>
                                         <div class="input-group mb-2">
                                             <select id="{{ fieldid }}" name="{{ fieldname }}"
@@ -141,8 +141,8 @@
                             {% if field.fieldtypeid == 'linkedmaster' %}
                                 <div class="ui-widget">
                                     <input class="form-select mb-2 {{ mandatory }}" autocomplete="off"
-                                           id="{{ fieldid }}" style="width: 80%" value="{{ field.value }}"
-                                           onfocus="selectAllText(this); showOptions()">
+                                           id="{{ fieldid }}-{{ recordid }}" style="width: 80%" value="{{ field.value }}"
+                                           onfocus="selectAllText(this); showOptions(this)">
                                 </div>
 
                                 <input type="hidden" class="hidden-input {{ mandatory }}" name="{{ field.fieldid }}"
@@ -155,7 +155,7 @@
                                             $("#log").scrollTop(0);
                                         }
 
-                                        $("#{{ fieldid }}").autocomplete({
+                                        $("#{{ fieldid }}-{{ recordid }}").autocomplete({
                                             source: function (request, response) {
                                                 $.ajax({
                                                     url: "{% url 'get_autocomplete_data' %}",
@@ -191,7 +191,7 @@
 
 
                                     function showOptions() {
-                                        $("#{{ fieldid }}").autocomplete({
+                                        $(this).autocomplete({
                                             source: function (request, response) {
                                                 $.ajax({
                                                     url: "{% url 'get_autocomplete_data' %}",
@@ -221,8 +221,8 @@
                     {% for items in field.valuecode %}
                         {% if items.value and items.code %}
                             <script>
-                                document.getElementById("hidden-input").value = "{{ items.code }}";
-                                document.getElementById("{{ fieldid }}").value = "{{ items.value }}";
+                                document.getElementById("hidden-input-{{ recordid }}").value = "{{ items.code }}";
+                                document.getElementById("{{ fieldid }}-{{ recordid }}").value = "{{ items.value }}";
                             </script>
                         {% endif %}
                     {% endfor %}
