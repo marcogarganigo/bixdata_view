@@ -21,7 +21,6 @@ from bixdata_app.views import beta
 
 urlpatterns = [
     path('', alpha.get_render_index, name='index'),
-    path('index/', alpha.get_render_index, name='index'),
     path('loading/', alpha.get_render_loading, name='loading'),
     path('content_records/', alpha.get_content_records, name='content_records'),
     path('chart/', alpha.get_render_content_chart, name='charts_view'),
