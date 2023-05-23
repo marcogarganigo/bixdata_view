@@ -567,7 +567,7 @@ def get_records_table_render(request):
 
 
 @login_required(login_url='/login/')
-def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=''):
+def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=1):
     userid = get_userid(request.user.id)
     table_type = 'standard'
     table_height = '100%'
