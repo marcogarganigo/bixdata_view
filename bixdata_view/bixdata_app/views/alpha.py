@@ -296,6 +296,7 @@ def get_render_index(request, content=''):
         'role': role,
         'theme': theme,
         'content': content,
+        'layout_setting': get_user_setting(request, 'record_open_layout'),
     }
 
     return user_agent(request, 'index.html', 'index2.html', context)
