@@ -6,16 +6,20 @@
 <div class="container fields_container" style="height: 100%" id="fields_container_{{ tableid }}_{{ recordid }}">
 
     <div id="fields-scroll-container"
-         style="height: calc(100% - 90px); overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
+         style="height: calc(100% - 100px); overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
 
         <style>
-            #saved-alert {
-                position: unset;
-                float: right;
-                width: 20%;
-                height: 5%;
-                z-index: 9999;
-            }
+
+        #saved-alert {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 20%;
+            min-width: 200px;
+            max-width: 400px;
+            height: auto;
+            z-index: 9999;
+        }
         </style>
 
 
@@ -55,11 +59,6 @@
                             {% if field.fieldtypeid == 'Parola' %}
                                 {% if field.lookuptableid %}
                                     {% for valuecode in field.valuecode %}
-
-                                        <script>
-                                            document.getElementById("hidden-input-{{ recordid }}").value = "{{ items.code }}";
-                                            document.getElementById("{{ fieldid }}-{{ recordid }}").value = "{{ items.value }}";
-                                        </script>
                                         <div class="input-group mb-2">
                                             <select id="{{ fieldid }}" name="{{ fieldname }}"
                                                     class="form-select {{ mandatory }}">
@@ -220,10 +219,6 @@
                     </div>
                     {% for items in field.valuecode %}
                         {% if items.value and items.code %}
-                            <script>
-                                document.getElementById("hidden-input-{{ recordid }}").value = "{{ items.code }}";
-                                document.getElementById("{{ fieldid }}-{{ recordid }}").value = "{{ items.value }}";
-                            </script>
                         {% endif %}
                     {% endfor %}
                 {% endwith %}

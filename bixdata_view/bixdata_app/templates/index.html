@@ -835,9 +835,10 @@
             <!--record modal small end-->
             -->
             <script>
+                /*
                 var imageDropArea = document.getElementById('image-drop-area');
 
-                // Handle drag and drop events
+
                 imageDropArea.addEventListener('dragenter', function (e) {
                     e.preventDefault();
                     imageDropArea.style.backgroundColor = '#eee';
@@ -855,7 +856,6 @@
                     e.preventDefault();
                     imageDropArea.style.backgroundColor = '#fff';
 
-                    // Handle dropped image
                     var file = e.dataTransfer.files[0];
                     var reader = new FileReader();
                     reader.onload = function (e) {
@@ -866,11 +866,10 @@
                     reader.readAsDataURL(file);
                 });
 
-                // Handle paste event
+
                 imageDropArea.addEventListener('paste', function (e) {
                     e.preventDefault();
 
-                    // Handle pasted image
                     var file = e.clipboardData.items[0].getAsFile();
                     var reader = new FileReader();
                     reader.onload = function (e) {
@@ -880,14 +879,18 @@
                     };
                     reader.readAsDataURL(file);
                 });
+                */
+
             </script>
 
             <style>
+                /*
                 #image-drop-area img {
                     max-width: 100px;
                     max-height: 100px;
                     margin: 5px;
                 }
+                 */
             </style>
 
 
