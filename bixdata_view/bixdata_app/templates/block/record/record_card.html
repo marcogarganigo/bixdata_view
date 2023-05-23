@@ -59,7 +59,15 @@
         $(".tabs-icon").css("display", "none");
     }
 
-    function copyFunc(tableid, recordid) {
+    function copyFunc(el, tableid, recordid) {
+
+        $(el).find('.mdi').removeClass('mdi-content-copy')
+        $(el).find('.mdi').addClass('mdi-checkbox-multiple-marked-outline')
+
+        setTimeout(function () {
+            $(el).find('.mdi').removeClass('mdi-checkbox-multiple-marked-outline')
+            $(el).find('.mdi').addClass('mdi-content-copy')
+        }, 1500);
 
         var url = window.location.href;
         var urlParts = url.split('/');
@@ -68,7 +76,6 @@
         var link = baseUrl + 'get_record_path/' + tableid + '/' + recordid;
 
         navigator.clipboard.writeText(link)
-        alert('Link copiato');
     }
 
     function deleteFunc() {
@@ -178,7 +185,7 @@
 
                 <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip"
                         data-bs-placement="bottom" data-bs-title="copia"
-                        onclick="copyFunc('{{ tableid }}', '{{ recordid }}')"><i
+                        onclick="copyFunc(this,'{{ tableid }}', '{{ recordid }}')"><i
                         class="mdi mdi-content-copy"></i></button>
 
 
