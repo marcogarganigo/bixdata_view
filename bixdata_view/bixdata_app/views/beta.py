@@ -75,13 +75,13 @@ def get_user_setting(request, setting):
     returned_value = ''
     id = request.user.id
     with connection.cursor() as cursor:
-        cursor.execute("SELECT value FROM v_sys_user_settings WHERE userid = %s AND setting = %s", [id, setting])
+        cursor.execute("SELECT value FROM v_sys_user_settings WHERE bixid = %s AND setting = %s", [id, setting])
         result = cursor.fetchone()
         if result:
             returned_value = result[0]
         else:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT value FROM v_sys_user_settings WHERE userid = %s AND setting = %s", [1, setting])
+                cursor.execute("SELECT value FROM v_sys_user_settings WHERE bixid = %s AND setting = %s", [1, setting])
                 result = cursor.fetchone()
                 if result:
                     returned_value = result[0]
