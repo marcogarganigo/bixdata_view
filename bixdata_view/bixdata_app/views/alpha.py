@@ -485,7 +485,7 @@ def get_chart(request, sql, id, name, layout, fields):
 
 
 @login_required(login_url='/login/')
-def get_record_card_copy(request):
+def record_card_duplicate(request):
     return render(request)
 
 

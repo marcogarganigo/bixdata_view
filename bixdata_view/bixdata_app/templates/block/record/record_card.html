@@ -78,6 +78,21 @@
         navigator.clipboard.writeText(link)
     }
 
+    function duplicateFunc() {
+        var serialized_data = [];
+        $.ajax({
+            type: "POST",
+            url: "{% url 'record_card_duplicate' %}",
+            data: serialized_data,
+            success: function (response) {
+                alert('duplicate')
+            },
+            error: function (response) {
+                alert('duplicate')
+            }
+        });
+    }
+
     function deleteFunc() {
         if (confirm("Sei sicuro di voler eliminare questo record?")) {
 
@@ -184,7 +199,7 @@
                         class=" mdi mdi-delete-outline"></i></button>
 
                 <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip"
-                        data-bs-placement="bottom" data-bs-title="copia"
+                        data-bs-placement="bottom" data-bs-title="copia collegamento"
                         onclick="copyFunc(this,'{{ tableid }}', '{{ recordid }}')"><i
                         class="mdi mdi-content-copy"></i></button>
 
@@ -212,6 +227,7 @@
                             <li><a class="dropdown-item" onclick="get_timesheet_serviceassets(this)">Servizi e
                                 risorse</a></li>
                         {% endif %}
+                    <li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>
 
                     </ul>
                 </div>
