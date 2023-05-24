@@ -953,7 +953,7 @@ def get_block_record_linked(tableid,recordid):
     context = dict()
     
 
-    rows = db_query_sql("SELECT * FROM sys_table_link WHERE tableid = '" + tableid + "'")
+    rows = db_query_sql(f"SELECT sys_table_link.*,typepreference,sys_user_order.ID FROM sys_table_link JOIN sys_user_order ON sys_table_link.tableid=sys_user_order.tableid AND sys_table_link.tablelinkid=sys_user_order.fieldid  WHERE sys_table_link.tableid = '{tableid}' AND typepreference='keylabel'")
 
     linked_tables = list()
     for row in rows:
