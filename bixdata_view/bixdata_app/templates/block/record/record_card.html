@@ -59,7 +59,7 @@
         $(".tabs-icon").css("display", "none");
     }
 
- function copyFunc(el, tableid, recordid) {
+    function copyFunc(el, tableid, recordid) {
 
         $(el).find('.mdi').removeClass('mdi-content-copy')
         $(el).find('.mdi').addClass('mdi-checkbox-multiple-marked-outline')
@@ -70,13 +70,19 @@
         }, 1500);
 
         var url = window.location.href;
-     //alert(url)
         var urlParts = url.split('/');
         var baseUrl = urlParts[0] + '//' + urlParts[2] + '/';
-
         var link = baseUrl + 'get_record_path/' + tableid + '/' + recordid;
 
-        navigator.clipboard.writeText('test')
+        $.ajax({
+            type: "POST",
+            url: "{% url 'record_card_copy' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                link: link
+            },
+        });
+
     }
 
     function duplicateFunc() {
