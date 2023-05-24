@@ -170,8 +170,8 @@
                 });
             }
 
-            function open_record(el, tableid, recordid, contextfunction='edit') {
-                
+            function open_record(el, tableid, recordid, contextfunction = 'edit') {
+
                 var serialized_data = [];
                 serialized_data.push({name: 'tableid', value: tableid});
                 serialized_data.push({name: 'recordid', value: recordid});
@@ -570,7 +570,7 @@
                                 <li class="side-nav-item">
                                     <a data-bs-toggle="collapse" href="#sidebar{{ key }}" aria-expanded="false"
                                        aria-controls="sidebar{{ key }}" class="side-nav-link">
-                                        <i class="{{menu_list_value.0.icon }}"></i>
+                                        <i class="{{ menu_list_value.0.icon }}"></i>
                                         <span>{{ key }}</span>
                                         <span class="menu-arrow"></span>
                                     </a>
@@ -750,6 +750,19 @@
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="linked-table-modal" aria-labelledby="exampleModalLabel" aria-hidden="true"
+                 style="width: 100%; z-index: 12000">
+                <div class="modal-dialog modal-fullscreen" style="width: 50%; margin: 2% auto auto;height: 85%">
+                    <div class="modal-content" style="width: 100%">
+                        <div class="modal-body" style="width: 100%; overflow: hidden">
+                            <div id="linked-table-modal-content" class="col-xl-4 col-md-4 mb-4"
+                                 style="height: 100%; width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--record modal end-->
 
             <!--
@@ -793,8 +806,8 @@
         </div>
     -->
 
-            
-         <!--record modal big start-->
+
+            <!--record modal big start-->
             <div id="modalBig" class="modal fade" tabindex="-1">
                 <div class="modal-dialog modal-fullscreen"
                      style="width: 80%; height: 90%; margin: auto; margin-top: 1%">
@@ -897,6 +910,5 @@
         </div>
 
 
-
-</div>
+    </div>
 {% endblock %}

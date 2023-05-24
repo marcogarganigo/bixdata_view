@@ -136,7 +136,7 @@
 
 
     function refresh() {
-             
+
         var serialized_data = [];
         serialized_data.push({
             name: 'tableid',
@@ -152,7 +152,7 @@
         });
         serialized_data.push({
             name: 'currentpage',
-            value: $('#my-pagination').data('currentpage')   
+            value: $('#my-pagination').data('currentpage')
         });
         //$("#records_table_container").load('/loading/');
         $("#records_table_container").load('/loading/', function () {
@@ -257,8 +257,6 @@
     }
 
 
-    
-
     function closeCard(vrbl) {
         $(vrbl).closest('.modal').modal('hide');
         setTimeout(function () {
@@ -324,20 +322,6 @@
         }
     </style>
 {% endif %}
-
-
-
-<div class="modal fade" id="linked-table-modal" aria-labelledby="exampleModalLabel" aria-hidden="true"
-     style="width: 100%; z-index: 12000">
-    <div class="modal-dialog modal-fullscreen" style="width: 50%; margin: 2% auto auto;height: 85%">
-        <div class="modal-content" style="width: 100%">
-            <div class="modal-body" style="width: 100%; overflow: hidden">
-                <div id="linked-table-modal-content" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <div id="content-records" style="height: 98%">
