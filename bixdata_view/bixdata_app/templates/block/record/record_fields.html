@@ -10,7 +10,7 @@
 
         <style>
 
-        #saved-alert {
+        #saved-alert-{{ recordid }} {
             position: absolute;
             bottom: 10px;
             right: 10px;
@@ -233,8 +233,8 @@
         </div>
 
 
-        <button id="save-button" type="button" class="btn btn-primary" onclick=" save_record(this)">Salva</button>
-        <div class="alert alert-success" role="alert" id="saved-alert" style="display: none">
+        <button id="save-button" data-recordid="{{ recordid }}" type="button" class="btn btn-primary" onclick="save_record(this)">Salva</button>
+        <div class="alert alert-success" role="alert" id="saved-alert-{{ recordid }}" style="display: none">
             Salvato
         </div>
         </div>
@@ -311,8 +311,9 @@
                         if ('{{ tableid }}' == 'ticketbixdata') {
                             alert('Grazie per la segnalazione. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
                         }
-                        $("#saved-alert").css("display", "block");
-                        $("#saved-alert").fadeOut(1500);
+                        var recordid = $(el).attr('data-recordid');
+                        $("#saved-alert-" + recordid).css("display", "block");
+                        $("#saved-alert-" + recordid).fadeOut(1500);
                         //getContentRecords('{{ tableid }}')
                         //$("#linked-container-{{ tableid }}").load('/loading/')
                         load_linked(this, '{{ tableid }}')
