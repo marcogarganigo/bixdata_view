@@ -59,7 +59,7 @@
         $(".tabs-icon").css("display", "none");
     }
 
-    function copyFunc(el, tableid, recordid) {
+ function copyFunc(el, tableid, recordid) {
 
         $(el).find('.mdi').removeClass('mdi-content-copy')
         $(el).find('.mdi').addClass('mdi-checkbox-multiple-marked-outline')
@@ -70,6 +70,7 @@
         }, 1500);
 
         var url = window.location.href;
+     //alert(url)
         var urlParts = url.split('/');
         var baseUrl = urlParts[0] + '//' + urlParts[2] + '/';
 
@@ -174,7 +175,7 @@
 
 </script>
 
-<div id="block_record_card-{{recordid}}" class="block_record_card" style="height: 100%;width: 100%;">
+<div id="block_record_card-{{ recordid }}" class="block_record_card" style="height: 100%;width: 100%;">
     <div id="RecordCard" class="card RecordCard" style=" height: 100%; overflow: hidden">
         <div class="card-body" style="max-height: 100%">
             <p class="card-text">
@@ -227,7 +228,7 @@
                             <li><a class="dropdown-item" onclick="get_timesheet_serviceassets(this)">Servizi e
                                 risorse</a></li>
                         {% endif %}
-                    <li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>
+                        <li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>
 
                     </ul>
                 </div>
