@@ -511,20 +511,6 @@ def get_record_card_delete(request):
             )
     return JsonResponse({'success': True})
 
-
-@login_required(login_url='/login/')
-def get_record_card_permissions(request):
-    return render(request)
-
-
-@login_required(login_url='/login/')
-def get_record_card_pin(request):
-    return render(request)
-
-
-# https://openclassrooms.com/en/courses/7107341-intermediate-django/7263317-create-a-login-page-with-a-function-based-view
-
-
 def get_render_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
