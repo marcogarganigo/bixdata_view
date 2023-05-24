@@ -858,9 +858,6 @@ def get_block_record_badge(tableid,recordid):
     # response_dict = json.loads(response.text)
     sql = f"SELECT sys_field.* FROM sys_field join sys_user_order on sys_field.fieldid=sys_user_order.fieldid WHERE sys_user_order.userid=1 AND sys_user_order.tableid='{tableid}' AND typePreference='campiFissi' ORDER BY fieldorder asc"
 
-    if tableid == 'company' or tableid == 'project':
-        sql = f"SELECT sys_field.* FROM sys_field join sys_user_order on sys_field.fieldid=sys_user_order.fieldid WHERE sys_user_order.userid=1 AND sys_user_order.tableid='{tableid}' ORDER BY fieldorder asc"
-
     fields = db_query_sql(sql)
     values = db_get_row(f"user_{tableid}", "*", f"recordid_='{recordid}'")
     context_fields = dict()
@@ -871,14 +868,19 @@ def get_block_record_badge(tableid,recordid):
 
     context['fields'] = context_fields
 
-    #if tableid == 'company':
-    #    records_table = render_to_string('block/record/custom/record_badge_company.html', context)
+    records_table = ""
+    
+    if tableid == 'company':
+        sql = f"SELECT DISTINCT type FROM user_servicecontract WHERE recordidcompany_='{recordid}' AND STATUS='In Progress'"
+        context_fields['services']=db_query_sql(sql)
+        context['fields'] = context_fields
+        records_table = render_to_string('block/record/custom/record_badge_company.html', context)
 
    # elif tableid == 'project':
     #    records_table = render_to_string('block/record/custom/record_badge_project.html', context)
 
     #else:
-    records_table = ""#render_to_string('block/record/record_badge.html', context)
+    #render_to_string('block/record/record_badge.html', context)
 
     return records_table
 

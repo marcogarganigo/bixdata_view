@@ -20,9 +20,9 @@
     }
 
     //appena la card carica aprire collegato di default
-    var recordtab = '{{user_table_settings.default_recordtab}}';
-    $('#block_record_card').ready(function () {
-        if (recordtab === 'Linked') {
+    var recordtab_{{recordid}} = '{{user_table_settings.default_recordtab}}';
+    $('#block_record_card-{{recordid}}').ready(function () {
+        if (recordtab_{{recordid}} === 'Linked') {
             $('#linked-tab-{{ recordid }}').click();
         } else {
             $('#fields-tab-{{ recordid }}').click();
@@ -174,7 +174,7 @@
 
 </script>
 
-<div id="block_record_card" class="block_record_card" style="height: 100%;width: 100%;">
+<div id="block_record_card-{{recordid}}" class="block_record_card" style="height: 100%;width: 100%;">
     <div id="RecordCard" class="card RecordCard" style=" height: 100%; overflow: hidden">
         <div class="card-body" style="max-height: 100%">
             <p class="card-text">
@@ -236,7 +236,7 @@
             </div>
 
 
-            <div class="container" style="max-height:10%">
+            <div class="container" style="height:10%">
                 {{ block_record_badge }}
             </div>
 
@@ -316,7 +316,7 @@
                 </div>
             </nav>
 
-            <div class="tab-content" id="myTabContent" style="height: 85%;">
+            <div class="tab-content" id="myTabContent" style="height: 80%;">
                 <div class="tab-pane tab-pane-fields fade show active" id="fields-tab-pane-{{ recordid }}"
                      role="tabpanel"
                      aria-labelledby="fields-tab" tabindex="0" style="height: 100%">
