@@ -39,8 +39,6 @@ urlpatterns = [
     path('record_card_copy/', alpha.record_card_copy, name='record_card_copy'),
     path('record_card_duplicate/', alpha.record_card_duplicate, name='record_card_duplicate'),
     path('record_card_delete/', alpha.get_record_card_delete, name='record_card_delete'),
-    path('record_card_permissions/', alpha.get_record_card_permissions, name='record_card_permissions'),
-    path('record_card_pin/', alpha.get_record_card_pin, name='record_card_pin'),
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     # path('login/', alpha.get_render_login, name='login'),
     # path('logout/', alpha.get_render_logout, name='logout'),
