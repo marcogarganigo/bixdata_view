@@ -405,7 +405,8 @@ def get_block_records_chart(request):
 
 @login_required(login_url='/login/')
 def get_test(request):
-    return render(request, 'content/test.html')
+    num = 1
+    return render(request, 'content/test.html', {'num': num})
 
 
 @login_required(login_url='/login/')
@@ -525,6 +526,9 @@ def get_record_card_delete(request):
                 query
             )
     return JsonResponse({'success': True})
+
+# https://openclassrooms.com/en/courses/7107341-intermediate-django/7263317-create-a-login-page-with-a-function-based-view
+
 
 def get_render_login(request):
     if request.method == 'POST':
