@@ -609,6 +609,7 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
             record[record_index]['value'] = value
             record[record_index]['code'] = value
             record[record_index]['fieldtype'] = columns[record_index]['fieldtypeid'];
+            record[record_index]['fieldtypeweb'] = columns[record_index]['fieldtypewebid'];
             if record[record_index]['fieldtype'] == 'linked':
                 if isinstance(value, str):
                     value = value.split('|:|')
