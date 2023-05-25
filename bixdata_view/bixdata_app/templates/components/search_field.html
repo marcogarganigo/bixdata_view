@@ -1,49 +1,73 @@
-<div class="col">
-
-    {% if search_field.fieldtypeid == 'Parola' %}
-        {{ search_field.fieldid }}<br/>
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+{% if search_field.fieldtypeid == 'Parola' %}
+    <div class="col">
+        {{ search_field.fieldtypeid }}<br/>
+        <br>
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="">
+         <i class="mdi mdi-dots-vertical btn" id="parolaDropdown" data-bs-toggle="dropdown" aria-expanded="false"></i>
         <div class="dropdown">
-            <button class="btn btn-link dropdown-toggle" type="button" id="parolaDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="mdi mdi-dots-horizontal"></i>
-            </button>
             <ul class="dropdown-menu" aria-labelledby="parolaDropdown">
-                <li><a class="dropdown-item" href="#">Example 1</a></li>
-                <li><a class="dropdown-item" href="#">Example 2</a></li>
-                <li><a class="dropdown-item" href="#">Example 3</a></li>
+                <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
+                <li><a class="dropdown-item" href="#">Nessun valore</a></li>
+                <li><a class="dropdown-item" href="#">Diverso da</a></li>
             </ul>
         </div>
+    </div>
     {% elif search_field.fieldtypeid == 'Numero' %}
-        {{ search_field.fieldid }}<br/>
+    <div class="col">
+        {{ search_field.fieldtypeid }}<br/>
         da<input class="form-control me-2" type="number" placeholder="Search" aria-label="Search" oninput="fillSecondInput(this)">
         a<input class="form-control me-2" type="number" placeholder="Search" aria-label="Search">
+         <i class="mdi mdi-dots-vertical btn" id="numeroDropdown" data-bs-toggle="dropdown" aria-expanded="false"></i>
         <div class="dropdown">
-            <button class="btn btn-link dropdown-toggle" type="button" id="numeroDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="mdi mdi-dots-horizontal"></i>
-            </button>
             <ul class="dropdown-menu" aria-labelledby="numeroDropdown">
-                <li><a class="dropdown-item" href="#">Example 1</a></li>
-                <li><a class="dropdown-item" href="#">Example 2</a></li>
-                <li><a class="dropdown-item" href="#">Example 3</a></li>
+                <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
+                <li><a class="dropdown-item" href="#">Nessun valore</a></li>
+                <li><a class="dropdown-item" href="#">Diverso da</a></li>
             </ul>
         </div>
+    </div>
     {% elif search_field.fieldtypeid == 'Data' %}
-        {{ search_field.fieldid }}<br/>
+    <div class="col">
+        {{ search_field.fieldtypeid }}<br/>
         da<input class="form-control me-2" type="date" placeholder="Search" aria-label="Search" onchange="fillSecondInput(this)">
         a<input class="form-control me-2" type="date" placeholder="Search" aria-label="Search">
+         <i class="mdi mdi-dots-vertical btn" id="dataDropdown" data-bs-toggle="dropdown" aria-expanded="false"></i>
         <div class="dropdown">
-            <button class="btn btn-link dropdown-toggle" type="button" id="dataDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="mdi mdi-dots-horizontal"></i>
-            </button>
             <ul class="dropdown-menu" aria-labelledby="dataDropdown">
-                <li><a class="dropdown-item" href="#">Example 1</a></li>
-                <li><a class="dropdown-item" href="#">Example 2</a></li>
-                <li><a class="dropdown-item" href="#">Example 3</a></li>
+                <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
+                <li><a class="dropdown-item" href="#">Nessun valore</a></li>
+                <li><a class="dropdown-item" href="#">Diverso da</a></li>
+                <li><a class="dropdown-item" href="#">Passato</a></li>
+                <li><a class="dropdown-item" href="#">Futuro</a></li>
+                <li><a class="dropdown-item" href="#">Questa settimana</a></li>
+                <li><a class="dropdown-item" href="#">Questo mese</a></li>
             </ul>
         </div>
+    </div>
+    {% elif search_field.fieldtypeid == 'Utente' %}
+    <div class="col">
+        {{ search_field.fieldtypeid }}<br/>
+        <br>
+        <div class="col">
+            <select class="form-select" id="inputGroupSelect01">
+            <option selected>Choose...</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+            </select>
+        </div>
+         <i class="mdi mdi-dots-vertical btn" id="utenteDropdown" data-bs-toggle="dropdown" aria-expanded="false"></i>
+        <div class="dropdown">
+            <ul class="dropdown-menu" aria-labelledby="utenteDropdown">
+                <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
+                <li><a class="dropdown-item" href="#">Nessun valore</a></li>
+                <li><a class="dropdown-item" href="#">Diverso da</a></li>
+                <li><a class="dropdown-item" href="#">Utente corrente</a></li>
+            </ul>
+        </div>
+    </div>
     {% endif %}
 
-</div>
 
 <script>
     function fillSecondInput(input) {

@@ -709,15 +709,11 @@
 
             <style>
                 #newRecordModal {
-                    z-index: 9999;
+                    z-index: 12001;
                 }
             </style>
 
             <script>
-                $('#newRecordModal').on('shown.bs.modal', function (e) {
-                    $('#newRecordModal').css('z-index', 9000)
-                });
-
                 $('#newRecordModal').on('hide.bs.modal', function (e) {
                     $('.modal-backdrop').css('z-index', 1000)
                 });

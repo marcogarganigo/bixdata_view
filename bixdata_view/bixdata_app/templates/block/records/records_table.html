@@ -228,7 +228,7 @@
                     {% else %}
                         <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
                             {% autoescape off %}
-                                {% if column_value.fieldtypeweb == 'custom_bexiourl' %} 
+                                {% if column_value.fieldtypeweb == 'custom_bexiourl' %}
                                     <a onclick="event.stopPropagation();" href="https://office.bexio.com/index.php/kb_order/show/id/{{ column_value.value }}" target="blank_">{{ column_value.value }}</a>
                                 {% else %}
                                     {{ column_value.value }}
@@ -301,7 +301,6 @@
 
 
     </script>
-
 
     <style>
         .pagination {
