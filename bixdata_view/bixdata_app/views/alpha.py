@@ -349,6 +349,20 @@ def get_content_records(request):
     return user_agent(request, 'content/records.html', 'content/records_mobile.html', context)
     # return render(request, 'content/records.html', context)
 
+def get_search_fields_data(tableid):
+    search_fields = []
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT f.* FROM sys_user_table_search_field AS s join sys_field as f on s.tableid=f.tableid and s.fieldid=f.fieldid  WHERE s.tableid='{tableid}'"
+        )
+        result = dictfetchall(cursor)
+        if result:
+            for field in result:
+                field['fieldtype'] = field['fieldtypeid']  # Add fieldtype key to the field dictionary
+                search_fields.append(field)
+    return search_fields
+
+
 
 def get_records_linked(request):
     tableid = request.POST.get('tableid')

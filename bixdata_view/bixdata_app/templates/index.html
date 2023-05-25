@@ -333,7 +333,7 @@
 
                     <ul class="list-unstyled topbar-menu float-end mb-0">
                         <li class="dropdown notification-list d-lg-none">
-                            <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#"
+                            <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown"
                                role="button" aria-haspopup="false" aria-expanded="false">
                                 <i class="ri-search-line noti-icon"></i>
                             </a>
@@ -375,7 +375,7 @@
 
                         <li class="dropdown notification-list">
                             <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown"
-                               href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                               role="button" aria-haspopup="false" aria-expanded="false">
                                 <span class="account-user-avatar">
                                     <img src="{% static 'images/users/' %}{{ username }}.png?v=" + time alt=""
                                          class="rounded-circle">
@@ -578,7 +578,7 @@
                                         <ul class="side-nav-second-level">
                                             {% for value in menu_list_value %}
                                                 <li onclick="getContentRecords('{{ value.id }}')">
-                                                    <a href="#" class="side-nav-txt"
+                                                    <a class="side-nav-txt"
                                                        onclick="setColor(this)">{{ value.description }}</a>
                                                 </li>
                                             {% endfor %}
@@ -598,7 +598,7 @@
                           <div class="collapse" id="sidebarcalendar">
                             <ul class="side-nav-second-level">
                               <li onclick="testcalendar()">
-                                <a href="#" class="side-nav-txt">testcalendar</a>
+                                <a class="side-nav-txt">testcalendar</a>
                               </li>
                                 </ul>
                             </div>
@@ -641,7 +641,7 @@
                                     <div class="collapse" id="sidebarAdmin">
                                         <ul class="side-nav-second-level">
                                             <li onclick="getContentRecordsAdmin($(this).find('a').text())">
-                                                <a href="#" class="side-nav-txt" onclick="setColor(this)">Grafici</a>
+                                                <a class="side-nav-txt" onclick="setColor(this)">Grafici</a>
                                             </li>
 
                                         </ul>
@@ -714,6 +714,7 @@
             </style>
 
             <script>
+
                 $('#newRecordModal').on('hide.bs.modal', function (e) {
                     $('.modal-backdrop').css('z-index', 1000)
                 });
