@@ -147,6 +147,26 @@
         });
     }
 
+    function stampaRapportino() {
+        var serialized_data = [];
+        $.ajax({
+            type: "POST",
+            url: "{% url 'stampa_rapportino' %}",
+            data: {
+                'recordid': '{{ recordid }}',
+            },
+            success: function (response) {
+                //open the file returned
+                //alert(response)
+                //window.open(response, '_blank');
+            },
+            error: function (response) {
+                //alert(response)
+                //window.open(response, '_blank');
+            }
+        });
+    }
+
 </script>
 
 <div id="block_record_card-{{ recordid }}" class="block_record_card" style="height: 100%;width: 100%;">
@@ -179,7 +199,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Stampa scheda</a></li>
                         <li><a class="dropdown-item"
-                               href="http://10.0.0.133:8822/bixdata/index.php/sys_viewcontroller/scarica_stampa_test">Stampa
+                               onclick="stampaRapportino()">Stampa
                             rapportino</a></li>
                     </ul>
                 </div>

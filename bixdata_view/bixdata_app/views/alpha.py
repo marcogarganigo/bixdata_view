@@ -1,4 +1,8 @@
+import tempfile
+
 import pyperclip
+from aiohttp.web_fileresponse import FileResponse
+from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
@@ -11,6 +15,9 @@ import json
 import datetime
 from django.contrib.auth.decorators import login_required
 import time
+
+import pdfkit
+
 from ..forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
@@ -23,6 +30,7 @@ from bixdata_app.models import CustomUser
 import os
 from django.conf import settings
 from django.views.decorators.clickjacking import xframe_options_exempt
+import subprocess
 from .beta import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
@@ -332,7 +340,7 @@ def get_content_records(request):
     context['loading'] = render_to_string('other/loading.html', context, request)
 
     #  search fields
-    search_fields=dict()
+    search_fields = dict()
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT f.* FROM sys_user_table_search_field AS s join sys_field as f on s.tableid=f.tableid and s.fieldid=f.fieldid  WHERE s.tableid='{tableid}'"
@@ -340,14 +348,16 @@ def get_content_records(request):
         result = dictfetchall(cursor)
         if result:
             search_fields = result
-    for search_field_key,search_field in enumerate(search_fields):
-        context_search_field=dict()
-        context_search_field['search_field']=search_field
-        search_fields[search_field_key]['component']=render_to_string('components/search_field.html', context_search_field, request)
+    for search_field_key, search_field in enumerate(search_fields):
+        context_search_field = dict()
+        context_search_field['search_field'] = search_field
+        search_fields[search_field_key]['component'] = render_to_string('components/search_field.html',
+                                                                        context_search_field, request)
 
-    context['search_fields']=search_fields
+    context['search_fields'] = search_fields
     return user_agent(request, 'content/records.html', 'content/records_mobile.html', context)
     # return render(request, 'content/records.html', context)
+
 
 def get_search_fields_data(tableid):
     search_fields = []
@@ -361,7 +371,6 @@ def get_search_fields_data(tableid):
                 field['fieldtype'] = field['fieldtypeid']  # Add fieldtype key to the field dictionary
                 search_fields.append(field)
     return search_fields
-
 
 
 def get_records_linked(request):
@@ -521,7 +530,6 @@ def record_card_duplicate(request):
 
 @login_required(login_url='/login/')
 def record_card_copy(request):
-
     link = request.POST.get('link')
     pyperclip.copy(link)
 
@@ -540,6 +548,7 @@ def get_record_card_delete(request):
                 query
             )
     return JsonResponse({'success': True})
+
 
 # https://openclassrooms.com/en/courses/7107341-intermediate-django/7263317-create-a-login-page-with-a-function-based-view
 
@@ -1301,3 +1310,26 @@ def get_bixdata_updates(request):
 @login_required(login_url='/login/')
 def new_update(request):
     return render(request, 'other/bixdata_updates.html')
+
+
+def stampa_rapportino(request):
+    if request.method == 'POST':
+        recordid = request.POST.get('recordid')
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"SELECT   t.*,c.companyname,c.address,c.city,c.email FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ WHERE recordid_='{recordid}'"
+            )
+            rows = dictfetchall(cursor)
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    wkhtmltopdf_path = os.path.join(script_dir, '\\wkhtmltopdf.exe')
+
+    config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+    content=render_to_string('content/test.html', rows[0])
+    pdfkit.from_string(content, 'out.pdf', configuration=config)
+    return True
+
+
+
+

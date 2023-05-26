@@ -85,6 +85,7 @@ urlpatterns = [
     path('save_chart_settings/', alpha.save_chart_settings, name='save_chart_settings'),
     path('get_record_path/<str:tableid>/<str:recordid>/', alpha.get_record_path, name='get_record_path'),
     path('new_chart_block/', alpha.new_chart_block, name='new_chart_block'),
+    path('stampa_rapportino/', alpha.stampa_rapportino, name='stampa_rapportino'),
 ]
 
 urlpatterns += [
