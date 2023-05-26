@@ -1318,7 +1318,7 @@ def stampa_rapportino(request):
 
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT   t.*,c.companyname,c.address,c.city,c.email FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ WHERE recordid_='{recordid}'"
+                f"SELECT t.*,c.companyname,c.address,c.city,c.email FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ WHERE recordid_='{recordid}'"
             )
             rows = dictfetchall(cursor)
 
