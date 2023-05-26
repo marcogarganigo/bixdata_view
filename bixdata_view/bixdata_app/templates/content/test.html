@@ -9,6 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
        
     <title>Intervento IT</title>   
+    <style>
+    @import url('https://fonts.cdnfonts.com/css/barcode-font');
+    </style>
 </head>
 
 <body style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">   
@@ -23,11 +26,11 @@
 <div style="width:200px;height:100px;float:left">
     <img src="https://www.swissbix.ch/corp/wp-content/uploads/2018/08/logo_w.png" width="150%"> 
 </div>
-<div style="float:right">
+<div style="float:right; margin-bottom: -50px">
     <h1>Intervento IT</h1>
 </div>
+    <p style="font-family: 'barcode font', sans-serif; font-size: 30pt; margin-left: 40%; float: right">*{{ recordid }}*</p>
 <div style="clear:both"></div>
-
 <div style="background-color:#e43b2c;width:100%;height:25px;color:white;padding:2px;">
     Dati Cliente
 </div>
@@ -39,17 +42,17 @@
     <div style="float:left;width:33%">
         <b>Azienda/Cognome</b>
         <br>
-        <p>{{ rows.companyname }}</p>
+        <p>{{ companyname }}</p>
     </div>
     <div style="float:left;width:30%">
         <b>Nome</b>
         <br>
-        <p>$campo$</p>
+        <p>{{ name }}</p>
     </div>
     <div style="float:left;width:30%">
         <b>Tel.Mobile</b>
         <br>
-        <p>$campo$</p>
+        <p>{{ phone }}</p>
     </div>
 
     <div style="clear:both"></div>
@@ -63,17 +66,17 @@
     <div style="float:left;width:33%">
         <b>Indirizzo</b>
         <br>
-        <p>$campo$</p>
+        <p>{{ address }}</p>
     </div>
     <div style="float:left;width:30%">
-        <b>Luogi</b>
+        <b>Città</b>
         <br>
-        <p>$campo$</p>
+        <p>{{ city }}</p>
     </div>
     <div style="float:left;width:30%">
         <b>E-mail</b>
         <br>
-        <p>$campo$</p>
+        <p>{{ email }}</p>
     </div>
 
     <div style="clear:both"></div>
@@ -105,7 +108,7 @@
 <div style="float:right;width:30%">
     <input type="checkbox">
     <label>Progetto N.</label>
-    <span class="border-bottom" style=" margin-block-end: 0; margin-block-start: 0; display:unset">$campo$</span>
+    <span class="border-bottom" style=" margin-block-end: 0; margin-block-start: 0; display:unset"></span>
 </div>
 
 <div style="clear:both"></div>
@@ -129,7 +132,7 @@
 <div style="float:left;width:25%">
     <input type="checkbox">
     <label>Altro</label>
-    <span class="border-bottom" style=" margin-block-end: 0; margin-block-start: 0; display:unset">$campo$</span>
+    <span class="border-bottom" style=" margin-block-end: 0; margin-block-start: 0; display:unset">{{ recordidproject_ }}</span>
     <span style=" margin-block-end: 0; margin-block-start: 0; display:unset">+IVA</span>
 </div>
 
@@ -153,17 +156,19 @@
 <div style="background-color:#e43b2c;width:100%;height:25px;color:white; padding: 2px; margin-top: 2%">
     Data e Ora Intervento
 </div>
-
 <div style="float:left;width:10%; text-align: center">
     <p class="border-bottom">Data</p>
+    {{ date }}
 </div>
-<div style="float:left;width:10%; text-align: center">
+<div style="float:left;width:20%; text-align: center">
     <p class="border-bottom">Ore di lavoro</p>
+    {{ worktime }}
 </div>
-<div style="float:left;width:40%; text-align: center">
+<div style="float:left;width:35%; text-align: center">
     <p class="border-bottom">Collaboratore</p>
+    {{ firstname }} {{ lastname }}
 </div>
-<div style="float:left;width:40%; text-align: center">
+<div style="float:left;width:35%; text-align: center">
     <p class="border-bottom">Registrato VTE</p>
 </div>
 

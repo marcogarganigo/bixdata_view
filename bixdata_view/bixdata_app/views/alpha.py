@@ -1313,22 +1313,38 @@ def new_update(request):
 
 
 def stampa_rapportino(request):
+    recordid = ''
     if request.method == 'POST':
         recordid = request.POST.get('recordid')
+        filename = request.POST.get('filename')
 
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT t.*,c.companyname,c.address,c.city,c.email FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ WHERE t.recordid_='{recordid}'"
+                f"SELECT   t.*,c.companyname,c.address,c.city,c.email,u.firstname, u.lastname FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ join sys_user as u on t.user = u.id WHERE t.recordid_='{recordid}'"
             )
             rows = dictfetchall(cursor)
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    wkhtmltopdf_path = os.path.join(script_dir, '\\wkhtmltopdf.exe')
+            row = rows[0]
+            row['recordid'] = recordid
 
-    config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-    content=render_to_string('content/test.html', rows[0])
-    pdfkit.from_string(content, 'out.pdf', configuration=config)
-    return True
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
+
+        config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+        content = render_to_string('content/test.html', row)
+        pdfkit.from_string(content, filename, configuration=config)
+
+        # Open the file and read its contents
+        with open(filename, 'rb') as file:
+            file_data = file.read()
+
+        # Delete the file from the file system
+        os.remove(filename)
+
+        # Create an HTTP response with the file contents
+        response = HttpResponse(file_data, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
 
 
 
