@@ -986,7 +986,6 @@ def get_block_record_linked_OLD(request):
         'block/record/record_linked.html', context, request=request)
     return record_linked_labels
 
-
 @login_required(login_url='/login/')
 def request_block_record_linked(request):
     tableid = request.POST.get('tableid')

@@ -1,2 +1,27 @@
-record fields timesheet
+<div class="container">
+    <div class="row">
+        <div class="col-lg-2">
+            <p>ID</p>
+            <p class="badge bg-danger fs-5">Data</p>
+            <p class="badge bg-danger fs-5">Azienda</p>
+        </div>
 
+        <div class="col">
+            <p>{{ record_fields_labels.Dati.id.valuecode.0.value }}</p>
+
+            <label>
+                <input id="{{ record_fields_labels.Dati.date.fieldid }}"
+                       name="{{ record_fields_labels.Dati.date.fieldname }}"
+                       class="form-control mb-2" type="date"
+                       value="{{ record_fields_labels.Dati.date.valuecode.0.value }}">
+            </label>
+
+            <div>
+                <input class="form-select mb-2" autocomplete="off"
+                       id="{{ record_fields_labels.Dati._recordidcompany.fieldid }}-{{ recordid }}" style="width: 80%" value="{{ record_fields_labels.Dati._recordidcompany.value }}"
+                       onfocus="selectAllText(this); showOptions(this)">
+            </div>
+
+        </div>
+    </div>
+</div>
