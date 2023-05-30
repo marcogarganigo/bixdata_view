@@ -2,8 +2,14 @@
     <div class="row">
         <div class="col-lg-2">
             <p>ID</p>
-            <p class="badge bg-danger fs-5">Data</p>
             <p class="badge bg-danger fs-5">Azienda</p>
+            <p>Progetto</p>
+            <p class="badge bg-danger fs-5">Data</p>
+            <p class="badge bg-danger fs-5">Servizio</p>
+            <p>Opzioni</p>
+            <p>Descrizione</p>
+            <p>Tempo di lavoro</p>
+            <p>Tempo di trasferta</p>
         </div>
 
         <div class="col">
@@ -18,9 +24,107 @@
 
             <div>
                 <input class="form-select mb-2" autocomplete="off"
-                       id="{{ record_fields_labels.Dati._recordidcompany.fieldid }}-{{ recordid }}" style="width: 80%" value="{{ record_fields_labels.Dati._recordidcompany.value }}"
+                       id="{{ record_fields_labels.Dati._recordidcompany.fieldid }}-{{ recordid }}" style="width: 80%"
+                       value="{{ record_fields_labels.Dati._recordidcompany.value }}"
                        onfocus="selectAllText(this); showOptions(this)">
             </div>
+
+            <div>
+                <input class="form-select mb-2" autocomplete="off"
+                       id="{{ record_fields_labels.Dati._recordidproject.fieldid }}-{{ recordid }}" style="width: 80%"
+                       value="{{ record_fields_labels.Dati._recordidproject.value }}"
+                       onfocus="selectAllText(this); showOptions(this)">
+            </div>
+
+            <div class="input-group mb-2">
+                <select id="{{ record_fields_labels.Dati.service.fieldid }}"
+                        name="{{ record_fields_labels.Dati.service.fieldname }}"
+                        class="form-select">
+                    <option value=""></option>
+                    {% for item in record_fields_labels.Dati.service.lookupitems %}
+                        {% if item.itemcode == record_fields_labels.Dati.service.valuecode.0.code %}
+                            <option selected
+                                    value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                        {% else %}
+                            <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+
+            <div class="input-group mb-2">
+                <select id="{{ record_fields_labels.Dati.invoiceoption.fieldid }}"
+                        name="{{ record_fields_labels.Dati.invoiceoption.fieldname }}"
+                        class="form-select">
+                    <option value=""></option>
+                    {% for item in record_fields_labels.Dati.invoiceoption.lookupitems %}
+                        {% if item.itemcode == record_fields_labels.Dati.invoiceoption.valuecode.0.code %}
+                            <option selected
+                                    value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                        {% else %}
+                            <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <textarea style="min-height: 250px" class="form-control mb-2"
+                      id="{{ record_fields_labels.Dati.description.fieldid }}"
+                      name="{{ record_fields_labels.Dati.description.fieldname }}"
+                      rows="3">{{ record_fields_labels.Dati.description.value }}</textarea>
+
+            <div class="input-group mb-2">
+                <select id="{{ record_fields_labels.Dati.worktime.fieldid }}"
+                        name="{{ record_fields_labels.Dati.worktime.fieldname }}"
+                        class="form-select">
+                    <option value=""></option>
+                    {% for item in record_fields_labels.Dati.worktime.lookupitems %}
+                        {% if item.itemcode == record_fields_labels.Dati.worktime.valuecode.0.code %}
+                            <option selected
+                                    value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                        {% else %}
+                            <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="input-group mb-2">
+                <select id="{{ record_fields_labels.Dati.traveltime.fieldid }}"
+                        name="{{ record_fields_labels.Dati.traveltime.fieldname }}"
+                        class="form-select">
+                    <option value=""></option>
+                    {% for item in record_fields_labels.Dati.traveltime.lookupitems %}
+                        {% if item.itemcode == record_fields_labels.Dati.traveltime.valuecode.0.code %}
+                            <option selected
+                                    value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                        {% else %}
+                            <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="input-group mb-2">
+                <select id="{{ record_fields_labels.Dati.user.fieldid }}"
+                        name="{{ record_fields_labels.Dati.user.fieldname }}"
+                        class="form-select">
+                    <option value=""></option>
+                    {% for items in record_fields_labels.Dati.user.lookupitems %}
+                        {% if items.id and items.firstname and items.lastname %}
+                            {% if items.id == record_fields_labels.Dati.user.valuecode.0.code %}
+                                <option selected id="{{ items.id }}"
+                                        value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                            {% else %}
+                                <option id="{{ items.id }}"
+                                        value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
 
         </div>
     </div>
