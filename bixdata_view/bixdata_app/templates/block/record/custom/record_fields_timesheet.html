@@ -1,131 +1,259 @@
-<div class="container">
-    <div class="row">
-        <div class="col-lg-2">
-            <p>ID</p>
-            <p class="badge bg-danger fs-5">Azienda</p>
-            <p>Progetto</p>
-            <p class="badge bg-danger fs-5">Data</p>
-            <p class="badge bg-danger fs-5">Servizio</p>
-            <p>Opzioni</p>
-            <p>Descrizione</p>
-            <p>Tempo di lavoro</p>
-            <p>Tempo di trasferta</p>
-        </div>
-
-        <div class="col">
-            <p>{{ record_fields_labels.Dati.id.valuecode.0.value }}</p>
-
-            <label>
-                <input id="{{ record_fields_labels.Dati.date.fieldid }}"
-                       name="{{ record_fields_labels.Dati.date.fieldname }}"
-                       class="form-control mb-2" type="date"
-                       value="{{ record_fields_labels.Dati.date.valuecode.0.value }}">
-            </label>
-
-            <div>
-                <input class="form-select mb-2" autocomplete="off"
-                       id="{{ record_fields_labels.Dati._recordidcompany.fieldid }}-{{ recordid }}" style="width: 80%"
-                       value="{{ record_fields_labels.Dati._recordidcompany.value }}"
-                       onfocus="selectAllText(this); showOptions(this)">
+<div id="fields-scroll-container"
+     style="height: calc(100% - 100px); overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <p>ID</p>
+                <p class="badge bg-danger fs-5">Azienda</p>
+                <p>Progetto</p>
+                <p class="badge bg-danger fs-5">Data</p>
+                <p class="badge bg-danger fs-5">Servizio</p>
+                <p>Opzioni</p>
+                <p>Descrizione</p>
+                <p>Tempo di lavoro</p>
+                <p>Tempo di trasferta</p>
+                <p>User</p>
             </div>
 
-            <div>
-                <input class="form-select mb-2" autocomplete="off"
-                       id="{{ record_fields_labels.Dati._recordidproject.fieldid }}-{{ recordid }}" style="width: 80%"
-                       value="{{ record_fields_labels.Dati._recordidproject.value }}"
-                       onfocus="selectAllText(this); showOptions(this)">
-            </div>
+            <div class="col">
+                <p>{{ record_fields_labels.Dati.id.valuecode.0.value }}</p>
 
-            <div class="input-group mb-2">
-                <select id="{{ record_fields_labels.Dati.service.fieldid }}"
-                        name="{{ record_fields_labels.Dati.service.fieldname }}"
-                        class="form-select">
-                    <option value=""></option>
-                    {% for item in record_fields_labels.Dati.service.lookupitems %}
-                        {% if item.itemcode == record_fields_labels.Dati.service.valuecode.0.code %}
-                            <option selected
-                                    value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                        {% else %}
-                            <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
+                <label>
+                    <input id="{{ record_fields_labels.Dati.date.fieldid }}"
+                           name="{{ record_fields_labels.Dati.date.fieldname }}"
+                           class="form-control mb-2" type="date"
+                           value="{{ record_fields_labels.Dati.date.valuecode.0.code }}">
+                </label>
 
+                <!--qui autocomplete-->
 
-            <div class="input-group mb-2">
-                <select id="{{ record_fields_labels.Dati.invoiceoption.fieldid }}"
-                        name="{{ record_fields_labels.Dati.invoiceoption.fieldname }}"
-                        class="form-select">
-                    <option value=""></option>
-                    {% for item in record_fields_labels.Dati.invoiceoption.lookupitems %}
-                        {% if item.itemcode == record_fields_labels.Dati.invoiceoption.valuecode.0.code %}
-                            <option selected
-                                    value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                        {% else %}
-                            <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-
-            <textarea style="min-height: 250px" class="form-control mb-2"
-                      id="{{ record_fields_labels.Dati.description.fieldid }}"
-                      name="{{ record_fields_labels.Dati.description.fieldname }}"
-                      rows="3">{{ record_fields_labels.Dati.description.value }}</textarea>
-
-            <div class="input-group mb-2">
-                <select id="{{ record_fields_labels.Dati.worktime.fieldid }}"
-                        name="{{ record_fields_labels.Dati.worktime.fieldname }}"
-                        class="form-select">
-                    <option value=""></option>
-                    {% for item in record_fields_labels.Dati.worktime.lookupitems %}
-                        {% if item.itemcode == record_fields_labels.Dati.worktime.valuecode.0.code %}
-                            <option selected
-                                    value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                        {% else %}
-                            <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="input-group mb-2">
-                <select id="{{ record_fields_labels.Dati.traveltime.fieldid }}"
-                        name="{{ record_fields_labels.Dati.traveltime.fieldname }}"
-                        class="form-select">
-                    <option value=""></option>
-                    {% for item in record_fields_labels.Dati.traveltime.lookupitems %}
-                        {% if item.itemcode == record_fields_labels.Dati.traveltime.valuecode.0.code %}
-                            <option selected
-                                    value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                        {% else %}
-                            <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="input-group mb-2">
-                <select id="{{ record_fields_labels.Dati.user.fieldid }}"
-                        name="{{ record_fields_labels.Dati.user.fieldname }}"
-                        class="form-select">
-                    <option value=""></option>
-                    {% for items in record_fields_labels.Dati.user.lookupitems %}
-                        {% if items.id and items.firstname and items.lastname %}
-                            {% if items.id == record_fields_labels.Dati.user.valuecode.0.code %}
-                                <option selected id="{{ items.id }}"
-                                        value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                <div class="input-group mb-2">
+                    <select id="{{ record_fields_labels.Dati.service.fieldid }}"
+                            name="{{ record_fields_labels.Dati.service.fieldname }}"
+                            class="form-select">
+                        <option value=""></option>
+                        {% for item in record_fields_labels.Dati.service.lookupitems %}
+                            {% if item.itemcode == record_fields_labels.Dati.service.valuecode.0.code %}
+                                <option selected
+                                        value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
                             {% else %}
-                                <option id="{{ items.id }}"
-                                        value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                                <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
                             {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </select>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                <div class="input-group mb-2">
+                    <select id="{{ record_fields_labels.Dati.invoiceoption.fieldid }}"
+                            name="{{ record_fields_labels.Dati.invoiceoption.fieldname }}"
+                            class="form-select">
+                        <option value=""></option>
+                        {% for item in record_fields_labels.Dati.invoiceoption.lookupitems %}
+                            {% if item.itemcode == record_fields_labels.Dati.invoiceoption.valuecode.0.code %}
+                                <option selected
+                                        value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                            {% else %}
+                                <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <textarea style="min-height: 250px" class="form-control mb-2"
+                          id="{{ record_fields_labels.Dati.description.fieldid }}"
+                          name="{{ record_fields_labels.Dati.description.fieldname }}"
+                          rows="3">{{ record_fields_labels.Dati.description.value }}</textarea>
+
+                <div class="input-group mb-2">
+                    <select id="{{ record_fields_labels.Dati.worktime.fieldid }}"
+                            name="{{ record_fields_labels.Dati.worktime.fieldname }}"
+                            class="form-select">
+                        <option value=""></option>
+                        {% for item in record_fields_labels.Dati.worktime.lookupitems %}
+                            {% if item.itemcode == record_fields_labels.Dati.worktime.valuecode.0.code %}
+                                <option selected
+                                        value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                            {% else %}
+                                <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="input-group mb-2">
+                    <select id="{{ record_fields_labels.Dati.traveltime.fieldid }}"
+                            name="{{ record_fields_labels.Dati.traveltime.fieldname }}"
+                            class="form-select">
+                        <option value=""></option>
+                        {% for item in record_fields_labels.Dati.traveltime.lookupitems %}
+                            {% if item.itemcode == record_fields_labels.Dati.traveltime.valuecode.0.code %}
+                                <option selected
+                                        value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                            {% else %}
+                                <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="input-group mb-2">
+                    <select id="{{ record_fields_labels.Dati.user.fieldid }}"
+                            name="{{ record_fields_labels.Dati.user.fieldname }}"
+                            class="form-select">
+                        <option value=""></option>
+                        {% for items in record_fields_labels.Dati.user.lookupitems %}
+                            {% if items.id and items.firstname and items.lastname %}
+                                {% if items.id == record_fields_labels.Dati.user.valuecode.0.code %}
+                                    <option selected id="{{ items.id }}"
+                                            value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                                {% else %}
+                                    <option id="{{ items.id }}"
+                                            value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Icon for adding a new row -->
+                <i id="addRowIcon" class="mdi mdi-plus" onclick="addNewRow()"></i>
+
+                <!-- Bootstrap table -->
+                <table id="myTable" class="table">
+                    <thead>
+                    <tr>
+                        <th>Descrizione</th>
+                        <th>Quantità prevista</th>
+                        <th>Quantità installata</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Existing table rows -->
+                    </tbody>
+                </table>
+
+                <button onclick="saveRows()">save</button>
+
+
+                <style>
+                    #myTable {
+                        width: 100%;
+                        table-layout: fixed;
+                    }
+
+                    #myTable thead {
+                        width: 100%;
+                        display: table;
+                    }
+
+                    #myTable tbody {
+                        height: 200px; /* Adjust the height as needed */
+                        overflow-y: scroll;
+                        display: block;
+                    }
+
+                    #myTable thead th,
+                    #myTable tbody td {
+                        padding: 8px;
+                        text-align: left;
+                    }
+
+                    #myTable thead th {
+                        background-color: #f2f2f2;
+                        position: sticky;
+                        top: 0;
+                        z-index: 1;
+                    }
+
+                    #myTable tbody td {
+                        width: calc(100% / 3); /* Set the width based on the number of columns */
+                    }
+
+
+                </style>
+
+                <script>
+                    function addNewRow() {
+                        // Get reference to the table body
+                        var tableBody = document.querySelector('#myTable tbody');
+
+                        // Create a new row
+                        var newRow = document.createElement('tr');
+                        //add a remove button
+                        var remove = document.createElement('i');
+                        remove.setAttribute('class', 'mdi mdi-close');
+                        remove.setAttribute('onclick', 'removeRow(this)');
+                        newRow.appendChild(remove);
+
+
+                        // Create three columns for the new row
+                        var column1 = document.createElement('td');
+                        var column1Input = document.createElement('input');
+                        column1Input.setAttribute('type', 'text');
+                        column1Input.setAttribute('class', 'form-control');
+                        column1Input.setAttribute('placeholder', 'Descrizione');
+                        column1.appendChild(column1Input);
+
+                        var column2 = document.createElement('td');
+                        var column2Input = document.createElement('input');
+                        column2Input.setAttribute('type', 'number');
+                        column2Input.setAttribute('class', 'form-control');
+                        column2Input.setAttribute('placeholder', 'Quantità prevista');
+                        column2.appendChild(column2Input);
+
+                        var column3 = document.createElement('td');
+                        var column3Input = document.createElement('input');
+                        column3Input.setAttribute('type', 'number');
+                        column3Input.setAttribute('class', 'form-control');
+                        column3Input.setAttribute('placeholder', 'Quantità installata');
+                        column3.appendChild(column3Input);
+
+                        // Append the columns to the new row
+                        newRow.appendChild(column1);
+                        newRow.appendChild(column2);
+                        newRow.appendChild(column3);
+
+                        // Append the new row to the table body
+                        tableBody.appendChild(newRow);
+                    }
+
+                    function removeRow(button) {
+                        // Get reference to the table body
+                        var tableBody = document.querySelector('#myTable tbody');
+
+                        // Get reference to the button's parent row
+                        var buttonRow = button.closest('tr');
+
+                        // Remove the parent row from the table body
+                        tableBody.removeChild(buttonRow);
+                    }
+
+                    function saveRows() {
+                        var tableRows = document.querySelectorAll('#myTable tbody tr');
+                        var rowsArray = [];
+
+                        // Iterate through each table row
+                        tableRows.forEach(function (row) {
+                            var rowValues = [];
+                            var rowInputs = row.querySelectorAll('input');
+
+                            // Iterate through each input field in the row
+                            rowInputs.forEach(function (input) {
+                                rowValues.push(input.value);
+                            });
+
+                            // Add the row values to the array
+                            rowsArray.push(rowValues);
+                        });
+
+                        // Print the array to the console
+                        console.log(rowsArray);
+                    }
+                </script>
+
+
             </div>
-
-
         </div>
     </div>
 </div>
