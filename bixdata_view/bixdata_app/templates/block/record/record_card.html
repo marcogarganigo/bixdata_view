@@ -147,39 +147,40 @@
         });
     }
 
-        function stampaRapportino() {
-      var serialized_data = [];
-      var filename = 'rapportino' + new Date().getTime() + '.pdf';
-      alert(filename)
+    function stampa(tableid) {
+        var serialized_data = [];
+        var filename = tableid + new Date().getTime() + '.pdf';
+        alert(filename)
+        var url = '/stampa_' + tableid + '/';
 
-      $.ajax({
-        type: "POST",
-        url: "{% url 'stampa_rapportino' %}",
-        data: {
-          'recordid': '{{ recordid }}',
-          'filename': filename,
-        },
-        xhrFields: {
-          responseType: 'blob' // Set the response type to 'blob'
-        },
-        success: function(response, status, xhr) {
-          // Check if the request was successful
-          if (xhr.status === 200) {
-            // Create a URL for the response blob
-            const url = URL.createObjectURL(response);
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                'recordid': '{{ recordid }}',
+                'filename': filename,
+            },
+            xhrFields: {
+                responseType: 'blob' // Set the response type to 'blob'
+            },
+            success: function (response, status, xhr) {
+                // Check if the request was successful
+                if (xhr.status === 200) {
+                    // Create a URL for the response blob
+                    const url = URL.createObjectURL(response);
 
-            // Open the URL in a new tab
-            window.open(url, '_blank');
-          } else {
-            // Handle the error case
-            console.error('Request failed with status:', xhr.status);
-          }
-        },
-        error: function(xhr, status, error) {
-          // Handle the error case
-          console.error('Error:', error);
-        }
-      });
+                    // Open the URL in a new tab
+                    window.open(url, '_blank');
+                } else {
+                    // Handle the error case
+                    console.error('Request failed with status:', xhr.status);
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle the error case
+                console.error('Error:', error);
+            }
+        });
     }
 
 </script>
@@ -214,8 +215,13 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Stampa scheda</a></li>
                         <li><a class="dropdown-item"
-                               onclick="stampaRapportino()">Stampa
-                            rapportino</a></li>
+                               onclick="stampa('{{ tableid }}')">
+                            {% if tableid == 'timesheet' %}
+                                Stampa rapportino
+                            {% elif tableid == 'servicecontract' %}
+                                Stampa report monte ore
+                            {% endif %}
+                        </a></li>
                     </ul>
                 </div>
 

@@ -429,7 +429,7 @@ def get_block_records_chart(request):
 @login_required(login_url='/login/')
 def get_test(request):
     num = 1
-    return render(request, 'content/test.html', {'num': num})
+    return render(request, 'content/../templates/pdf/test.html', {'num': num})
 
 
 @login_required(login_url='/login/')
@@ -1314,7 +1314,7 @@ def new_update(request):
     return render(request, 'other/bixdata_updates.html')
 
 
-def stampa_rapportino(request):
+def stampa_timesheet(request):
     recordid = ''
     if request.method == 'POST':
         recordid = request.POST.get('recordid')
@@ -1333,7 +1333,7 @@ def stampa_rapportino(request):
         wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
 
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-        content = render_to_string('content/test.html', row)
+        content = render_to_string('pdf/timesheet.html', row)
         pdfkit.from_string(content, filename, configuration=config)
 
         # Open the file and read its contents
@@ -1347,6 +1347,43 @@ def stampa_rapportino(request):
         response = HttpResponse(file_data, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
+
+
+def stampa_servicecontract(request):
+    recordid = ''
+    if request.method == 'POST':
+        recordid = request.POST.get('recordid')
+        filename = request.POST.get('filename')
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"SELECT s.*,c.companyname,c.address,c.city,c.email FROM user_servicecontract as s join user_company as c on s.recordidcompany_=c.recordid_  WHERE s.recordid_='{recordid}'"
+            )
+            rows = dictfetchall(cursor)
+
+            row = rows[0]
+            row['recordid'] = recordid
+            row['date'] = datetime.datetime.now().strftime("%d/%m/%Y")
+
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
+
+        config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+        content = render_to_string('pdf/servicecontract.html', row)
+        pdfkit.from_string(content, filename, configuration=config)
+
+        # Open the file and read its contents
+        with open(filename, 'rb') as file:
+            file_data = file.read()
+
+        # Delete the file from the file system
+        os.remove(filename)
+
+        # Create an HTTP response with the file contents
+        response = HttpResponse(file_data, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+
 
 
 
