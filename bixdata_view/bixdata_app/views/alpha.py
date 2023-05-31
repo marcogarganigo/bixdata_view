@@ -553,41 +553,13 @@ def get_record_card_delete(request):
 # https://openclassrooms.com/en/courses/7107341-intermediate-django/7263317-create-a-login-page-with-a-function-based-view
 
 
-def get_render_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('index')
-
-            else:
-                messages.error(request, 'Invalid username or password')
-
-            """if username == 'admin' and password == 'admin':
-
-                return redirect('index')
-            else:
-                form.add_error(None, "Invalid username or password")"""
-
-    else:
-        form = LoginForm()
-    # return user_agent(request, 'other/login.html', 'other/test_query.html', {'form': form})
-    return render(request, 'other/../templates/registration/login.html', {'form': form}, )
-
-
 @user_passes_test(lambda u: u.is_superuser)
 def get_render_gestione_utenti(request):
     return render(request, 'other/gestione_utenti.html')
 
 
 #   @login_required(login_url='/login/')
-def get_render_logout(request):
-    logout(request)
-    return redirect('login')
+
 
 
 @login_required(login_url='/login/')

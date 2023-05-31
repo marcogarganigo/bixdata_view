@@ -88,7 +88,3 @@ urlpatterns = [
     path('stampa_timesheet/', alpha.stampa_timesheet, name='stampa_timesheet'),
     path('stampa_servicecontract/', alpha.stampa_servicecontract, name='stampa_servicecontract'),
 ]
-
-urlpatterns += [
-    path('accounts/login/', include('django.contrib.auth.urls')),
-]
