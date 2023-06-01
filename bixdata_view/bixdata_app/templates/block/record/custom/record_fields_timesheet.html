@@ -2,35 +2,55 @@
      style="height: calc(100% - 100px); overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
     <div class="container">
         <div class="row">
+        <div class="row">
             <div class="col-lg-2">
                 <p>ID</p>
-                <p class="badge bg-danger fs-5">Azienda</p>
-                <p>Progetto</p>
-                <p class="badge bg-danger fs-5">Data</p>
-                <p class="badge bg-danger fs-5">Servizio</p>
-                <p>Opzioni</p>
-                <p>Descrizione</p>
-                <p>Tempo di lavoro</p>
-                <p>Tempo di trasferta</p>
-                <p>User</p>
             </div>
-
             <div class="col">
-                <p>{{ record_fields_labels.Dati.id.valuecode.0.value }}</p>
+                  <p>{{ record_fields_labels.Dati.id.valuecode.0.value }}</p>
+            </div>
+        </div>
 
-                <label>
+        <div class="row">
+            <div class="col-lg-2">
+                 <p class="badge bg-danger fs-5">Data</p>
+            </div>
+            <div class="col">
+                  <label>
                     <input id="{{ record_fields_labels.Dati.date.fieldid }}"
                            name="{{ record_fields_labels.Dati.date.fieldname }}"
-                           class="form-control mb-2" type="date"
+                           class="form-control mb-2 necessary" type="date"
                            value="{{ record_fields_labels.Dati.date.valuecode.0.code }}">
                 </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2">
+                 <p class="badge bg-danger fs-5">Azienda</p>
+            </div>
+            <div class="col field">
 
-                <!--qui autocomplete-->
+            </div>
+        </div>
 
-                <div class="input-group mb-2">
+        <div class="row">
+            <div class="col-lg-2">
+                <p>Progetto</p>
+            </div>
+            <div class="col field">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2">
+                 <p class="badge bg-danger fs-5">Servizio</p>
+            </div>
+            <div class="col">
+                  <div class="input-group mb-2">
                     <select id="{{ record_fields_labels.Dati.service.fieldid }}"
                             name="{{ record_fields_labels.Dati.service.fieldname }}"
-                            class="form-select">
+                            class="form-select necessary">
                         <option value=""></option>
                         {% for item in record_fields_labels.Dati.service.lookupitems %}
                             {% if item.itemcode == record_fields_labels.Dati.service.valuecode.0.code %}
@@ -42,9 +62,15 @@
                         {% endfor %}
                     </select>
                 </div>
+            </div>
+        </div>
 
-
-                <div class="input-group mb-2">
+        <div class="row">
+            <div class="col-lg-2">
+                 <p>Opzioni</p>
+            </div>
+            <div class="col">
+                  <div class="input-group mb-2">
                     <select id="{{ record_fields_labels.Dati.invoiceoption.fieldid }}"
                             name="{{ record_fields_labels.Dati.invoiceoption.fieldname }}"
                             class="form-select">
@@ -59,13 +85,28 @@
                         {% endfor %}
                     </select>
                 </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-lg-2">
+                 <p>Descrizione</p>
+            </div>
+            <div class="col">
                 <textarea style="min-height: 250px" class="form-control mb-2"
                           id="{{ record_fields_labels.Dati.description.fieldid }}"
                           name="{{ record_fields_labels.Dati.description.fieldname }}"
-                          rows="3">{{ record_fields_labels.Dati.description.value }}</textarea>
+                          rows="3">{{ record_fields_labels.Dati.description.value }}
+                </textarea>
+            </div>
+        </div>
 
-                <div class="input-group mb-2">
+        <div class="row">
+            <div class="col-lg-2">
+                <p>Tempo di lavoro</p>
+            </div>
+            <div class="col">
+                   <div class="input-group mb-2">
                     <select id="{{ record_fields_labels.Dati.worktime.fieldid }}"
                             name="{{ record_fields_labels.Dati.worktime.fieldname }}"
                             class="form-select">
@@ -80,8 +121,15 @@
                         {% endfor %}
                     </select>
                 </div>
+            </div>
+        </div>
 
-                <div class="input-group mb-2">
+        <div class="row">
+            <div class="col-lg-2">
+                 <p>Tempo di trasferta</p>
+            </div>
+            <div class="col">
+                  <div class="input-group mb-2">
                     <select id="{{ record_fields_labels.Dati.traveltime.fieldid }}"
                             name="{{ record_fields_labels.Dati.traveltime.fieldname }}"
                             class="form-select">
@@ -96,8 +144,15 @@
                         {% endfor %}
                     </select>
                 </div>
+            </div>
+        </div>
 
-                <div class="input-group mb-2">
+        <div class="row">
+            <div class="col-lg-2">
+                <p>User</p>
+            </div>
+            <div class="col">
+                  <div class="input-group mb-2">
                     <select id="{{ record_fields_labels.Dati.user.fieldid }}"
                             name="{{ record_fields_labels.Dati.user.fieldname }}"
                             class="form-select">
@@ -114,13 +169,21 @@
                             {% endif %}
                         {% endfor %}
                     </select>
+
                 </div>
+            </div>
+        </div>
+
+
+
+
 
                 <!-- Icon for adding a new row -->
-                <i id="addRowIcon" class="mdi mdi-plus" onclick="addNewRow()"></i>
+        <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary mdi mdi-plus" style="width: auto" onclick="addNewRow(this)">
 
+        </button>
                 <!-- Bootstrap table -->
-                <table id="myTable" class="table">
+                <table id="myTable-{{ timesheet }}" class="table">
                     <thead>
                     <tr>
                         <th>Descrizione</th>
@@ -133,40 +196,49 @@
                     </tbody>
                 </table>
 
-                <button onclick="saveRows()">save</button>
+
+        </div>
+    </div>
+</div>
+
+
+<button id="save-button" data-recordid="{{ recordid }}" type="button" class="btn btn-primary" onclick="saveRows(); save_record(this)" style="float: right">Salva</button>
+        <div class="alert alert-success" role="alert" id="saved-alert-{{ recordid }}" style="display: none">
+            Salvato
+        </div>
 
 
                 <style>
-                    #myTable {
+                    #myTable-{{ timesheet }} {
                         width: 100%;
                         table-layout: fixed;
                     }
 
-                    #myTable thead {
+                    #myTable-{{ timesheet }} thead {
                         width: 100%;
                         display: table;
                     }
 
-                    #myTable tbody {
+                    #myTable-{{ timesheet }} tbody {
                         height: 200px; /* Adjust the height as needed */
                         overflow-y: scroll;
                         display: block;
                     }
 
-                    #myTable thead th,
-                    #myTable tbody td {
+                    #myTable-{{ timesheet }} thead th,
+                    #myTable-{{ timesheet }} tbody td {
                         padding: 8px;
                         text-align: left;
                     }
 
-                    #myTable thead th {
+                    #myTable-{{ timesheet }} thead th {
                         background-color: #f2f2f2;
                         position: sticky;
                         top: 0;
                         z-index: 1;
                     }
 
-                    #myTable tbody td {
+                    #myTable-{{ timesheet }} tbody td {
                         width: calc(100% / 3); /* Set the width based on the number of columns */
                     }
 
@@ -176,7 +248,8 @@
                 <script>
                     function addNewRow() {
                         // Get reference to the table body
-                        var tableBody = document.querySelector('#myTable tbody');
+                        var tableBody = document.querySelector('#myTable-{{ timesheet }} tbody');
+                        alert('mytable-{{ timesheet }}')
 
                         // Create a new row
                         var newRow = document.createElement('tr');
@@ -220,7 +293,7 @@
 
                     function removeRow(button) {
                         // Get reference to the table body
-                        var tableBody = document.querySelector('#myTable tbody');
+                        var tableBody = document.querySelector('#myTable-{{ timesheet }} tbody');
 
                         // Get reference to the button's parent row
                         var buttonRow = button.closest('tr');
@@ -230,7 +303,7 @@
                     }
 
                     function saveRows() {
-                        var tableRows = document.querySelectorAll('#myTable tbody tr');
+                        var tableRows = document.querySelectorAll('#myTable-{{ timesheet }} tbody tr');
                         var rowsArray = [];
 
                         // Iterate through each table row
@@ -250,10 +323,73 @@
                         // Print the array to the console
                         console.log(rowsArray);
                     }
+
+                     function save_record(el) {
+        let necessaryFields = document.querySelectorAll('.necessary');
+        let hasNecessaryFields = false;
+
+        necessaryFields.forEach(function (field) {
+            if (field.value === null || field.value === "" || field.value === "None") {
+                hasNecessaryFields = true;
+            }
+        });
+
+        if (hasNecessaryFields === true) {
+        swal({
+          title: "Attenzione",
+          text: "Compilare tutti i campi obbligatori" ,
+          icon: "error",
+          button: "Ok",
+          dangerMode: true
+        });
+
+        } else {
+
+
+            closeNewRecordModal()
+            var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
+            var serialized_json = convertFormToJSON(serialized_array);
+            var post_data = [];
+            post_data.push({name: 'tableid', value: '{{ tableid }}'});
+            post_data.push({name: 'recordid', value: '{{ recordid }}'});
+            post_data.push({name: 'fields', value: serialized_json});
+
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'save_record_fields' %}",
+                data: post_data,
+                success: function (response) {
+                    contextfunction='{{contextfunction}}'
+                    if(contextfunction=='insert')
+                    {
+                        refresh();
+                    }
+                    setTimeout(function () {
+                        if ('{{ tableid }}' == 'ticketbixdata') {
+                            alert('Grazie per la segnalazione. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
+                        }
+                        var recordid = $(el).attr('data-recordid');
+                        //$("#saved-alert-" + recordid).css("display", "block");
+                        //$("#saved-alert-" + recordid).fadeOut(1500);
+                        swal({
+                            title: "Salvato!",
+                            text: "Il record è stato salvato",
+                            icon: "success",
+                            timer: 800,
+                            buttons: false,
+                        })
+                        //getContentRecords('{{ tableid }}')
+                        //$("#linked-container-{{ tableid }}").load('/loading/')
+                        load_linked(this, '{{ tableid }}')
+
+                    });
+
+                },
+                error: function () {
+                    alert('ko')
+                }
+            });
+        }
+    }
                 </script>
-
-
-            </div>
-        </div>
-    </div>
-</div>
