@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<body style="height: 100%">
+<body style="height: 100%; font-family: Calibri">
 <div style="width: 100%; height: 100px">
 <div style="width:200px;height:100px;float:left">
     <img src="https://www.swissbix.ch/corp/wp-content/uploads/2018/08/logo_w.png" width="150%"> 
@@ -22,7 +22,7 @@
 </div>
 
 <div style="float:left">
-    <p style="float:left; width: 100px"><b>Data</b></p>
+    <p style="float:left; width: 93px"><b>Data</b></p>
     <p style="float:left; margin-left: 85px">{{ date }}</p>
 
     <div style="clear:both"></div>
@@ -38,33 +38,36 @@
         <div style="clear:both"></div>
 
 <table>
-    <tr style="background-color: #f1a871">
-      <td><b>Data</b></td>
-      <td><b>Tecnico</b></td>
-      <td><b>Tempo</b></td>
-      <td><b>Descrizione</b></td>
-    </tr>
-    <tr>
-      <td>Row 2, Column 1</td>
-      <td>Row 2, Column 2</td>
-      <td>Row 2, Column 3</td>
-      <td>Row 2, Column 4</td>
-    </tr>
-    <tr>
-      <td>Row 3, Column 1</td>
-      <td>Row 3, Column 2</td>
-      <td>Row 3, Column 3</td>
-      <td>Row 3, Column 4</td>
-    </tr>
-    <tr style="background-color: #f1a871">
-      <td></td>
-      <td><b>Saldo ore</b></td>
-      <td><b>{{ residualhours }}</b></td>
-      <td></td>
-    </tr>
+    <thead>
+        <tr style="background-color: #f1a871">
+          <th><b>Data</b></th>
+          <th><b>Tecnico</b></th>
+          <th><b>Tempo</b></th>
+          <th><b>Descrizione</b></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for tms in timesheets %}
+            <tr>
+                <td>{{ tms.date }}</td>
+                <td>{{ tms.firstname }} {{ tms.lastname }}</td>
+                <td>{{ tms.worktime }}</td>
+                <td>{{ tms.description }}</td>
+            </tr>
+        {% endfor %}
+
+        <tr style="background-color: #f1a871">
+          <td></td>
+          <td><b>Saldo ore</b></td>
+          <td><b>{{ residualhours }}</b></td>
+          <td></td>
+        </tr>
+    </tbody>
+
   </table>
 
-<div style="margin-top: 65%">
+<div style="margin-top: 50%">
 Swissbix SA
 <br>
 Via Lisano 3

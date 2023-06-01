@@ -1345,9 +1345,9 @@ def stampa_servicecontract(request):
                     f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}'"
                 )
             timesheets = dictfetchall(cursor)
-        context['timesheets']=dict()
+        context['timesheets']=timesheets
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-        content = render_to_string('pdf/servicecontract.html', row)
+        content = render_to_string('pdf/servicecontract.html', context)
         pdfkit.from_string(content, filename, configuration=config)
 
         # Open the file and read its contents

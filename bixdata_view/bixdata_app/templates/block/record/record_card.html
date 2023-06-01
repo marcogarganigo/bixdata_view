@@ -150,7 +150,6 @@
     function stampa(tableid) {
         var serialized_data = [];
         var filename = tableid + new Date().getTime() + '.pdf';
-        alert(filename)
         var url = '/stampa_' + tableid + '/';
 
         $.ajax({
