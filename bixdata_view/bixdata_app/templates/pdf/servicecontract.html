@@ -48,14 +48,14 @@
     </thead>
     <tbody>
 
-        {% for tms in timesheets %}
-            <tr>
-                <td>{{ tms.date }}</td>
-                <td>{{ tms.firstname }} {{ tms.lastname }}</td>
-                <td>{{ tms.worktime }}</td>
-                <td>{{ tms.description }}</td>
-            </tr>
-        {% endfor %}
+            {% for tms in timesheets %}
+                <tr>
+                    <td>{{ tms.date|date:"d/m/Y" }}</td>
+                    <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }}</td>
+                    <td>{{ tms.worktime }}</td>
+                    <td>{{ tms.description }}</td>
+                </tr>
+            {% endfor %}
 
         <tr style="background-color: #f1a871">
           <td></td>

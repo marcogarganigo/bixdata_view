@@ -5,7 +5,6 @@
     }
 </style>
 
-
 <script type="text/javascript">
     $("#RecordCard").ready(function () {
 
@@ -100,27 +99,41 @@
         });
     }
 
+
     function deleteFunc() {
-        if (confirm("Sei sicuro di voler eliminare questo record?")) {
-
-            $.ajax({
-                type: "POST",
-                url: "{% url 'record_card_delete' %}",
-                data: {
-                    'csrfmiddlewaretoken': '{{ csrf_token }}',
-                    'tableid': '{{ tableid }}',
-                    'recordid': '{{ recordid }}',
-                },
-                success: function (response) {
-                    //$("#bixdata_recordcard_container").html(response);
-                    reloadFunc();
-                },
-                error: function () {
-                }
-            });
-
-        } else {
-        }
+        swal({
+            text: "Se sicuro di voler eliminare questo record?",
+            buttons: ["No", "Si"],
+            icon: "warning",
+            dangerMode: true,
+        }).then(function (value) {
+            if (value) {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'record_card_delete' %}",
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'tableid': '{{ tableid }}',
+                        'recordid': '{{ recordid }}',
+                    },
+                    success: function (response) {
+                        //$("#bixdata_recordcard_container").html(response);
+                        swal({
+                            text: "Record eliminato",
+                            icon: "success",
+                            timer: 1000,
+                            buttons: false,
+                        });
+                        reloadFunc();
+                    },
+                    error: function () {
+                        // Handle error if needed
+                    }
+                });
+            } else {
+                // Handle the case when the user clicks "Stop" or closes the SweetAlert dialog
+            }
+        });
     }
 
     function backdropHide() {

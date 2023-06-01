@@ -1346,6 +1346,7 @@ def stampa_servicecontract(request):
                 )
             timesheets = dictfetchall(cursor)
         context['timesheets']=timesheets
+
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
         content = render_to_string('pdf/servicecontract.html', context)
         pdfkit.from_string(content, filename, configuration=config)
