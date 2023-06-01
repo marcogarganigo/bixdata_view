@@ -1,4 +1,5 @@
 import tempfile
+import uuid
 
 import pyperclip
 from aiohttp.web_fileresponse import FileResponse
@@ -17,6 +18,7 @@ from django.contrib.auth.decorators import login_required
 import time
 
 import pdfkit
+from docx import Document
 
 from ..forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
@@ -32,6 +34,7 @@ from django.conf import settings
 from django.views.decorators.clickjacking import xframe_options_exempt
 import subprocess
 from .beta import *
+from htmldocx import HtmlToDocx
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -561,7 +564,6 @@ def get_render_gestione_utenti(request):
 #   @login_required(login_url='/login/')
 
 
-
 @login_required(login_url='/login/')
 def get_records_table_render(request):
     tableid = request.POST.get('tableid')
@@ -929,10 +931,11 @@ def get_block_record_fields(request):
     context['master_tableid'] = master_tableid
     context['master_recordid'] = master_recordid
     if tableid == 'timesheet':
-        block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context, request=request)
+        context['timesheet'] = uuid.uuid4()
+        block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context,request=request)
     else:
         block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
-    
+
     if (http_response):
         return HttpResponse(block_record_fields)
     else:
@@ -957,6 +960,7 @@ def get_block_record_linked_OLD(request):
     record_linked_labels = render_to_string(
         'block/record/record_linked.html', context, request=request)
     return record_linked_labels
+
 
 @login_required(login_url='/login/')
 def request_block_record_linked(request):
@@ -1337,33 +1341,32 @@ def stampa_servicecontract(request):
             row['recordid'] = recordid
             row['date'] = datetime.datetime.now().strftime("%d/%m/%Y")
 
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
-        context=row
+        context = row
         with connection.cursor() as cursor:
             cursor.execute(
-                    f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}'"
-                )
+                f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}'"
+            )
             timesheets = dictfetchall(cursor)
-        context['timesheets']=timesheets
+        context['timesheets'] = timesheets
 
-        config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-        content = render_to_string('pdf/servicecontract.html', context)
-        pdfkit.from_string(content, filename, configuration=config)
+        document = Document()
+        new_parser = HtmlToDocx()
+        # do stuff to document
+
+        html = render_to_string('pdf/servicecontract.html', context)
+        new_parser.add_html_to_document(html, document)
+
+        # do more stuff to document
+        document.save('your_file_name.docx')
 
         # Open the file and read its contents
-        with open(filename, 'rb') as file:
-            file_data = file.read()
+
 
         # Delete the file from the file system
-        os.remove(filename)
-
-        # Create an HTTP response with the file contents
-        response = HttpResponse(file_data, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
-        return response
+        #os.remove(filename)
 
 
-
-
-
+        #response = HttpResponse(file_data, content_type='application/pdf')
+        #response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        #return response
+        return True

@@ -626,6 +626,10 @@
         background-color: whitesmoke !important;
     }
 
+    .swal-overlay {
+        z-index: 100000 !important;
+    }
+
 
 
 

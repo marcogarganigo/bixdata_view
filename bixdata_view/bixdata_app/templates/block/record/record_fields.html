@@ -284,7 +284,14 @@
         });
 
         if (hasNecessaryFields === true) {
-            alert('Compila tutti i campi obbligatori prima di salvare');
+        swal({
+          title: "Attenzione",
+          text: "Compilare tutti i campi obbligatori" ,
+          icon: "error",
+          button: "Ok",
+          dangerMode: true
+        });
+
         } else {
 
 
@@ -312,8 +319,15 @@
                             alert('Grazie per la segnalazione. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
                         }
                         var recordid = $(el).attr('data-recordid');
-                        $("#saved-alert-" + recordid).css("display", "block");
-                        $("#saved-alert-" + recordid).fadeOut(1500);
+                        //$("#saved-alert-" + recordid).css("display", "block");
+                        //$("#saved-alert-" + recordid).fadeOut(1500);
+                        swal({
+                            title: "Salvato!",
+                            text: "Il record è stato salvato",
+                            icon: "success",
+                            timer: 800,
+                            buttons: false,
+                        })
                         //getContentRecords('{{ tableid }}')
                         //$("#linked-container-{{ tableid }}").load('/loading/')
                         load_linked(this, '{{ tableid }}')
