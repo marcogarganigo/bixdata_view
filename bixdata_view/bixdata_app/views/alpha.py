@@ -1339,7 +1339,13 @@ def stampa_servicecontract(request):
 
         script_dir = os.path.dirname(os.path.abspath(__file__))
         wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
-
+        context=row
+        with connection.cursor() as cursor:
+            cursor.execute(
+                    f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}'"
+                )
+            timesheets = dictfetchall(cursor)
+        context['timesheets']=dict()
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
         content = render_to_string('pdf/servicecontract.html', row)
         pdfkit.from_string(content, filename, configuration=config)
