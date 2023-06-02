@@ -467,7 +467,7 @@ def get_render_content_dashboard(request):
                 if row['operation'] == 'somma':
                     fields = row['fieldid'].split(';')
                     for field in fields:
-                        field = 'ROUND(SUM(' + field + '))'
+                        field = 'SUM(' + field + ')'
                         selected += field + ','
                     groupby = row['groupby']
                     selected += groupby
