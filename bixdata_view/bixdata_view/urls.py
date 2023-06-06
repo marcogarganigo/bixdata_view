@@ -87,4 +87,5 @@ urlpatterns = [
     path('new_chart_block/', alpha.new_chart_block, name='new_chart_block'),
     path('stampa_timesheet/', alpha.stampa_timesheet, name='stampa_timesheet'),
     path('stampa_servicecontract/', alpha.stampa_servicecontract, name='stampa_servicecontract'),
+    path('new_ticket_timesheet/<str:ticket>/', alpha.new_ticket_timesheet, name='new_ticket_timesheet'),
 ]

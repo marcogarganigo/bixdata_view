@@ -1344,6 +1344,14 @@ def stampa_servicecontract(request):
         script_dir = os.path.dirname(os.path.abspath(__file__))
         wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
 
+        context = row
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}'"
+            )
+            timesheets = dictfetchall(cursor)
+        context['timesheets'] = timesheets
+
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
         content = render_to_string('pdf/servicecontract.html', row)
         pdfkit.from_string(content, filename, configuration=config)
@@ -1359,4 +1367,35 @@ def stampa_servicecontract(request):
         response = HttpResponse(file_data, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
+
+
+def new_ticket_timesheet(request, ticket):
+    userid = request.user.id
+    content = get_block_ticket_timesheet(request, ticket, userid)
+    return get_render_index(request, content)
+
+
+def get_block_ticket_timesheet(request, ticket, userid):
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM user_ticket WHERE freshdeskid='{ticket}'"
+        )
+        rows = dictfetchall(cursor)
+        if rows:
+            recordid = rows[0]['recordid_']
+            ticket_block = get_block_record_card('ticket', recordid, userid)
+
+            context = dict()
+            context['ticket_block'] = ticket_block
+            content = render_to_string('other/check_ticket.html', context)
+
+        return content
+
+
+
+
+
+
+
 
