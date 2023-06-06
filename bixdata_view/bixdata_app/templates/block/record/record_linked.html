@@ -17,14 +17,16 @@
     }
 
     function load_linked(el, linkedtableid, tableid) {
+        var recordid = $(el).data('recordid');
+        var mastertableid = $(el).data('mastertableid');
         $.ajax({
             url: "{% url 'get_records_linked' %}",
             type: 'POST',
             data: {
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'tableid': tableid,
-                'master_tableid': '{{tableid}}',
-                'master_recordid': '{{recordid}}'
+                'master_tableid': mastertableid,
+                'master_recordid': recordid,
             },
             success: function (response) {
                 //$(collapse).find('.linked_container').html(response);
@@ -94,6 +96,8 @@ $('#top-label').on('click', function(event) {
         <button class="btn btn-primary" id="label-{{ recordid }}" type="button" data-bs-toggle="collapse"
                 data-bs-target="#{{ linked_table.tableid }}" aria-expanded="false"
                 aria-controls="{{ linked_table.tableid }}"
+                data-recordid="{{ recordid }}"
+                data-mastertableid="{{ tableid }}"
                 style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 10px"
                 onclick="toggleCollapse(this); triggerCollapse(this,'{{ linked_table.tableid }}', '{{ linked_table.tableid }}-{{ recordid }}', '{{ linked_table.tableid }}')">
       <span style="width: 97%; margin:auto; display: block ">

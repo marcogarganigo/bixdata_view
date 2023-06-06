@@ -1341,32 +1341,22 @@ def stampa_servicecontract(request):
             row['recordid'] = recordid
             row['date'] = datetime.datetime.now().strftime("%d/%m/%Y")
 
-        context = row
-        with connection.cursor() as cursor:
-            cursor.execute(
-                f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}'"
-            )
-            timesheets = dictfetchall(cursor)
-        context['timesheets'] = timesheets
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
 
-        document = Document()
-        new_parser = HtmlToDocx()
-        # do stuff to document
-
-        html = render_to_string('pdf/servicecontract.html', context)
-        new_parser.add_html_to_document(html, document)
-
-        # do more stuff to document
-        document.save('your_file_name.docx')
+        config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+        content = render_to_string('pdf/servicecontract.html', row)
+        pdfkit.from_string(content, filename, configuration=config)
 
         # Open the file and read its contents
-
+        with open(filename, 'rb') as file:
+            file_data = file.read()
 
         # Delete the file from the file system
-        #os.remove(filename)
+        os.remove(filename)
 
+        # Create an HTTP response with the file contents
+        response = HttpResponse(file_data, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
 
-        #response = HttpResponse(file_data, content_type='application/pdf')
-        #response['Content-Disposition'] = f'attachment; filename="{filename}"'
-        #return response
-        return True
