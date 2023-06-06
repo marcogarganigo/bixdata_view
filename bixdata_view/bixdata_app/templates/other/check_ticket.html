@@ -1,0 +1,36 @@
+
+    <div style="height: 90%;">
+        <div class="row" style="height: 100%;">
+              <button class="btn btn-outline-danger me-md-2" type="button"
+                                                onclick="newRecord()">Nuovo
+                                        </button>
+            <div class="col-12" style="height: 100%;">
+                {{ticket_block}}
+            </div>
+        </div>
+    </div>
+
+<script>
+        function newRecord() {
+        var tableid = 'timesheet'
+        $('#newRecordModal').modal('show');
+        var serialized_data = [];
+        serialized_data.push({name: 'tableid', value: tableid});
+        serialized_data.push({name: 'contextfunction', value: 'insert'});
+        serialized_data.push({name: 'http_response', value: true});
+        $.ajax({
+            type: "POST",
+            url: "{% url 'get_record_fields' %}",
+            data: serialized_data,
+            success: function (response) {
+                $("#fullwidth_modal_newrecord").html(response);
+
+            },
+            error: function () {
+                $("#bixdata_recordcard_container").html(response);
+            }
+        });
+
+
+    }
+</script>
