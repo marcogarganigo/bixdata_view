@@ -10,7 +10,7 @@
 <body style="height: 100%; font-family: Calibri">
 <div style="width: 100%; height: 100px">
 <div style="width:200px;height:100px;float:left">
-    <img src="https://www.swissbix.ch/corp/wp-content/uploads/2018/08/logo_w.png" width="150%"> 
+    <img src="https://www.swissbix.ch/corp/wp-content/uploads/2018/08/logo_w.png" width="150%">
 </div>
 </div>
 
@@ -30,12 +30,14 @@
     <p style="float:left; margin-left: 30px"><b>{{ contracthours }}</b></p>
     <p style="float:left; margin-left: 20px">{{ invoiceno }}</p>
 
-        <div style="clear:both"></div>
+    <div style="clear:both"></div>
     <p style="float:left; width: 100px"><b>Riporto ore</b></p>
     <p style="float:left; margin-left: 30px"><b>{{ previousresidual }}</b></p>
 </div>
 
-        <div style="clear:both"></div>
+<div style="clear:both"></div>
+
+<!-- Page break before the table -->
 
 <table>
     <thead>
@@ -48,14 +50,19 @@
     </thead>
     <tbody>
 
-            {% for tms in timesheets %}
-                <tr>
-                    <td>{{ tms.date|date:"d/m/Y" }}</td>
-                    <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }}</td>
-                    <td>{{ tms.worktime }}</td>
-                    <td>{{ tms.description }}</td>
-                </tr>
-            {% endfor %}
+        {% for tms in timesheets %}
+            <tr>
+                <td>{{ tms.date|date:"d/m/Y" }}</td>
+                <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }}</td>
+                <td>{{ tms.worktime }}</td>
+                <td>{{ tms.description }}</td>
+            </tr>
+
+            {% if forloop.counter == 5 %}
+                <tr><td colspan="4"></td></tr>
+            <tr class="page-break"><td colspan="4"></td></tr>
+            {% endif %}
+        {% endfor %}
 
         <tr style="background-color: #f1a871">
           <td></td>
@@ -66,6 +73,9 @@
     </tbody>
 
   </table>
+
+<!-- Page break after the table -->
+
 
 <div style="margin-top: 50%">
 Swissbix SA
@@ -101,6 +111,10 @@ www.swissbix.ch
     th:nth-child(4), td:nth-child(4) {
       width: 60%;
     }
-  </style>
+
+    .page-break {
+      page-break-before: always;
+    }
+</style>
 </body>
 </html>

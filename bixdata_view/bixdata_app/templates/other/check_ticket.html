@@ -1,9 +1,6 @@
 
     <div style="height: 90%;">
         <div class="row" style="height: 100%;">
-              <button class="btn btn-outline-danger me-md-2" type="button"
-                                                onclick="newRecord()">Nuovo
-                                        </button>
             <div class="col-12" style="height: 100%;">
                 {{ticket_block}}
             </div>
@@ -11,7 +8,9 @@
     </div>
 
 <script>
-        function newRecord() {
+    //trigger this when the page is loaded
+    $(document).ready(function () {
+
         var tableid = 'timesheet'
         $('#newRecordModal').modal('show');
         var serialized_data = [];
@@ -31,6 +30,5 @@
             }
         });
 
-
-    }
+    });
 </script>
