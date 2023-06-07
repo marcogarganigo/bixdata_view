@@ -195,6 +195,29 @@
         });
     }
 
+    function rinnova_contratto() {
+       var contract_hours = prompt("Inserisci totale ore contrattuali");
+       var invoicenr = prompt("Inserisci numero fattura");
+
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'rinnova_contratto' %}",
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'contract_hours': contract_hours,
+                'invoicenr': invoicenr,
+                'recordid': '{{ recordid }}',
+            },
+            success: function (response) {
+                alert('rinnova_contratto')
+            },
+            error: function (response) {
+                alert('rinnova_contratto')
+            }
+        });
+    }
+
 </script>
 
 <div id="block_record_card-{{ recordid }}" class="block_record_card" style="height: 100%;width: 100%;">
@@ -246,6 +269,8 @@
                         {% if tableid == 'timesheet' %}
                             <li><a class="dropdown-item" onclick="get_timesheet_serviceassets(this)">Servizi e
                                 risorse</a></li>
+                        {% elif tableid == 'servicecontract' %}
+                              <li><a class="dropdown-item" onclick="rinnova_contratto()">Rinnova</a></li>
                         {% endif %}
                         <li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>
 

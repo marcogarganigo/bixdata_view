@@ -1394,6 +1394,25 @@ def get_block_ticket_timesheet(request, ticket, userid):
 
 
 
+def rinnova_contratto(request):
+    recordid = request.POST.get('recordid')
+    contract_hours = request.POST.get('contract_hours')
+    invoicenr = request.POST.get('invoicenr')
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM user_servicecontract WHERE recordid_='{recordid}'"
+        )
+        rows = dictfetchall(cursor)
+        rows[0]['contracthours'] = contract_hours
+        rows[0]['invoiceno'] = invoicenr
+        rows[0]['startdate'] = datetime.datetime.now().strftime("%d/%m/%Y")
+        rows[0]['status'] = 'In progress'
+
+    return rows[0]
+    
+
+
 
 
 

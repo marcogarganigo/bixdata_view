@@ -37,18 +37,16 @@
 
 <div style="clear:both"></div>
 
-<!-- Page break before the table -->
 
 <table>
-    <thead>
+    <tbody>
+
         <tr style="background-color: #f1a871">
           <th><b>Data</b></th>
           <th><b>Tecnico</b></th>
           <th><b>Tempo</b></th>
           <th><b>Descrizione</b></th>
         </tr>
-    </thead>
-    <tbody>
 
         {% for tms in timesheets %}
             <tr>
@@ -57,11 +55,6 @@
                 <td>{{ tms.worktime }}</td>
                 <td>{{ tms.description }}</td>
             </tr>
-
-            {% if forloop.counter == 5 %}
-                <tr><td colspan="4"></td></tr>
-            <tr class="page-break"><td colspan="4"></td></tr>
-            {% endif %}
         {% endfor %}
 
         <tr style="background-color: #f1a871">
@@ -76,8 +69,9 @@
 
 <!-- Page break after the table -->
 
+<br>
 
-<div style="margin-top: 50%">
+<div>
 Swissbix SA
 <br>
 Via Lisano 3
@@ -110,10 +104,6 @@ www.swissbix.ch
 
     th:nth-child(4), td:nth-child(4) {
       width: 60%;
-    }
-
-    .page-break {
-      page-break-before: always;
     }
 </style>
 </body>
