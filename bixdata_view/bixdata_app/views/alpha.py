@@ -571,18 +571,21 @@ def get_records_table_render(request):
     master_recordid = request.POST.get('master_recordid')
     searchTerm = request.POST.get('searchTerm')
     viewid = request.POST.get('viewid')
+    order_field = request.POST.get('order_field')
+    order = request.POST.get('order')
     currentpage = request.POST.get('currentpage')
     if (currentpage == ''):
         currentpage = 1
-    render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid, currentpage)
+    render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid, currentpage, order_field, order)
     return HttpResponse(render)
 
 
 @login_required(login_url='/login/')
-def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=1):
+def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=1,order_field='',order=''):
     userid = get_userid(request.user.id)
     table_type = 'standard'
     table_height = '100%'
+
     if master_tableid:
         table_height = '500px'
         table_type = 'linked'
@@ -592,6 +595,8 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
         'searchTerm': searchTerm,
         'viewid': viewid,
         'currentpage': currentpage,
+        'order_field': order_field,
+        'order': order,
         'master_tableid': master_tableid,
         'master_recordid': master_recordid,
         'userid': userid
@@ -603,6 +608,16 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
     records = response_dict['records']
     reports = response_dict['reports']
     other_values = dict()
+
+    if order_field == '':
+        order_field = columns[3]['desc']
+        order = 'asc'
+
+    if order == 'asc':
+        icon = 'mdi mdi-arrow-down-thin'
+    else:
+        icon = 'mdi mdi-arrow-up-thin'
+
     context = {
         'records': records,
         'reports': reports,
@@ -611,7 +626,10 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
         'table_height': table_height,
         'table_type': table_type,
         'other_values': other_values,
-        'currentpage': currentpage
+        'currentpage': currentpage,
+        'order_field': order_field,
+        'order': order,
+        'icon': icon
     }
 
     for records_index, record in enumerate(records):
@@ -1410,7 +1428,19 @@ def rinnova_contratto(request):
         rows[0]['status'] = 'In progress'
 
     return rows[0]
-    
+
+
+def sort_records(request):
+    tableid = request.POST.get('tableid')
+    order = request.POST.get('order')
+    column_name = request.POST.get('order_field')
+
+    if order == 'asc':
+        icon = 'mdi mdi-arrow-down-thin'
+    else:
+        icon = 'mdi mdi-arrow-up-thin'
+
+    return icon
 
 
 

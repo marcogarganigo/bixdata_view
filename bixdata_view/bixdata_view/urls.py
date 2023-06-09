@@ -89,4 +89,5 @@ urlpatterns = [
     path('stampa_servicecontract/', alpha.stampa_servicecontract, name='stampa_servicecontract'),
     path('new_ticket_timesheet/<str:ticket>/', alpha.new_ticket_timesheet, name='new_ticket_timesheet'),
     path('rinnova_contratto/', alpha.rinnova_contratto, name='rinnova_contratto'),
+    path('sort_records/', alpha.sort_records, name='sort_records'),
 ]

@@ -128,8 +128,28 @@
 
 </style>
 
+<script>
+    function sort(el) {
 
-<div id="block_records_table" style="width: 100%;" data-type="{{ table_type }}">
+        $('#block_records_table').attr('data-order-field', $(el).text().trim())
+
+        if ($(el).find('i').hasClass('mdi-arrow-down-thin')) {
+
+            $(el).find('i').removeClass('mdi-arrow-down-thin')
+            $(el).find('i').removeClass('mdi')
+            $('#block_records_table').attr('data-order', 'desc')
+        } else {
+            $(el).find('i').removeClass('mdi-arrow-up-thin')
+            $(el).find('i').removeClass('mdi')
+            $('#block_records_table').attr('data-order', 'asc')
+        }
+
+        refresh()
+    }
+</script>
+
+
+<div data-order="" data-order-field="" id="block_records_table" style="width: 100%;" data-type="{{ table_type }}">
 
 
     <div class="col s12 m6 l6" id="pagination-container">
@@ -139,9 +159,17 @@
                 {% for column in columns %}
                     {% if column.desc != 'recordid_' and column.desc != 'recordstatus_' and column.desc != 'recordcss_' %}
                         {% if column.fieldtypeid == 'Numero' %}
-                            <th style="text-align: right">{{ column.desc }}</th>
+                            {% if column.desc == order_field %}
+                            <th onclick="sort(this)" style="text-align: right">{{ column.desc }} <i class="{{ icon }}"></i></th>
+                                {% else %}
+                                <th onclick="sort(this)" style="text-align: right">{{ column.desc }} <i class=""></i></th>
+                            {% endif %}
                         {% else %}
-                            <th>{{ column.desc }}</th>
+                            {% if column.desc == order_field %}
+                            <th onclick="sort(this)">{{ column.desc }} <i class="{{ icon }}"></i></th>
+                            {% else %}
+                             <th onclick="sort(this)">{{ column.desc }} <i class=""></i></th>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endfor %}
