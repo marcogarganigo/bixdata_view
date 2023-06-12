@@ -210,17 +210,25 @@
             value: $('#content-table').find('#block_records_table').data('order')
         });
 
-        $.ajax({
-            type: "POST",
-            url: "{% url 'export_excel' %}",
-            data: serialized_data,
-            success: function (response) {
+$.ajax({
+    type: "POST",
+    url: "{% url 'export_excel' %}",
+    data: serialized_data,
+    xhrFields: {
+        responseType: 'blob' // Set the response type to 'blob'
+    },
+     success: function (response, status, xhr) {
+        const filename = xhr.getResponseHeader('filename')
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(response); // Create a Blob URL
+        link.download = filename;
+        link.click(); // Simulate a click event to trigger the download
+    },
+    error: function () {
+        // Handle error
+    }
+});
 
-            },
-            error: function () {
-
-            }
-        });
     }
 
     $("#searchTerm").ready(function () {

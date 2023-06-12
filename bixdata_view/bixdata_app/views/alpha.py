@@ -1472,18 +1472,34 @@ def export_excel(request):
     response_dict = json.loads(response.text)
 
     # Specify the file name and path where you want to save the CSV file
-    csv_file = 'response_data.csv'
+    csv_file = tableid + '-' + uuid.uuid4().hex + '.csv'
 
-    csv_columns=list()
-    for count,col in enumerate(response_dict['columns']):
-        if(count>2):
+    csv_columns = []
+    for count, col in enumerate(response_dict['columns']):
+        if count > 2:
             csv_columns.append(col['desc'])
+
+    # Extract the records excluding the first three columns
+    records = [row[3:] for row in response_dict['records']]
+
     # Open the CSV file in write mode
     with open(csv_file, 'w', newline='', encoding='utf-8-sig') as file:
-        writer = csv.writer(file, dialect='excel')
+        writer = csv.writer(file, delimiter=';')
 
         writer.writerow(csv_columns)
-        #writer.writerow(response_dict['records'])
+        # Write the records to the CSV file
+        writer.writerows(records)
+
+    # Return the CSV file as a response to the frontend
+    with open(csv_file, 'rb') as file:
+        response = HttpResponse(file.read(), content_type='text/csv')
+        response['Content-Disposition'] = 'attachment'
+        response['filename'] = csv_file
+
+    # Delete the CSV file
+    os.remove(csv_file)
+
+    return response
 
 
 
