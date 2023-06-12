@@ -1474,13 +1474,16 @@ def export_excel(request):
     # Specify the file name and path where you want to save the CSV file
     csv_file = 'response_data.csv'
 
-
+    csv_columns=list()
+    for count,col in enumerate(response_dict['columns']):
+        if(count>2):
+            csv_columns.append(col['desc'])
     # Open the CSV file in write mode
     with open(csv_file, 'w', newline='', encoding='utf-8-sig') as file:
         writer = csv.writer(file, dialect='excel')
 
-        writer.writerow(response_dict['columns'])
-        writer.writerow(response_dict['records'])
+        writer.writerow(csv_columns)
+        #writer.writerow(response_dict['records'])
 
 
 
