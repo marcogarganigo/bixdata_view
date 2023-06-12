@@ -182,6 +182,47 @@
         });
     }
 
+    function export_excel() {
+          var serialized_data = [];
+        serialized_data.push({
+            name: 'tableid',
+            value: '{{tableid}}'
+        });
+        serialized_data.push({
+            name: 'searchTerm',
+            value: $("#searchTerm").val()
+        });
+        serialized_data.push({
+            name: 'viewid',
+            value: $("#viewid").val()
+        });
+        serialized_data.push({
+            name: 'currentpage',
+            value: $('#my-pagination').data('currentpage')
+        });
+
+        serialized_data.push({
+            name: 'order_field',
+            value: $('#content-table').find('#block_records_table').data('order-field')
+        });
+        serialized_data.push({
+            name: 'order',
+            value: $('#content-table').find('#block_records_table').data('order')
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'export_excel' %}",
+            data: serialized_data,
+            success: function (response) {
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+
     $("#searchTerm").ready(function () {
         $("input").keypress(function () {
             var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -394,7 +435,7 @@
                                                 Esporta
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Esporta dati excel</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="export_excel()">Esporta dati excel</a></li>
                                                 <li><a class="dropdown-item" href="#">Esporta elenco</a></li>
                                                 <li><a class="dropdown-item" href="#">Esporta migrazione</a></li>
                                             </ul>
