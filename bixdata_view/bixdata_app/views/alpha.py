@@ -948,11 +948,14 @@ def get_block_record_fields(request):
     context['recordid'] = recordid
     context['master_tableid'] = master_tableid
     context['master_recordid'] = master_recordid
+    """
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()
         block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context,request=request)
     else:
-        block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
+    """
+    block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
+
 
     if (http_response):
         return HttpResponse(block_record_fields)
@@ -1441,6 +1444,33 @@ def sort_records(request):
         icon = 'mdi mdi-arrow-up-thin'
 
     return icon
+
+
+def export_excel(request):
+    tableid = request.POST.get('tableid')
+    master_tableid = request.POST.get('master_tableid')
+    master_recordid = request.POST.get('master_recordid')
+    searchTerm = request.POST.get('searchTerm')
+    viewid = request.POST.get('viewid')
+    order_field = request.POST.get('order_field')
+    order = request.POST.get('order')
+    currentpage = request.POST.get('currentpage')
+
+    post = {
+        'tableid': tableid,
+        'searchTerm': searchTerm,
+        'viewid': viewid,
+        'currentpage': currentpage,
+        'order_field': order_field,
+        'order': order,
+        'master_tableid': master_tableid,
+        'master_recordid': master_recordid,
+        'userid': request.user.id
+    }
+    response = requests.post(
+        f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
+    response_dict = json.loads(response.text)
+
 
 
 
