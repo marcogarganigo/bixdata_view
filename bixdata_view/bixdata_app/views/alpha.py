@@ -35,6 +35,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 import subprocess
 from .beta import *
 from htmldocx import HtmlToDocx
+import csv
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -1467,9 +1468,19 @@ def export_excel(request):
         'master_recordid': master_recordid,
         'userid': request.user.id
     }
-    response = requests.post(
-        f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
+    response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
     response_dict = json.loads(response.text)
+
+    # Specify the file name and path where you want to save the CSV file
+    csv_file = 'response_data.csv'
+
+
+    # Open the CSV file in write mode
+    with open(csv_file, 'w', newline='', encoding='utf-8-sig') as file:
+        writer = csv.writer(file, dialect='excel')
+
+        writer.writerow(response_dict['columns'])
+        writer.writerow(response_dict['records'])
 
 
 
