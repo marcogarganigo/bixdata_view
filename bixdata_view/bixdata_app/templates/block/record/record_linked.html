@@ -8,7 +8,7 @@
             $(el).css('color', '#074048');
         }
 
-        load_linked(el, tablelinkid,tableid);
+        load_linked(el, tablelinkid, tableid);
 
     }
 
@@ -77,20 +77,6 @@
     }
 </style>
 
-
-<script>
-    /*
-$('#top-label').on('click', function(event) {
-  if ($(this).find('.collapse').hasClass('show')) {
-    $(this).find('.collapse').removeClass('show');
-  } else {
-    $(this).find('.collapse').addClass('show');
-  }
-});
-*/
-</script>
-
-
 <div id="block_record_linked">
     {% for linked_table in linked_tables %}
         <button class="btn btn-primary" id="label-{{ recordid }}" type="button" data-bs-toggle="collapse"
@@ -129,7 +115,8 @@ $('#top-label').on('click', function(event) {
       </span>
         </button>
 
-        <div class="div-collapse" id="collapse-{{ linked_table.tableid }}-{{ recordid }}" style="margin-top: 10px; display: none">
+        <div class="div-collapse" id="collapse-{{ linked_table.tableid }}-{{ recordid }}"
+             style="margin-top: 10px; display: none">
             <div class="card card-body">
                 <button class="btn btn-secondary d-flex justify-content-center align-items-center"
                         onclick="linked_newRecord(this, '{{ linked_table.tableid }}')" style="width: 5%;"><span
