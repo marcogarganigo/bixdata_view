@@ -86,18 +86,11 @@ def get_test_query(request, name=None):
                 'amounts': amounts,
             }
 
-            # Get the custom permission
             permission = Permission.objects.get(codename='can_do_something')
 
-            # Assign the permission to a group
-            # group = Group.objects.get(name='My group')
-            # group.permissions.add(permission)
-
-            # Assign the permission to a user
             user = User.objects.get(username='test')
             user.user_permissions.add(permission)
 
-            # Check if a user has a permission
 
     return render(request, 'other/test_query.html', {'data': data})
 
@@ -1471,7 +1464,6 @@ def export_excel(request):
     response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
     response_dict = json.loads(response.text)
 
-    # Specify the file name and path where you want to save the CSV file
     csv_file = tableid + '-' + uuid.uuid4().hex + '.csv'
 
     csv_columns = []
@@ -1479,32 +1471,22 @@ def export_excel(request):
         if count > 2:
             csv_columns.append(col['desc'])
 
-    # Extract the records excluding the first three columns
     records = [row[3:] for row in response_dict['records']]
 
-    # Open the CSV file in write mode
     with open(csv_file, 'w', newline='', encoding='utf-8-sig') as file:
         writer = csv.writer(file, delimiter=';')
 
         writer.writerow(csv_columns)
-        # Write the records to the CSV file
         writer.writerows(records)
 
-    # Return the CSV file as a response to the frontend
     with open(csv_file, 'rb') as file:
         response = HttpResponse(file.read(), content_type='text/csv')
         response['Content-Disposition'] = 'attachment'
         response['filename'] = csv_file
 
-    # Delete the CSV file
     os.remove(csv_file)
 
     return response
-
-
-
-
-
 
 
 
