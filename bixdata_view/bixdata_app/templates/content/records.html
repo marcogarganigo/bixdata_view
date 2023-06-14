@@ -138,6 +138,7 @@
     function refresh() {
 
         var serialized_data = [];
+
         serialized_data.push({
             name: 'tableid',
             value: '{{tableid}}'
@@ -149,6 +150,10 @@
         serialized_data.push({
             name: 'viewid',
             value: $("#viewid").val()
+        });
+        serialized_data.push({
+            name: 'filters',
+            value: $('#filters').serializeArray()
         });
         serialized_data.push({
             name: 'currentpage',
@@ -164,6 +169,7 @@
             value: $('#content-table').find('#block_records_table').data('order')
         });
 
+        //serialized_data=$('#filters').serializeArray()
         //$("#records_table_container").load('/loading/');
         $("#records_table_container").load('/loading/', function () {
             $.ajax({
@@ -393,7 +399,7 @@ $.ajax({
                     <!-- Views -->
                     <!-- Views end -->
                     <!-- Filters start-->
-                    <div id="filters">
+                    <div id="search">
                         <div class="text-center">
                             <div class="row">
                                 <div class="col filter-column">
@@ -422,7 +428,7 @@ $.ajax({
 
                                     <button type="button" class="btn btn-outline-secondary"
                                             style=" margin-left: 1%; float: left"
-                                            onclick="$('#hiddenCard').toggle(100);">Filtri
+                                            onclick="$('#filters').toggle(100);">Filtri
                                     </button>
 
                                 </div>
@@ -455,7 +461,7 @@ $.ajax({
                         </div>
 
 
-                        <div id="hiddenCard" style="display: none;">
+                        <div id="filters" style="display: none;">
                             <div class="card shadow-sm p-3 mb-5 bg-body rounded"
                                  style="margin-left: 30px;margin-right: 30px;">
                                 <p class="card-text">
