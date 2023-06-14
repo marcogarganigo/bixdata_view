@@ -36,7 +36,6 @@ import subprocess
 from .beta import *
 from htmldocx import HtmlToDocx
 import csv
-from pdfy import Pdfy
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
