@@ -104,7 +104,7 @@
             success: function (response) {
                 $("#calendar-tab-pane").html(response);
             },
-            error: function () {
+            error: function (response) {
                 $("#calendar-tab-pane").html(response);
             }
         });
@@ -551,7 +551,7 @@ $.ajax({
                                 </button>
                             </li>
                             <li id="nav-calendar" class="nav-item" role="presentation">
-                                <button onclick="underConstruction('#calendar-tab-pane')" class="nav-link"
+                                <button class="nav-link"
                                         id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane"
                                         type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar"
                                         aria-selected="false">Calendario

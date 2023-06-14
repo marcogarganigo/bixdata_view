@@ -777,38 +777,7 @@ def get_block_records_kanban(request):
 
 @login_required(login_url='/login/')
 def get_block_records_calendar(request):
-    tableid = request.POST.get('tableid')
-    searchTerm = request.POST.get('searchTerm')
-    viewid = request.POST.get('viewid')
-    post = {
-        'tableid': tableid,
-        'searchTerm': searchTerm,
-        'viewid': viewid,
-    }
-    response = requests.post(
-        f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
-    response_dict = json.loads(response.text)
-    columns = response_dict['columns']
-    records = response_dict['records']
-    context = {
-        'records': records,
-        'columns': columns,
-        'tableid': tableid,
-    }
-
-    for records_index, record in enumerate(records):
-        for record_index, value in enumerate(record):
-            if record_index == 4:
-                # record[index]=split(value)
-                value = value.split('|:|')
-                record[record_index] = value[0]
-            else:
-                record[record_index] = value
-        records[records_index] = record
-
-    records_table = render_to_string(
-        'block/records/records_calendar.html', context, request=request)
-    return HttpResponse(records_table)
+    return render(request, 'block/records/records_calendar.html')
 
 
 @login_required(login_url='/login/')
