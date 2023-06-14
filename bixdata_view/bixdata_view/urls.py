@@ -91,4 +91,5 @@ urlpatterns = [
     path('rinnova_contratto/', alpha.rinnova_contratto, name='rinnova_contratto'),
     path('sort_records/', alpha.sort_records, name='sort_records'),
     path('export_excel/', alpha.export_excel, name='export_excel'),
+    path('stampa_servicecontract_test/', alpha.stampa_servicecontract_test, name='stampa_servicecontract_test'),
 ]

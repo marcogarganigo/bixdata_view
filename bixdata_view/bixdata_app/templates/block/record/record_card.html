@@ -159,7 +159,7 @@
             }
         });
     }
-
+/*
     function stampa(tableid) {
         var serialized_data = [];
         var filename = tableid + new Date().getTime() + '.dockx';
@@ -193,6 +193,30 @@
                 console.error('Error:', error);
             }
         });
+    }
+*/
+
+    function stampa(tableid) {
+         var filename = tableid + new Date().getTime() + '.dockx';
+         var url = '/stampa_servicecontract_test/'
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                'recordid': '{{ recordid }}',
+                'filename': filename,
+            },
+            success: function (response) {
+
+                var w = window.open();
+                $(w.document.body).html(response);
+
+                setTimeout(function () {
+                    w.print();
+                }, 400);
+
+            },
+        })
     }
 
     function rinnova_contratto() {

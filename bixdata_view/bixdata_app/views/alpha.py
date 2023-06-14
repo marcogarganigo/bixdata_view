@@ -36,6 +36,7 @@ import subprocess
 from .beta import *
 from htmldocx import HtmlToDocx
 import csv
+from pdfy import Pdfy
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -1369,7 +1370,14 @@ def stampa_servicecontract(request):
 
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
         content = render_to_string('pdf/servicecontract.html', row)
-        pdfkit.from_string(content, filename, configuration=config)
+        pdf_options = {
+            'page-size': 'A4',
+            'margin-top': '10mm',
+            'margin-right': '10mm',
+            'margin-bottom': '10mm',
+            'margin-left': '10mm',
+        }
+        pdfkit.from_string(content, filename, configuration=config, options=pdf_options)
 
         # Open the file and read its contents
         with open(filename, 'rb') as file:
@@ -1382,6 +1390,33 @@ def stampa_servicecontract(request):
         response = HttpResponse(file_data, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
+
+
+def stampa_servicecontract_test(request):
+
+    recordid = request.POST.get('recordid')
+    filename = request.POST.get('filename')
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT s.*,c.companyname,c.address,c.city,c.email FROM user_servicecontract as s join user_company as c on s.recordidcompany_=c.recordid_  WHERE s.recordid_='{recordid}'"
+        )
+        rows = dictfetchall(cursor)
+
+        row = rows[0]
+        row['recordid'] = recordid
+        row['date'] = datetime.datetime.now().strftime("%d/%m/%Y")
+
+
+    context = row
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}'"
+        )
+        timesheets = dictfetchall(cursor)
+    context['timesheets'] = timesheets
+
+    return render(request, 'pdf/servicecontract.html', context)
 
 
 def new_ticket_timesheet(request, ticket):

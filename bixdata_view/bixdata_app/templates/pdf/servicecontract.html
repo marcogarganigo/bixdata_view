@@ -41,7 +41,7 @@
 <table>
     <tbody>
 
-        <tr style="background-color: #f1a871">
+        <tr class="colored">
           <th><b>Data</b></th>
           <th><b>Tecnico</b></th>
           <th><b>Tempo</b></th>
@@ -57,7 +57,7 @@
             </tr>
         {% endfor %}
 
-        <tr style="background-color: #f1a871">
+        <tr class="colored">
           <td></td>
           <td><b>Saldo ore</b></td>
           <td><b>{{ residualhours }}</b></td>
@@ -85,7 +85,7 @@ www.swissbix.ch
 <style>
     table {
       border-collapse: collapse;
-      width: 95%;
+      width: 100%;
     }
 
     th, td {
@@ -104,6 +104,15 @@ www.swissbix.ch
 
     th:nth-child(4), td:nth-child(4) {
       width: 60%;
+    }
+@media print {
+    .colored {
+        background-color: #f1a871 !important;
+    }
+}
+
+    .colored {
+        background-color: #f1a871 !important;
     }
 </style>
 </body>
