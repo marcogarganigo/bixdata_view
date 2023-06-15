@@ -18,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 import time
 
 import pdfkit
-from docx import Document
+#from docx import Document
 
 from ..forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
