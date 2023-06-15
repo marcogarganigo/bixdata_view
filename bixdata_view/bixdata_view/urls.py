@@ -92,4 +92,5 @@ urlpatterns = [
     path('sort_records/', alpha.sort_records, name='sort_records'),
     path('export_excel/', alpha.export_excel, name='export_excel'),
     path('stampa_servicecontract_test/', alpha.stampa_servicecontract_test, name='stampa_servicecontract_test'),
+    path('get_records_grouped/', alpha.get_records_grouped, name='get_records_grouped'),
 ]

@@ -332,8 +332,10 @@ def get_content_records(request):
             context['views'] = result
 
     layout_setting = get_user_setting(request, 'record_open_layout')
-    context['layout_setting'] = layout_setting
+    active_panel_setting = get_user_setting(request, 'active_panel')
 
+    context['layout_setting'] = layout_setting
+    context['active_panel_setting'] = active_panel_setting
     context['loading'] = render_to_string('other/loading.html', context, request)
 
     #  search fields
@@ -1090,6 +1092,7 @@ def save_settings(request):
     if request.method == 'POST':
         layout = request.POST.get('record_open_layout')
         theme = request.POST.get('theme')
+        active_panel = request.POST.get('active_panel')
 
         with connection.cursor() as cursor:
             cursor.execute(
@@ -1099,6 +1102,10 @@ def save_settings(request):
             cursor.execute(
                 "UPDATE v_sys_user_settings SET value = %s WHERE userid = %s AND setting = 'theme'",
                 [theme, id]
+            )
+            cursor.execute(
+                "UPDATE v_sys_user_settings SET value = %s WHERE userid = %s AND setting = 'active_panel'",
+                [active_panel, id]
             )
 
     return redirect('index')
@@ -1490,6 +1497,23 @@ def export_excel(request):
     os.remove(csv_file)
 
     return response
+
+
+def get_records_grouped(request):
+    tableid = request.POST.get('tableid')
+    table_name = 'user_' + tableid
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT c.companyname, COUNT(c.recordid_) AS NumeroTask, t.* FROM {table_name} AS t LEFT JOIN user_company AS c ON t.recordidcompany_ = c.recordid_ GROUP BY c.companyname"
+        )
+        rows = dictfetchall(cursor)
+
+    context = dict()
+    context['rows'] = rows
+
+    return render(request, 'block/records/records_grouped.html', context)
+
 
 
 

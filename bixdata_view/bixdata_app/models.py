@@ -1,13 +1,9 @@
-from django.db import models
-from django.contrib.auth.models import Group
-from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.views import LoginView
+from django.db import models
 
 
 class MyModel(models.Model):
-    # Fields
-    # ...
-
     class Meta:
         permissions = (
             ('can_do_something', 'Can do something'),
@@ -34,10 +30,3 @@ class CustomUser(AbstractUser):
         related_name='custom_users',
         related_query_name='custom_user',
     )
-
-
-"""
-class Blog(models.Model):
-    title = models.CharField(max_length=1000)
-"""
-

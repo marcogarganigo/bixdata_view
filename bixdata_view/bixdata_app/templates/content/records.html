@@ -29,6 +29,11 @@
                     searchChart()
                 })
             }
+            if ($(this).attr("id") == 'grouped-tab') {
+                $(this)[0].addEventListener('shown.bs.tab', function (event) {
+                    searchChart()
+                })
+            }
         })
 
         if (window.innerWidth <= min_width) {
@@ -366,6 +371,30 @@ $.ajax({
             }
         });
     }
+
+
+
+
+$(document).ready(function() {
+    $.ajax({
+        type: "POST",
+        url: "{% url 'get_records_grouped' %}",
+        data: {
+            csrf: '{{ csrf_token }}',
+            tableid: '{{ tableid }}',
+        },
+        success: function (response) {
+            $("#group-tab-pane").html(response);
+        },
+        error: function (response) {
+            $("#group-tab-pane").html(response);
+        }
+    });
+});
+
+
+
+
 </script>
 
 <style>
@@ -544,12 +573,34 @@ $.ajax({
                     <div id="result-tabs" style="height: 92%">
                         <!-- Nav menu start -->
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            {% if active_panel_setting == 'table' %}
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab"
                                         data-bs-target="#records_table_container" type="button" role="tab"
-                                        aria-controls="records_table_container" aria-selected="true">Tabella
+                                        aria-controls="records_table_container" aria-selected="false">Tabella
                                 </button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="group-tab" data-bs-toggle="tab"
+                                        data-bs-target="#group-tab-pane" type="button" role="tab"
+                                        aria-controls="group-tab-pane" aria-selected="false">Raggruppati
+                                </button>
+                            </li>
+                            {% else %}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tutti-tab" data-bs-toggle="tab"
+                                        data-bs-target="#records_table_container" type="button" role="tab"
+                                        aria-controls="records_table_container" aria-selected="false">Tabella
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="group-tab" data-bs-toggle="tab"
+                                        data-bs-target="#group-tab-pane" type="button" role="tab"
+                                        aria-controls="group-tab-pane" aria-selected="false">Raggruppati
+                                </button>
+                            </li>
+                            {% endif %}
+
                             <li class="nav-item" role="presentation">
                                 <button onclick="underConstruction('#chart-tab-pane')" class="nav-link" id="chart-tab"
                                         data-bs-toggle="tab" data-bs-target="#chart-tab-pane" type="button" role="tab"
@@ -579,12 +630,29 @@ $.ajax({
                         <!-- Nav menu end -->
                         <!-- Nav content start-->
                         <div class="tab-content" id="myTabContent" style="height: 100%">
+                            {% if active_panel_setting == 'table' %}
                             <div class="tab-pane fade show active" id="records_table_container" role="tabpanel"
                                  aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
                                 {{ records_table }}
+                            </div>
 
+                            <div class="tab-pane fade" id="group-tab-pane" style="height: 100%; overflow: hidden"
+                                 role="tabpanel" aria-labelledby="grouped-tab" tabindex="0">
 
                             </div>
+
+                            {% else %}
+                            <div class="tab-pane fade" id="records_table_container" role="tabpanel"
+                                 aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
+                                {{ records_table }}
+                            </div>
+
+                            <div class="tab-pane fade show active" id="group-tab-pane" style="height: 100%; overflow: hidden"
+                                 role="tabpanel" aria-labelledby="grouped-tab" tabindex="0">
+
+                            </div>
+
+                            {% endif %}
 
                             <div class="tab-pane fade" id="report-tab-pane" style="height: 100%; width: 100%"
                                  role="tabpanel" aria-labelledby="report-tab" tabindex="0">
