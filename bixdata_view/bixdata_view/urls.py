@@ -93,4 +93,5 @@ urlpatterns = [
     path('export_excel/', alpha.export_excel, name='export_excel'),
     path('stampa_servicecontract_test/', alpha.stampa_servicecontract_test, name='stampa_servicecontract_test'),
     path('get_records_grouped/', alpha.get_records_grouped, name='get_records_grouped'),
+    path('send_active_task/', alpha.send_active_task, name='send_active_task'),
 ]
