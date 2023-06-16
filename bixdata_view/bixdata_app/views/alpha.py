@@ -18,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 import time
 
 import pdfkit
-#from docx import Document
+# from docx import Document
 
 from ..forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
@@ -36,7 +36,6 @@ import subprocess
 from .beta import *
 from htmldocx import HtmlToDocx
 import csv
-
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -91,7 +90,6 @@ def get_test_query(request, name=None):
 
             user = User.objects.get(username='test')
             user.user_permissions.add(permission)
-
 
     return render(request, 'other/test_query.html', {'data': data})
 
@@ -573,12 +571,14 @@ def get_records_table_render(request):
     currentpage = request.POST.get('currentpage')
     if (currentpage == ''):
         currentpage = 1
-    render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid, currentpage, order_field, order)
+    render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid, currentpage,
+                               order_field, order)
     return HttpResponse(render)
 
 
 @login_required(login_url='/login/')
-def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=1,order_field='',order=''):
+def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=1,
+                      order_field='', order=''):
     userid = get_userid(request.user.id)
     table_type = 'standard'
     table_height = '100%'
@@ -924,7 +924,6 @@ def get_block_record_fields(request):
     """
     block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
 
-
     if (http_response):
         return HttpResponse(block_record_fields)
     else:
@@ -1017,6 +1016,43 @@ def save_record_fields(request):
             request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
         send_email(request, ['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'], 'Supporto bixdata',
                    message)
+
+    if tableid == 'task':
+        if fields_dict['user'] != fields_dict['creator']:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT email FROM v_users WHERE sys_user_id = %s", [fields_dict['user']])
+                row = cursor.fetchone()
+
+                email = row[0]
+
+                cursor.execute("SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s", [fields_dict['creator']])
+                row = cursor.fetchone()
+                first_name = row[0]
+                last_name = row[1]
+
+                companyname = 'N/A'
+                projectname = 'N/A'
+
+                if fields_dict['recordidcompany_'] != 'None':
+                    with connection.cursor() as cursor:
+                        cursor.execute("SELECT companyname FROM user_company WHERE recordid_ = %s",
+                                       [fields_dict['recordidcompany_']])
+                        row = cursor.fetchone()
+                        companyname = row[0]
+
+
+                if fields_dict['recordidproject_'] != 'None':
+                    with connection.cursor() as cursor:
+                        cursor.execute("SELECT projectname FROM user_project WHERE recordid_ = %s",
+                                       [fields_dict['recordidproject_']])
+                        row = cursor.fetchone()
+                        projectname = row[0]
+
+
+                message = 'Ti è stato assegnato un nuovo task da {} \nDescrizione: {} \nData di scadenza: {} \nAzienda: {} \nProgetto: {}'.format(
+                first_name + ' ' + last_name, fields_dict['description'], fields_dict['duedate'], companyname, projectname)
+
+                send_email(request, [email], 'Nuovo task assegnato', message)
 
     return render(request, 'block/record/record_fields.html')
 
@@ -1371,7 +1407,6 @@ def stampa_servicecontract(request):
 
 
 def stampa_servicecontract_test(request):
-
     recordid = request.POST.get('recordid')
     filename = request.POST.get('filename')
 
@@ -1384,7 +1419,6 @@ def stampa_servicecontract_test(request):
         row = rows[0]
         row['recordid'] = recordid
         row['date'] = datetime.datetime.now().strftime("%d/%m/%Y")
-
 
     context = row
     with connection.cursor() as cursor:
@@ -1404,7 +1438,6 @@ def new_ticket_timesheet(request, ticket):
 
 
 def get_block_ticket_timesheet(request, ticket, userid):
-
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT * FROM user_ticket WHERE freshdeskid='{ticket}'"
@@ -1419,7 +1452,6 @@ def get_block_ticket_timesheet(request, ticket, userid):
             content = render_to_string('other/check_ticket.html', context)
 
         return content
-
 
 
 def rinnova_contratto(request):
@@ -1518,5 +1550,24 @@ def get_records_grouped(request):
     return render(request, 'block/records/records_grouped.html', context)
 
 
+def send_active_task(request):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT email from auth_user where is_active=1"
+        )
+        rows = dictfetchall(cursor)
 
+        for row in rows:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT description, duedate FROM user_task WHERE status='Open'"
+                )
+                tasks = dictfetchall(cursor)
 
+                if tasks:
+                    subject = 'Task aperti'
+                    message = tasks
+                    recipient_list = 'marco.garganigo@swissbix.ch'
+                    send_mail(recipient_list, subject, message)
+
+                return render('index.html')
