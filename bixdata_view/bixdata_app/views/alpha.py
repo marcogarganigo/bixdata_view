@@ -892,6 +892,7 @@ def get_block_record_fields(request):
     master_tableid = request.POST.get('master_tableid')
     master_recordid = request.POST.get('master_recordid')
     contextfunction = request.POST.get('contextfunction')
+    contextreference = request.POST.get('contextreference')
     with connection.cursor() as cursor:
         cursor.execute("SELECT id FROM sys_user WHERE bixid = %s", [request.user.id])
         row = cursor.fetchone()
@@ -910,6 +911,7 @@ def get_block_record_fields(request):
     response_dict = json.loads(response.text)
     context['record_fields_labels'] = response_dict
     context['contextfunction'] = contextfunction
+    context['contextreference'] = contextreference
     context['tableid'] = tableid
     context['recordid'] = recordid
     context['master_tableid'] = master_tableid

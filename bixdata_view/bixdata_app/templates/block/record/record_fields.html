@@ -330,7 +330,8 @@
                         })
                         //getContentRecords('{{ tableid }}')
                         //$("#linked-container-{{ tableid }}").load('/loading/')
-                        load_linked(this, '{{ tableid }}')
+                        load_linked('{{ tableid }}-{{ recordid }}', '{{ tableid }}', '{{ recordid }}', '{{ tableid }}')
+                        //alert('test')
 
                     });
 

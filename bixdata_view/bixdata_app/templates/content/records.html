@@ -290,6 +290,7 @@ $.ajax({
         var serialized_data = [];
         serialized_data.push({name: 'tableid', value: tableid});
         serialized_data.push({name: 'contextfunction', value: 'insert'});
+        serialized_data.push({name: 'contextreference', value: tableid});
         serialized_data.push({name: 'http_response', value: true});
         $.ajax({
             type: "POST",
