@@ -310,9 +310,14 @@
                 data: post_data,
                 success: function (response) {
                     contextfunction='{{contextfunction}}'
-                    if(contextfunction=='insert')
+                    master_tableid='{{ master_tableid }}';
+                    if((contextfunction=='insert')&&(master_tableid=='None'))
                     {
                         refresh();
+                    }
+                    else
+                    {
+                        load_linked('{{ tableid }}-{{ master_recordid }}', '{{ tableid }}', '{{ master_recordid }}', '{{ master_tableid }}')
                     }
                     setTimeout(function () {
                         if ('{{ tableid }}' == 'ticketbixdata') {
@@ -330,7 +335,9 @@
                         })
                         //getContentRecords('{{ tableid }}')
                         //$("#linked-container-{{ tableid }}").load('/loading/')
-                        load_linked(this, '{{ tableid }}')
+                        
+                        //alert('test')
+
 
                     });
 

@@ -18,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 import time
 
 import pdfkit
-#from docx import Document
+# from docx import Document
 
 from ..forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
@@ -90,7 +90,6 @@ def get_test_query(request, name=None):
 
             user = User.objects.get(username='test')
             user.user_permissions.add(permission)
-
 
     return render(request, 'other/test_query.html', {'data': data})
 
@@ -332,8 +331,10 @@ def get_content_records(request):
             context['views'] = result
 
     layout_setting = get_user_setting(request, 'record_open_layout')
-    context['layout_setting'] = layout_setting
+    active_panel_setting = get_user_setting(request, 'active_panel')
 
+    context['layout_setting'] = layout_setting
+    context['active_panel_setting'] = active_panel_setting
     context['loading'] = render_to_string('other/loading.html', context, request)
 
     #  search fields
@@ -540,7 +541,7 @@ def get_record_card_delete(request):
         tableid = request.POST.get('tableid')
 
         with connection.cursor() as cursor:
-            query = 'UPDATE user_' + tableid + ' SET deleted_ = "Y" WHERE id = ' + recordid
+            query = f"UPDATE user_{tableid} SET deleted_ = 'Y' WHERE recordid_= '{recordid}'"
             cursor.execute(
                 query
             )
@@ -570,12 +571,14 @@ def get_records_table_render(request):
     currentpage = request.POST.get('currentpage')
     if (currentpage == ''):
         currentpage = 1
-    render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid, currentpage, order_field, order)
+    render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid, currentpage,
+                               order_field, order)
     return HttpResponse(render)
 
 
 @login_required(login_url='/login/')
-def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=1,order_field='',order=''):
+def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=1,
+                      order_field='', order=''):
     userid = get_userid(request.user.id)
     table_type = 'standard'
     table_height = '100%'
@@ -889,6 +892,7 @@ def get_block_record_fields(request):
     master_tableid = request.POST.get('master_tableid')
     master_recordid = request.POST.get('master_recordid')
     contextfunction = request.POST.get('contextfunction')
+    contextreference = request.POST.get('contextreference')
     with connection.cursor() as cursor:
         cursor.execute("SELECT id FROM sys_user WHERE bixid = %s", [request.user.id])
         row = cursor.fetchone()
@@ -907,6 +911,7 @@ def get_block_record_fields(request):
     response_dict = json.loads(response.text)
     context['record_fields_labels'] = response_dict
     context['contextfunction'] = contextfunction
+    context['contextreference'] = contextreference
     context['tableid'] = tableid
     context['recordid'] = recordid
     context['master_tableid'] = master_tableid
@@ -918,7 +923,6 @@ def get_block_record_fields(request):
     else:
     """
     block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
-
 
     if (http_response):
         return HttpResponse(block_record_fields)
@@ -1013,6 +1017,43 @@ def save_record_fields(request):
         send_email(request, ['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'], 'Supporto bixdata',
                    message)
 
+    if tableid == 'task':
+        if fields_dict['user'] != fields_dict['creator']:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT email FROM v_users WHERE sys_user_id = %s", [fields_dict['user']])
+                row = cursor.fetchone()
+
+                email = row[0]
+
+                cursor.execute("SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s", [fields_dict['creator']])
+                row = cursor.fetchone()
+                first_name = row[0]
+                last_name = row[1]
+
+                companyname = 'N/A'
+                projectname = 'N/A'
+
+                if fields_dict['recordidcompany_'] != 'None':
+                    with connection.cursor() as cursor:
+                        cursor.execute("SELECT companyname FROM user_company WHERE recordid_ = %s",
+                                       [fields_dict['recordidcompany_']])
+                        row = cursor.fetchone()
+                        companyname = row[0]
+
+
+                if fields_dict['recordidproject_'] != 'None':
+                    with connection.cursor() as cursor:
+                        cursor.execute("SELECT projectname FROM user_project WHERE recordid_ = %s",
+                                       [fields_dict['recordidproject_']])
+                        row = cursor.fetchone()
+                        projectname = row[0]
+
+
+                message = 'Ti è stato assegnato un nuovo task da {} \nDescrizione: {} \nData di scadenza: {} \nAzienda: {} \nProgetto: {}'.format(
+                first_name + ' ' + last_name, fields_dict['description'], fields_dict['duedate'], companyname, projectname)
+
+                send_email(request, [email], 'Nuovo task assegnato', message)
+
     return render(request, 'block/record/record_fields.html')
 
 
@@ -1090,6 +1131,7 @@ def save_settings(request):
     if request.method == 'POST':
         layout = request.POST.get('record_open_layout')
         theme = request.POST.get('theme')
+        active_panel = request.POST.get('active_panel')
 
         with connection.cursor() as cursor:
             cursor.execute(
@@ -1099,6 +1141,10 @@ def save_settings(request):
             cursor.execute(
                 "UPDATE v_sys_user_settings SET value = %s WHERE userid = %s AND setting = 'theme'",
                 [theme, id]
+            )
+            cursor.execute(
+                "UPDATE v_sys_user_settings SET value = %s WHERE userid = %s AND setting = 'active_panel'",
+                [active_panel, id]
             )
 
     return redirect('index')
@@ -1361,7 +1407,6 @@ def stampa_servicecontract(request):
 
 
 def stampa_servicecontract_test(request):
-
     recordid = request.POST.get('recordid')
     filename = request.POST.get('filename')
 
@@ -1374,7 +1419,6 @@ def stampa_servicecontract_test(request):
         row = rows[0]
         row['recordid'] = recordid
         row['date'] = datetime.datetime.now().strftime("%d/%m/%Y")
-
 
     context = row
     with connection.cursor() as cursor:
@@ -1394,7 +1438,6 @@ def new_ticket_timesheet(request, ticket):
 
 
 def get_block_ticket_timesheet(request, ticket, userid):
-
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT * FROM user_ticket WHERE freshdeskid='{ticket}'"
@@ -1409,7 +1452,6 @@ def get_block_ticket_timesheet(request, ticket, userid):
             content = render_to_string('other/check_ticket.html', context)
 
         return content
-
 
 
 def rinnova_contratto(request):
@@ -1492,4 +1534,40 @@ def export_excel(request):
     return response
 
 
+def get_records_grouped(request):
+    tableid = request.POST.get('tableid')
+    table_name = 'user_' + tableid
 
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT c.companyname, COUNT(c.recordid_) AS NumeroTask, t.* FROM {table_name} AS t LEFT JOIN user_company AS c ON t.recordidcompany_ = c.recordid_ GROUP BY c.companyname"
+        )
+        rows = dictfetchall(cursor)
+
+    context = dict()
+    context['rows'] = rows
+
+    return render(request, 'block/records/records_grouped.html', context)
+
+
+def send_active_task(request):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT email from auth_user where is_active=1"
+        )
+        rows = dictfetchall(cursor)
+
+        for row in rows:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT description, duedate FROM user_task WHERE status='Open'"
+                )
+                tasks = dictfetchall(cursor)
+
+                if tasks:
+                    subject = 'Task aperti'
+                    message = tasks
+                    recipient_list = 'marco.garganigo@swissbix.ch'
+                    send_mail(recipient_list, subject, message)
+
+                return render('index.html')

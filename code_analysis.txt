@@ -1,0 +1,254 @@
+.\bixdata_app\admin.py:8: [E501] line too long (87 > 79 characters)
+.\bixdata_app\admin.py:12: [E501] line too long (111 > 79 characters)
+.\bixdata_app\forms.py:2: [F401] 'django.contrib.auth.models.User' imported but unused
+.\bixdata_app\forms.py:10: [W391] blank line at end of file
+.\bixdata_app\manage_permissions.py:1: [F401] 'django.contrib.auth.models.Group' imported but unused
+.\bixdata_app\manage_permissions.py:1: [F401] 'django.contrib.auth.models.Permission' imported but unused
+.\bixdata_app\manage_permissions.py:1: [F401] 'django.contrib.auth.models.User' imported but unused
+.\bixdata_app\manage_permissions.py:2: [F401] 'models.MyModel' imported but unused
+.\bixdata_app\manage_permissions.py:4: [W391] blank line at end of file
+.\bixdata_app\migrations\0004_customuser.py:28: [E501] line too long (88 > 79 characters)
+.\bixdata_app\migrations\0004_customuser.py:39: [E501] line too long (117 > 79 characters)
+.\bixdata_app\migrations\0004_customuser.py:47: [E501] line too long (81 > 79 characters)
+.\bixdata_app\migrations\0004_customuser.py:49: [E501] line too long (107 > 79 characters)
+.\bixdata_app\migrations\0004_customuser.py:53: [E501] line too long (85 > 79 characters)
+.\bixdata_app\migrations\0004_customuser.py:73: [E501] line too long (80 > 79 characters)
+.\bixdata_app\migrations\0004_customuser.py:80: [E501] line too long (94 > 79 characters)
+.\bixdata_app\migrations\0004_customuser.py:88: [E501] line too long (138 > 79 characters)
+.\bixdata_app\migrations\0004_customuser.py:95: [E501] line too long (85 > 79 characters)
+.\bixdata_app\migrations\0006_copy_user_data.py:5: [E302] expected 2 blank lines, found 1
+.\bixdata_app\migrations\0006_copy_user_data.py:23: [E302] expected 2 blank lines, found 1
+.\bixdata_app\migrations\0006_copy_user_data.py:32: [W391] blank line at end of file
+.\bixdata_app\models.py:32: [W292] no newline at end of file
+.\bixdata_app\templatetags\define_action.py:9: [W391] blank line at end of file
+.\bixdata_app\templatetags\test_tag.py:12: [W391] blank line at end of file
+.\bixdata_app\tests.py:1: [F401] 'django.test.TestCase' imported but unused
+.\bixdata_app\views\alpha.py:1: [F401] 'tempfile' imported but unused
+.\bixdata_app\views\alpha.py:5: [F401] 'aiohttp.web_fileresponse.FileResponse' imported but unused
+.\bixdata_app\views\alpha.py:6: [F401] 'django.core.files.storage.FileSystemStorage' imported but unused
+.\bixdata_app\views\alpha.py:9: [F401] 'django.contrib.auth.login' imported but unused
+.\bixdata_app\views\alpha.py:9: [F401] 'django.contrib.auth.authenticate' imported but unused
+.\bixdata_app\views\alpha.py:9: [F401] 'django.contrib.auth.logout' imported but unused
+.\bixdata_app\views\alpha.py:11: [F401] 'django.core.mail.send_mail' imported but unused
+.\bixdata_app\views\alpha.py:11: [F401] 'django.core.mail.BadHeaderError' imported but unused
+.\bixdata_app\views\alpha.py:18: [F401] 'time' imported but unused
+.\bixdata_app\views\alpha.py:21: [F401] 'docx.Document' imported but unused
+.\bixdata_app\views\alpha.py:23: [F401] '..forms.LoginForm' imported but unused
+.\bixdata_app\views\alpha.py:25: [F401] 'django.contrib.messages' imported but unused
+.\bixdata_app\views\alpha.py:27: [F811] redefinition of unused 'JsonResponse' from line 8
+.\bixdata_app\views\alpha.py:28: [F811] redefinition of unused 'User' from line 10
+.\bixdata_app\views\alpha.py:28: [F811] redefinition of unused 'Group' from line 28
+.\bixdata_app\views\alpha.py:28: [F401] 'django.contrib.auth.models.Group' imported but unused
+.\bixdata_app\views\alpha.py:29: [F401] 'django_user_agents.utils.get_user_agent' imported but unused
+.\bixdata_app\views\alpha.py:30: [F401] 'bixdata_app.models.MyModel' imported but unused
+.\bixdata_app\views\alpha.py:31: [F401] 'bixdata_app.models.CustomUser' imported but unused
+.\bixdata_app\views\alpha.py:35: [F401] 'subprocess' imported but unused
+.\bixdata_app\views\alpha.py:36: [F403] 'from .beta import *' used; unable to detect undefined names
+.\bixdata_app\views\alpha.py:37: [F401] 'htmldocx.HtmlToDocx' imported but unused
+.\bixdata_app\views\alpha.py:56: [E501] line too long (115 > 79 characters)
+.\bixdata_app\views\alpha.py:95: [E303] too many blank lines (2)
+.\bixdata_app\views\alpha.py:109: [E501] line too long (115 > 79 characters)
+.\bixdata_app\views\alpha.py:185: [E501] line too long (110 > 79 characters)
+.\bixdata_app\views\alpha.py:247: [E501] line too long (83 > 79 characters)
+.\bixdata_app\views\alpha.py:288: [E501] line too long (82 > 79 characters)
+.\bixdata_app\views\alpha.py:292: [F405] 'get_user_setting' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:304: [F405] 'get_user_setting' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:307: [F405] 'user_agent' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:325: [F405] 'get_user_table_settings' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:325: [E501] line too long (86 > 79 characters)
+.\bixdata_app\views\alpha.py:328: [E501] line too long (82 > 79 characters)
+.\bixdata_app\views\alpha.py:330: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:334: [F405] 'get_user_setting' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:337: [E501] line too long (81 > 79 characters)
+.\bixdata_app\views\alpha.py:343: [E501] line too long (159 > 79 characters)
+.\bixdata_app\views\alpha.py:345: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:351: [E501] line too long (103 > 79 characters)
+.\bixdata_app\views\alpha.py:352: [E501] line too long (102 > 79 characters)
+.\bixdata_app\views\alpha.py:355: [F405] 'user_agent' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:355: [E501] line too long (94 > 79 characters)
+.\bixdata_app\views\alpha.py:363: [E501] line too long (159 > 79 characters)
+.\bixdata_app\views\alpha.py:365: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:368: [E501] line too long (102 > 79 characters)
+.\bixdata_app\views\alpha.py:377: [E501] line too long (88 > 79 characters)
+.\bixdata_app\views\alpha.py:385: [E501] line too long (133 > 79 characters)
+.\bixdata_app\views\alpha.py:402: [F841] local variable 'context' is assigned to but never used
+.\bixdata_app\views\alpha.py:403: [F841] local variable 'tableid' is assigned to but never used
+.\bixdata_app\views\alpha.py:409: [E501] line too long (90 > 79 characters)
+.\bixdata_app\views\alpha.py:413: [F841] local variable 'label' is assigned to but never used
+.\bixdata_app\views\alpha.py:445: [E501] line too long (88 > 79 characters)
+.\bixdata_app\views\alpha.py:455: [E501] line too long (92 > 79 characters)
+.\bixdata_app\views\alpha.py:457: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:470: [F405] 'get_userid' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:471: [E501] line too long (84 > 79 characters)
+.\bixdata_app\views\alpha.py:481: [E501] line too long (81 > 79 characters)
+.\bixdata_app\views\alpha.py:484: [F405] 'user_agent' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:484: [E501] line too long (98 > 79 characters)
+.\bixdata_app\views\alpha.py:514: [E501] line too long (84 > 79 characters)
+.\bixdata_app\views\alpha.py:516: [E501] line too long (84 > 79 characters)
+.\bixdata_app\views\alpha.py:518: [E501] line too long (85 > 79 characters)
+.\bixdata_app\views\alpha.py:543: [E501] line too long (91 > 79 characters)
+.\bixdata_app\views\alpha.py:573: [E501] line too long (134 > 79 characters)
+.\bixdata_app\views\alpha.py:578: [E501] line too long (144 > 79 characters)
+.\bixdata_app\views\alpha.py:578: [E231] missing whitespace after ','
+.\bixdata_app\views\alpha.py:578: [E231] missing whitespace after ','
+.\bixdata_app\views\alpha.py:579: [F405] 'get_userid' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:599: [E501] line too long (84 > 79 characters)
+.\bixdata_app\views\alpha.py:634: [E501] line too long (85 > 79 characters)
+.\bixdata_app\views\alpha.py:634: [E703] statement ends with a semicolon
+.\bixdata_app\views\alpha.py:635: [E501] line too long (91 > 79 characters)
+.\bixdata_app\views\alpha.py:635: [E703] statement ends with a semicolon
+.\bixdata_app\views\alpha.py:671: [F405] 'bix_render_to_string' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:671: [E501] line too long (94 > 79 characters)
+.\bixdata_app\views\alpha.py:678: [F841] local variable 'tableid' is assigned to but never used
+.\bixdata_app\views\alpha.py:685: [E501] line too long (90 > 79 characters)
+.\bixdata_app\views\alpha.py:715: [F841] local variable 'post' is assigned to but never used
+.\bixdata_app\views\alpha.py:720: [E501] line too long (120 > 79 characters)
+.\bixdata_app\views\alpha.py:793: [E501] line too long (84 > 79 characters)
+.\bixdata_app\views\alpha.py:833: [F405] 'get_user_table_settings' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:834: [E501] line too long (118 > 79 characters)
+.\bixdata_app\views\alpha.py:848: [F841] local variable 'post' is assigned to but never used
+.\bixdata_app\views\alpha.py:852: [E501] line too long (111 > 79 characters)
+.\bixdata_app\views\alpha.py:854: [E501] line too long (235 > 79 characters)
+.\bixdata_app\views\alpha.py:856: [F405] 'db_query_sql' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:857: [F405] 'db_get_row' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:869: [E501] line too long (124 > 79 characters)
+.\bixdata_app\views\alpha.py:870: [F405] 'db_query_sql' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:872: [E501] line too long (98 > 79 characters)
+.\bixdata_app\views\alpha.py:875: [E501] line too long (99 > 79 characters)
+.\bixdata_app\views\alpha.py:893: [E501] line too long (85 > 79 characters)
+.\bixdata_app\views\alpha.py:905: [E501] line too long (90 > 79 characters)
+.\bixdata_app\views\alpha.py:917: [E501] line too long (123 > 79 characters)
+.\bixdata_app\views\alpha.py:920: [E501] line too long (103 > 79 characters)
+.\bixdata_app\views\alpha.py:923: [E303] too many blank lines (2)
+.\bixdata_app\views\alpha.py:939: [E501] line too long (90 > 79 characters)
+.\bixdata_app\views\alpha.py:959: [F405] 'db_query_sql' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:960: [E501] line too long (285 > 79 characters)
+.\bixdata_app\views\alpha.py:966: [F841] local variable 'table_name' is assigned to but never used
+.\bixdata_app\views\alpha.py:967: [F405] 'db_get_value' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:967: [E501] line too long (103 > 79 characters)
+.\bixdata_app\views\alpha.py:968: [F405] 'db_get_count' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:968: [E501] line too long (96 > 79 characters)
+.\bixdata_app\views\alpha.py:977: [E501] line too long (87 > 79 characters)
+.\bixdata_app\views\alpha.py:1005: [F841] local variable 'response' is assigned to but never used
+.\bixdata_app\views\alpha.py:1006: [E501] line too long (88 > 79 characters)
+.\bixdata_app\views\alpha.py:1011: [E501] line too long (81 > 79 characters)
+.\bixdata_app\views\alpha.py:1012: [E501] line too long (94 > 79 characters)
+.\bixdata_app\views\alpha.py:1013: [F405] 'send_email' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1013: [E501] line too long (112 > 79 characters)
+.\bixdata_app\views\alpha.py:1023: [F841] local variable 'offset' is assigned to but never used
+.\bixdata_app\views\alpha.py:1040: [F405] 'get_user_setting_list' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1042: [E501] line too long (83 > 79 characters)
+.\bixdata_app\views\alpha.py:1061: [E501] line too long (111 > 79 characters)
+.\bixdata_app\views\alpha.py:1085: [E501] line too long (85 > 79 characters)
+.\bixdata_app\views\alpha.py:1096: [E501] line too long (113 > 79 characters)
+.\bixdata_app\views\alpha.py:1100: [E501] line too long (100 > 79 characters)
+.\bixdata_app\views\alpha.py:1139: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1146: [E501] line too long (106 > 79 characters)
+.\bixdata_app\views\alpha.py:1148: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1156: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1165: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1171: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1200: [E501] line too long (98 > 79 characters)
+.\bixdata_app\views\alpha.py:1208: [E501] line too long (99 > 79 characters)
+.\bixdata_app\views\alpha.py:1224: [E501] line too long (124 > 79 characters)
+.\bixdata_app\views\alpha.py:1237: [E501] line too long (84 > 79 characters)
+.\bixdata_app\views\alpha.py:1239: [F841] local variable 'project_block' is assigned to but never used
+.\bixdata_app\views\alpha.py:1242: [E501] line too long (82 > 79 characters)
+.\bixdata_app\views\alpha.py:1244: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1246: [E703] statement ends with a semicolon
+.\bixdata_app\views\alpha.py:1247: [E501] line too long (82 > 79 characters)
+.\bixdata_app\views\alpha.py:1253: [E703] statement ends with a semicolon
+.\bixdata_app\views\alpha.py:1285: [E501] line too long (243 > 79 characters)
+.\bixdata_app\views\alpha.py:1287: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1320: [E501] line too long (188 > 79 characters)
+.\bixdata_app\views\alpha.py:1322: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1334: [E501] line too long (158 > 79 characters)
+.\bixdata_app\views\alpha.py:1336: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1348: [E501] line too long (88 > 79 characters)
+.\bixdata_app\views\alpha.py:1366: [F841] local variable 'filename' is assigned to but never used
+.\bixdata_app\views\alpha.py:1370: [E501] line too long (184 > 79 characters)
+.\bixdata_app\views\alpha.py:1372: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1379: [E303] too many blank lines (2)
+.\bixdata_app\views\alpha.py:1382: [E501] line too long (154 > 79 characters)
+.\bixdata_app\views\alpha.py:1384: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1402: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1415: [E303] too many blank lines (3)
+.\bixdata_app\views\alpha.py:1424: [F405] 'dictfetchall' may be undefined, or defined from star imports: .beta
+.\bixdata_app\views\alpha.py:1434: [F841] local variable 'tableid' is assigned to but never used
+.\bixdata_app\views\alpha.py:1436: [F841] local variable 'column_name' is assigned to but never used
+.\bixdata_app\views\alpha.py:1467: [E501] line too long (105 > 79 characters)
+.\bixdata_app\views\alpha.py:1499: [W391] blank line at end of file
+.\bixdata_app\views\beta.py:1: [F401] 'django.shortcuts.redirect' imported but unused
+.\bixdata_app\views\beta.py:3: [F401] 'django.contrib.auth.login' imported but unused
+.\bixdata_app\views\beta.py:3: [F401] 'django.contrib.auth.authenticate' imported but unused
+.\bixdata_app\views\beta.py:3: [F401] 'django.contrib.auth.logout' imported but unused
+.\bixdata_app\views\beta.py:5: [F401] 'django.core.mail.BadHeaderError' imported but unused
+.\bixdata_app\views\beta.py:6: [F401] 'django.http.HttpResponse' imported but unused
+.\bixdata_app\views\beta.py:8: [F401] 'requests' imported but unused
+.\bixdata_app\views\beta.py:9: [F401] 'json' imported but unused
+.\bixdata_app\views\beta.py:11: [F401] 'django.contrib.auth.decorators.login_required' imported but unused
+.\bixdata_app\views\beta.py:12: [F401] 'time' imported but unused
+.\bixdata_app\views\beta.py:13: [F401] '..forms.LoginForm' imported but unused
+.\bixdata_app\views\beta.py:14: [F401] 'django.contrib.auth.decorators.user_passes_test' imported but unused
+.\bixdata_app\views\beta.py:15: [F401] 'django.contrib.messages' imported but unused
+.\bixdata_app\views\beta.py:17: [F811] redefinition of unused 'JsonResponse' from line 2
+.\bixdata_app\views\beta.py:17: [F401] 'django.http.JsonResponse' imported but unused
+.\bixdata_app\views\beta.py:18: [F811] redefinition of unused 'User' from line 4
+.\bixdata_app\views\beta.py:18: [F811] redefinition of unused 'Group' from line 18
+.\bixdata_app\views\beta.py:18: [F401] 'django.contrib.auth.models.User' imported but unused
+.\bixdata_app\views\beta.py:18: [F401] 'django.contrib.auth.models.Group' imported but unused
+.\bixdata_app\views\beta.py:18: [F401] 'django.contrib.auth.models.Permission' imported but unused
+.\bixdata_app\views\beta.py:20: [F401] 'bixdata_app.models.MyModel' imported but unused
+.\bixdata_app\views\beta.py:21: [F403] 'from .alpha import *' used; unable to detect undefined names
+.\bixdata_app\views\beta.py:21: [F401] '.alpha.*' imported but unused
+.\bixdata_app\views\beta.py:22: [F401] 'django.template' imported but unused
+.\bixdata_app\views\beta.py:53: [E501] line too long (99 > 79 characters)
+.\bixdata_app\views\beta.py:66: [E501] line too long (83 > 79 characters)
+.\bixdata_app\views\beta.py:78: [E501] line too long (112 > 79 characters)
+.\bixdata_app\views\beta.py:84: [E501] line too long (119 > 79 characters)
+.\bixdata_app\views\beta.py:96: [E501] line too long (113 > 79 characters)
+.\bixdata_app\views\beta.py:102: [E501] line too long (115 > 79 characters)
+.\bixdata_app\views\beta.py:110: [E501] line too long (82 > 79 characters)
+.\bixdata_view\settings.py:14: [F401] 'os' imported but unused
+.\bixdata_view\settings.py:15: [F401] 'requests' imported but unused
+.\bixdata_view\settings.py:122: [E501] line too long (91 > 79 characters)
+.\bixdata_view\settings.py:125: [E501] line too long (81 > 79 characters)
+.\bixdata_view\settings.py:128: [E501] line too long (82 > 79 characters)
+.\bixdata_view\settings.py:131: [E501] line too long (83 > 79 characters)
+.\bixdata_view\urls.py:17: [F401] 'django.urls.include' imported but unused
+.\bixdata_view\urls.py:26: [E501] line too long (80 > 79 characters)
+.\bixdata_view\urls.py:28: [E501] line too long (93 > 79 characters)
+.\bixdata_view\urls.py:29: [E501] line too long (92 > 79 characters)
+.\bixdata_view\urls.py:30: [E501] line too long (95 > 79 characters)
+.\bixdata_view\urls.py:31: [E501] line too long (101 > 79 characters)
+.\bixdata_view\urls.py:32: [E501] line too long (92 > 79 characters)
+.\bixdata_view\urls.py:35: [E501] line too long (90 > 79 characters)
+.\bixdata_view\urls.py:40: [E501] line too long (94 > 79 characters)
+.\bixdata_view\urls.py:41: [E501] line too long (89 > 79 characters)
+.\bixdata_view\urls.py:42: [E501] line too long (104 > 79 characters)
+.\bixdata_view\urls.py:51: [E501] line too long (88 > 79 characters)
+.\bixdata_view\urls.py:53: [E501] line too long (85 > 79 characters)
+.\bixdata_view\urls.py:55: [E501] line too long (86 > 79 characters)
+.\bixdata_view\urls.py:56: [E501] line too long (85 > 79 characters)
+.\bixdata_view\urls.py:60: [E501] line too long (85 > 79 characters)
+.\bixdata_view\urls.py:64: [E501] line too long (91 > 79 characters)
+.\bixdata_view\urls.py:65: [E501] line too long (105 > 79 characters)
+.\bixdata_view\urls.py:66: [E501] line too long (114 > 79 characters)
+.\bixdata_view\urls.py:67: [E501] line too long (104 > 79 characters)
+.\bixdata_view\urls.py:70: [E501] line too long (89 > 79 characters)
+.\bixdata_view\urls.py:74: [E501] line too long (85 > 79 characters)
+.\bixdata_view\urls.py:77: [E501] line too long (113 > 79 characters)
+.\bixdata_view\urls.py:80: [E501] line too long (112 > 79 characters)
+.\bixdata_view\urls.py:81: [E501] line too long (132 > 79 characters)
+.\bixdata_view\urls.py:81: [E231] missing whitespace after ','
+.\bixdata_view\urls.py:82: [E501] line too long (88 > 79 characters)
+.\bixdata_view\urls.py:85: [E501] line too long (88 > 79 characters)
+.\bixdata_view\urls.py:86: [E501] line too long (105 > 79 characters)
+.\bixdata_view\urls.py:89: [E501] line too long (97 > 79 characters)
+.\bixdata_view\urls.py:90: [E501] line too long (104 > 79 characters)
+.\bixdata_view\urls.py:91: [E501] line too long (82 > 79 characters)
+.\bixdata_view\urls.py:94: [E501] line too long (112 > 79 characters)
+.\bixdata_view\urls.py:95: [E501] line too long (88 > 79 characters)
+.\tasks.py:3: [E302] expected 2 blank lines, found 1
+.\tasks.py:20: [E265] block comment should start with '# '
+.\tasks.py:25: [W391] blank line at end of file

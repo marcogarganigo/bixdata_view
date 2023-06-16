@@ -1,0 +1,58 @@
+<script>
+    /*
+    function triggerCollapse(el, id, tablelinkid, tableid) {
+        if ($(el).next('.div-collapse').attr('display') === 'none') {
+            $(el).css('background-color', '#e1dfdf');
+            $(el).css('color', 'black');
+        } else {
+            $(el).css('background-color', 'whitesmoke');
+            $(el).css('color', '#074048');
+        }
+
+        load_linked(el, tablelinkid, tableid);
+
+    }
+
+    function toggleCollapse(el) {
+        $(el).next('.div-collapse').slideToggle(200);
+    }
+
+    function load_linked(el, linkedtableid, tableid) {
+        var recordid = $(el).data('recordid');
+        var mastertableid = $(el).data('mastertableid');
+        $.ajax({
+            url: "{% url 'get_records_linked' %}",
+            type: 'POST',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'tableid': tableid,
+                'master_tableid': mastertableid,
+                'master_recordid': recordid,
+            },
+            success: function (response) {
+                //$(collapse).find('.linked_container').html(response);
+                $("#linked-container-" + linkedtableid).html(response)
+            }, error: function (response) {
+            }
+        });
+    }
+    */
+</script>
+<div style="overflow-y: scroll; height: 90%">
+{% for row in rows %}
+<button onclick="toggleCollapse(this); triggerCollapse(this,'timesheet', 'timesheet-00000000000000000000000000000001', 'timesheet')" class="btn btn-primary" id="label-00000000000000000000000000000001" type="button"
+        data-bs-toggle="collapse"
+        data-recordid="00000000000000000000000000000001"
+        data-mastertableid="project"
+        style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 90%; margin-top: 10px"
+        >{{ row.companyname }}   <span class="badge bg-danger"> {{ row.NumeroTask }}</span>
+</button>
+<div class="div-collapse" style="margin-top: 10px; display: none; width: 90%" id="collapse-timesheet-00000000000000000000000000000001">
+    <div class="card card-body">
+    <div id="linked-container-timesheet-00000000000000000000000000000001" class="linked_container">
+
+    </div>
+    </div>
+</div>
+{% endfor %}
+</div>

@@ -47,17 +47,43 @@ def dictfetchall(cursor):
 
 def get_user_setting_list(request):
     if request.user.is_authenticated:
-        # settings superuser
-        id = request.user.id
+        # Get settings for superuser
+        superuser_id = 1
+
         with connection.cursor() as cursor:
-            cursor.execute("SELECT setting, value FROM v_sys_user_settings WHERE bixid = %s", [id])
-            rows = cursor.fetchall()
-            settings_list = []
+            cursor.execute("SELECT id FROM sys_user WHERE bixid = %s", [request.user.id])
+            row = cursor.fetchone()
 
-            for row in rows:
-                settings_list.append({'setting': row[0], 'value': row[1]})
+            userid = row[0]
 
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT setting, value FROM v_sys_user_settings WHERE bixid = %s", [superuser_id])
+            admin_rows = cursor.fetchall()
+            admin_settings_list = [{'setting': row[0], 'value': row[1]} for row in admin_rows]
+
+            settings_count = len(admin_rows)
+
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT setting, value FROM v_sys_user_settings WHERE bixid = %s", [request.user.id])
+            user_rows = cursor.fetchall()
+
+        if len(user_rows) == settings_count:
+            settings_list = [{'setting': row[0], 'value': row[1]} for row in user_rows]
             return settings_list
+        else:
+            settings_list = admin_settings_list.copy()
+            user_settings = {row[0]: row[1] for row in user_rows}
+            missing_settings = [setting for setting in admin_settings_list if setting['setting'] not in user_settings]
+
+            with connection.cursor() as cursor:
+                for setting in missing_settings:
+                    cursor.execute("INSERT INTO sys_user_settings (userid, setting, value) VALUES (%s, %s, %s)",
+                                   [userid, setting['setting'], setting['value']])
+
+            settings_list += missing_settings
+            return settings_list
+
+
 
 
 def get_userid(django_userid):
