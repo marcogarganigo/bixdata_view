@@ -19,6 +19,7 @@
     function load_linked(linkedtableid, tableid, masterrecordid, mastertableid) {
         var masterrecordid = masterrecordid
         var mastertableid = mastertableid
+         $("#linked-container-" + linkedtableid).load('/loading/')
         $.ajax({
             url: "{% url 'get_records_linked' %}",
             type: 'POST',
@@ -30,7 +31,7 @@
             },
             success: function (response) {
                 //$(collapse).find('.linked_container').html(response);
-                $("#linked-container-" + linkedtableid).html(response)
+                 $("#linked-container-" + linkedtableid).html(response)
             }, error: function (response) {
             }
         });

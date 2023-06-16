@@ -543,7 +543,7 @@ def get_record_card_delete(request):
         tableid = request.POST.get('tableid')
 
         with connection.cursor() as cursor:
-            query = 'UPDATE user_' + tableid + ' SET deleted_ = "Y" WHERE id = ' + recordid
+            query = f"UPDATE user_{tableid} SET deleted_ = 'Y' WHERE recordid_= '{recordid}'"
             cursor.execute(
                 query
             )
