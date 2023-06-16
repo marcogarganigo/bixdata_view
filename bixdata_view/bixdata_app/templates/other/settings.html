@@ -16,7 +16,7 @@
       </div>
     {% elif item.setting == 'theme' %}
       <div>
-        <label for="theme">theme</label>
+        <label for="theme">tema</label>
         <select name="theme" id="theme" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
           {% if item.value == 'default' %}
             <option value="default" selected>tema default</option>
@@ -24,6 +24,19 @@
           {% else %}
             <option value="theme1" selected>tema1</option>
             <option value="default">tema default</option>
+          {% endif %}
+        </select>
+      </div>
+    {% elif item.setting == 'active_panel' %}
+        <div>
+        <label for="active_panel">pannello attivo di default</label>
+        <select name="active_panel" id="active_panel" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+          {% if item.value == 'table' %}
+            <option value="table" selected>tabella</option>
+            <option value="grouped">raggruppati</option>
+          {% else %}
+            <option value="grouped" selected>raggruppati</option>
+            <option value="table">tabella</option>
           {% endif %}
         </select>
       </div>
