@@ -1012,7 +1012,7 @@ def save_record_fields(request):
     fields_dict = json.loads(fields)
 
     if tableid == 'ticketbixdata' and 'description' in fields_dict:
-        message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(
+        message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format( 
             request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
         send_email(request, ['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'], 'Supporto bixdata',
                    message)
