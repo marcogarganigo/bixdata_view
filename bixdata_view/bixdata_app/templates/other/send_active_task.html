@@ -66,7 +66,7 @@
       <td>{{ task.duedate|date:"d/m/Y" }}</td>
       <td>{{ task.planneddate|date:"d/m/Y" }}</td>
       <td>{{ task.companyname }}</td>
-        <td class="description" onclick="window.location.href='http://bixcrm01/get_record_path/task/{{ task.recordid }}'">{{ task.description|truncatechars:50 }}</td>
+        <td class="description" onclick="window.location.href='http://bixcrm01/get_record_path/task/{{ task.recordid }}'"><a href="http://bixcrm01:8000/get_record_path/task/{{ task.recordid_ }}">{{ task.description|truncatechars:50 }}</a></td>
       <td>{{ task.username }}</td>
     </tr>
     {% endfor %}
