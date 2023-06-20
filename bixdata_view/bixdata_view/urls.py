@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+
 from bixdata_app.views import alpha
 from bixdata_app.views import beta
 
@@ -94,4 +95,5 @@ urlpatterns = [
     path('stampa_servicecontract_test/', alpha.stampa_servicecontract_test, name='stampa_servicecontract_test'),
     path('get_records_grouped/', alpha.get_records_grouped, name='get_records_grouped'),
     path('send_active_task/', alpha.send_active_task, name='send_active_task'),
+    path('send_unique_active_task/', alpha.send_unique_active_task, name='send_unique_active_task'),
 ]

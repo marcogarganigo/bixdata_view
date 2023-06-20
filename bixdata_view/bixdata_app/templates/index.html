@@ -138,18 +138,29 @@
                 });
             }
 
-            function get_bixdata_updates() {
-                //$("#content_container").load('/loading/');
+            function send_unique_active_task(el) {
                 $.ajax({
                     type: "POST",
                     crossDomain: true,
-                    url: "{% url 'get_bixdata_updates' %}",
+                    url: "{% url 'send_unique_active_task' %}",
                     success: function (response) {
-                        $("#content_container").html(response);
-                        $('[data-toggle="tooltip"]').tooltip();
+                        swal({
+                            title: "Report inviato!",
+                            text: "Il report è stato inviato correttamente.",
+                            icon: "success",
+                            timer: 800,
+                            buttons: false,
+                        })
                     },
                     error: function (response) {
-                        $("#content_container").html(response);
+                        $("#content_container").html('');
+                        swal({
+                            title: "Report inviato!",
+                            text: "Il report è stato inviato correttamente.",
+                            icon: "success",
+                            timer: 1000,
+                            buttons: false,
+                        })
                     }
                 });
             }
@@ -362,10 +373,10 @@
                             </a>
                         </li>
 
-                        <li onclick="get_bixdata_updates()" class="notification-list d-none d-sm-inline-block">
+                        <li onclick="send_unique_active_task(this)" class="notification-list d-none d-sm-inline-block">
                             <a class="nav-link" data-bs-toggle="offcanvas" href="#theme-settings-offcanvas">
-                                <i class="ri-notification-badge-line noti-icon" data-bs-toggle="tooltip"
-                                   data-bs-placement="bottom" data-bs-title="Aggiornamenti bixdata"></i>
+                                <i class="ri-task-line noti-icon" data-bs-toggle="tooltip"
+                                   data-bs-placement="bottom" data-bs-title="Ricevi report tasks via mail"></i>
                             </a>
                         </li>
 
