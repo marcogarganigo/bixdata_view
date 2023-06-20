@@ -137,13 +137,14 @@ def get_user_table_settings(bixid, tableid):
     return returned_settings
 
 
-def send_email(request, email, subject, message):
+def send_email(request=None, emails=None, subject=None, message=None,html_message=None):
     send_mail(
-        subject,
-        message,
-        'bixdata@sender.swissbix.ch',
-        email,
+        subject=subject,
+        message=message,
+        from_email='bixdata@sender.swissbix.ch',
+        recipient_list=emails,
         fail_silently=False,
+        html_message=html_message
     )
     return True
 

@@ -1553,21 +1553,26 @@ def get_records_grouped(request):
 def send_active_task(request):
     with connection.cursor() as cursor:
         cursor.execute(
-            "SELECT email from auth_user where is_active=1"
+            "SELECT * from v_users where is_active=1"
         )
         rows = dictfetchall(cursor)
 
         for row in rows:
+            sys_user_id=row['sys_user_id']
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT description, duedate FROM user_task WHERE status='Open'"
+                    f"SELECT description, duedate FROM user_task WHERE user={sys_user_id} and status='Open'"
                 )
                 tasks = dictfetchall(cursor)
-
                 if tasks:
+                    html_message=""
+                    for task in tasks:
+                        task_description=task['description']
+                        duedate=task['duedate']
+                        html_message=html_message+f"{task_description}: {duedate} <br/>"
+                
                     subject = 'Task aperti'
-                    message = tasks
-                    recipient_list = 'marco.garganigo@swissbix.ch'
-                    send_mail(recipient_list, subject, message)
+                    email = row['email']
+                    send_email(emails=[email],subject=subject,html_message=html_message)
 
-                return render('index.html')
+    return render('index.html')
