@@ -1550,6 +1550,7 @@ def get_records_grouped(request):
     return render(request, 'block/records/records_grouped.html', context)
 
 
+#@user_passes_test(lambda u: u.is_superuser)
 def send_active_task(request, requested_user=''):
     if requested_user != '':
         userid = requested_user
@@ -1570,7 +1571,7 @@ def send_active_task(request, requested_user=''):
         sys_user_id = user['sys_user_id']
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT user_task.*, v_users.username FROM user_task LEFT JOIN v_users ON user_task.creator = v_users.sys_user_id WHERE user={sys_user_id} and status='Open' and deleted_ = 'N'"
+                f"SELECT user_task.*, v_users.username FROM user_task LEFT JOIN v_users ON user_task.creator = v_users.sys_user_id WHERE user={sys_user_id} and (user_task.completed != 'Si' OR user_task.completed is not null) and deleted_ = 'N'"
             )
             tasks = dictfetchall(cursor)
 
@@ -1591,7 +1592,7 @@ def send_active_task(request, requested_user=''):
                          LEFT JOIN v_users ON user_task.user = v_users.sys_user_id \
                          LEFT JOIN user_company ON user_task.recordidcompany_ = user_company.recordid_ \
                          WHERE creator={sys_user_id} AND user != {sys_user_id} \
-                         AND closedate >= '{one_week_ago_str}' AND closedate <= '{current_date_str}' AND user_task.status = 'Closed' AND user_task.deleted_ = 'N'"
+                         AND closedate >= '{one_week_ago_str}' AND closedate <= '{current_date_str}' AND user_task.completed = 'Si' AND user_task.deleted_ = 'N'"
 
             cursor.execute(
                 query
@@ -1615,7 +1616,7 @@ def send_active_task(request, requested_user=''):
 
                 subject = 'Task aperti'
                 email = user['email']
-                send_email(emails=[email], subject=subject, html_message=html_message)
+                send_email(emails=['marco.garganigo@swissbix.ch'], subject=subject, html_message=html_message)
 
     return HttpResponse('ok')
 
@@ -1625,3 +1626,36 @@ def send_unique_active_task(request):
     send_active_task(request, requested_user)
 
     return True
+
+
+def update_task_status(request):
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * from user_task"
+        )
+        tasks = dictfetchall(cursor)
+
+        #pick the current date
+        current_date = datetime.date.today()
+        current_date_str = current_date.strftime("%Y-%m-%d")
+
+        for task in tasks:
+            if task['closedate'] < current_date_str:
+                cursor.execute(
+                    f"UPDATE user_task SET status = 'Scaduto' WHERE recordid_ = {task['recordid_']}"
+                )
+
+            elif current_date_str < task['closedate'] < current_date_str + datetime.timedelta(days=2):
+                cursor.execute(
+                    f"UPDATE user_task SET status = 'In scadenza' WHERE recordid_ = {task['recordid_']}"
+                )
+            else:
+                cursor.execute(
+                    f"UPDATE user_task SET status = 'Aperto' WHERE recordid_ = {task['recordid_']}"
+                )
+
+
+    return HttpResponse('ok')
+
+

@@ -153,7 +153,6 @@
                         })
                     },
                     error: function (response) {
-                        $("#content_container").html('');
                         swal({
                             title: "Report inviato!",
                             text: "Il report è stato inviato correttamente.",
@@ -562,7 +561,7 @@
                                     var els = document.querySelectorAll('.side-nav-txt');
                                     els.forEach(function (el) {
                                         el.classList.remove('active');
-                                        el.style.color = '#d3cfcf';
+                                        el.style.color = rgb(207, 211, 207);
                                     });
                                     el.classList.add('active');
                                     el.style.color = 'red';
