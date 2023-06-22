@@ -1012,10 +1012,10 @@ def save_record_fields(request):
     fields_dict = json.loads(fields)
 
     if tableid == 'ticketbixdata' and 'description' in fields_dict:
-        message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format( 
+        message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(
             request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
-        send_email(request, ['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'], 'Supporto bixdata',
-                   message)
+        send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'], subject='Supporto bixdata',
+                   message=message)
 
     if tableid == 'task':
         if fields_dict['user'] != fields_dict['creator']:
@@ -1025,7 +1025,8 @@ def save_record_fields(request):
 
                 email = row[0]
 
-                cursor.execute("SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s", [fields_dict['creator']])
+                cursor.execute("SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s",
+                               [fields_dict['creator']])
                 row = cursor.fetchone()
                 first_name = row[0]
                 last_name = row[1]
@@ -1040,7 +1041,6 @@ def save_record_fields(request):
                         row = cursor.fetchone()
                         companyname = row[0]
 
-
                 if fields_dict['recordidproject_'] != 'None':
                     with connection.cursor() as cursor:
                         cursor.execute("SELECT projectname FROM user_project WHERE recordid_ = %s",
@@ -1048,11 +1048,11 @@ def save_record_fields(request):
                         row = cursor.fetchone()
                         projectname = row[0]
 
-
                 message = 'Ti è stato assegnato un nuovo task da {} \nDescrizione: {} \nData di scadenza: {} \nAzienda: {} \nProgetto: {}'.format(
-                first_name + ' ' + last_name, fields_dict['description'], fields_dict['duedate'], companyname, projectname)
+                    first_name + ' ' + last_name, fields_dict['description'], fields_dict['duedate'], companyname,
+                    projectname)
 
-                send_email(request, [email], 'Nuovo task assegnato', message)
+                send_email(emails=[email], subject='Nuovo task assegnato', message=message)
 
     return render(request, 'block/record/record_fields.html')
 
@@ -1550,29 +1550,112 @@ def get_records_grouped(request):
     return render(request, 'block/records/records_grouped.html', context)
 
 
-def send_active_task(request):
+#@user_passes_test(lambda u: u.is_superuser)
+def send_active_task(request, requested_user=''):
+    if requested_user != '':
+        userid = requested_user
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * from v_users where id = %s", [userid]
+            )
+            users = dictfetchall(cursor)
+    else:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * from v_users where is_active=1"
+            )
+            users = dictfetchall(cursor)
+
+    for user in users:
+        sys_user_id = user['sys_user_id']
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"SELECT user_task.*, v_users.username FROM user_task LEFT JOIN v_users ON user_task.creator = v_users.sys_user_id WHERE user={sys_user_id} and (user_task.completed != 'Si' OR user_task.completed is not null) and deleted_ = 'N'"
+            )
+            tasks = dictfetchall(cursor)
+
+            cursor.execute(
+                f"SELECT user_task.*, v_users.username, user_company.companyname FROM user_task LEFT JOIN v_users ON user_task.user = v_users.sys_user_id LEFT JOIN user_company on user_task.recordidcompany_ = user_company.recordid_ WHERE creator={sys_user_id} and user_task.deleted_ = 'N' and user != {sys_user_id}"
+            )
+            tasks_created = dictfetchall(cursor)
+
+            current_date = datetime.date.today()
+            one_week_ago = current_date - datetime.timedelta(days=7)
+
+            # Format the date range in the YYYY-MM-DD format
+            current_date_str = current_date.strftime("%Y-%m-%d")
+            one_week_ago_str = one_week_ago.strftime("%Y-%m-%d")
+
+            # Modify the SQL query
+            query = f"SELECT user_task.*, v_users.username, user_company.companyname FROM user_task \
+                         LEFT JOIN v_users ON user_task.user = v_users.sys_user_id \
+                         LEFT JOIN user_company ON user_task.recordidcompany_ = user_company.recordid_ \
+                         WHERE creator={sys_user_id} AND user != {sys_user_id} \
+                         AND closedate >= '{one_week_ago_str}' AND closedate <= '{current_date_str}' AND user_task.completed = 'Si' AND user_task.deleted_ = 'N'"
+
+            cursor.execute(
+                query
+            )
+
+            tasks_assigned = dictfetchall(cursor)
+
+            if tasks:
+                html_message = ""
+                context = dict()
+                for task in tasks:
+                    if task['creator'] is not None:
+                        task['creator'] = task['creator']
+                    else:
+                        task['creator'] = 'N/A'
+
+                context['data'] = tasks
+                context['data_created'] = tasks_created
+                context['data_assigned'] = tasks_assigned
+                html_message = render_to_string('other/send_active_task.html', context)
+
+                subject = 'Task aperti'
+                email = user['email']
+                send_email(emails=[email], subject=subject, html_message=html_message)
+
+    return HttpResponse('ok')
+
+
+def send_unique_active_task(request):
+    requested_user = request.user.id
+    send_active_task(request, requested_user)
+
+    return True
+
+
+def update_task_status(request):
+
     with connection.cursor() as cursor:
         cursor.execute(
-            "SELECT * from v_users where is_active=1"
+            f"SELECT * from user_task"
         )
-        rows = dictfetchall(cursor)
+        tasks = dictfetchall(cursor)
 
-        for row in rows:
-            sys_user_id=row['sys_user_id']
-            with connection.cursor() as cursor:
+        #pick the current date
+        current_date = datetime.date.today()
+        current_date_str = current_date.strftime("%Y-%m-%d")
+
+        for task in tasks:
+            if task['closedate'] < current_date_str:
                 cursor.execute(
-                    f"SELECT description, duedate FROM user_task WHERE user={sys_user_id} and status='Open'"
+                    f"UPDATE user_task SET status = 'Scaduto' WHERE recordid_ = {task['recordid_']}"
                 )
-                tasks = dictfetchall(cursor)
-                if tasks:
-                    html_message=""
-                    for task in tasks:
-                        task_description=task['description']
-                        duedate=task['duedate']
-                        html_message=html_message+f"{task_description}: {duedate} <br/>"
-                
-                    subject = 'Task aperti'
-                    email = row['email']
-                    send_email(emails=[email],subject=subject,html_message=html_message)
 
-    return render('index.html')
+            elif current_date_str < task['closedate'] < current_date_str + datetime.timedelta(days=2):
+                cursor.execute(
+                    f"UPDATE user_task SET status = 'In scadenza' WHERE recordid_ = {task['recordid_']}"
+                )
+            else:
+                cursor.execute(
+                    f"UPDATE user_task SET status = 'Aperto' WHERE recordid_ = {task['recordid_']}"
+                )
+
+
+    return HttpResponse('ok')
+
+
