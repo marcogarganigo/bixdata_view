@@ -21,7 +21,7 @@
 <table class="table">
   <thead style="background-color: #f8c398;">
     <tr>
-      <th scope="col">Miei Tasks</th>
+      <th scope="col">Miei Task</th>
       <th scope="col">Stato</th>
       <th scope="col">Scadenza</th>
       <th scope="col">Previsto</th>
@@ -36,7 +36,7 @@
       <td>{{ task.status }}</td>
       <td>{{ task.duedate|date:"d/m/Y" }}</td>
       <td>{{ task.planneddate|date:"d/m/Y" }}</td>
-        <td class="description" onclick="window.location.href='http://bixcrm01/get_record_path/task/{{ task.recordid }}'">{{ task.description|truncatechars:50 }}</td>
+        <td class="description" >{{ task.description|truncatechars:50 }}</td>
       <td>{{ task.username }}</td>
     </tr>
     {% endfor %}
@@ -49,7 +49,7 @@
 <table class="table">
   <thead style="background-color: #f8c398;">
     <tr>
-      <th scope="col">Tasks Eseguiti</th>
+      <th scope="col">Task assegnati</th>
       <th scope="col">Stato</th>
       <th scope="col">Scadenza</th>
       <th scope="col">Previsto</th>
@@ -66,7 +66,7 @@
       <td>{{ task.duedate|date:"d/m/Y" }}</td>
       <td>{{ task.planneddate|date:"d/m/Y" }}</td>
       <td>{{ task.companyname }}</td>
-        <td class="description" onclick="window.location.href='http://bixcrm01/get_record_path/task/{{ task.recordid }}'"><a href="http://bixcrm01:8000/get_record_path/task/{{ task.recordid_ }}">{{ task.description|truncatechars:50 }}</a></td>
+        <td class="description" >{{ task.description|truncatechars:50 }}</td>
       <td>{{ task.username }}</td>
     </tr>
     {% endfor %}
@@ -82,7 +82,7 @@
 <table class="table">
   <thead style="background-color: #f8c398;">
     <tr>
-      <th scope="col">Tasks Assegnati</th>
+      <th scope="col">Tasks Eseguiti</th>
       <th scope="col">Stato</th>
       <th scope="col">Scadenza</th>
       <th scope="col">Previsto</th>
@@ -93,7 +93,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for task in data_assigned %}
+    {% for task in tasks_completed %}
     <tr>
       <th scope="row"></th>
       <td>{{ task.status }}</td>
@@ -101,7 +101,7 @@
       <td>{{ task.planneddate|date:"d/m/Y" }}</td>
       <td>{{ task.closedate|date:"d/m/Y" }}</td>
       <td>{{ task.companyname }}</td>
-        <td class="description" onclick="window.location.href='http://bixcrm01/get_record_path/task/{{ task.recordid }}'">{{ task.description|truncatechars:50 }}</td>
+        <td class="description" >{{ task.description|truncatechars:50 }}</td>
       <td>{{ task.username }}</td>
     </tr>
     {% endfor %}

@@ -1598,9 +1598,9 @@ def send_active_task(request, requested_user=''):
                 query
             )
 
-            tasks_assigned = dictfetchall(cursor)
+            tasks_completed = dictfetchall(cursor)
 
-            if tasks:
+            if tasks or tasks_created or tasks_completed:
                 html_message = ""
                 context = dict()
                 for task in tasks:
@@ -1611,10 +1611,10 @@ def send_active_task(request, requested_user=''):
 
                 context['data'] = tasks
                 context['data_created'] = tasks_created
-                context['data_assigned'] = tasks_assigned
+                context['tasks_completed'] = tasks_completed
                 html_message = render_to_string('other/send_active_task.html', context)
 
-                subject = 'Task aperti'
+                subject = 'Report task'
                 email = user['email']
                 send_email(emails=[email], subject=subject, html_message=html_message)
 
