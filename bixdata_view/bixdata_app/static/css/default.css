@@ -622,8 +622,10 @@
     background-size: cover;
     }
 
-    #results-row:hover {
-        border: 2px solid #bbb8b8;
+    #results-row:hover > td  {
+        border: 1px solid #9d9696 !important;
+        border-left: none !important;
+        border-right: none !important;
     }
 
     .swal-overlay {

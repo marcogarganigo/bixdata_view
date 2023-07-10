@@ -999,6 +999,7 @@ def save_record_fields(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     fields = request.POST.get('fields')
+    contextfunction = request.POST.get('contextfunction')
 
     post_data = {
         'tableid': tableid,
@@ -1011,48 +1012,49 @@ def save_record_fields(request):
 
     fields_dict = json.loads(fields)
 
-    if tableid == 'ticketbixdata' and 'description' in fields_dict:
-        message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(
-            request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
-        send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'], subject='Supporto bixdata',
-                   message=message)
+    if contextfunction == 'insert':
+        if tableid == 'ticketbixdata' and 'description' in fields_dict:
+            message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(
+                request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
+            send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'], subject='Supporto bixdata',
+                       message=message)
 
-    if tableid == 'task':
-        if fields_dict['user'] != fields_dict['creator']:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT email FROM v_users WHERE sys_user_id = %s", [fields_dict['user']])
-                row = cursor.fetchone()
+        if tableid == 'task':
+            if fields_dict['user'] != fields_dict['creator']:
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT email FROM v_users WHERE sys_user_id = %s", [fields_dict['user']])
+                    row = cursor.fetchone()
 
-                email = row[0]
+                    email = row[0]
 
-                cursor.execute("SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s",
-                               [fields_dict['creator']])
-                row = cursor.fetchone()
-                first_name = row[0]
-                last_name = row[1]
+                    cursor.execute("SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s",
+                                   [fields_dict['creator']])
+                    row = cursor.fetchone()
+                    first_name = row[0]
+                    last_name = row[1]
 
-                companyname = 'N/A'
-                projectname = 'N/A'
+                    companyname = 'N/A'
+                    projectname = 'N/A'
 
-                if fields_dict['recordidcompany_'] != 'None':
-                    with connection.cursor() as cursor:
-                        cursor.execute("SELECT companyname FROM user_company WHERE recordid_ = %s",
-                                       [fields_dict['recordidcompany_']])
-                        row = cursor.fetchone()
-                        companyname = row[0]
+                    if fields_dict['recordidcompany_'] != 'None':
+                        with connection.cursor() as cursor:
+                            cursor.execute("SELECT companyname FROM user_company WHERE recordid_ = %s",
+                                           [fields_dict['recordidcompany_']])
+                            row = cursor.fetchone()
+                            companyname = row[0]
 
-                if fields_dict['recordidproject_'] != 'None':
-                    with connection.cursor() as cursor:
-                        cursor.execute("SELECT projectname FROM user_project WHERE recordid_ = %s",
-                                       [fields_dict['recordidproject_']])
-                        row = cursor.fetchone()
-                        projectname = row[0]
+                    if fields_dict['recordidproject_'] != 'None':
+                        with connection.cursor() as cursor:
+                            cursor.execute("SELECT projectname FROM user_project WHERE recordid_ = %s",
+                                           [fields_dict['recordidproject_']])
+                            row = cursor.fetchone()
+                            projectname = row[0]
 
-                message = 'Ti è stato assegnato un nuovo task da {} \nDescrizione: {} \nData di scadenza: {} \nAzienda: {} \nProgetto: {}'.format(
-                    first_name + ' ' + last_name, fields_dict['description'], fields_dict['duedate'], companyname,
-                    projectname)
+                    message = 'Ti è stato assegnato un nuovo task da {} \nDescrizione: {} \nData di scadenza: {} \nAzienda: {} \nProgetto: {}'.format(
+                        first_name + ' ' + last_name, fields_dict['description'], fields_dict['duedate'], companyname,
+                        projectname)
 
-                send_email(emails=[email], subject='Nuovo task assegnato', message=message)
+                    send_email(emails=[email], subject='Nuovo task assegnato', message=message)
 
     return render(request, 'block/record/record_fields.html')
 
