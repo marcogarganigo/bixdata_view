@@ -623,7 +623,7 @@
     }
 
     #results-row:hover {
-        background-color: whitesmoke !important;
+        border: 2px solid #bbb8b8;
     }
 
     .swal-overlay {

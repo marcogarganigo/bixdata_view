@@ -32,8 +32,16 @@
   <tbody>
     {% for task in data %}
     <tr>
-      <th scope="row"></th>
-      <td>{{ task.status }}</td>
+    {% if task.status == 'Chiuso' or task.status == 'Aperto' %}
+      <td style="text-align: right">✔️</td>
+        {% elif task.status == 'Scaduto' %}
+        <td style="text-align: right">❌</td>
+        {% elif task.status == 'In Scadenza' %}
+         <td style="text-align: right">⚠️</td>
+        {% else %}
+        <td style="text-align: right">📅</td>
+    {% endif %}
+      <td>{{ task.status }}️</td>
       <td>{{ task.duedate|date:"d/m/Y" }}</td>
       <td>{{ task.planneddate|date:"d/m/Y" }}</td>
         <td class="description" >{{ task.description|truncatechars:50 }}</td>
@@ -61,7 +69,15 @@
   <tbody>
     {% for task in data_created %}
     <tr>
-      <th scope="row"></th>
+      {% if task.status == 'Chiuso' or task.status == 'Aperto' %}
+      <td style="text-align: right">✔️</td>
+        {% elif task.status == 'Scaduto' %}
+        <td style="text-align: right">❌</td>
+        {% elif task.status == 'In Scadenza' %}
+         <td style="text-align: right">⚠️</td>
+        {% else %}
+        <td style="text-align: right">📅</td>
+    {% endif %}
       <td>{{ task.status }}</td>
       <td>{{ task.duedate|date:"d/m/Y" }}</td>
       <td>{{ task.planneddate|date:"d/m/Y" }}</td>
@@ -95,7 +111,15 @@
   <tbody>
     {% for task in tasks_completed %}
     <tr>
-      <th scope="row"></th>
+      {% if task.status == 'Chiuso' or task.status == 'Aperto' %}
+      <td style="text-align: right">✔️</td>
+        {% elif task.status == 'Scaduto' %}
+        <td style="text-align: right">❌</td>
+        {% elif task.status == 'In Scadenza' %}
+         <td style="text-align: right">⚠️</td>
+        {% else %}
+        <td style="text-align: right">📅</td>
+    {% endif %}
       <td>{{ task.status }}</td>
       <td>{{ task.duedate|date:"d/m/Y" }}</td>
       <td>{{ task.planneddate|date:"d/m/Y" }}</td>

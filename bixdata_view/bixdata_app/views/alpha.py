@@ -1571,7 +1571,7 @@ def send_active_task(request, requested_user=''):
         sys_user_id = user['sys_user_id']
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT user_task.*, v_users.username FROM user_task LEFT JOIN v_users ON user_task.creator = v_users.sys_user_id WHERE user={sys_user_id} and (user_task.completed != 'Si' OR user_task.completed is not null) and deleted_ = 'N'"
+                f"SELECT user_task.*, v_users.username FROM user_task LEFT JOIN v_users ON user_task.creator = v_users.sys_user_id WHERE user={sys_user_id} and deleted_ = 'N'"
             )
             tasks = dictfetchall(cursor)
 
@@ -1616,7 +1616,7 @@ def send_active_task(request, requested_user=''):
 
                 subject = 'Report task'
                 email = user['email']
-                send_email(emails=[email], subject=subject, html_message=html_message)
+                send_email(emails=['marco.garganigo@swissbix.ch'], subject=subject, html_message=html_message)
 
     return HttpResponse('ok')
 

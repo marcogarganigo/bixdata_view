@@ -232,6 +232,8 @@
                             style="text-align: right;">
                             {{ column_value.value }}
                         </td>
+                    {% elif column_value.fieldtype == 'Memo' %}
+                    <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">{{ column_value.value|truncatechars:50 }}</td>
 
                     {% elif column_value.fieldtype == 'Utente' %}
                         {% if column_value.value %}
