@@ -191,6 +191,13 @@ def db_get_count(table, condition, order=''):
 
 
 def generate_recordid(tableid):
+    tableid = 'user_task'
     sql = f"SELECT recordid_ FROM {tableid} WHERE recordid_ NOT LIKE '1%' ORDER BY recordid_ DESC LIMIT 1"
     rows = db_query_sql(sql)
+    recordid = rows[0]['recordid_']
+    recordid = int(recordid) + 1
+    recordid = str(recordid).zfill(32)
+
+    return recordid
+
         
