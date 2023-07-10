@@ -188,3 +188,9 @@ def db_get_count(table, condition, order=''):
         return rows[0]['counter']
     else:
         return None
+
+
+def generate_recordid(tableid):
+    sql = f"SELECT recordid_ FROM {tableid} WHERE recordid_ NOT LIKE '1%' ORDER BY recordid_ DESC LIMIT 1"
+    rows = db_query_sql(sql)
+        
