@@ -98,4 +98,5 @@ urlpatterns = [
     path('send_unique_active_task/', alpha.send_unique_active_task, name='send_unique_active_task'),
     path('update_task_status/', alpha.update_task_status, name='update_task_status'),
     path('generate_recordid/', beta.generate_recordid, name='generate_recordid'),
+    path('update_task_status/', alpha.update_task_status, name='update_task_status'),
 ]
