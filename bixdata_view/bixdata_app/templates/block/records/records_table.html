@@ -116,12 +116,11 @@
     }
 
     .linked-field:hover {
-        text-decoration: underline;
         cursor: pointer;
     }
 
     .linked-field {
-        color: #7cc4ef;
+        color: #000000;
 
     }
 
@@ -153,7 +152,7 @@
 
 
     <div class="col s12 m6 l6" id="pagination-container">
-        <table id="results-table" class="table">
+        <table id="results-table" class="">
             <thead id="results-head">
             <tr id="results-row">
                 {% for column in columns %}
@@ -232,6 +231,8 @@
                             style="text-align: right;">
                             {{ column_value.value }}
                         </td>
+                    {% elif column_value.fieldtype == 'Memo' %}
+                    <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">{{ column_value.value|truncatechars:50 }}</td>
 
                     {% elif column_value.fieldtype == 'Utente' %}
                         {% if column_value.value %}

@@ -302,6 +302,9 @@
             post_data.push({name: 'tableid', value: '{{ tableid }}'});
             post_data.push({name: 'recordid', value: '{{ recordid }}'});
             post_data.push({name: 'fields', value: serialized_json});
+            contextfunction='{{contextfunction}}'
+            post_data.push({name: 'contextfunction', value: contextfunction});
+
 
 
             $.ajax({
@@ -309,7 +312,6 @@
                 url: "{% url 'save_record_fields' %}",
                 data: post_data,
                 success: function (response) {
-                    contextfunction='{{contextfunction}}'
                     master_tableid='{{ master_tableid }}';
                     if((contextfunction=='insert')&&(master_tableid=='None'))
                     {

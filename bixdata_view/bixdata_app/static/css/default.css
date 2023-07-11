@@ -195,6 +195,7 @@
         padding: 8px;
         text-align: left;
         border-bottom: 1px solid #ddd;
+        border-top: 1px solid #ddd;
     }
 
     #results-hover:hover {
@@ -622,8 +623,10 @@
     background-size: cover;
     }
 
-    #results-row:hover {
-        background-color: whitesmoke !important;
+    #results-row:hover > td  {
+        border: 1px solid #706d6d !important;
+        border-left: none !important;
+        border-right: none !important;
     }
 
     .swal-overlay {

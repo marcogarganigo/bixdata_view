@@ -137,13 +137,17 @@ def get_user_table_settings(bixid, tableid):
     return returned_settings
 
 
-def send_email(request, email, subject, message):
+def send_email(request=None, emails=None, subject=None, message=None,html_message=None):
+    email_fields=dict()
+    email_fields['subject']=subject
+    #set_record('user_email',email_fields)
     send_mail(
-        subject,
-        message,
-        'bixdata@sender.swissbix.ch',
-        email,
+        subject=subject,
+        message=message,
+        from_email='bixdata@sender.swissbix.ch',
+        recipient_list=emails,
         fail_silently=False,
+        html_message=html_message
     )
     return True
 
@@ -187,3 +191,24 @@ def db_get_count(table, condition, order=''):
         return rows[0]['counter']
     else:
         return None
+
+
+def generate_recordid(tableid):
+    sql = f"SELECT recordid_ FROM {tableid} WHERE recordid_ NOT LIKE '1%' ORDER BY recordid_ DESC LIMIT 1"
+    rows = db_query_sql(sql)
+    recordid = rows[0]['recordid_']
+    recordid = int(recordid) + 1
+    recordid = str(recordid).zfill(32)
+
+    return recordid
+
+def set_record(tableid,fields):
+    fields['recordid_'] = generate_recordid(tableid)
+
+    for key, value in fields.items():
+        sql = f"INSERT INTO {tableid} (recordid_, {key}) VALUES ('{fields['recordid_']}', '{value}')"
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+
+    return fields['recordid_']
+        
