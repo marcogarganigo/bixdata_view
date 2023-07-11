@@ -1618,7 +1618,7 @@ def send_active_task(request, requested_user=''):
 
                 subject = f"Report task - {user['first_name']} {user['last_name']}"
                 email = user['email']
-                send_email(emails=['marco.garganigo@swissbix.ch'], subject=subject, html_message=html_message)
+                send_email(emails=[email], subject=subject, html_message=html_message)
 
     return HttpResponse('ok')
 

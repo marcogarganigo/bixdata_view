@@ -1,0 +1,11 @@
+*.pyc
+__pycache__/
+*.sqlite3
+/staticfiles/
+/media/
+/local_settings.py
+.env
+bixdata_view/bixdata_app/__pycache__/__init__.cpython-311.pyc
+*.pyc
+*.pyc
+bixdata_view/bixdata_view/__pycache__/settings.cpython-311.pyc
