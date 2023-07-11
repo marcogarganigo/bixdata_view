@@ -19,65 +19,61 @@
 </style>
 
 <table class="table">
-  <thead style="background-color: #f8c398;">
-    <tr>
+  
+  <tbody>
+    <tr style="background-color: #f8c398;">
       <th scope="col">Miei Task</th>
       <th scope="col">Stato</th>
       <th scope="col">Scadenza</th>
       <th scope="col">Previsto</th>
+      <th scope="col">Azienda</th>
       <th scope="col">Descrizione</th>
       <th scope="col">Assegnato Da</th>
     </tr>
-  </thead>
-  <tbody>
     {% for task in data %}
     <tr>
-    {% if task.status == 'Chiuso' or task.status == 'Aperto' %}
+    {% if task.status == 'Chiuso' %}
       <td style="text-align: right">✔️</td>
         {% elif task.status == 'Scaduto' %}
         <td style="text-align: right">❌</td>
         {% elif task.status == 'In Scadenza' %}
          <td style="text-align: right">⚠️</td>
-        {% else %}
-        <td style="text-align: right">📅</td>
+         {% elif task.status == 'Pianificato' %}
+         <td style="text-align: right">📅</td>
+       {% else %}
+         <td></td>
     {% endif %}
       <td>{{ task.status }}️</td>
       <td>{{ task.duedate|date:"d/m/Y" }}</td>
       <td>{{ task.planneddate|date:"d/m/Y" }}</td>
-        <td class="description" >{{ task.description|truncatechars:50 }}</td>
+      <td>{{ task.companyname }}️</td>
+      <td class="description" >{{ task.description|truncatechars:50 }}</td>
       <td>{{ task.username }}</td>
     </tr>
     {% endfor %}
-  </tbody>
-</table>
 
-<br>
-<br>
-
-<table class="table">
-  <thead style="background-color: #f8c398;">
-    <tr>
-      <th scope="col">Task assegnati</th>
+    <tr style="background-color: #f8c398;">
+      <th scope="col">Task assegnati ad altri</th>
       <th scope="col">Stato</th>
       <th scope="col">Scadenza</th>
       <th scope="col">Previsto</th>
       <th scope="col">Azienda</th>
       <th scope="col">Descrizione</th>
-      <th scope="col">Assegnato A</th>
+      <th scope="col">Assegnato a</th>
     </tr>
-  </thead>
-  <tbody>
     {% for task in data_created %}
     <tr>
-      {% if task.status == 'Chiuso' or task.status == 'Aperto' %}
-      <td style="text-align: right">✔️</td>
-        {% elif task.status == 'Scaduto' %}
+      {% if task.status == 'Chiuso' %}
+        <td style="text-align: right">✔️</td>
+      {% elif task.status == 'Scaduto' %}
         <td style="text-align: right">❌</td>
-        {% elif task.status == 'In Scadenza' %}
-         <td style="text-align: right">⚠️</td>
-        {% else %}
+      {% elif task.status == 'In Scadenza' %}
+        <td style="text-align: right">⚠️</td>
+      {% elif task.status == 'Pianificato' %}
         <td style="text-align: right">📅</td>
-    {% endif %}
+      {% else %}
+        <td></td>
+      {% endif %}
       <td>{{ task.status }}</td>
       <td>{{ task.duedate|date:"d/m/Y" }}</td>
       <td>{{ task.planneddate|date:"d/m/Y" }}</td>
@@ -86,48 +82,37 @@
       <td>{{ task.username }}</td>
     </tr>
     {% endfor %}
-  </tbody>
-</table>
 
-
-<br>
-<br>
-
-
-
-<table class="table">
-  <thead style="background-color: #f8c398;">
-    <tr>
-      <th scope="col">Tasks Eseguiti</th>
+    <tr style="background-color: #f8c398;">
+      <th scope="col">Task completati</th>
       <th scope="col">Stato</th>
       <th scope="col">Scadenza</th>
       <th scope="col">Previsto</th>
-      <th scope="col">Data Chiusura</th>
       <th scope="col">Azienda</th>
       <th scope="col">Descrizione</th>
-      <th scope="col">Assegnato A</th>
+      <th scope="col">Assegnato a</th>
     </tr>
-  </thead>
-  <tbody>
     {% for task in tasks_completed %}
     <tr>
-      {% if task.status == 'Chiuso' or task.status == 'Aperto' %}
+      {% if task.status == 'Chiuso' %}
       <td style="text-align: right">✔️</td>
         {% elif task.status == 'Scaduto' %}
         <td style="text-align: right">❌</td>
         {% elif task.status == 'In Scadenza' %}
          <td style="text-align: right">⚠️</td>
-        {% else %}
-        <td style="text-align: right">📅</td>
+         {% elif task.status == 'Pianificato' %}
+         <td style="text-align: right">📅</td>
+       {% else %}
+         <td></td>
     {% endif %}
       <td>{{ task.status }}</td>
       <td>{{ task.duedate|date:"d/m/Y" }}</td>
       <td>{{ task.planneddate|date:"d/m/Y" }}</td>
-      <td>{{ task.closedate|date:"d/m/Y" }}</td>
       <td>{{ task.companyname }}</td>
         <td class="description" >{{ task.description|truncatechars:50 }}</td>
       <td>{{ task.username }}</td>
     </tr>
     {% endfor %}
+
   </tbody>
 </table>

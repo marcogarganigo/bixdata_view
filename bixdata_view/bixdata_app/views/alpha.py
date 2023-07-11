@@ -1573,12 +1573,12 @@ def send_active_task(request, requested_user=''):
         sys_user_id = user['sys_user_id']
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT user_task.*, v_users.username FROM user_task LEFT JOIN v_users ON user_task.creator = v_users.sys_user_id WHERE user={sys_user_id} and deleted_ = 'N'"
+                f"SELECT user_task.*, v_users.username, user_company.companyname FROM user_task LEFT JOIN v_users ON user_task.creator = v_users.sys_user_id LEFT JOIN user_company on user_task.recordidcompany_ = user_company.recordid_ WHERE user={sys_user_id} and user_task.status!='Chiuso' and user_task.deleted_ = 'N'"
             )
             tasks = dictfetchall(cursor)
 
             cursor.execute(
-                f"SELECT user_task.*, v_users.username, user_company.companyname FROM user_task LEFT JOIN v_users ON user_task.user = v_users.sys_user_id LEFT JOIN user_company on user_task.recordidcompany_ = user_company.recordid_ WHERE creator={sys_user_id} and user_task.deleted_ = 'N' and user != {sys_user_id}"
+                f"SELECT user_task.*, v_users.username, user_company.companyname FROM user_task LEFT JOIN v_users ON user_task.user = v_users.sys_user_id LEFT JOIN user_company on user_task.recordidcompany_ = user_company.recordid_ WHERE creator={sys_user_id} and user != {sys_user_id} and user_task.status!='Chiuso' and user_task.deleted_ = 'N' "
             )
             tasks_created = dictfetchall(cursor)
 
@@ -1616,9 +1616,9 @@ def send_active_task(request, requested_user=''):
                 context['tasks_completed'] = tasks_completed
                 html_message = render_to_string('other/send_active_task.html', context)
 
-                subject = 'Report task'
+                subject = f"Report task - {user['first_name']} {user['last_name']}"
                 email = user['email']
-                send_email(emails=['marco.garganigo@swissbix.ch'], subject=subject, html_message=html_message)
+                send_email(emails=[email], subject=subject, html_message=html_message)
 
     return HttpResponse('ok')
 
@@ -1661,3 +1661,18 @@ def update_task_status(request):
     return HttpResponse('ok')
 
 
+def update_task_status(request):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * from user_task where status!='Chiuso'"
+        )
+        tasks = dictfetchall(cursor)
+    for task in tasks:
+        post_data = {
+        'tableid': 'task',
+        'recordid': task['recordid_'],
+        'fields': []
+        }
+
+        response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
+    return HttpResponse('Eseguito')
