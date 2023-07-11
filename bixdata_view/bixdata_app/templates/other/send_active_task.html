@@ -19,33 +19,35 @@
 </style>
 
 <table class="table">
-  <thead style="background-color: #f8c398;">
+<thead style="background-color: #f8c398;">
     <tr>
-      <th scope="col">Miei Task</th>
-      <th scope="col">Stato</th>
-      <th scope="col">Scadenza</th>
-      <th scope="col">Previsto</th>
-      <th scope="col">Descrizione</th>
-      <th scope="col">Assegnato Da</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
     {% for task in data %}
     <tr>
-    {% if task.status == 'Chiuso' or task.status == 'Aperto' %}
-      <td style="text-align: right">✔️</td>
-        {% elif task.status == 'Scaduto' %}
-        <td style="text-align: right">❌</td>
-        {% elif task.status == 'In Scadenza' %}
-         <td style="text-align: right">⚠️</td>
-        {% else %}
-        <td style="text-align: right">📅</td>
-    {% endif %}
-      <td>{{ task.status }}️</td>
-      <td>{{ task.duedate|date:"d/m/Y" }}</td>
-      <td>{{ task.planneddate|date:"d/m/Y" }}</td>
-        <td class="description" >{{ task.description|truncatechars:50 }}</td>
-      <td>{{ task.username }}</td>
+
+    <td>test</td>
+
+    <td>
+        {{ task.companyname }}
+
+        {{ task.description|truncatechars:50 }}
+
+
+
+
+    </td>
+      <td>
+          {{ task.duedate|date:"d/m/Y" }}
+          <br>
+          {{ task.planneddate|date:"d/m/Y" }}
+          <br>
+          Da: {{ task.username }}
+      </td>
     </tr>
     {% endfor %}
   </tbody>

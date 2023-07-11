@@ -140,7 +140,7 @@ def get_user_table_settings(bixid, tableid):
 def send_email(request=None, emails=None, subject=None, message=None,html_message=None):
     email_fields=dict()
     email_fields['subject']=subject
-    set_record('user_email',email_fields)
+    #set_record('user_email',email_fields)
     send_mail(
         subject=subject,
         message=message,

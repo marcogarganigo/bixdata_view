@@ -1660,4 +1660,3 @@ def update_task_status(request):
 
     return HttpResponse('ok')
 
-
