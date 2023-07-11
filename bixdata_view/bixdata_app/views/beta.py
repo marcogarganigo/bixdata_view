@@ -138,6 +138,9 @@ def get_user_table_settings(bixid, tableid):
 
 
 def send_email(request=None, emails=None, subject=None, message=None,html_message=None):
+    email_fields=dict()
+    email_fields['subject']=subject
+    set_record('user_email',email_fields)
     send_mail(
         subject=subject,
         message=message,
@@ -191,7 +194,6 @@ def db_get_count(table, condition, order=''):
 
 
 def generate_recordid(tableid):
-    tableid = 'user_task'
     sql = f"SELECT recordid_ FROM {tableid} WHERE recordid_ NOT LIKE '1%' ORDER BY recordid_ DESC LIMIT 1"
     rows = db_query_sql(sql)
     recordid = rows[0]['recordid_']
@@ -200,4 +202,13 @@ def generate_recordid(tableid):
 
     return recordid
 
+def set_record(tableid,fields):
+    fields['recordid_'] = generate_recordid(tableid)
+
+    for key, value in fields.items():
+        sql = f"INSERT INTO {tableid} (recordid_, {key}) VALUES ('{fields['recordid_']}', '{value}')"
+        with connection.cursor() as cursor:
+            cursor.execute(sql)
+
+    return fields['recordid_']
         
