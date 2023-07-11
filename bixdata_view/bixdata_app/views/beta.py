@@ -84,8 +84,6 @@ def get_user_setting_list(request):
             return settings_list
 
 
-
-
 def get_userid(django_userid):
     userid = 0
     with connection.cursor() as cursor:
@@ -137,10 +135,10 @@ def get_user_table_settings(bixid, tableid):
     return returned_settings
 
 
-def send_email(request=None, emails=None, subject=None, message=None,html_message=None):
-    email_fields=dict()
-    email_fields['subject']=subject
-    #set_record('user_email',email_fields)
+def send_email(request=None, emails=None, subject=None, message=None, html_message=None):
+    email_fields = dict()
+    email_fields['subject'] = subject
+    #set_record('user_email', email_fields)
     send_mail(
         subject=subject,
         message=message,
@@ -202,7 +200,8 @@ def generate_recordid(tableid):
 
     return recordid
 
-def set_record(tableid,fields):
+
+def set_record(tableid, fields):
     fields['recordid_'] = generate_recordid(tableid)
 
     for key, value in fields.items():
@@ -211,4 +210,3 @@ def set_record(tableid,fields):
             cursor.execute(sql)
 
     return fields['recordid_']
-        
