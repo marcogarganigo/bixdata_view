@@ -1007,6 +1007,10 @@ def save_record_fields(request):
         'fields': fields
     }
 
+    if contextfunction == 'edit':
+        if tableid == 'user_task':
+            check_task_status(recordid)
+
 
 
 
@@ -1692,11 +1696,36 @@ def validate_timesheet(request):
     return HttpResponse('done')
 
 
-def check_task_status(status, recordid):
+def check_task_status(recordid):
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            f"SELECT status from user_task where recordid_ = {recordid}"
+    with connection.cursor() as cursor2:
+        cursor2.execute(
+            "SELECT status from user_task where user != creator and recordid_ = %s", [recordid]
         )
-        task = dictfetchall(cursor)
+        task = dictfetchall(cursor2)
+        status = task[0]['status']
+
+        if status != 'Chiuso':
+
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                       f"SELECT description, email, username from v_users, user_task where v_users.sys_user_id = user_task.creator and user_task.recordid_ = {recordid}"
+                    )
+                    user = dictfetchall(cursor)
+                    email = user[0]['email']
+                    username = user[0]['username']
+                    description = user[0]['description']
+
+                    cursor.execute(
+                        "SELECT companyname from user_company, user_task where user_task.recordidcompany_ = user_company.recordid_ and user_task.recordid_ = %s", [recordid]
+                    )
+                    company = dictfetchall(cursor)
+                    companyname = company[0]['companyname']
+
+                    send_email(
+                        emails=['marco.garganigo@swissbix.ch'],
+                        subject=username + ' ha chiuso un task',
+                        html_message=description + "<br><br>" + companyname
+                    )
+
     return True

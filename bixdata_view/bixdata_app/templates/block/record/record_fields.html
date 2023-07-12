@@ -328,6 +328,10 @@
                         var recordid = $(el).attr('data-recordid');
                         //$("#saved-alert-" + recordid).css("display", "block");
                         //$("#saved-alert-" + recordid).fadeOut(1500);
+                        el = $('#open_record_el-' + '{{ recordid }}')
+                         $('#open_record_el-' + '{{ recordid }}').remove()
+                        $('#fields_container_'+ '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
+                        open_record(el,'timesheet','{{ recordid }}')
                         swal({
                             title: "Salvato!",
                             text: "Il record è stato salvato",

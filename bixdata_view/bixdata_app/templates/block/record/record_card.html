@@ -251,6 +251,12 @@ function validate_timesheet() {
         },
         url: "{% url 'validate_timesheet' %}",
         success: function (response) {
+            //close modal
+            $('#fields_container_'+ '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
+            el = $('#open_record_el-' + '{{ recordid }}')
+            $('#open_record_el-' + '{{ recordid }}').remove()
+            open_record(el,'timesheet','{{ recordid }}')
+
             swal({
                 text: "Timesheet validated",
                 icon: "success",
