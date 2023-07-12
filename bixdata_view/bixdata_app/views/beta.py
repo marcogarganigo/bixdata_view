@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
-from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import send_mail, BadHeaderError, EmailMessage
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 import requests
@@ -135,18 +135,39 @@ def get_user_table_settings(bixid, tableid):
     return returned_settings
 
 
-def send_email(request=None, emails=None, subject=None, message=None, html_message=None):
+def send_email(request=None, emails=None, subject=None, message=None, html_message=None, cc=None, bcc=None):
     email_fields = dict()
     email_fields['subject'] = subject
-    #set_record('user_email', email_fields)
+    email_fields['mailbody'] = message
+    email_fields['date'] = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+    email_fields['timestamp'] = datetime.datetime.now().strftime('%H:%M:%S')
+    email_fields['recipients'] = emails
+    set_record('user_email', email_fields)
+
+    email = EmailMessage(
+        subject,
+        html_message,
+        'bixdata_sender@swissbix.ch',
+        emails,
+        bcc=['alessandro.galli@swissbix.ch'],
+        cc=cc,
+    )
+    email.content_subtype = "html"
+    email.send(fail_silently=True)
+
+    """
     send_mail(
         subject=subject,
         message=message,
         from_email='bixdata@sender.swissbix.ch',
         recipient_list=emails,
+        bcc=['alessandro.galli@swissbix.ch'],
+        cc=cc,
         fail_silently=False,
         html_message=html_message
     )
+    """
+
     return True
 
 
@@ -203,10 +224,20 @@ def generate_recordid(tableid):
 
 def set_record(tableid, fields):
     fields['recordid_'] = generate_recordid(tableid)
+    record_id = fields['recordid_']
 
-    for key, value in fields.items():
+    with connection.cursor() as cursor:
+        sql = f"INSERT INTO {tableid} (recordid_, subject, mailbody, date, recipients, sent_timestamp) VALUES (%s, %s, %s, %s, %s, %s)"
+        values = (record_id, fields['subject'], fields['mailbody'], fields['date'], fields['recipients'], fields['timestamp'])
+        cursor.execute(sql, values)
+
+
+
+
+    """for key, value in fields.items():
         sql = f"INSERT INTO {tableid} (recordid_, {key}) VALUES ('{fields['recordid_']}', '{value}')"
+        print(sql)
         with connection.cursor() as cursor:
             cursor.execute(sql)
-
-    return fields['recordid_']
+"""
+    return True

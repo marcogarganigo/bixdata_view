@@ -242,6 +242,29 @@
         });
     }
 
+function validate_timesheet() {
+    $.ajax({
+        type: "POST",
+        data: {
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'recordid': '{{ recordid }}'
+        },
+        url: "{% url 'validate_timesheet' %}",
+        success: function (response) {
+            swal({
+                text: "Timesheet validated",
+                icon: "success",
+                timer: 1000,
+                buttons: false,
+            });
+        },
+        error: function (xhr, status, error) {
+            alert('An error occurred while validating the timesheet.');
+        }
+    });
+}
+
+
 </script>
 
 <div id="block_record_card-{{ recordid }}" class="block_record_card" style="height: 100%;width: 100%;">
@@ -300,6 +323,10 @@
 
                     </ul>
                 </div>
+
+            {% if tableid == 'timesheet' %}
+                <button onclick="validate_timesheet()" type="button" class="btn btn-outline-success">Valida</button>
+            {% endif %}
 
                 <div style="clear:both;"></div>
             </div>

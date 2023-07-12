@@ -1007,6 +1007,10 @@ def save_record_fields(request):
         'fields': fields
     }
 
+
+
+
+
     response = requests.post(
         f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
 
@@ -1016,7 +1020,8 @@ def save_record_fields(request):
         if tableid == 'ticketbixdata' and 'description' in fields_dict:
             message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(
                 request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
-            send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'], subject='Supporto bixdata',
+            send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'],
+                       subject='Supporto bixdata',
                        message=message)
 
         if tableid == 'task':
@@ -1552,7 +1557,7 @@ def get_records_grouped(request):
     return render(request, 'block/records/records_grouped.html', context)
 
 
-#@user_passes_test(lambda u: u.is_superuser)
+# @user_passes_test(lambda u: u.is_superuser)
 def send_active_task(request, requested_user=''):
     if requested_user != '':
         userid = requested_user
@@ -1631,14 +1636,13 @@ def send_unique_active_task(request):
 
 
 def update_task_status(request):
-
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT * from user_task"
         )
         tasks = dictfetchall(cursor)
 
-        #pick the current date
+        # pick the current date
         current_date = datetime.date.today()
         current_date_str = current_date.strftime("%Y-%m-%d")
 
@@ -1657,7 +1661,6 @@ def update_task_status(request):
                     f"UPDATE user_task SET status = 'Aperto' WHERE recordid_ = {task['recordid_']}"
                 )
 
-
     return HttpResponse('ok')
 
 
@@ -1669,10 +1672,31 @@ def update_task_status(request):
         tasks = dictfetchall(cursor)
     for task in tasks:
         post_data = {
-        'tableid': 'task',
-        'recordid': task['recordid_'],
-        'fields': []
+            'tableid': 'task',
+            'recordid': task['recordid_'],
+            'fields': []
         }
 
         response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
     return HttpResponse('Eseguito')
+
+
+def validate_timesheet(request):
+    recordid = request.POST.get('recordid')
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "UPDATE user_timesheet SET validated = 'Si' WHERE recordid_ = %s", [recordid]
+        )
+
+    return HttpResponse('done')
+
+
+def check_task_status(status, recordid):
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT status from user_task where recordid_ = {recordid}"
+        )
+        task = dictfetchall(cursor)
+    return True

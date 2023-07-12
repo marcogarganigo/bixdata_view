@@ -99,4 +99,5 @@ urlpatterns = [
     path('update_task_status/', alpha.update_task_status, name='update_task_status'),
     path('generate_recordid/', beta.generate_recordid, name='generate_recordid'),
     path('update_task_status/', alpha.update_task_status, name='update_task_status'),
+    path('validate_timesheet/', alpha.validate_timesheet, name='validate_timesheet'),
 ]
