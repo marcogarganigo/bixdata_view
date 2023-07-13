@@ -15,7 +15,6 @@
 
     function closeModal() {
         $("#recordModal").modal("hide");
-        //$("#linked-table-modal").modal("hide");
     }
 
     //appena la card carica aprire collegato di default
@@ -196,28 +195,29 @@
     }
 */
 
-    function stampa(tableid) {
-         var filename = tableid + new Date().getTime() + '.dockx';
-         var url = '/stampa_servicecontract_test/'
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: {
-                'recordid': '{{ recordid }}',
-                'filename': filename,
-            },
-            success: function (response) {
+function stampa(tableid) {
+    var filename = tableid + new Date().getTime() + '.pdf';
+    var url = '/stampa_servicecontract/';
 
-                var w = window.open();
-                $(w.document.body).html(response);
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+            'recordid': '{{ recordid }}',
+            'filename': filename,
+        },
+        success: function (response) {
 
-                setTimeout(function () {
-                    w.print();
-                }, 400);
+            window.open('/static/pdf/' + filename, '_blank');
 
-            },
-        })
-    }
+        },
+        error: function (response) {
+            alert('stampa')
+        }
+    });
+}
+
+
 
     function rinnova_contratto() {
        var contract_hours = prompt("Inserisci totale ore contrattuali");
@@ -251,6 +251,8 @@ function validate_timesheet() {
         },
         url: "{% url 'validate_timesheet' %}",
         success: function (response) {
+             $('#fields_container_'+ '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
+            open_record(window.content,'{{ tableid }}','{{ recordid }}')
             swal({
                 text: "Timesheet validated",
                 icon: "success",
