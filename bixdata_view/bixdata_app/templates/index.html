@@ -180,7 +180,12 @@
                 });
             }
 
+
+
             function open_record(el, tableid, recordid, contextfunction = 'edit') {
+
+                window.content = el;
+
 
                 var serialized_data = [];
                 serialized_data.push({name: 'tableid', value: tableid});
@@ -292,6 +297,7 @@
         </script>
 
         <div id="bixdata2" style="height: 100%;">
+        <input type="hidden" id="saved_layout">
             <!-- ========== Topbar Start ========== -->
             <div class="navbar-custom topnav-navbar">
                 <div class="container-fluid detached-nav">

@@ -186,7 +186,7 @@
                 {% if forloop.counter0 > 2 %}
                     {% if column_value.fieldtype == 'linked' %}
                         <td class="records-linked" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                            data-fieldtype="standard" style="font-weight: bold !important;">
+                            data-fieldtype="standard" data-layout="recordcard" style="font-weight: bold !important;">
                             <!--
                                         <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')"
                                             data-fieldtype="{{ column_value.fieldtype }}"
@@ -202,7 +202,7 @@
 
                                         <script>$('.popover-linked').popover();</script>
                                         -->
-                            <span onclick="event.stopPropagation(); open_record(this,'{{ column_value.link_tableid }}','{{ column_value.link_recordid }}')"
+                            <span data-layout="modal" onclick="event.stopPropagation(); open_record(this,'{{ column_value.link_tableid }}','{{ column_value.link_recordid }}')"
                                   data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
                                   data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
                                   data-linkedtableid="{{ column_value.link_tableid }}"
@@ -227,27 +227,27 @@
 
                     {% elif column_value.fieldtype == 'Numero' %}
                         <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number"
+                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number" data-layout="recordcard"
                             style="text-align: right;">
                             {{ column_value.value }}
                         </td>
                     {% elif column_value.fieldtype == 'Memo' %}
-                    <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">{{ column_value.value|truncatechars:50 }}</td>
+                    <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">{{ column_value.value|truncatechars:50 }}</td>
 
                     {% elif column_value.fieldtype == 'Utente' %}
                         {% if column_value.value %}
-                            <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                                 data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
                                 <img src="{% static 'images/users/' %}{{ column_value.code }}.png?v={{ date }}"
                                      alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
                                 {{ column_value.value }}
                                 {% else %}
-                            <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                                 data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
                             {{ column_value.value }}
                         {% endif %}
                     {% elif column_value.fieldtype == 'lookup' %}
-                        <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                             data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
                             <div class="badge" style="background-color: {{ column_value.fieldbackground }}; font-size: 10.5pt">{{ column_value.value }}</div>
 
@@ -255,7 +255,7 @@
                         </td>
 
                     {% else %}
-                        <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
+                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
                             {% autoescape off %}
                                 {% if column_value.fieldtypeweb == 'custom_bexiourl' %}
                                     <a onclick="event.stopPropagation();" href="https://office.bexio.com/index.php/kb_order/show/id/{{ column_value.value }}" target="blank_">{{ column_value.value }}</a>

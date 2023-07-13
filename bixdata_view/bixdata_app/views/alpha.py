@@ -1007,6 +1007,10 @@ def save_record_fields(request):
         'fields': fields
     }
 
+    if contextfunction == 'edit':
+        if tableid == 'user_task':
+            check_task_status(recordid)
+
 
 
 
@@ -1354,7 +1358,7 @@ def stampa_timesheet(request):
             file_data = file.read()
 
         # Delete the file from the file system
-        os.remove(filename)
+        #os.remove(filename)
 
         # Create an HTTP response with the file contents
         response = HttpResponse(file_data, content_type='application/pdf')
@@ -1391,21 +1395,17 @@ def stampa_servicecontract(request):
 
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
         content = render_to_string('pdf/servicecontract.html', row)
-        pdf_options = {
-            'page-size': 'A4',
-            'margin-top': '10mm',
-            'margin-right': '10mm',
-            'margin-bottom': '10mm',
-            'margin-left': '10mm',
-        }
-        pdfkit.from_string(content, filename, configuration=config, options=pdf_options)
+
+        filename_with_path = os.path.join('bixdata_app/static/pdf', filename)
+        #filename_with_path="D:\\xampp\\htdocs\\bixdata_view\\bixdata_view\\bixdata_app\\static\\pdf\\test.pdf"
+        pdfkit.from_string(content, filename_with_path, configuration=config)
 
         # Open the file and read its contents
-        with open(filename, 'rb') as file:
+        with open(filename_with_path, 'rb') as file:
             file_data = file.read()
 
         # Delete the file from the file system
-        os.remove(filename)
+        #os.remove(filename_with_path)
 
         # Create an HTTP response with the file contents
         response = HttpResponse(file_data, content_type='application/pdf')
@@ -1692,11 +1692,36 @@ def validate_timesheet(request):
     return HttpResponse('done')
 
 
-def check_task_status(status, recordid):
+def check_task_status(recordid):
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            f"SELECT status from user_task where recordid_ = {recordid}"
+    with connection.cursor() as cursor2:
+        cursor2.execute(
+            "SELECT status from user_task where user != creator and recordid_ = %s", [recordid]
         )
-        task = dictfetchall(cursor)
+        task = dictfetchall(cursor2)
+        status = task[0]['status']
+
+        if status != 'Chiuso':
+
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                       f"SELECT description, email, username from v_users, user_task where v_users.sys_user_id = user_task.creator and user_task.recordid_ = {recordid}"
+                    )
+                    user = dictfetchall(cursor)
+                    email = user[0]['email']
+                    username = user[0]['username']
+                    description = user[0]['description']
+
+                    cursor.execute(
+                        "SELECT companyname from user_company, user_task where user_task.recordidcompany_ = user_company.recordid_ and user_task.recordid_ = %s", [recordid]
+                    )
+                    company = dictfetchall(cursor)
+                    companyname = company[0]['companyname']
+
+                    send_email(
+                        emails=['marco.garganigo@swissbix.ch'],
+                        subject=username + ' ha chiuso un task',
+                        html_message=description + "<br><br>" + companyname
+                    )
+
     return True

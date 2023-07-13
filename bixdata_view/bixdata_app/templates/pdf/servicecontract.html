@@ -45,6 +45,7 @@
           <th><b>Data</b></th>
           <th><b>Tecnico</b></th>
           <th><b>Tempo</b></th>
+          <th id="trasferta" style="display: none"><b>Trasferta</b></th>
           <th><b>Descrizione</b></th>
         </tr>
 
@@ -53,6 +54,12 @@
                 <td>{{ tms.date|date:"d/m/Y" }}</td>
                 <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }}</td>
                 <td>{{ tms.worktime }}</td>
+                {% if excludetravel == '0' %}
+                <td>{{ tms.traveltime }}</td>
+                    <script>
+                        document.getElementById("trasferta").removeAttribute("style");
+                    </script>
+                {% endif %}
                 <td>{{ tms.description }}</td>
             </tr>
         {% endfor %}
@@ -61,6 +68,7 @@
           <td></td>
           <td><b>Saldo ore</b></td>
           <td><b>{{ residualhours }}</b></td>
+          <td></td>
           <td></td>
         </tr>
     </tbody>
@@ -93,18 +101,18 @@ www.swissbix.ch
       border: 1px solid black;
     }
 
-    th:nth-child(1), td:nth-child(1),
-    th:nth-child(2), td:nth-child(2) {
+    th:nth-child(1),
+    th:nth-child(2) {
       width: 15%;
     }
 
-    th:nth-child(3), td:nth-child(3) {
+    th:nth-child(3) {
       width: 10%;
     }
-
-    th:nth-child(4), td:nth-child(4) {
-      width: 60%;
+    th:nth-child(5) {
+      width: 50%;
     }
+
 @media print {
     .colored {
         background-color: #f1a871 !important;
@@ -114,6 +122,10 @@ www.swissbix.ch
     .colored {
         background-color: #f1a871 !important;
     }
+
+     tr, td, th, tbody, thead, tfoot {
+    page-break-inside: avoid !important;
+}
 </style>
 </body>
 </html>
