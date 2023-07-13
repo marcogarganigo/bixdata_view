@@ -180,13 +180,12 @@
                 });
             }
 
+
+
             function open_record(el, tableid, recordid, contextfunction = 'edit') {
 
+                window.content = el;
 
-                var hidden_input = document.createElement("input");
-                hidden_input.setAttribute("type", "hidden");
-                hidden_input.setAttribute("id", "open_record_el-"+'{{ recordid }}');
-                hidden_input.setAttribute("value", el);
 
                 var serialized_data = [];
                 serialized_data.push({name: 'tableid', value: tableid});
@@ -298,7 +297,7 @@
         </script>
 
         <div id="bixdata2" style="height: 100%;">
-        <input type="hidden" id="open_record_el">
+        <input type="hidden" id="saved_layout">
             <!-- ========== Topbar Start ========== -->
             <div class="navbar-custom topnav-navbar">
                 <div class="container-fluid detached-nav">

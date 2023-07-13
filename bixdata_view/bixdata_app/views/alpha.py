@@ -1358,7 +1358,7 @@ def stampa_timesheet(request):
             file_data = file.read()
 
         # Delete the file from the file system
-        os.remove(filename)
+        #os.remove(filename)
 
         # Create an HTTP response with the file contents
         response = HttpResponse(file_data, content_type='application/pdf')
@@ -1395,21 +1395,17 @@ def stampa_servicecontract(request):
 
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
         content = render_to_string('pdf/servicecontract.html', row)
-        pdf_options = {
-            'page-size': 'A4',
-            'margin-top': '10mm',
-            'margin-right': '10mm',
-            'margin-bottom': '10mm',
-            'margin-left': '10mm',
-        }
-        pdfkit.from_string(content, filename, configuration=config, options=pdf_options)
+
+        filename_with_path = os.path.join('bixdata_app/static/pdf', filename)
+
+        pdfkit.from_string(content, filename_with_path, configuration=config)
 
         # Open the file and read its contents
-        with open(filename, 'rb') as file:
+        with open(filename_with_path, 'rb') as file:
             file_data = file.read()
 
         # Delete the file from the file system
-        os.remove(filename)
+        #os.remove(filename_with_path)
 
         # Create an HTTP response with the file contents
         response = HttpResponse(file_data, content_type='application/pdf')
