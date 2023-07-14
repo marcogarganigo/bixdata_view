@@ -445,8 +445,8 @@ def get_render_content_dashboard(request):
         cursor2.execute(
             "SELECT dashboardid FROM v_user_dashboard_block WHERE bixid = %s", [user_id]
         )
-        
-        righe = cursor2.fetchall() 
+
+        righe = cursor2.fetchall()
         dashboard_id = righe[0][0]
 
     if request.method == 'POST':
@@ -478,30 +478,29 @@ def get_render_content_dashboard(request):
 
                 else:
 
+                    selected = ''
+                    if data['operation'] == 'somma':
+                        fields = data['fieldid'].split(';')
+                        for field in fields:
+                            field = 'SUM(' + field + ')'
+                            selected += field + ','
+                        groupby = data['groupby']
+                        selected += groupby
 
-                        selected = ''
-                        if data['operation'] == 'somma':
-                            fields = data['fieldid'].split(';')
-                            for field in fields:
-                                field = 'SUM(' + field + ')'
-                                selected += field + ','
-                            groupby = data['groupby']
-                            selected += groupby
-
-                        query_conditions = data['query_conditions']
-                        userid = get_userid(request.user.id)
-                        query_conditions = query_conditions.replace("$userid$", str(userid))
-                        id = data['id']
-                        tableid = data['tableid']
-                        name = data['name']
-                        layout = data['layout']
-                        sql = "SELECT " + selected + " FROM " + 'user_' + tableid + \
-                              " WHERE " + query_conditions + " GROUP BY " + groupby
-                        block = dict()
-                        block['sql'] = sql
-                        block['name'] = 'test'
-                        block['html'] = get_chart(request, sql, id, name, layout, fields)
-                        context['blocks'].append(block)
+                    query_conditions = data['query_conditions']
+                    userid = get_userid(request.user.id)
+                    query_conditions = query_conditions.replace("$userid$", str(userid))
+                    id = data['id']
+                    tableid = data['tableid']
+                    name = data['name']
+                    layout = data['layout']
+                    sql = "SELECT " + selected + " FROM " + 'user_' + tableid + \
+                          " WHERE " + query_conditions + " GROUP BY " + groupby
+                    block = dict()
+                    block['sql'] = sql
+                    block['name'] = 'test'
+                    block['html'] = get_chart(request, sql, id, name, layout, fields)
+                    context['blocks'].append(block)
 
     return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', context)
 
@@ -567,8 +566,6 @@ def get_record_card_delete(request):
                 query
             )
     return JsonResponse({'success': True})
-
-
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -1538,9 +1535,9 @@ def export_excel(request):
     viewid = request.POST.get('viewid')
     order_field = request.POST.get('order_field')
     order = request.POST.get('order')
-    #currentpage = request.POST.get('currentpage')
-    currentpage=0
-    
+    # currentpage = request.POST.get('currentpage')
+    currentpage = 0
+
     post = {
         'tableid': tableid,
         'searchTerm': searchTerm,
