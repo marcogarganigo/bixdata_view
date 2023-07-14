@@ -457,12 +457,12 @@ def get_render_content_dashboard(request):
             rows = dictfetchall(cursor)
 
             cursor.execute(
-                "SELECT * FROM sys_dashboard_block WHERE dashboardid = %s", [dashboard_id]
+                "SELECT * FROM v_sys_dashboard_block WHERE dashboardid = %s", [dashboard_id]
             )
             datas = dictfetchall(cursor)
 
             for data in datas:
-                if data['reportid'] is None or data['reportid'] == 0:
+                if data['id'] is None or data['id'] == 0:
 
                     cursor.execute(
                         "SELECT tableid FROM v_sys_dashboard_block WHERE dashboardid = %s", [dashboard_id]
