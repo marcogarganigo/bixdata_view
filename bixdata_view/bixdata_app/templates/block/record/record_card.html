@@ -326,7 +326,7 @@ function validate_timesheet() {
                     </ul>
                 </div>
 
-            {% if tableid == 'timesheet' %}
+            {% if tableid == 'timesheet' and userid == 3  %}
                 <button onclick="validate_timesheet()" type="button" class="btn btn-outline-success">Valida</button>
             {% endif %}
 

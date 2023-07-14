@@ -457,30 +457,51 @@ def get_render_content_dashboard(request):
             )
             rows = dictfetchall(cursor)
 
-            for row in rows:
-                selected = ''
-                if row['operation'] == 'somma':
-                    fields = row['fieldid'].split(';')
-                    for field in fields:
-                        field = 'SUM(' + field + ')'
-                        selected += field + ','
-                    groupby = row['groupby']
-                    selected += groupby
+            cursor.execute(
+                "SELECT * FROM sys_dashboard_block WHERE dashboardid = %s", [dashboard_id]
+            )
+            datas = dictfetchall(cursor)
 
-                query_conditions = row['query_conditions']
-                userid = get_userid(request.user.id)
-                query_conditions = query_conditions.replace("$userid$", str(userid))
-                id = row['id']
-                tableid = row['tableid']
-                name = row['name']
-                layout = row['layout']
-                sql = "SELECT " + selected + " FROM " + tableid + \
-                      " WHERE " + query_conditions + " GROUP BY " + groupby
-                block = dict()
-                block['sql'] = sql
-                block['name'] = 'test'
-                block['html'] = get_chart(request, sql, id, name, layout, fields)
-                context['blocks'].append(block)
+            for data in datas:
+                if data['reportid'] is None or data['reportid'] == 0:
+
+                    cursor.execute(
+                        "SELECT tableid FROM v_sys_dashboard_block WHERE dashboardid = %s", [dashboard_id]
+                    )
+                    tableid = cursor.fetchone()[0]
+                    tableid = 'user_' + tableid
+
+                    block = dict()
+                    block['html'] = 'asdasd'
+                    block['name'] = 'test dati'
+                    context['blocks'].append(block)
+
+                else:
+
+                    for row in rows:
+                        selected = ''
+                        if row['operation'] == 'somma':
+                            fields = row['fieldid'].split(';')
+                            for field in fields:
+                                field = 'SUM(' + field + ')'
+                                selected += field + ','
+                            groupby = row['groupby']
+                            selected += groupby
+
+                        query_conditions = row['query_conditions']
+                        userid = get_userid(request.user.id)
+                        query_conditions = query_conditions.replace("$userid$", str(userid))
+                        id = row['id']
+                        tableid = row['tableid']
+                        name = row['name']
+                        layout = row['layout']
+                        sql = "SELECT " + selected + " FROM " + tableid + \
+                              " WHERE " + query_conditions + " GROUP BY " + groupby
+                        block = dict()
+                        block['sql'] = sql
+                        block['name'] = 'test'
+                        block['html'] = get_chart(request, sql, id, name, layout, fields)
+                        context['blocks'].append(block)
 
     return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', context)
 
@@ -833,6 +854,7 @@ def get_block_record_card(tableid, recordid, userid):
     context['block_record_fields'] = ""
     context['recordid'] = recordid
     context['tableid'] = tableid
+    context['userid'] = userid
     context['user_table_settings'] = get_user_table_settings(userid, tableid)
     # returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
     return render_to_string('block/record/record_card.html', context)
@@ -1011,10 +1033,6 @@ def save_record_fields(request):
         if tableid == 'user_task':
             check_task_status(recordid)
 
-
-
-
-
     response = requests.post(
         f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
 
@@ -1063,7 +1081,7 @@ def save_record_fields(request):
                         first_name + ' ' + last_name, fields_dict['description'], fields_dict['duedate'], companyname,
                         projectname)
 
-                    send_email(emails=[email], subject='Nuovo task assegnato', message=message)
+                    send_email(emails=[email], subject='Nuovo task assegnato', message=message, html_message=message)
 
     return render(request, 'block/record/record_fields.html')
 
@@ -1358,7 +1376,7 @@ def stampa_timesheet(request):
             file_data = file.read()
 
         # Delete the file from the file system
-        #os.remove(filename)
+        # os.remove(filename)
 
         # Create an HTTP response with the file contents
         response = HttpResponse(file_data, content_type='application/pdf')
@@ -1397,7 +1415,8 @@ def stampa_servicecontract(request):
         content = render_to_string('pdf/servicecontract.html', row)
 
         filename_with_path = os.path.join('bixdata_app/static/pdf', filename)
-        #filename_with_path="D:\\xampp\\htdocs\\bixdata_view\\bixdata_view\\bixdata_app\\static\\pdf\\test.pdf"
+        filename_with_path = os.path.abspath(filename_with_path)
+
         pdfkit.from_string(content, filename_with_path, configuration=config)
 
         # Open the file and read its contents
@@ -1405,7 +1424,7 @@ def stampa_servicecontract(request):
             file_data = file.read()
 
         # Delete the file from the file system
-        #os.remove(filename_with_path)
+        # os.remove(filename_with_path)
 
         # Create an HTTP response with the file contents
         response = HttpResponse(file_data, content_type='application/pdf')
@@ -1500,8 +1519,9 @@ def export_excel(request):
     viewid = request.POST.get('viewid')
     order_field = request.POST.get('order_field')
     order = request.POST.get('order')
-    currentpage = request.POST.get('currentpage')
-
+    #currentpage = request.POST.get('currentpage')
+    currentpage=0
+    
     post = {
         'tableid': tableid,
         'searchTerm': searchTerm,
@@ -1693,7 +1713,6 @@ def validate_timesheet(request):
 
 
 def check_task_status(recordid):
-
     with connection.cursor() as cursor2:
         cursor2.execute(
             "SELECT status from user_task where user != creator and recordid_ = %s", [recordid]
@@ -1702,26 +1721,26 @@ def check_task_status(recordid):
         status = task[0]['status']
 
         if status != 'Chiuso':
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"SELECT description, email, username from v_users, user_task where v_users.sys_user_id = user_task.creator and user_task.recordid_ = {recordid}"
+                )
+                user = dictfetchall(cursor)
+                email = user[0]['email']
+                username = user[0]['username']
+                description = user[0]['description']
 
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                       f"SELECT description, email, username from v_users, user_task where v_users.sys_user_id = user_task.creator and user_task.recordid_ = {recordid}"
-                    )
-                    user = dictfetchall(cursor)
-                    email = user[0]['email']
-                    username = user[0]['username']
-                    description = user[0]['description']
+                cursor.execute(
+                    "SELECT companyname from user_company, user_task where user_task.recordidcompany_ = user_company.recordid_ and user_task.recordid_ = %s",
+                    [recordid]
+                )
+                company = dictfetchall(cursor)
+                companyname = company[0]['companyname']
 
-                    cursor.execute(
-                        "SELECT companyname from user_company, user_task where user_task.recordidcompany_ = user_company.recordid_ and user_task.recordid_ = %s", [recordid]
-                    )
-                    company = dictfetchall(cursor)
-                    companyname = company[0]['companyname']
-
-                    send_email(
-                        emails=['marco.garganigo@swissbix.ch'],
-                        subject=username + ' ha chiuso un task',
-                        html_message=description + "<br><br>" + companyname
-                    )
+                send_email(
+                    emails=['marco.garganigo@swissbix.ch'],
+                    subject=username + ' ha chiuso un task',
+                    html_message=description + "<br><br>" + companyname
+                )
 
     return True
