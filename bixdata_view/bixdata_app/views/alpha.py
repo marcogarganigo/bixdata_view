@@ -569,7 +569,6 @@ def get_record_card_delete(request):
     return JsonResponse({'success': True})
 
 
-# https://openclassrooms.com/en/courses/7107341-intermediate-django/7263317-create-a-login-page-with-a-function-based-view
 
 
 @user_passes_test(lambda u: u.is_superuser)
