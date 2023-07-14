@@ -1519,8 +1519,9 @@ def export_excel(request):
     viewid = request.POST.get('viewid')
     order_field = request.POST.get('order_field')
     order = request.POST.get('order')
-    currentpage = None
-
+    #currentpage = request.POST.get('currentpage')
+    currentpage=0
+    
     post = {
         'tableid': tableid,
         'searchTerm': searchTerm,
