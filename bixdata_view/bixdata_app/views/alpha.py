@@ -833,6 +833,7 @@ def get_block_record_card(tableid, recordid, userid):
     context['block_record_fields'] = ""
     context['recordid'] = recordid
     context['tableid'] = tableid
+    context['userid'] = userid
     context['user_table_settings'] = get_user_table_settings(userid, tableid)
     # returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
     return render_to_string('block/record/record_card.html', context)
@@ -1063,7 +1064,7 @@ def save_record_fields(request):
                         first_name + ' ' + last_name, fields_dict['description'], fields_dict['duedate'], companyname,
                         projectname)
 
-                    send_email(emails=[email], subject='Nuovo task assegnato', message=message)
+                    send_email(emails=[email], subject='Nuovo task assegnato', message=message, html_message=message)
 
     return render(request, 'block/record/record_fields.html')
 
