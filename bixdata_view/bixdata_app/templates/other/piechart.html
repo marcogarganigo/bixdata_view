@@ -6,12 +6,11 @@
       height: 'auto',
       type: 'pie', // change chart type to pie
     },
-    series: {{ value|safe }},
+    series: {{ value|safe|slice:"1:-1" }},
     labels: {{ labels|safe }},
     title: {
       text: '{{ name }}',
     },
-    colors: ['#008ffbd9','#00e396d9','#ff4560d9'], // set color for each dataset
     responsive: [{
       breakpoint: 480,
       options: {
