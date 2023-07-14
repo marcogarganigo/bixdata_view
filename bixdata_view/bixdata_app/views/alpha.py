@@ -1398,7 +1398,8 @@ def stampa_servicecontract(request):
         content = render_to_string('pdf/servicecontract.html', row)
 
         filename_with_path = os.path.join('bixdata_app/static/pdf', filename)
-        #filename_with_path="D:\\xampp\\htdocs\\bixdata_view\\bixdata_view\\bixdata_app\\static\\pdf\\test.pdf"
+        filename_with_path = os.path.abspath(filename_with_path)
+
         pdfkit.from_string(content, filename_with_path, configuration=config)
 
         # Open the file and read its contents
