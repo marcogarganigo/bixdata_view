@@ -477,23 +477,23 @@ def get_render_content_dashboard(request):
 
                 else:
 
-                    for row in rows:
+
                         selected = ''
-                        if row['operation'] == 'somma':
-                            fields = row['fieldid'].split(';')
+                        if data['operation'] == 'somma':
+                            fields = data['fieldid'].split(';')
                             for field in fields:
                                 field = 'SUM(' + field + ')'
                                 selected += field + ','
-                            groupby = row['groupby']
+                            groupby = data['groupby']
                             selected += groupby
 
-                        query_conditions = row['query_conditions']
+                        query_conditions = data['query_conditions']
                         userid = get_userid(request.user.id)
                         query_conditions = query_conditions.replace("$userid$", str(userid))
-                        id = row['id']
-                        tableid = row['tableid']
-                        name = row['name']
-                        layout = row['layout']
+                        id = data['id']
+                        tableid = data['tableid']
+                        name = data['name']
+                        layout = data['layout']
                         sql = "SELECT " + selected + " FROM " + 'user_' + tableid + \
                               " WHERE " + query_conditions + " GROUP BY " + groupby
                         block = dict()
