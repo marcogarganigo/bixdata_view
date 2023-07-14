@@ -445,7 +445,8 @@ def get_render_content_dashboard(request):
         cursor2.execute(
             "SELECT dashboardid FROM v_user_dashboard_block WHERE bixid = %s", [user_id]
         )
-        righe = cursor2.fetchall()
+        
+        righe = cursor2.fetchall() 
         dashboard_id = righe[0][0]
 
     if request.method == 'POST':
