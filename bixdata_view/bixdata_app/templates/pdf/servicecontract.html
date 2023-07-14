@@ -58,6 +58,7 @@
                 <td>{{ tms.traveltime }}</td>
                     <script>
                         document.getElementById("trasferta").removeAttribute("style");
+                        document.getElementById("td-trasferta").removeAttribute("style");
                     </script>
                 {% endif %}
                 <td>{{ tms.description }}</td>
@@ -69,7 +70,7 @@
           <td><b>Saldo ore</b></td>
           <td><b>{{ residualhours }}</b></td>
           <td></td>
-          <td></td>
+          <td id="td-trasferta" style="display: none"></td>
         </tr>
     </tbody>
 
