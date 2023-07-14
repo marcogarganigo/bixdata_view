@@ -495,7 +495,7 @@ def get_render_content_dashboard(request):
                         tableid = row['tableid']
                         name = row['name']
                         layout = row['layout']
-                        sql = "SELECT " + selected + " FROM " + tableid + \
+                        sql = "SELECT " + selected + " FROM " + 'user_' + tableid + \
                               " WHERE " + query_conditions + " GROUP BY " + groupby
                         block = dict()
                         block['sql'] = sql
@@ -1392,6 +1392,7 @@ def stampa_timesheet(request):
 
         # Open the file and read its contents
         with open(filename, 'rb') as file:
+            file_data = file.read()
             file_data = file.read()
 
         # Delete the file from the file system
