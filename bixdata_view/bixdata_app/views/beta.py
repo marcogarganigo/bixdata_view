@@ -95,7 +95,7 @@ def get_userid(django_userid):
 
 
 def get_user_setting(request, setting):
-    # settings superuser
+
     returned_value = ''
     id = request.user.id
     with connection.cursor() as cursor:
