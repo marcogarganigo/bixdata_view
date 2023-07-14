@@ -17,7 +17,6 @@
         $("#recordModal").modal("hide");
     }
 
-    //appena la card carica aprire collegato di default
     var recordtab_{{recordid}} = '{{user_table_settings.default_recordtab}}';
     $('#block_record_card-{{recordid}}').ready(function () {
         if (recordtab_{{recordid}} === 'Linked') {
