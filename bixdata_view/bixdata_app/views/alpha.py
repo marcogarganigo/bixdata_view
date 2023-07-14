@@ -1304,8 +1304,27 @@ def new_chart_block(request):
 @login_required(login_url='/login/')
 def get_record_path(request, tableid, recordid):
     userid = request.user.id
-    content = get_block_timesheetinvoice(recordid, userid)
+    if tableid == 'timesheet':
+        content = get_block_timesheetinvoice(recordid, userid)
+    elif tableid == 'task':
+        content = get_block_task(recordid, userid)
     return get_render_index(request, content)
+
+
+def get_block_task(recordid_task, userid):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM user_task WHERE recordid_='{recordid_task}'"
+        )
+        rows = dictfetchall(cursor)
+    if (rows):
+        context = dict()
+        context['task'] = rows[0]
+        context['task_block'] = get_block_record_card('task', recordid_task, userid)
+        content = render_to_string('other/check_task.html', context)
+        return content
+    else:
+        return ''
 
 
 def get_block_timesheetinvoice(recordid_timesheet, userid):

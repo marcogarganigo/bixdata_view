@@ -21,7 +21,6 @@
 
   .description:hover {
     cursor: pointer;
-    text-decoration: underline;
   }
 </style>
 
@@ -47,7 +46,7 @@
             </td>
             <td style="margin: 0; padding: 0; width: 200px">
                 <b>{{ task.companyname }}</b>
-                <p class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</p>
+                <a href="http://bixcrm01:8000/get_record_path/task/{{ task.recordid_ }}" class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</a>
                 <p style="margin: 0;">Da: {{ task.username }}</p>
             </td>
             <td style="width: 100px">
@@ -92,7 +91,7 @@
             </td>
              <td style="margin: 0; padding: 0; width: 200px">
                 <b>{{ task.companyname }}</b>
-                <p class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</p>
+                <a href="http://bixcrm01:8000/get_record_path/task/{{ task.recordid_ }}" class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</a>
                 <p style="margin: 0;">Assegnato a: {{ task.username }}</p>
             </td>
             <td style="width: 100px">
@@ -133,7 +132,7 @@
             </td>
             <td style="margin: 0; padding: 0; width: 200px">
                 <b>{{ task.companyname }}</b>
-                <p class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</p>
+                <a href="http://bixcrm01:8000/get_record_path/task/'{{ task.recordid_ }}'" class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</a>
                 <p style="margin: 0;">Assegnato a: {{ task.username }}</p>
             </td>
            <td style="width: 100px">
@@ -152,3 +151,4 @@
         {% endfor %}
     </tbody>
 </table>
+
