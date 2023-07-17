@@ -13,7 +13,7 @@ import time
 from ..forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
-from django.db import connection
+from django.db import connection, connections
 from django.http import JsonResponse
 from django.contrib.auth.models import Group, Permission, User, Group
 from django_user_agents.utils import get_user_agent
@@ -95,7 +95,6 @@ def get_userid(django_userid):
 
 
 def get_user_setting(request, setting):
-
     returned_value = ''
     id = request.user.id
     with connection.cursor() as cursor:
@@ -136,37 +135,39 @@ def get_user_table_settings(bixid, tableid):
 
 
 def send_email(request=None, emails=None, subject=None, message=None, html_message=None, cc=None, bcc=None):
+    bcc = ['alessandro.galli@swissbix.ch']
+    cc = ['']
     email_fields = dict()
     email_fields['subject'] = subject
     email_fields['mailbody'] = message
     email_fields['date'] = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     email_fields['timestamp'] = datetime.datetime.now().strftime('%H:%M:%S')
     email_fields['recipients'] = emails
-    set_record('user_email', email_fields)
+    email_fields['cc'] = cc
+    email_fields['bcc'] = bcc
+    recordid = set_record('user_email', email_fields)
 
-    email = EmailMessage(
-        subject,
-        html_message,
-        'bixdata_sender@swissbix.ch',
-        emails,
-        bcc=['alessandro.galli@swissbix.ch'],
-        cc=cc,
-    )
-    email.content_subtype = "html"
-    email.send(fail_silently=True)
+    try:
+        email = EmailMessage(
+            subject,
+            html_message,
+            'bixdata_sender@swissbix.ch',
+            emails,
+            bcc=bcc,
+            cc=cc,
+        )
+        email.content_subtype = "html"
+        email.send(fail_silently=True)
 
-    """
-    send_mail(
-        subject=subject,
-        message=message,
-        from_email='bixdata@sender.swissbix.ch',
-        recipient_list=emails,
-        bcc=['alessandro.galli@swissbix.ch'],
-        cc=cc,
-        fail_silently=False,
-        html_message=html_message
-    )
-    """
+        with connections['default'].cursor() as cursor:
+            cursor.execute("UPDATE user_email SET status = 'Inviata' WHERE recordid_ = %s", [recordid])
+
+    except Exception as e:
+        error = str(e)
+        with connections['default'].cursor() as cursor:
+            cursor.execute("UPDATE user_email SET status = 'Errore', note = %s WHERE recordid_ = %s",
+                           [error, recordid])
+        return False
 
     return True
 
@@ -227,17 +228,12 @@ def set_record(tableid, fields):
     record_id = fields['recordid_']
 
     with connection.cursor() as cursor:
-        sql = f"INSERT INTO {tableid} (recordid_, subject, mailbody, date, recipients, sent_timestamp) VALUES (%s, %s, %s, %s, %s, %s)"
-        values = (record_id, fields['subject'], fields['mailbody'], fields['date'], fields['recipients'], fields['timestamp'])
+        sql = f"INSERT INTO {tableid} (recordid_, subject, mailbody, date, recipients, sent_timestamp, cc, ccn) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        values = (
+            record_id, fields['subject'], fields['mailbody'], fields['date'], fields['recipients'],
+            fields['timestamp'],
+            fields['cc'], fields['bcc'])
         cursor.execute(sql, values)
 
+    return record_id
 
-
-
-    """for key, value in fields.items():
-        sql = f"INSERT INTO {tableid} (recordid_, {key}) VALUES ('{fields['recordid_']}', '{value}')"
-        print(sql)
-        with connection.cursor() as cursor:
-            cursor.execute(sql)
-"""
-    return True

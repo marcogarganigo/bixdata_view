@@ -100,4 +100,7 @@ urlpatterns = [
     path('generate_recordid/', beta.generate_recordid, name='generate_recordid'),
     path('update_task_status/', alpha.update_task_status, name='update_task_status'),
     path('validate_timesheet/', alpha.validate_timesheet, name='validate_timesheet'),
+    path('scheduler/', alpha.scheduler, name='scheduler'),
+    path('save_scheduler_settings/', alpha.save_scheduler_settings, name='save_scheduler_settings'),
+    path('run_tasks/', alpha.run_tasks, name='run_tasks'),
 ]

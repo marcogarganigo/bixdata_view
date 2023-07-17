@@ -36,6 +36,11 @@ import subprocess
 from .beta import *
 from htmldocx import HtmlToDocx
 import csv
+from functools import wraps
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.jobstores.memory import MemoryJobStore
+from apscheduler.executors.pool import ThreadPoolExecutor
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -1760,3 +1765,146 @@ def check_task_status(recordid):
                 )
 
     return True
+
+
+def staff_only(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+
+        if request.user.is_staff:
+            return view_func(request, *args, **kwargs)
+        else:
+            return HttpResponse('Non sei autorizzato ad accedere a questa pagina')
+
+    return wrapper
+
+
+@staff_only
+def scheduler(request):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * from sys_scheduler_tasks"
+        )
+        tasks = dictfetchall(cursor)
+
+        cursor.execute(
+            "SELECT * from sys_scheduler_tasks where status = 'running'"
+        )
+        running_tasks = dictfetchall(cursor)
+
+        if running_tasks:
+            button = 'stop'
+        else:
+            button = 'run'
+
+        data = {
+            'tasks': tasks,
+            'button': button
+        }
+
+    return render(request, 'scheduler/scheduler.html', data)
+
+
+def schedule_job(request, funzione, interval):
+    global scheduler
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(lambda: test_scheduler(request), 'interval', seconds=interval)
+    scheduler.start()
+
+
+
+def test_scheduler(request):
+    timestamp = datetime.datetime.now().timestamp()
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"INSERT INTO test_scheduler (timestamp, nome_funzione) VALUES ({timestamp}, 'test_scheduler')"
+        )
+    return HttpResponse('ok')
+
+
+
+
+def check_mails():
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * from user_task where status = 'Errore'"
+        )
+        tasks = dictfetchall(cursor)
+
+    return True
+
+
+def save_scheduler_settings(request):
+    tasks = request.POST.getlist('tasks')
+    tasks = json.loads(tasks[0])  # Decode the JSON string
+
+    with connection.cursor() as cursor:
+        for task in tasks:
+            name = task['name']
+            value = task['value']
+            cursor.execute(
+                "UPDATE sys_scheduler_tasks SET active = %s WHERE funzione = %s",
+                [value, name]
+            )
+            if value == '0':
+                cursor.execute(
+                    "UPDATE sys_scheduler_tasks SET active = %s, status = %s WHERE funzione = %s",
+                    [value, 'stopped', name]
+                )
+
+    return HttpResponse('Settings saved successfully')
+
+
+def run_tasks(request):
+    button = request.POST.get('button')
+
+    if button == 'run':
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * from sys_scheduler_tasks where active = 1"
+            )
+            tasks = dictfetchall(cursor)
+
+        if tasks:
+            with connection.cursor() as cursor:
+                for task in tasks:
+                    funzione = task['funzione']
+                    cursor.execute(
+                        "UPDATE sys_scheduler_tasks SET status = 'running' WHERE funzione = %s", [funzione]
+                    )
+                    schedule_job(request, funzione, task['intervallo'])
+                    button = 'stop'
+
+    else:
+        stop_job()
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * from sys_scheduler_tasks where active = 1"
+            )
+            tasks = dictfetchall(cursor)
+
+
+        if tasks:
+            with connection.cursor() as cursor:
+                for task in tasks:
+                    funzione = task['funzione']
+                    cursor.execute(
+                        "UPDATE sys_scheduler_tasks SET status = 'stopped' WHERE funzione = %s", [funzione]
+                    )
+                    button = 'run'
+
+    return button
+
+
+
+def stop_job():
+    global scheduler
+
+    if scheduler is not None:
+        scheduler.shutdown()
+        scheduler.remove_all_jobs()
+        scheduler = None
+
+
+
+
