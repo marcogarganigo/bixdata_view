@@ -206,7 +206,7 @@
                                   data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
                                   data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
                                   data-linkedtableid="{{ column_value.link_tableid }}"
-                                  data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value }}</span>
+                                  data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe|truncatechars:50 }}</span>
                             <script>
                                 $('.popover-linked').popover({
                                     content: popoverContent,
@@ -321,7 +321,7 @@
           });
           el.classList.add('clicked');
           if (el.classList.contains('clicked')) {
-            el.style.border = '2px solid grey';
+            el.style.border = '2px solid black';
           } else {
 
           }

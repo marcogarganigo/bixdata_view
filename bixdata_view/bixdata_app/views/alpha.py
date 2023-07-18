@@ -45,6 +45,19 @@ from apscheduler.executors.pool import ThreadPoolExecutor
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
 
+def firefox_check(view_func):
+    def wrapped_view(request, *args, **kwargs):
+        user_agent = request.META.get('HTTP_USER_AGENT', '')
+
+        if 'firefox' in user_agent.lower():
+
+            return render(request, 'other/firefox.html')
+        else:
+            return view_func(request, *args, **kwargs)
+
+    return wrapped_view
+
+
 def get_test_autocomplete(request):
     return render(request, 'test_autocomplete.html')
 
@@ -274,7 +287,7 @@ def get_chart4(request):
 
         return render(request, 'other/chart4.html', {'data': data})
 
-
+@firefox_check
 @xframe_options_exempt
 @login_required(login_url='/login/')
 def get_render_index(request, content=''):
@@ -908,14 +921,18 @@ def get_block_record_badge(tableid, recordid):
 
 @login_required(login_url='/login/')
 def get_block_record_fields(request):
+
     context = dict()
     http_response = request.POST.get('http_response')
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
+    ticketid = request.POST.get('ticketid')
+    recordid_ticket = request.POST.get('recordid_ticket')
     master_tableid = request.POST.get('master_tableid')
     master_recordid = request.POST.get('master_recordid')
     contextfunction = request.POST.get('contextfunction')
     contextreference = request.POST.get('contextreference')
+
     with connection.cursor() as cursor:
         cursor.execute("SELECT id FROM sys_user WHERE bixid = %s", [request.user.id])
         row = cursor.fetchone()
@@ -932,6 +949,11 @@ def get_block_record_fields(request):
         f"{bixdata_server}bixdata/index.php/rest_controller/get_record_fields", data=post)
 
     response_dict = json.loads(response.text)
+
+    if (ticketid):
+        response_dict['Dati']['_recordidticket']['valuecode'][0]['value'] = ticketid
+        response_dict['Dati']['_recordidticket']['valuecode'][0]['code'] = recordid_ticket
+
     context['record_fields_labels'] = response_dict
     context['contextfunction'] = contextfunction
     context['contextreference'] = contextreference
@@ -1309,7 +1331,48 @@ def get_record_path(request, tableid, recordid):
         content = get_block_timesheetinvoice(recordid, userid)
     elif tableid == 'task':
         content = get_block_task(recordid, userid)
+    elif tableid == 'ticket':
+        content = insert_timesheet(request, recordid, userid)
     return get_render_index(request, content)
+
+
+def insert_timesheet(request, ticketid, userid):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT recordid_, email FROM user_ticket WHERE freshdeskid = '{ticketid}'"
+        )
+        rows = dictfetchall(cursor)
+        recordid_ticket = rows[0]['recordid_']
+        email = rows[0]['email']
+
+    tableid = 'timesheet'
+    contextfunction = 'insert'
+    contextreference = tableid
+    http_response = 'true'
+    called_from = 'url'
+    recordid = None
+
+    table_block = get_records_table(request, 'company', None, None, email, '', 1, '', '')
+
+    ticket_block = get_block_record_card('ticket', recordid_ticket, userid)
+    #timesheet_block = get_block_record_fields(request, tableid, contextfunction, contextreference, recordid, userid, http_response, called_from)
+
+    data = {
+        'ticketid': ticketid,
+        'recordid_ticket': recordid_ticket,
+        'ticket_block': ticket_block,
+        'table_block': table_block,
+        'contextfunction': contextfunction,
+        'tableid': tableid,
+        'recordid': recordid,
+        'userid': userid,
+        'http_response': http_response,
+
+    }
+
+    content = render_to_string('other/insert_timesheet.html', data)
+
+    return content
 
 
 def get_block_task(recordid_task, userid):
@@ -1812,7 +1875,6 @@ def schedule_job(request, funzione, interval):
     scheduler.start()
 
 
-
 def test_scheduler(request):
     timestamp = datetime.datetime.now().timestamp()
     with connection.cursor() as cursor:
@@ -1820,8 +1882,6 @@ def test_scheduler(request):
             f"INSERT INTO test_scheduler (timestamp, nome_funzione) VALUES ({timestamp}, 'test_scheduler')"
         )
     return HttpResponse('ok')
-
-
 
 
 def check_mails():
@@ -1883,7 +1943,6 @@ def run_tasks(request):
             )
             tasks = dictfetchall(cursor)
 
-
         if tasks:
             with connection.cursor() as cursor:
                 for task in tasks:
@@ -1896,7 +1955,6 @@ def run_tasks(request):
     return button
 
 
-
 def stop_job():
     global scheduler
 
@@ -1904,7 +1962,3 @@ def stop_job():
         scheduler.shutdown()
         scheduler.remove_all_jobs()
         scheduler = None
-
-
-
-

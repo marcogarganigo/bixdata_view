@@ -1,0 +1,39 @@
+<div style="height: 90%; margin-top: 0.5%">
+        <div class="row" style="height: 100%;">
+            <div class="col-4" style="height: 100%;">
+                <div class="card card-body" style="height: 100%">
+                </div>
+            </div>
+            <div class="col-4" style="height: 100%;">
+                 <div class="card card-body" id="insert-timesheet" style="height: 100%">
+                 </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+
+    $(document).ready(function() {
+
+        var serialized_data = [];
+        serialized_data.push({name: 'tableid', value: 'timesheet'});
+        serialized_data.push({name: 'contextfunction', value: 'insert'});
+        serialized_data.push({name: 'contextreference', value: 'timesheet'});
+        serialized_data.push({name: 'http_response', value: true});
+        serialized_data.push({name: 'ticketid', value: '{{ ticketid }}'});
+        serialized_data.push({name: 'recordid_ticket', value: '{{ recordid_ticket }}'});
+        $.ajax({
+            type: "POST",
+            url: "{% url 'get_record_fields' %}",
+            data: serialized_data,
+            success: function (response) {
+                $("#insert-timesheet").html(response);
+
+            },
+            error: function (response) {
+            }
+        });
+    });
+
+</script>
