@@ -481,18 +481,35 @@ def get_render_content_dashboard(request):
             datas = dictfetchall(cursor)
 
             for data in datas:
-                if data['id'] is None or data['id'] == 0:
+                block = dict()
+                cursor.execute(
+                    "SELECT tableid, width, height, id FROM v_sys_dashboard_block WHERE id = %s", [data['id']]
+                )
+                results = dictfetchall(cursor)
+                id = results[0]['id']
+                block['id'] = id
+                width = results[0]['width']
+                if width == None or width == 0 or width == '':
+                    width = 4
 
-                    cursor.execute(
-                        "SELECT tableid FROM v_sys_dashboard_block WHERE dashboardid = %s", [dashboard_id]
-                    )
-                    tableid = cursor.fetchone()[0]
+                height = results[0]['height']
+                if height == None or height == 0 or height == '':
+                    height = '50%'
+                    
+                block['width'] = width
+                block['height'] = height
+                if data['reportid'] is None or data['reportid'] == 0:
+
+
+                    tableid = results[0]['tableid']
                     tableid = 'user_' + tableid
 
-                    block = dict()
-                    block['html'] = 'asdasd'
+
+
+                    block['html'] = get_records_table(request, 'task', None, None, '', 67, 1, '', '')
                     block['name'] = 'test dati'
                     context['blocks'].append(block)
+
 
                 else:
 
@@ -514,7 +531,6 @@ def get_render_content_dashboard(request):
                     layout = data['layout']
                     sql = "SELECT " + selected + " FROM " + 'user_' + tableid + \
                           " WHERE " + query_conditions + " GROUP BY " + groupby
-                    block = dict()
                     block['sql'] = sql
                     block['name'] = 'test'
                     block['html'] = get_chart(request, sql, id, name, layout, fields)
@@ -868,6 +884,11 @@ def get_block_record_card(tableid, recordid, userid):
     context['block_record_fields'] = ""
     context['recordid'] = recordid
     context['tableid'] = tableid
+    if tableid == 'ticket':
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT freshdeskid FROM user_ticket WHERE recordid_={recordid}")
+            freshdeskid = cursor.fetchone()[0]
+            context['freshdeskid'] = freshdeskid
     context['userid'] = userid
     context['user_table_settings'] = get_user_table_settings(userid, tableid)
     # returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)

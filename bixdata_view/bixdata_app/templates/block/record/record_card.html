@@ -266,6 +266,11 @@ function validate_timesheet() {
     });
 }
 
+function open_freshdesk() {
+    var url = 'https://swissbix.freshdesk.com/a/tickets/' + '{{ freshdeskid }}';
+    window.open(url, '_blank');
+}
+
 
 </script>
 
@@ -320,6 +325,8 @@ function validate_timesheet() {
                                 risorse</a></li>
                         {% elif tableid == 'servicecontract' %}
                               <li><a class="dropdown-item" onclick="rinnova_contratto()">Rinnova</a></li>
+                        {% elif tableid == 'ticket' %}
+                            <li><a class="dropdown-item" onclick="open_freshdesk()">Apri in freshdesk</a></li>
                         {% endif %}
                         <li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>
 

@@ -239,6 +239,7 @@
                     url: "{% url 'block_record_card' %}",
                     data: serialized_data,
                     success: function (response) {
+
                         //if ($(el.closest('table')).attr('data-type') === 'linked') {
                         //if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
                         if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el).attr('data-fieldtype') === 'linked') {

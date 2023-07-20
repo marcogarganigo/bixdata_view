@@ -1,12 +1,40 @@
-<div style="width: 100.8%; height: 100%; overflow: scroll ">
+<div style="width: 100.8%; height: 100%; overflow: scroll">
+
+    <button class="btn btn-primary" onclick="change_order(this)">Personalizza disposizione</button>
+    <button id="save-order-button" class="btn btn-success" style="display: none">Salva</button>
+
     {% for block in blocks %}
-        <div class="card no-padding" style="width: 30%; float: left; margin-right: 10px; margin-top: 0.2%">
-            <div class="card-body">
-                {{ block.html|safe }}
+        <div class="card-container" id="card-{{ block.id }}" data-order="">
+            <div class="card col-{{ block.width }} no-padding"
+                 style=" height: {{ block.height }}; float: left; margin-right: 10px; margin-top: 0.2%">
+                <div class="card-body">
+                    {{ block.html|safe }}
+                </div>
             </div>
         </div>
 
     {% endfor %}
+
+    <script>
+
+        function change_order(el) {
+            $(el).hide()
+            $('#save-order-button').show();
+
+            var tsi_id = [];
+
+            $(".card-container").each(function (index) {
+                var element_id = $(this).attr("id");
+                tsi_id.push(document.getElementById(element_id));
+            });
+
+            dragula(tsi_id).on('drop', function (el, target) {
+
+            });
+
+        }
+
+    </script>
 
     <style>
         .no-padding .card-body {
@@ -15,7 +43,7 @@
 
         @media only screen and (max-width: 1800px) {
             .card {
-                width: 44% !important;
+
             }
         }
     </style>
