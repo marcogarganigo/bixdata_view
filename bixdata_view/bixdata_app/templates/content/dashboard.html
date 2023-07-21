@@ -1,51 +1,87 @@
-<div style="width: 100.8%; height: 100%; overflow: scroll">
+<button class="btn btn-primary" onclick="change_order(this)">Personalizza disposizione</button>
+<button id="save-order-button" class="btn btn-success" style="display: none">Salva</button>
 
-    <button class="btn btn-primary" onclick="change_order(this)">Personalizza disposizione</button>
-    <button id="save-order-button" class="btn btn-success" style="display: none">Salva</button>
+<div style="width: 100.8%; height: 100%; overflow: scroll" class="grid-stack">
 
-    {% for block in blocks %}
-        <div class="card-container" id="card-{{ block.id }}" data-order="">
-            <div class="card col-{{ block.width }} no-padding"
-                 style=" height: {{ block.height }}; float: left; margin-right: 10px; margin-top: 0.2%">
-                <div class="card-body">
-                    {{ block.html|safe }}
-                </div>
-            </div>
-        </div>
+        {% for block in blocks %}
+                <div class="card card-body col-{{ block.width }} no-padding"
+                     style=" height: {{ block.height }}; margin-right: 10px; margin-top: 0.2%" gs-x="{{ block.gsx }}" gs-y="{{ block.gsy }}" gs-w="{{ block.gsw }}" gs-h="{{ block.gsh }}"  >
 
-    {% endfor %}
+                        {{ block.html|safe }}
+                    </div>
 
-    <script>
+        {% endfor %}
 
-        function change_order(el) {
-            $(el).hide()
-            $('#save-order-button').show();
 
-            var tsi_id = [];
+        <style>
+            .grid-stack {
+                background: lightgoldenrodyellow;
+            }
 
-            $(".card-container").each(function (index) {
-                var element_id = $(this).attr("id");
-                tsi_id.push(document.getElementById(element_id));
-            });
+            .grid-stack-item-content {
+                color: #2c3e50;
+                text-align: center;
+                background-color: #18bc9c;
+            }
 
-            dragula(tsi_id).on('drop', function (el, target) {
 
-            });
 
-        }
 
-    </script>
 
-    <style>
-        .no-padding .card-body {
-            padding: 0;
-        }
 
-        @media only screen and (max-width: 1800px) {
-            .card {
+        </style>
+
+
+<script>
+  var options = {
+    disableOneColumnMode: true,
+    float: false,
+  };
+  var grid = GridStack.init(options);
+
+  var count = 0;
+
+  // Retrieve elements with class="card-body"
+  var cardBodies = document.getElementsByClassName("card-body");
+
+
+
+  for (var i = 0; i < cardBodies.length; i++) {
+
+
+
+                count = count + 4;
+
+
+
+
+
+    grid.makeWidget(cardBodies[i]); // Make the element a widget within the grid
+  }
+</script>
+
+
+        <script>
+
+            function change_order(el) {
+                $(el).hide()
+                $('#save-order-button').show();
+
 
             }
-        }
-    </style>
 
-</div>
+        </script>
+
+        <style>
+            .no-padding .card-body {
+                padding: 0;
+            }
+
+            @media only screen and (max-width: 1800px) {
+                .card {
+
+                }
+            }
+        </style>
+
+    </div>

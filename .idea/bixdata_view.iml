@@ -28,6 +28,7 @@
     <orderEntry type="library" name="jquery-ui" level="application" />
     <orderEntry type="library" name="clipboardy" level="application" />
     <orderEntry type="library" name="copy-paste" level="application" />
+    <orderEntry type="library" name="gridstack" level="application" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />

@@ -151,13 +151,13 @@ def send_email(request=None, emails=None, subject=None, message=None, html_messa
         email = EmailMessage(
             subject,
             html_message,
-            'bixdata_sender@swissbix.ch',
+            'bixdata@sender.swissbix.ch',
             emails,
             bcc=bcc,
             cc=cc,
         )
         email.content_subtype = "html"
-        email.send(fail_silently=True)
+        send_return = email.send(fail_silently=False)
 
         with connections['default'].cursor() as cursor:
             cursor.execute("UPDATE user_email SET status = 'Inviata' WHERE recordid_ = %s", [recordid])

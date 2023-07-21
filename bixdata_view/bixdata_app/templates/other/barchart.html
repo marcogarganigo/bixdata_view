@@ -1,51 +1,51 @@
 <div id="chart{{ id }}"></div>
 
 <script>
-  var options = {
-    chart: {
-      height: '400%',
-      type: 'bar',
-    },
-    series: [
-    {% for val in value %}
-    {
-      name: '{{ fields|join:'' }}',
-      data: {{ val|safe }},
-    },
-    {% endfor %}
-
-    ],
-    xaxis: {
-      categories: {{ labels|safe }},
-      labels: {
-        show: true,
-        style: {
-          fontSize: '12px',
+    var options = {
+        chart: {
+            height: 'auto',
+            type: 'bar',
         },
-      },
-      tooltip: {
-        enabled: true,
-        offsetY: 8,
-      },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          labels: {
-            rotate: -90,
-          },
+        series: [
+            {% for val in value %}
+                {
+                    name: '{{ fields|join:'' }}',
+                    data: {{ val|safe }},
+                },
+            {% endfor %}
+
+        ],
+        xaxis: {
+            categories: {{ labels|safe }},
+            labels: {
+                show: true,
+                style: {
+                    fontSize: '12px',
+                },
+            },
+            tooltip: {
+                enabled: true,
+                offsetY: 8,
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    labels: {
+                        rotate: -90,
+                    },
+                },
+            }],
         },
-      }],
-    },
-    dataLabels: {
-      enabled: false
-    },
-    title: {
-      text: '{{ name }}',
-    },
-      colors: ['#008ffbd9', '#00e396d9', '#ff4560d9', '#775dd0d9', '#ffc107d9', '#28a745d9', '#dc3545d9', '#17a2b8d9', '#6610f2d9', '#fd7e14d9']
-  };
+        dataLabels: {
+            enabled: false
+        },
+        title: {
+            text: '{{ name }}',
+        },
+        colors: ['#008ffbd9', '#00e396d9', '#ff4560d9', '#775dd0d9', '#ffc107d9', '#28a745d9', '#dc3545d9', '#17a2b8d9', '#6610f2d9', '#fd7e14d9']
+    };
 
-  var chart = new ApexCharts(document.querySelector("#chart{{ id }}"), options);
+    var chart = new ApexCharts(document.querySelector("#chart{{ id }}"), options);
 
-  chart.render();
+    chart.render();
 </script>

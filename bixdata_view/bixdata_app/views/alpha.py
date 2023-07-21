@@ -470,10 +470,6 @@ def get_render_content_dashboard(request):
     if request.method == 'POST':
         selected = ''
         with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT * FROM v_sys_dashboard_block WHERE dashboardid = %s", [dashboard_id]
-            )
-            rows = dictfetchall(cursor)
 
             cursor.execute(
                 "SELECT * FROM v_sys_dashboard_block WHERE dashboardid = %s", [dashboard_id]
@@ -483,11 +479,16 @@ def get_render_content_dashboard(request):
             for data in datas:
                 block = dict()
                 cursor.execute(
-                    "SELECT tableid, width, height, id FROM v_sys_dashboard_block WHERE id = %s", [data['id']]
+                    "SELECT * FROM v_sys_dashboard_block WHERE id = %s", [data['id']]
                 )
                 results = dictfetchall(cursor)
                 id = results[0]['id']
                 block['id'] = id
+                block['gsx'] = results[0]['gs-x']
+                block['gsy'] = results[0]['gs-y']
+                block['gsw'] = results[0]['gs-w']
+                block['gsh'] = results[0]['gs-h']
+
                 width = results[0]['width']
                 if width == None or width == 0 or width == '':
                     width = 4
@@ -1107,12 +1108,14 @@ def save_record_fields(request):
                     companyname = 'N/A'
                     projectname = 'N/A'
 
+
                     if fields_dict['recordidcompany_'] != 'None':
                         with connection.cursor() as cursor:
                             cursor.execute("SELECT companyname FROM user_company WHERE recordid_ = %s",
                                            [fields_dict['recordidcompany_']])
                             row = cursor.fetchone()
                             companyname = row[0]
+
 
                     if fields_dict['recordidproject_'] != 'None':
                         with connection.cursor() as cursor:
@@ -1121,11 +1124,15 @@ def save_record_fields(request):
                             row = cursor.fetchone()
                             projectname = row[0]
 
-                    message = 'Ti è stato assegnato un nuovo task da {} \nDescrizione: {} \nData di scadenza: {} \nAzienda: {} \nProgetto: {}'.format(
-                        first_name + ' ' + last_name, fields_dict['description'], fields_dict['duedate'], companyname,
-                        projectname)
+                    fields_dict['username'] = first_name + ' ' + last_name
+                    fields_dict['companyname'] = companyname
+                    fields_dict['projectname'] = projectname
 
-                    send_email(emails=[email], subject='Nuovo task assegnato', message=message, html_message=message)
+                    message = render_to_string('other/new_task.html', fields_dict)
+
+                    #return render(request, 'other/new_task.html', fields_dict)
+
+                    send_email(emails=[email], subject='Nuovo task assegnato', html_message=message)
 
     return render(request, 'block/record/record_fields.html')
 
@@ -1983,3 +1990,8 @@ def stop_job():
         scheduler.shutdown()
         scheduler.remove_all_jobs()
         scheduler = None
+
+
+
+def test_gridstack(request):
+    return render(request, 'other/test_gridstack.html')
