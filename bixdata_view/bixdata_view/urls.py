@@ -104,4 +104,5 @@ urlpatterns = [
     path('save_scheduler_settings/', alpha.save_scheduler_settings, name='save_scheduler_settings'),
     path('run_tasks/', alpha.run_tasks, name='run_tasks'),
     path('test_gridstack/', alpha.test_gridstack, name='test_gridstack'),
+    path('save_block_order/', alpha.save_block_order, name='save_block_order'),
 ]

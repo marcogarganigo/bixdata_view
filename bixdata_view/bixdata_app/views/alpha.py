@@ -287,6 +287,7 @@ def get_chart4(request):
 
         return render(request, 'other/chart4.html', {'data': data})
 
+
 @firefox_check
 @xframe_options_exempt
 @login_required(login_url='/login/')
@@ -484,10 +485,10 @@ def get_render_content_dashboard(request):
                 results = dictfetchall(cursor)
                 id = results[0]['id']
                 block['id'] = id
-                block['gsx'] = results[0]['gs-x']
-                block['gsy'] = results[0]['gs-y']
-                block['gsw'] = results[0]['gs-w']
-                block['gsh'] = results[0]['gs-h']
+                block['gsx'] = results[0]['gsx']
+                block['gsy'] = results[0]['gsy']
+                block['gsw'] = results[0]['gsw']
+                block['gsh'] = results[0]['gsh']
 
                 width = results[0]['width']
                 if width == None or width == 0 or width == '':
@@ -496,16 +497,13 @@ def get_render_content_dashboard(request):
                 height = results[0]['height']
                 if height == None or height == 0 or height == '':
                     height = '50%'
-                    
+
                 block['width'] = width
                 block['height'] = height
                 if data['reportid'] is None or data['reportid'] == 0:
 
-
                     tableid = results[0]['tableid']
                     tableid = 'user_' + tableid
-
-
 
                     block['html'] = get_records_table(request, 'task', None, None, '', 67, 1, '', '')
                     block['name'] = 'test dati'
@@ -538,6 +536,21 @@ def get_render_content_dashboard(request):
                     context['blocks'].append(block)
 
     return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', context)
+
+
+def save_block_order(request):
+    values = request.POST.get('value_list')
+
+    values = json.loads(values)
+    print(values)
+    for value in values:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE sys_dashboard_block SET gsx = %s, gsy = %s, gsw = %s, gsh = %s WHERE id = %s",
+                [value['gsX'], value['gsY'], value['gsW'], value['gsH'], value['id']]
+            )
+
+    return True
 
 
 @login_required(login_url='/login/')
@@ -943,7 +956,6 @@ def get_block_record_badge(tableid, recordid):
 
 @login_required(login_url='/login/')
 def get_block_record_fields(request):
-
     context = dict()
     http_response = request.POST.get('http_response')
     tableid = request.POST.get('tableid')
@@ -1108,14 +1120,12 @@ def save_record_fields(request):
                     companyname = 'N/A'
                     projectname = 'N/A'
 
-
                     if fields_dict['recordidcompany_'] != 'None':
                         with connection.cursor() as cursor:
                             cursor.execute("SELECT companyname FROM user_company WHERE recordid_ = %s",
                                            [fields_dict['recordidcompany_']])
                             row = cursor.fetchone()
                             companyname = row[0]
-
 
                     if fields_dict['recordidproject_'] != 'None':
                         with connection.cursor() as cursor:
@@ -1130,7 +1140,7 @@ def save_record_fields(request):
 
                     message = render_to_string('other/new_task.html', fields_dict)
 
-                    #return render(request, 'other/new_task.html', fields_dict)
+                    # return render(request, 'other/new_task.html', fields_dict)
 
                     send_email(emails=[email], subject='Nuovo task assegnato', html_message=message)
 
@@ -1383,7 +1393,7 @@ def insert_timesheet(request, ticketid, userid):
     table_block = get_records_table(request, 'company', None, None, email, '', 1, '', '')
 
     ticket_block = get_block_record_card('ticket', recordid_ticket, userid)
-    #timesheet_block = get_block_record_fields(request, tableid, contextfunction, contextreference, recordid, userid, http_response, called_from)
+    # timesheet_block = get_block_record_fields(request, tableid, contextfunction, contextreference, recordid, userid, http_response, called_from)
 
     data = {
         'ticketid': ticketid,
@@ -1990,7 +2000,6 @@ def stop_job():
         scheduler.shutdown()
         scheduler.remove_all_jobs()
         scheduler = None
-
 
 
 def test_gridstack(request):
