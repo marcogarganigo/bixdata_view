@@ -1,13 +1,15 @@
+{% if userid == 15 or userid == 3 or userid == 11  %}
 <button class="btn btn-primary" onclick="change_order(this)">Personalizza disposizione</button>
 <button id="save-order-button" onclick="save_order()" class="btn btn-success" style="display: none">Salva</button>
+{% endif %}
 
 <div style="width: 100.8%; height: 100%; overflow: scroll" class="grid-stack">
 
         {% for block in blocks %}
                 <div class="card card-body col-{{ block.width }} no-padding" data-id="{{ block.id }}"
-                     style=" height: {{ block.height }}; margin-right: 10px; margin-top: 0.2%" gs-x="{{ block.gsx }}" gs-y="{{ block.gsy }}" gs-w="{{ block.gsw }}" gs-h="{{ block.gsh }}">
-
+                     style=" display: none;  margin-right: 10px; margin-top: 0.2%" gs-x="{{ block.gsx }}" gs-y="{{ block.gsy }}" gs-w="{{ block.gsw }}" gs-h="{{ block.gsh }}">
                         {{ block.html|safe }}
+
                     </div>
 
         {% endfor %}
@@ -33,15 +35,15 @@
 
 
 <script>
+
+
   var options = {
-    disableOneColumnMode: true,
-    float: false,
+
   };
   var grid = GridStack.init(options);
 
   var count = 0;
 
-  // Retrieve elements with class="card-body"
   var cardBodies = document.getElementsByClassName("card-body");
 
 
@@ -57,6 +59,9 @@
 
 
     grid.makeWidget(cardBodies[i]); // Make the element a widget within the grid
+      //set the display to block
+        cardBodies[i].style.display = "block";
+
   }
 
    function change_order(el) {

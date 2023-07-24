@@ -334,7 +334,7 @@ function open_freshdesk() {
                 </div>
 
             {% if tableid == 'timesheet' and userid == 3  %}
-                <button onclick="validate_timesheet()" type="button" class="btn btn-outline-success">Valida</button>
+                <button onclick="$('#field-validated').val('Si'); $('#save-button').click()" type="button" class="btn btn-outline-success">Valida</button>
             {% endif %}
 
                 <div style="clear:both;"></div>

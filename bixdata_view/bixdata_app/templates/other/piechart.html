@@ -3,7 +3,7 @@
 <script>
   var options = {
     chart: {
-      height: 'auto',
+        height: '100%',
       type: 'pie', // change chart type to pie
     },
     series: {{ value|safe|slice:"1:-1" }},
@@ -24,6 +24,7 @@
   };
 
   var chart = new ApexCharts(document.querySelector("#chart{{ id }}"), options);
+
 
   chart.render();
 </script>

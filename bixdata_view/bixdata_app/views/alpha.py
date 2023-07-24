@@ -456,6 +456,7 @@ def get_block_reload(request):
 
 @login_required(login_url='/login/')
 def get_render_content_dashboard(request):
+    userid = request.user.id
     context = {}
     context['blocks'] = []  # Initialize the blocks list
     user_id = request.user.id
@@ -534,6 +535,7 @@ def get_render_content_dashboard(request):
                     block['name'] = 'test'
                     block['html'] = get_chart(request, sql, id, name, layout, fields)
                     context['blocks'].append(block)
+                    context['userid'] = userid
 
     return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', context)
 

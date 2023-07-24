@@ -193,9 +193,19 @@
                 serialized_data.push({name: 'contextfunction', value: contextfunction});
 
 
+
+
+
+
                 {% if layout_setting == 'modal' %}
                     const min_width = 5000
                 {% endif %}
+
+                if ($(el).closest('.grid-stack-item').length) {
+                    //min_width = 5000
+                }
+
+
 
                 if (window.innerWidth <= min_width) {
 
@@ -643,7 +653,7 @@
 
 
 
-                            {% if username|lower == "admin" or "marco.garganigo" or "alessandro.galli" %}
+                            {% if username|lower == "admin" or username|lower == "marco.garganigo" or username|lower == "alessandro.galli" %}
                                 <li class="side-nav-title side-nav-item">Systems</li>
 
                                 <li class="side-nav-item">
