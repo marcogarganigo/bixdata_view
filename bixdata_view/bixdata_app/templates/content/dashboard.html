@@ -1,122 +1,102 @@
-{% if userid == 53 or userid == 2 or userid == 47   %}
-<button class="btn btn-primary" onclick="change_order(this)">Personalizza disposizione</button>
-<button id="save-order-button" onclick="save_order()" class="btn btn-success" style="display: none">Salva</button>
+{% if userid == 53 or userid == 2 or userid == 47 %}
+    <button class="btn btn-primary" onclick="change_order(this)">Personalizza disposizione</button>
+    <button id="save-order-button" onclick="save_order()" class="btn btn-success" style="display: none">Salva</button>
 {% endif %}
 
 <div style="width: 100.8%; height: 100%; overflow: scroll" class="grid-stack">
 
-        {% for block in blocks %}
-                <div class="card card-body col-{{ block.width }} no-padding" data-id="{{ block.id }}"
-                     style=" display: none;  margin-right: 10px; margin-top: 0.2%" gs-x="{{ block.gsx }}" gs-y="{{ block.gsy }}" gs-w="{{ block.gsw }}" gs-h="{{ block.gsh }}">
-                        {{ block.html|safe }}
+    {% for block in blocks %}
+        <div class="card card-body col-{{ block.width }} no-padding" data-id="{{ block.id }}"
+             style=" display: none; gs-x="{{ block.gsx }}" gs-y="{{ block.gsy }}"
+             gs-w="{{ block.gsw }}" gs-h="{{ block.gsh }}">
+            {{ block.html|safe }}
 
-                    </div>
+        </div>
 
-        {% endfor %}
+    {% endfor %}
 
+    <style>
+        #pagination-container {
+            height: 100%;
+        }
+    </style>
 
-        <style>
-            .grid-stack {
-                background: lightgoldenrodyellow;
-            }
-
-            .grid-stack-item-content {
-                color: #2c3e50;
-                text-align: center;
-                background-color: #18bc9c;
-            }
+    <script>
 
 
+        var options = {};
+        var grid = GridStack.init(options);
+
+        var count = 0;
+
+        var cardBodies = document.getElementsByClassName("card-body");
 
 
+        for (var i = 0; i < cardBodies.length; i++) {
 
 
-        </style>
+            count = count + 4;
 
 
-<script>
+            grid.makeWidget(cardBodies[i]); // Make the element a widget within the grid
+            //set the display to block
+            cardBodies[i].style.display = "block";
 
+        }
 
-  var options = {
+        function change_order(el) {
+            $(el).hide()
+            $('#save-order-button').show();
+        }
 
-  };
-  var grid = GridStack.init(options);
+        function save_order() {
+            var value_list = [];
 
-  var count = 0;
+            $('.grid-stack-item').each(function () {
+                var gsX = parseInt($(this).attr('gs-x'), 10);
+                var gsY = parseInt($(this).attr('gs-y'), 10);
+                var gsW = parseInt($(this).attr('gs-w'), 10);
+                var gsH = parseInt($(this).attr('gs-h'), 10);
+                var id = parseInt($(this).attr('data-id'), 10);
 
-  var cardBodies = document.getElementsByClassName("card-body");
-
-
-
-  for (var i = 0; i < cardBodies.length; i++) {
-
-
-
-                count = count + 4;
-
-
-
-
-
-    grid.makeWidget(cardBodies[i]); // Make the element a widget within the grid
-      //set the display to block
-        cardBodies[i].style.display = "block";
-
-  }
-
-   function change_order(el) {
-                $(el).hide()
-                $('#save-order-button').show();
-            }
-
-              function save_order() {
-                    var value_list = [];
-
-                    $('.grid-stack-item').each(function () {
-                        var gsX = parseInt($(this).attr('gs-x'), 10);
-                        var gsY = parseInt($(this).attr('gs-y'), 10);
-                        var gsW = parseInt($(this).attr('gs-w'), 10);
-                        var gsH = parseInt($(this).attr('gs-h'), 10);
-                        var id = parseInt($(this).attr('data-id'), 10);
-
-                        value_list.push({
-                            'gsX': gsX,
-                            'gsY': gsY,
-                            'gsW': gsW,
-                            'gsH': gsH,
-                            'id': id,
-                        });
-                    });
-
-
-                $.ajax({
-                    url: '/save_block_order/',
-                    type: 'POST',
-                    data: {
-                        'value_list': JSON.stringify(value_list),
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    dataType: 'json',
-                    success: function (data) {
-
-                            location.reload();
-
-                    }
+                value_list.push({
+                    'gsX': gsX,
+                    'gsY': gsY,
+                    'gsW': gsW,
+                    'gsH': gsH,
+                    'id': id,
                 });
-            }
-</script>
+            });
 
 
-        <style>
-            .no-padding .card-body {
-                padding: 0;
-            }
+            $.ajax({
+                url: '/save_block_order/',
+                type: 'POST',
+                data: {
+                    'value_list': JSON.stringify(value_list),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (data) {
 
-            @media only screen and (max-width: 1800px) {
-                .card {
+                    location.reload();
 
                 }
-            }
-        </style>
+            });
+        }
+    </script>
 
-    </div>
+
+    <style>
+        .no-padding .card-body {
+            padding: 0;
+        }
+
+        @media only screen and (max-width: 1800px) {
+            .card {
+
+            }
+        }
+    </style>
+
+</div>

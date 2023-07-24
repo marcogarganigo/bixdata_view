@@ -1088,14 +1088,14 @@ def save_record_fields(request):
         'fields': fields
     }
 
-    if contextfunction == 'edit':
-        if tableid == 'user_task':
-            check_task_status(recordid)
-
     response = requests.post(
         f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
 
     fields_dict = json.loads(fields)
+
+    if contextfunction == 'edit':
+        if tableid == 'user_task':
+            check_task_status(recordid)
 
     if contextfunction == 'insert':
         if tableid == 'ticketbixdata' and 'description' in fields_dict:
@@ -1851,7 +1851,7 @@ def check_task_status(recordid):
         task = dictfetchall(cursor2)
         status = task[0]['status']
 
-        if status != 'Chiuso':
+        if status == 'Chiuso':
             with connection.cursor() as cursor:
                 cursor.execute(
                     f"SELECT description, email, username from v_users, user_task where v_users.sys_user_id = user_task.creator and user_task.recordid_ = {recordid}"
@@ -1870,7 +1870,7 @@ def check_task_status(recordid):
 
                 send_email(
                     emails=['marco.garganigo@swissbix.ch'],
-                    subject=username + ' ha chiuso un task',
+                    subject= 'test' + ' ha chiuso un task',
                     html_message=description + "<br><br>" + companyname
                 )
 
