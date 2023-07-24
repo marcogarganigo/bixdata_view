@@ -29,6 +29,7 @@
     <orderEntry type="library" name="clipboardy" level="application" />
     <orderEntry type="library" name="copy-paste" level="application" />
     <orderEntry type="library" name="gridstack" level="application" />
+    <orderEntry type="library" name="sweetalert2" level="application" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />
