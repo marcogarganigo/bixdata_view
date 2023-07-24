@@ -456,7 +456,6 @@ def get_block_reload(request):
 
 @login_required(login_url='/login/')
 def get_render_content_dashboard(request):
-    userid = request.user.id
     context = {}
     context['blocks'] = []  # Initialize the blocks list
     user_id = request.user.id
