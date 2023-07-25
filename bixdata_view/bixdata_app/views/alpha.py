@@ -458,6 +458,7 @@ def get_block_reload(request):
 def get_render_content_dashboard(request):
     context = {}
     context['blocks'] = []  # Initialize the blocks list
+    context['block_list'] = []  # Initialize the block_list list
     user_id = request.user.id
 
     with connection.cursor() as cursor2:
@@ -477,14 +478,23 @@ def get_render_content_dashboard(request):
             )
             datas = dictfetchall(cursor)
 
+            cursor.execute(
+                "SELECT * FROM sys_dashboard_block"
+            )
+            all_blocks = dictfetchall(cursor)
+
+
+            for block in all_blocks:
+                context['block_list'].append(block)
+
+
             for data in datas:
                 block = dict()
                 cursor.execute(
                     "SELECT * FROM v_sys_dashboard_block WHERE id = %s", [data['id']]
                 )
                 results = dictfetchall(cursor)
-                id = results[0]['id']
-                block['id'] = id
+                block['id'] = results[0]['id']
                 block['gsx'] = results[0]['gsx']
                 block['gsy'] = results[0]['gsy']
                 block['gsw'] = results[0]['gsw']
@@ -506,7 +516,6 @@ def get_render_content_dashboard(request):
                     tableid = 'user_' + tableid
 
                     block['html'] = get_records_table(request, 'task', None, None, '', 67, 1, '', '')
-                    block['name'] = 'test dati'
                     context['blocks'].append(block)
 
 
@@ -531,7 +540,6 @@ def get_render_content_dashboard(request):
                     sql = "SELECT " + selected + " FROM " + 'user_' + tableid + \
                           " WHERE " + query_conditions + " GROUP BY " + groupby
                     block['sql'] = sql
-                    block['name'] = 'test'
                     block['html'] = get_chart(request, sql, id, name, layout, fields)
                     context['blocks'].append(block)
                     context['userid'] = userid
@@ -1838,7 +1846,7 @@ def validate_timesheet(request):
 def check_task_status(recordid):
     with connection.cursor() as cursor2:
         cursor2.execute(
-            "SELECT status from user_task where user != creator and recordid_ = %s", [recordid]
+            "SELECT status from user_task where user_task.user != creator and recordid_ = %s", [recordid]
         )
         task = dictfetchall(cursor2)
         status = task[0]['status']
@@ -1853,17 +1861,10 @@ def check_task_status(recordid):
                 username = user[0]['username']
                 description = user[0]['description']
 
-                cursor.execute(
-                    "SELECT companyname from user_company, user_task where user_task.recordidcompany_ = user_company.recordid_ and user_task.recordid_ = %s",
-                    [recordid]
-                )
-                company = dictfetchall(cursor)
-                companyname = company[0]['companyname']
-
                 send_email(
                     emails=['marco.garganigo@swissbix.ch'],
-                    subject= 'test' + ' ha chiuso un task',
-                    html_message=description + "<br><br>" + companyname
+                    subject='Task chiusos',
+                    html_message='ok'
                 )
 
     return True

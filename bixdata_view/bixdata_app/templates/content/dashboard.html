@@ -1,35 +1,65 @@
 {% if userid == 53 or userid == 2 or userid == 47 %}
-    <button class="btn btn-primary" onclick="change_order(this)">Personalizza disposizione</button>
-    <button id="save-order-button" onclick="save_order()" class="btn btn-success" style="display: none">Salva</button>
+    <button id="save-order-button" onclick="save_order()" class="btn btn-success">Salva</button>
+    <button class="btn btn-primary">Aggiungi</button>
+    <select class="form-select" aria-label="Default select example">
+    {% for block in block_list %}
+        <option value="{{ block.id }}">{{ block.name }}</option>
+    {% endfor %}
+    </select>
+    <button class="btn btn-primary" onclick="new_block()">Aggiungi blocco</button>
 {% endif %}
 
-<div style="width: 100.8%; height: 100%; overflow: scroll" class="grid-stack">
+<div style="width: 100%; height: 100%; overflow: scroll" class="grid-stack">
 
     {% for block in blocks %}
-        <div class="card card-body col-{{ block.width }} no-padding" data-id="{{ block.id }}"
-             style=" display: none; gs-x="{{ block.gsx }}" gs-y="{{ block.gsy }}"
+        <div class="grid-elements grid-elements" data-id="{{ block.id }}"
+             style="display: none" gs-x="{{ block.gsx }}" gs-y="{{ block.gsy }}"
              gs-w="{{ block.gsw }}" gs-h="{{ block.gsh }}">
-            {{ block.html|safe }}
+        <div class="grid-stack-item-content" style="background-color: white; padding: 10px;">
+                        {{ block.html|safe }}
 
         </div>
 
-    {% endfor %}
+        </div>
 
-    <style>
-        #pagination-container {
-            height: 100%;
+        <style>
+        .grid-stack-item-content {
+            overflow: hidden !important;
         }
-    </style>
+        #results-body {
+            overflow-x: hidden;
+        }
+        </style>
+
+    {% endfor %}
 
     <script>
 
+        function new_block() {
+            var block_id = $('.form-select').val();
+            alert(block_id)
+            $.ajax({
+                url: '/new_block/',
+                type: 'POST',
+                data: {
+                    'block_id': block_id,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (data) {
+
+                    location.reload();
+
+                }
+            });
+        }
 
         var options = {};
         var grid = GridStack.init(options);
 
         var count = 0;
 
-        var cardBodies = document.getElementsByClassName("card-body");
+        var cardBodies = document.getElementsByClassName("grid-elements");
 
 
         for (var i = 0; i < cardBodies.length; i++) {
@@ -41,12 +71,11 @@
             grid.makeWidget(cardBodies[i]); // Make the element a widget within the grid
             //set the display to block
             cardBodies[i].style.display = "block";
-
+            //make that them cant collide themselves
         }
 
-        function change_order(el) {
-            $(el).hide()
-            $('#save-order-button').show();
+                if ($('#my-pagination').length) {
+            $('#my-pagination').remove();
         }
 
         function save_order() {
