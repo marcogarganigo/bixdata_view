@@ -42,6 +42,7 @@ from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor
 
+
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
 
@@ -1674,8 +1675,15 @@ def export_excel(request):
         if count > 2:
             csv_columns.append(col['desc'])
 
-    records = [row[3:] for row in response_dict['records']]
+    #records = [row[3:] for row in response_dict['records']]
 
+    records=[]
+    for response_dict_record in response_dict['records']:
+        record=[]
+        for response_dict_record_field in response_dict_record[3:]:
+            record.append(remove_html_tags(response_dict_record_field))
+        records.append(record)
+            
     with open(csv_file, 'w', newline='', encoding='utf-8-sig') as file:
         writer = csv.writer(file, delimiter=';')
 

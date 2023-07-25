@@ -20,6 +20,7 @@ from django_user_agents.utils import get_user_agent
 from bixdata_app.models import MyModel
 from .alpha import *
 from django import template
+from bs4 import BeautifulSoup
 
 
 def user_agent(request, page, mobilepage, context={}):
@@ -237,3 +238,13 @@ def set_record(tableid, fields):
 
     return record_id
 
+
+def remove_html_tags(input_string):
+    soup = BeautifulSoup(input_string, "html.parser")
+    cleaned_text = soup.get_text(separator=" ")
+    splitted = cleaned_text.split("|:|")
+
+    if splitted:  # Check if the list is not empty
+        cleaned_text = splitted[0]
+
+    return cleaned_text
