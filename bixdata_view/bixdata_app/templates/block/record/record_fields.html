@@ -10,17 +10,38 @@
 
         <style>
 
-        #saved-alert-{{ recordid }} {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 20%;
-            min-width: 200px;
-            max-width: 400px;
-            height: auto;
-            z-index: 9999;
-        }
+            #saved-alert-{{ recordid }} {
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+                width: 20%;
+                min-width: 200px;
+                max-width: 400px;
+                height: auto;
+                z-index: 9999;
+            }
         </style>
+
+
+        {% if contextfunction == 'view' %}
+            <style>
+
+                #save-button {
+                    display: none;
+                }
+            </style>
+
+            <script>
+
+                $("#fields-scroll-container input").attr("disabled", true);
+                $("#fields-scroll-container select").attr("disabled", true);
+                $("#fields-scroll-container textarea").attr("disabled", true);
+                $("save-button").remove();
+
+
+            </script>
+        {% endif %}
+
 
 
 
@@ -140,7 +161,8 @@
                             {% if field.fieldtypeid == 'linkedmaster' %}
                                 <div>
                                     <input class="form-select mb-2 {{ mandatory }}"
-                                           id="{{ fieldid }}-{{ recordid }}" style="width: 80%" value="{{ field.valuecode.0.value }}"
+                                           id="{{ fieldid }}-{{ recordid }}" style="width: 80%"
+                                           value="{{ field.valuecode.0.value }}"
                                            onfocus="selectAllText(this); showOptions(this)">
                                 </div>
 
@@ -233,44 +255,14 @@
         </div>
 
 
-        <button id="save-button" data-recordid="{{ recordid }}" type="button" class="btn btn-primary" onclick="save_record(this)">Salva</button>
-        <div class="alert alert-success" role="alert" id="saved-alert-{{ recordid }}" style="display: none">
-            Salvato
-        </div>
+        <button id="save-button" data-recordid="{{ recordid }}" type="button" class="btn btn-primary"
+                onclick="save_record(this)">Salva
+        </button>
+
         </div>
     </div>
 </div>
 
-
-
-{% if function == "view" %}
-    <script>
-        $(document).ready(function () {
-            $("input").attr("disabled", true);
-            $("select").attr("disabled", true);
-            $("textarea").attr("disabled", true);
-            document.getElementById("save-button").style.display = "none";
-        });
-    </script>
-{% else %}
-    <script>
-        $(document).ready(function () {
-            $("input").attr("disabled", false);
-            $("select").attr("disabled", false);
-            $("textarea").attr("disabled", false);
-        });
-    </script>
-{% endif %}
-
-
-<style>
-    input:disabled, select:disabled, textarea:disabled {
-        opacity: 1;
-        cursor: default;
-        background-color: #fff !important;
-        color: #000;
-    }
-</style>
 
 <script>
     function save_record(el) {
@@ -284,13 +276,13 @@
         });
 
         if (hasNecessaryFields === true) {
-        swal({
-          title: "Attenzione",
-          text: "Compilare tutti i campi obbligatori" ,
-          icon: "error",
-          button: "Ok",
-          dangerMode: true
-        });
+            swal({
+                title: "Attenzione",
+                text: "Compilare tutti i campi obbligatori",
+                icon: "error",
+                button: "Ok",
+                dangerMode: true
+            });
 
         } else {
 
@@ -302,9 +294,8 @@
             post_data.push({name: 'tableid', value: '{{ tableid }}'});
             post_data.push({name: 'recordid', value: '{{ recordid }}'});
             post_data.push({name: 'fields', value: serialized_json});
-            contextfunction='{{contextfunction}}'
+            contextfunction = '{{contextfunction}}'
             post_data.push({name: 'contextfunction', value: contextfunction});
-
 
 
             $.ajax({
@@ -312,13 +303,10 @@
                 url: "{% url 'save_record_fields' %}",
                 data: post_data,
                 success: function (response) {
-                    master_tableid='{{ master_tableid }}';
-                    if((contextfunction=='insert')&&(master_tableid=='None'))
-                    {
+                    master_tableid = '{{ master_tableid }}';
+                    if ((contextfunction == 'insert') && (master_tableid == 'None')) {
                         refresh();
-                    }
-                    else
-                    {
+                    } else {
                         load_linked('{{ tableid }}-{{ master_recordid }}', '{{ tableid }}', '{{ master_recordid }}', '{{ master_tableid }}')
                     }
                     setTimeout(function () {
@@ -327,8 +315,8 @@
                         }
                         var recordid = $(el).attr('data-recordid');
 
-                         $('#fields_container_'+ '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
-                        open_record(window.content,'{{ tableid }}','{{ recordid }}')
+                        $('#fields_container_' + '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
+                        open_record(window.content, '{{ tableid }}', '{{ recordid }}')
                         swal({
                             title: "Salvato!",
                             text: "Il record è stato salvato",
@@ -338,7 +326,7 @@
                         })
                         //getContentRecords('{{ tableid }}')
                         //$("#linked-container-{{ tableid }}").load('/loading/')
-                        
+
                         //alert('test')
 
 

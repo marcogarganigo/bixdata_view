@@ -42,7 +42,6 @@ from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor
 
-
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
 
@@ -463,19 +462,26 @@ def get_render_content_dashboard(request):
     user_id = request.user.id
 
     with connection.cursor() as cursor2:
+
         cursor2.execute(
-            "SELECT dashboardid FROM v_user_dashboard_block WHERE bixid = %s", [user_id]
+            "SELECT sys_user_id FROM v_users WHERE id = %s", [user_id]
+        )
+        bixid = cursor2.fetchone()[0]
+
+        cursor2.execute(
+            "SELECT dashboardid FROM sys_user_dashboard WHERE userid = %s", [bixid]
         )
 
         righe = cursor2.fetchall()
         dashboard_id = righe[0][0]
+        context['dashboardid'] = dashboard_id
 
     if request.method == 'POST':
         selected = ''
         with connection.cursor() as cursor:
 
             cursor.execute(
-                "SELECT * FROM v_sys_dashboard_block WHERE dashboardid = %s", [dashboard_id]
+                "SELECT * FROM sys_user_dashboard_block where userid = %s", [bixid]
             )
             datas = dictfetchall(cursor)
 
@@ -484,66 +490,64 @@ def get_render_content_dashboard(request):
             )
             all_blocks = dictfetchall(cursor)
 
-
             for block in all_blocks:
                 context['block_list'].append(block)
 
-
             for data in datas:
-                block = dict()
                 cursor.execute(
-                    "SELECT * FROM v_sys_dashboard_block WHERE id = %s", [data['id']]
+                    "SELECT * FROM v_sys_dashboard_block WHERE id = %s", [data['dashboard_block_id']]
                 )
                 results = dictfetchall(cursor)
-                block['id'] = results[0]['id']
-                block['gsx'] = results[0]['gsx']
-                block['gsy'] = results[0]['gsy']
-                block['gsw'] = results[0]['gsw']
-                block['gsh'] = results[0]['gsh']
+                results = results[0]
+                block['id'] = results['id']
+                block['gsx'] = results['gsx']
+                block['gsy'] = results['gsy']
+                block['gsw'] = results['gsw']
+                block['gsh'] = results['gsh']
 
-                width = results[0]['width']
+                width = results['width']
                 if width == None or width == 0 or width == '':
                     width = 4
 
-                height = results[0]['height']
+                height = results['height']
                 if height == None or height == 0 or height == '':
                     height = '50%'
 
                 block['width'] = width
                 block['height'] = height
-                if data['reportid'] is None or data['reportid'] == 0:
+                if results['reportid'] is None or results['reportid'] == 0:
 
-                    tableid = results[0]['tableid']
+                    tableid = results['tableid']
                     tableid = 'user_' + tableid
 
                     block['html'] = get_records_table(request, 'task', None, None, '', 67, 1, '', '')
-                    context['blocks'].append(block)
 
 
                 else:
 
                     selected = ''
-                    if data['operation'] == 'somma':
-                        fields = data['fieldid'].split(';')
+                    if results['operation'] == 'somma':
+                        fields = results['fieldid'].split(';')
                         for field in fields:
                             field = 'SUM(' + field + ')'
                             selected += field + ','
-                        groupby = data['groupby']
+                        groupby = results['groupby']
                         selected += groupby
 
-                    query_conditions = data['query_conditions']
+                    query_conditions = results['query_conditions']
                     userid = get_userid(request.user.id)
                     query_conditions = query_conditions.replace("$userid$", str(userid))
-                    id = data['id']
-                    tableid = data['tableid']
-                    name = data['name']
-                    layout = data['layout']
+                    id = results['id']
+                    tableid = results['tableid']
+                    name = results['name']
+                    layout = results['layout']
                     sql = "SELECT " + selected + " FROM " + 'user_' + tableid + \
                           " WHERE " + query_conditions + " GROUP BY " + groupby
                     block['sql'] = sql
                     block['html'] = get_chart(request, sql, id, name, layout, fields)
-                    context['blocks'].append(block)
                     context['userid'] = userid
+                context['blocks'].append(block)
+
 
     return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', context)
 
@@ -1102,7 +1106,7 @@ def save_record_fields(request):
     fields_dict = json.loads(fields)
 
     if contextfunction == 'edit':
-        if tableid == 'user_task':
+        if tableid == 'task':
             check_task_status(recordid)
 
     if contextfunction == 'insert':
@@ -1675,15 +1679,15 @@ def export_excel(request):
         if count > 2:
             csv_columns.append(col['desc'])
 
-    #records = [row[3:] for row in response_dict['records']]
+    # records = [row[3:] for row in response_dict['records']]
 
-    records=[]
+    records = []
     for response_dict_record in response_dict['records']:
-        record=[]
+        record = []
         for response_dict_record_field in response_dict_record[3:]:
             record.append(remove_html_tags(response_dict_record_field))
         records.append(record)
-            
+
     with open(csv_file, 'w', newline='', encoding='utf-8-sig') as file:
         writer = csv.writer(file, delimiter=';')
 
@@ -1871,7 +1875,7 @@ def check_task_status(recordid):
 
                 send_email(
                     emails=['marco.garganigo@swissbix.ch'],
-                    subject='Task chiusos',
+                    subject='Task chiuso',
                     html_message='ok'
                 )
 
@@ -2014,3 +2018,15 @@ def stop_job():
 
 def test_gridstack(request):
     return render(request, 'other/test_gridstack.html')
+
+
+def new_block(request):
+    blockid = request.POST.get('blockid')
+    userid = request.POST.get('userid')
+    dashboardid = request.POST.get('dashboardid')
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO sys_user_dashboard_block (userid, dashboard_block_id, dashboardid) VALUES (%s, %s, %s)",
+            [userid, blockid, dashboardid]
+        )
+    return True

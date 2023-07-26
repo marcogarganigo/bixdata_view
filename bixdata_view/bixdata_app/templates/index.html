@@ -106,7 +106,7 @@
 
             function getDashboard() {
                 var serialized_data = [];
-                //$("#content_container").load('/loading/');
+                $("#content_container").load('/loading/');
                 $.ajax({
                     type: "POST",
                     crossDomain: true,
@@ -926,6 +926,10 @@
                     margin: 5px;
                 }
                  */
+
+                .side-nav-item {
+                    cursor: pointer;
+                }
             </style>
 
 

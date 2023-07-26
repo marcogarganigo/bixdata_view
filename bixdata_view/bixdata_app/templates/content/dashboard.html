@@ -1,9 +1,8 @@
 {% if userid == 53 or userid == 2 or userid == 47 %}
-    <button id="save-order-button" onclick="save_order()" class="btn btn-success">Salva</button>
-    <button class="btn btn-primary">Aggiungi</button>
-    <select class="form-select" aria-label="Default select example">
+    <button id="save-order-button" onclick="save_order()" class="btn btn-success">Salva disposizione</button>
+    <select id="select-block" class="form-select" aria-label="Default select example" style="width: 10%">
     {% for block in block_list %}
-        <option value="{{ block.id }}">{{ block.name }}</option>
+        <option name="blockid" value="{{ block.id }}">{{ block.name }}</option>
     {% endfor %}
     </select>
     <button class="btn btn-primary" onclick="new_block()">Aggiungi blocco</button>
@@ -36,13 +35,14 @@
     <script>
 
         function new_block() {
-            var block_id = $('.form-select').val();
-            alert(block_id)
+            var blockid = $('#select-block').val();
             $.ajax({
                 url: '/new_block/',
                 type: 'POST',
                 data: {
-                    'block_id': block_id,
+                    'blockid': blockid,
+                    'userid': '{{ userid }}',
+                    'dashboardid': '{{ dashboardid }}',
                     'csrfmiddlewaretoken': '{{ csrf_token }}'
                 },
                 dataType: 'json',

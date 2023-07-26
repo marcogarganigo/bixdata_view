@@ -599,7 +599,7 @@
     html[data-sidenav-size=condensed] .side-nav .side-nav-second-level li a,
     html[data-sidenav-size=condensed] .side-nav .side-nav-third-level li a {
 
-        color: #524d4d
+        color: #524d4d ;
     }
 
     html[data-sidenav-size=default] .side-nav .side-nav-forth-level li a,

@@ -105,4 +105,5 @@ urlpatterns = [
     path('run_tasks/', alpha.run_tasks, name='run_tasks'),
     path('test_gridstack/', alpha.test_gridstack, name='test_gridstack'),
     path('save_block_order/', alpha.save_block_order, name='save_block_order'),
+    path('new_block/', alpha.new_block, name='new_block'),
 ]
