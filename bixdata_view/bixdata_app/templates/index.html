@@ -105,13 +105,11 @@
             }
 
             function getDashboard() {
-                var serialized_data = [];
                 $("#content_container").load('/loading/');
                 $.ajax({
                     type: "POST",
                     crossDomain: true,
                     url: "{% url 'dashboard' %}",
-                    data: serialized_data,
                     success: function (response) {
                         $("#content_container").html(response);
                         $('[data-toggle="tooltip"]').tooltip();

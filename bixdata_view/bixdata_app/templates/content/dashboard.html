@@ -1,38 +1,73 @@
-{% if userid == 53 or userid == 2 or userid == 47 %}
-    <button id="save-order-button" onclick="save_order()" class="btn btn-success">Salva disposizione</button>
-    <select id="select-block" class="form-select" aria-label="Default select example" style="width: 10%">
+<button id="save-order-button" onclick="save_order()" class="btn btn-success" style="float: left">Salva disposizione</button>
+<select id="select-block" class="form-select" aria-label="Default select example" style="width: 10%; float: left; margin-left: 5%">
     {% for block in block_list %}
         <option name="blockid" value="{{ block.id }}">{{ block.name }}</option>
     {% endfor %}
-    </select>
-    <button class="btn btn-primary" onclick="new_block()">Aggiungi blocco</button>
-{% endif %}
+</select>
+<button class="btn btn-primary"style="float: left" onclick="new_block()">Aggiungi</button>
+
 
 <div style="width: 100%; height: 100%; overflow: scroll" class="grid-stack">
-
     {% for block in blocks %}
-        <div class="grid-elements grid-elements" data-id="{{ block.id }}"
+        <div class="grid-elements" data-id="{{ block.id }}"
              style="display: none" gs-x="{{ block.gsx }}" gs-y="{{ block.gsy }}"
              gs-w="{{ block.gsw }}" gs-h="{{ block.gsh }}">
-        <div class="grid-stack-item-content" style="background-color: white; padding: 10px;">
-                        {{ block.html|safe }}
+            <div class="grid-stack-item-content" style="background-color: white;">
+                {{ block.html|safe }}
+                <i class="mdi mdi-delete" onclick="remove_widget(this)"
+                   style="position: absolute; bottom: 5px; left: 5px;"></i>
+            </div>
+
 
         </div>
 
-        </div>
-
-        <style>
-        .grid-stack-item-content {
-            overflow: hidden !important;
-        }
-        #results-body {
-            overflow-x: hidden;
-        }
-        </style>
 
     {% endfor %}
 
+    <style>
+        .grid-stack-item-content {
+            overflow: hidden !important;
+        }
+
+        #results-body {
+            overflow-x: hidden;
+        }
+    </style>
+
     <script>
+
+
+        button = document.createElement("button");
+        button.innerHTML = "Rimuovi";
+        button.onclick = function () {
+            remove_widget(this.parentNode.parentNode.parentNode);
+        };
+
+
+        function remove_widget(el) {
+            swal({
+                text: "Sei sicuro di voler eliminare questo record?",
+                buttons: ["No", "Si"],
+                icon: "warning",
+                dangerMode: true,
+            }).then(function (confirmResult) {
+                if (confirmResult) {
+                    var id = $(el).closest('.grid-elements').attr('data-id');
+                    $.ajax({
+                        url: '/remove_block/',
+                        type: 'POST',
+                        data: {
+                            'blockid': id,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            getDashboard()
+                        },
+                    });
+                }
+            });
+        }
 
         function new_block() {
             var blockid = $('#select-block').val();
@@ -47,10 +82,8 @@
                 },
                 dataType: 'json',
                 success: function (data) {
-
-                    location.reload();
-
-                }
+                    getDashboard()
+                },
             });
         }
 
@@ -71,10 +104,10 @@
             grid.makeWidget(cardBodies[i]); // Make the element a widget within the grid
             //set the display to block
             cardBodies[i].style.display = "block";
-            //make that them cant collide themselves
+            //create an icon to remove the widget
         }
 
-                if ($('#my-pagination').length) {
+        if ($('#my-pagination').length) {
             $('#my-pagination').remove();
         }
 
@@ -107,9 +140,13 @@
                 },
                 dataType: 'json',
                 success: function (data) {
-
-                    location.reload();
-
+                    swal({
+                        title: "Disposizione salvata",
+                        text: "La nuova disposizione è stata salvata con successo",
+                        icon: "success",
+                        timer: 800,
+                        buttons: false,
+                    })
                 }
             });
         }

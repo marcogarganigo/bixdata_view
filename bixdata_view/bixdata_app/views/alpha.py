@@ -468,6 +468,7 @@ def get_render_content_dashboard(request):
         )
         bixid = cursor2.fetchone()[0]
 
+
         cursor2.execute(
             "SELECT dashboardid FROM sys_user_dashboard WHERE userid = %s", [bixid]
         )
@@ -479,6 +480,8 @@ def get_render_content_dashboard(request):
     if request.method == 'POST':
         selected = ''
         with connection.cursor() as cursor:
+
+            context['userid'] = bixid
 
             cursor.execute(
                 "SELECT * FROM sys_user_dashboard_block where userid = %s", [bixid]
@@ -499,11 +502,18 @@ def get_render_content_dashboard(request):
                 )
                 results = dictfetchall(cursor)
                 results = results[0]
-                block['id'] = results['id']
-                block['gsx'] = results['gsx']
-                block['gsy'] = results['gsy']
-                block['gsw'] = results['gsw']
-                block['gsh'] = results['gsh']
+                block = dict()
+                block['id'] = data['id']
+
+                block['gsx'] = data['gsx']
+                block['gsy'] = data['gsy']
+                block['gsw'] = data['gsw']
+                block['gsh'] = data['gsh']
+
+                #if they are null set default values
+                if block['gsw'] == None or block['gsw'] == '':
+                    block['gsw'] = 3
+                    block['gsh'] = 2
 
                 width = results['width']
                 if width == None or width == 0 or width == '':
@@ -537,7 +547,7 @@ def get_render_content_dashboard(request):
                     query_conditions = results['query_conditions']
                     userid = get_userid(request.user.id)
                     query_conditions = query_conditions.replace("$userid$", str(userid))
-                    id = results['id']
+                    id = data['id']
                     tableid = results['tableid']
                     name = results['name']
                     layout = results['layout']
@@ -560,11 +570,11 @@ def save_block_order(request):
     for value in values:
         with connection.cursor() as cursor:
             cursor.execute(
-                "UPDATE sys_dashboard_block SET gsx = %s, gsy = %s, gsw = %s, gsh = %s WHERE id = %s",
+                "UPDATE sys_user_dashboard_block SET gsx = %s, gsy = %s, gsw = %s, gsh = %s WHERE id = %s",
                 [value['gsX'], value['gsY'], value['gsW'], value['gsH'], value['id']]
             )
 
-    return True
+    return JsonResponse({'success': True})
 
 
 @login_required(login_url='/login/')
@@ -600,7 +610,7 @@ def get_chart(request, sql, id, name, layout, fields):
         elif layout_chart == 'linechart':
             return render_to_string('other/linechart.html', context, request=request)
 
-    return render_to_string('other/barchart.html', context, request=request)
+
 
 
 @login_required(login_url='/login/')
@@ -2029,4 +2039,12 @@ def new_block(request):
             "INSERT INTO sys_user_dashboard_block (userid, dashboard_block_id, dashboardid) VALUES (%s, %s, %s)",
             [userid, blockid, dashboardid]
         )
-    return True
+    return JsonResponse({'success': True})
+
+def remove_block(request):
+    blockid = request.POST.get('blockid')
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "DELETE FROM sys_user_dashboard_block WHERE id = %s",[blockid]
+        )
+    return JsonResponse({'success': True})
