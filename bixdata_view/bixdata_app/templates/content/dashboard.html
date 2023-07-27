@@ -1,13 +1,16 @@
 <button id="save-order-button" onclick="save_order()" class="btn btn-success" style="float: left">Salva disposizione</button>
 <select id="select-block" class="form-select" aria-label="Default select example" style="width: 10%; float: left; margin-left: 5%">
-    {% for block in block_list %}
-        <option name="blockid" value="{{ block.id }}">{{ block.name }}</option>
-    {% endfor %}
+{% for block in block_list %}
+    <!--skippa i primi 4 per i sales che ora danno errore-->
+    {% if forloop.counter > 4 %}
+      <option name="blockid" value="{{ block.id }}">{{ block.name }}</option>
+    {% endif %}
+  {% endfor %}
 </select>
 <button class="btn btn-primary"style="float: left" onclick="new_block()">Aggiungi</button>
 
 
-<div style="width: 100%; height: 100%; overflow: scroll" class="grid-stack">
+<div style="!important; width: 100%; height: 100%; overflow: scroll" class="grid-stack">
     {% for block in blocks %}
         <div class="grid-elements" data-id="{{ block.id }}"
              style="display: none" gs-x="{{ block.gsx }}" gs-y="{{ block.gsy }}"
@@ -27,6 +30,10 @@
     <style>
         .grid-stack-item-content {
             overflow: hidden !important;
+        }
+
+        .grid-stack {
+            min-height: unset !important;
         }
 
         #results-body {
