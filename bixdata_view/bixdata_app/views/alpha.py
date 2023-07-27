@@ -530,7 +530,8 @@ def get_render_content_dashboard(request):
                     tableid = results['tableid']
                     tableid = 'user_' + tableid
 
-                    block['html'] = get_records_table(request, 'task', None, None, '', 67, 1, '', '')
+
+                    block['html'] = get_records_table(request, results['tableid'], None, None, '', results['viewid'], 1, '', '')
 
 
                 else:
