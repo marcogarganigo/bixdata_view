@@ -65,17 +65,17 @@
 </form>
 
 
-    <div class="container text-center card card-body" style="margin-top: 2%">
-                <h4>Aggiungi dashboard block</h4>
+<div class="container text-center card card-body" style="margin-top: 2%">
+    <h4>Aggiungi dashboard block</h4>
 
-                 <select id="table-select" class="form-select" aria-label="Default select example" name="tableid-form-block">
-                     {% for table in context.tables %}
-                    <option value="{{ table.id }}">{{ table.id }}</option>
-                     {% endfor %}
-                </select>
-                <button style="width: 10%; float: right" class="btn btn-primary" onclick="select_table()">Seleziona</button>
+    <select id="table-select" class="form-select" aria-label="Default select example" name="tableid-form-block">
+        {% for table in context.tables %}
+            <option value="{{ table.id }}">{{ table.id }}</option>
+        {% endfor %}
+    </select>
+    <button style="width: 10%; float: right" class="btn btn-primary" onclick="select_table()">Seleziona</button>
 
-<form method="post" action="{% url 'new_chart_block' %}" class="container text-center" style="float: left">
+    <form method="post" action="{% url 'new_chart_block' %}" class="container text-center" style="float: left">
 
         <div class="row">
 
@@ -99,7 +99,8 @@
                 <h4>View name</h4>
                 <select class="form-select build-form" aria-label="Default select example" name="view_id">
                     {% for item in context.views %}
-                        <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }} - {{ item.tableid }}</option>
+                        <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }}
+                            - {{ item.tableid }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -108,7 +109,8 @@
                 <h4>Report name</h4>
                 <select class="form-select build-form" aria-label="Default select example" name="report_id">
                     {% for item in context.reports %}
-                        <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }} - {{ item.tableid }}</option>
+                        <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }}
+                            - {{ item.tableid }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -116,37 +118,103 @@
 
         </div>
 
-    <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
+        <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
 
-</form>
-        </div>
+    </form>
+</div>
 
 
 <div class="container text-center card card-body" style="margin-top: 2%">
 
-            <h4>Nuovo Report</h4>
+    <h4>Nuovo Report</h4>
 
-        <select id="table-select" class="form-select" aria-label="Default select example" name="tableid-form-report">
-                     {% for table in context.tables %}
+ <form method="post" action="{% url 'new_report' %}" class="container text-center" style="float: left">
+
+    <div class="row">
+
+        <div class="col-md-4 d-flex flex-column">
+            <h4>Tableid</h4>
+            <select class="form-select" id="table-select-report" aria-label="Default select example" name="tableid">
+                {% for table in context.tables %}
                     <option value="{{ table.id }}">{{ table.id }}</option>
-                     {% endfor %}
-                </select>
-        <button style="width: 10%; float: right" class="btn btn-primary" onclick="select_table()">Seleziona</button>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary" onclick="select_table_report()">Seleziona</button>
+        </div>
 
 
-    <div class="col-md-4 d-flex flex-column">
-                <h4>Nome report</h4>
-                <div class="flex-fill">
-                    <input name="report_name" style="width: 100%" type="text">
-                </div>
+        <div class="col-md-4 d-flex flex-column">
+            <h4>Nome report</h4>
+            <div class="flex-fill">
+                <input style="width: 100%" type="text" name="report_name">
             </div>
+        </div>
 
+        <div class="col-md-4 d-flex flex-column">
+            <h4>Fieldid</h4>
+            <select class="form-select build-form-report" aria-label="Default select example" name="fieldid">
+                {% for field in context.fields %}
+                    <option data-tableid="{{ field.tableid }}" value="{{ field.fieldid }}">{{ field.fieldid }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+
+        <div class="col-md-4 d-flex flex-column">
+            <h4>Operation</h4>
+            <select class="form-select" aria-label="Default select example" name="operation">
+                <option value="sum">sum</option>
+                <option value="avg">avg</option>
+                <option value="count">count</option>
+            </select>
+        </div>
+
+
+        <div class="col-md-4 d-flex flex-column">
+            <h4>Layout</h4>
+            <select class="form-select" aria-label="Default select example" name="layout">
+                <option value="barchart">column</option>
+                <option value="linechart">line</option>
+                <option value="piechart">pie</option>
+                <option value="table">table</option>
+            </select>
+        </div>
+
+
+        <div class="col-md-4 d-flex flex-column">
+            <h4>Group by</h4>
+            <div class="flex-fill">
+                <input style="width: 100%" type="text" name="groupby">
+            </div>
+        </div>
+
+
+    </div>
+
+ <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
+
+ </form>
 
 
 </div>
 
 
 <script>
+
+    function select_table_report() {
+        var selected_table = $('#table-select-report').val()
+        $('.build-form-report').each(function () {
+            $(this).children().each(function () {
+                if ($(this).data('tableid') == selected_table) {
+                    $(this).show()
+                } else {
+                    $(this).hide()
+                }
+            })
+        })
+    }
+
+
     function select_table() {
         var selected_table = $('#table-select').val()
         $('.build-form').each(function () {

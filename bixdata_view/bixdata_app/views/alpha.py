@@ -1332,6 +1332,11 @@ def admin_page(request):
         )
         tables = dictfetchall(cursor5)
 
+        cursor5.execute(
+            "SELECT tableid, fieldid FROM sys_field"
+        )
+        fields = dictfetchall(cursor5)
+
     context = {
         'userids': userids,
         'dashboardids': dashboardids,
@@ -1340,7 +1345,8 @@ def admin_page(request):
         'chart_dashboard_id': chart_dashboard_id,
         'views': rows4,
         'reports': rows5,
-        'tables': tables
+        'tables': tables,
+        'fields': fields,
 
     }
 
@@ -2058,5 +2064,20 @@ def remove_block(request):
     with connection.cursor() as cursor:
         cursor.execute(
             "DELETE FROM sys_user_dashboard_block WHERE id = %s", [blockid]
+        )
+    return JsonResponse({'success': True})
+
+
+def new_block(request):
+    tableid = request.POST.get('tableid')
+    report_name = request.POST.get('report_name')
+    fieldid = request.POST.get('fieldid')
+    operation = request.POST.get('operation')
+    layout = request.POST.get('layout')
+    groupby = request.POST.get('groupby')
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO sys_report (userid, dashboard_block_id, dashboardid) VALUES (%s, %s, %s)",
+            [userid, blockid, dashboardid]
         )
     return JsonResponse({'success': True})
