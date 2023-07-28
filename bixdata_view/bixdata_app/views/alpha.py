@@ -594,6 +594,11 @@ def get_chart(request, sql, id, name, layout, fields):
 
         labels = [row[-1] for row in rows]
 
+        #check if there are none in labels
+        if None in labels:
+            #change none to non assegnato
+            labels = ['Non assegnato' if v is None else v for v in labels]
+
         context = {
             'value': value,
             'labels': labels,
