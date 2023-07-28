@@ -73,7 +73,7 @@
             <option value="{{ table.id }}">{{ table.id }}</option>
         {% endfor %}
     </select>
-    <button style="width: 10%; float: right" class="btn btn-primary" onclick="select_table()">Seleziona</button>
+    <button style="width: 10%; float: right" class="btn btn-secondary" type="button" onclick="select_table()">Seleziona</button>
 
     <form method="post" action="{% url 'new_chart_block' %}" class="container text-center" style="float: left">
 
@@ -139,7 +139,7 @@
                     <option value="{{ table.id }}">{{ table.id }}</option>
                 {% endfor %}
             </select>
-            <button class="btn btn-primary" onclick="select_table_report()">Seleziona</button>
+            <button class="btn btn-secondary" type="button" onclick="select_table_report()">Seleziona</button>
         </div>
 
 

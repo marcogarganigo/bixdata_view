@@ -2068,7 +2068,7 @@ def remove_block(request):
     return JsonResponse({'success': True})
 
 
-def new_block(request):
+def new_report(request):
     tableid = request.POST.get('tableid')
     report_name = request.POST.get('report_name')
     fieldid = request.POST.get('fieldid')
@@ -2077,7 +2077,8 @@ def new_block(request):
     groupby = request.POST.get('groupby')
     with connection.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO sys_report (userid, dashboard_block_id, dashboardid) VALUES (%s, %s, %s)",
-            [userid, blockid, dashboardid]
+            "INSERT INTO sys_report (userid, tableid, name, fieldid, operation, layout, groupby) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            [1, tableid, report_name, fieldid, operation, layout, groupby]
         )
-    return JsonResponse({'success': True})
+
+    return HttpResponse('ok')

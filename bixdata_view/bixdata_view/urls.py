@@ -107,5 +107,5 @@ urlpatterns = [
     path('save_block_order/', alpha.save_block_order, name='save_block_order'),
     path('new_block/', alpha.new_block, name='new_block'),
     path('remove_block/', alpha.remove_block, name='remove_block'),
-    path('new_block/', alpha.new_block, name='new_block'),
+    path('new_report/', alpha.new_report, name='new_report'),
 ]
