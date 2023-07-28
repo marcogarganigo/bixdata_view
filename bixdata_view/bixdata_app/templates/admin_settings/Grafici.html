@@ -68,7 +68,7 @@
     <div class="container text-center card card-body" style="margin-top: 2%">
                 <h4>Aggiungi dashboard block</h4>
 
-                 <select id="table-select" class="form-select" aria-label="Default select example" name="ads">
+                 <select id="table-select" class="form-select" aria-label="Default select example" name="tableid-form-block">
                      {% for table in context.tables %}
                     <option value="{{ table.id }}">{{ table.id }}</option>
                      {% endfor %}
@@ -106,7 +106,7 @@
 
             <div class="col-md-4 d-flex flex-column">
                 <h4>Report name</h4>
-                <select class="form-select" aria-label="Default select example" name="report_id">
+                <select class="form-select build-form" aria-label="Default select example" name="report_id">
                     {% for item in context.reports %}
                         <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }} - {{ item.tableid }}</option>
                     {% endfor %}
@@ -123,14 +123,40 @@
 
 
 <div class="container text-center card card-body" style="margin-top: 2%">
-    <h4>Nuovo grafico</h4>
+
+            <h4>Nuovo Report</h4>
+
+        <select id="table-select" class="form-select" aria-label="Default select example" name="tableid-form-report">
+                     {% for table in context.tables %}
+                    <option value="{{ table.id }}">{{ table.id }}</option>
+                     {% endfor %}
+                </select>
+        <button style="width: 10%; float: right" class="btn btn-primary" onclick="select_table()">Seleziona</button>
+
+
+    <div class="col-md-4 d-flex flex-column">
+                <h4>Nome report</h4>
+                <div class="flex-fill">
+                    <input name="report_name" style="width: 100%" type="text">
+                </div>
+            </div>
+
+
+
 </div>
 
 
 <script>
     function select_table() {
         var selected_table = $('#table-select').val()
-
-        alert(table)
+        $('.build-form').each(function () {
+            $(this).children().each(function () {
+                if ($(this).data('tableid') == selected_table) {
+                    $(this).show()
+                } else {
+                    $(this).hide()
+                }
+            })
+        })
     }
 </script>

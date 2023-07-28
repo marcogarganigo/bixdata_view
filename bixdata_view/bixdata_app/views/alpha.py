@@ -1871,25 +1871,33 @@ def validate_timesheet(request):
 def check_task_status(recordid):
     with connection.cursor() as cursor2:
         cursor2.execute(
-            "SELECT status from user_task where user_task.user != creator and recordid_ = %s", [recordid]
+            "SELECT status FROM user_task WHERE user_task.user != creator AND recordid_ = %s",
+            [recordid]
         )
         task = dictfetchall(cursor2)
-        status = task[0]['status']
 
+    #non funziona l'invio della mail quando il task viene chiuso
+    if task and 'status' in task[0]:
+        status = task[0]['status']
         if status == 'Chiuso':
             with connection.cursor() as cursor:
                 cursor.execute(
-                    f"SELECT description, email, username from v_users, user_task where v_users.sys_user_id = user_task.creator and user_task.recordid_ = {recordid}"
+                    "SELECT description, email, username FROM v_users INNER JOIN user_task "
+                    "ON v_users.sys_user_id = user_task.creator WHERE user_task.recordid_ = %s",
+                    [recordid]
                 )
                 user = dictfetchall(cursor)
+
+            if user:
                 email = user[0]['email']
                 username = user[0]['username']
                 description = user[0]['description']
 
+                message = f"Task '{description}' has been closed for user '{username}'."
                 send_email(
-                    emails=['marco.garganigo@swissbix.ch'],
+                    emails=[email],
                     subject='Task chiuso',
-                    html_message='ok'
+                    html_message=message
                 )
 
     return True
