@@ -592,12 +592,18 @@ def get_chart(request, sql, id, name, layout, fields):
         for num in range(0, len(fields_chart)):
             value.append([row[num] for row in rows])
 
+
         labels = [row[-1] for row in rows]
 
-        #check if there are none in labels
+
         if None in labels:
-            #change none to non assegnato
             labels = ['Non assegnato' if v is None else v for v in labels]
+
+        for i in range(len(value)):
+            for j in range(len(value[i])):
+                if value[i][j] is not None:
+                    value[i][j] = round(value[i][j], 2)
+
 
         context = {
             'value': value,
@@ -2055,11 +2061,10 @@ def test_gridstack(request):
 def new_block(request):
     blockid = request.POST.get('blockid')
     userid = request.POST.get('userid')
-    dashboardid = request.POST.get('dashboardid')
     with connection.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO sys_user_dashboard_block (userid, dashboard_block_id, dashboardid) VALUES (%s, %s, %s)",
-            [userid, blockid, dashboardid]
+            "INSERT INTO sys_user_dashboard_block (userid, dashboard_block_id) VALUES (%s, %s)",
+            [userid, blockid]
         )
     return JsonResponse({'success': True})
 
