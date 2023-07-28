@@ -12,6 +12,18 @@
 
     });
 
+    //document ready
+
+  $(document).ready(function () {
+      //timeout
+        setTimeout(function () {
+    if ($('#field-validated').val() !== 'Si') {
+      $('#validate-button').show();
+    }
+    }, 250);
+  });
+
+
 
     function closeModal() {
         $("#recordModal").modal("hide");
@@ -334,7 +346,7 @@ function open_freshdesk() {
                 </div>
 
             {% if tableid == 'timesheet' and userid == 3  %}
-                <button onclick="$('#field-validated').val('Si'); $('#save-button').click()" type="button" class="btn btn-outline-success">Valida</button>
+                <button onclick="$('#field-validated').val('Si'); $('#save-button').click()" type="button" id="validate-button" style="display: none" class="btn btn-outline-success">Valida</button>
             {% endif %}
 
                 <div style="clear:both;"></div>
