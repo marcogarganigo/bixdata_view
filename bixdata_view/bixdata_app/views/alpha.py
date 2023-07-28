@@ -468,7 +468,6 @@ def get_render_content_dashboard(request):
         )
         bixid = cursor2.fetchone()[0]
 
-
         cursor2.execute(
             "SELECT dashboardid FROM sys_user_dashboard WHERE userid = %s", [bixid]
         )
@@ -510,7 +509,7 @@ def get_render_content_dashboard(request):
                 block['gsw'] = data['gsw']
                 block['gsh'] = data['gsh']
 
-                #if they are null set default values
+                # if they are null set default values
                 if block['gsw'] == None or block['gsw'] == '':
                     block['gsw'] = 3
                     block['gsh'] = 2
@@ -530,8 +529,8 @@ def get_render_content_dashboard(request):
                     tableid = results['tableid']
                     tableid = 'user_' + tableid
 
-
-                    block['html'] = get_records_table(request, results['tableid'], None, None, '', results['viewid'], 1, '', '')
+                    block['html'] = get_records_table(request, results['tableid'], None, None, '', results['viewid'], 1,
+                                                      '', '')
 
 
                 else:
@@ -558,7 +557,6 @@ def get_render_content_dashboard(request):
                     block['html'] = get_chart(request, sql, id, name, layout, fields)
                     context['userid'] = userid
                 context['blocks'].append(block)
-
 
     return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', context)
 
@@ -610,8 +608,6 @@ def get_chart(request, sql, id, name, layout, fields):
             return render_to_string('other/piechart.html', context, request=request)
         elif layout_chart == 'linechart':
             return render_to_string('other/linechart.html', context, request=request)
-
-
 
 
 @login_required(login_url='/login/')
@@ -1331,6 +1327,11 @@ def admin_page(request):
         )
         rows5 = dictfetchall(cursor5)
 
+        cursor5.execute(
+            "SELECT id FROM sys_table"
+        )
+        tables = dictfetchall(cursor5)
+
     context = {
         'userids': userids,
         'dashboardids': dashboardids,
@@ -1339,6 +1340,7 @@ def admin_page(request):
         'chart_dashboard_id': chart_dashboard_id,
         'views': rows4,
         'reports': rows5,
+        'tables': tables
 
     }
 
@@ -2042,10 +2044,11 @@ def new_block(request):
         )
     return JsonResponse({'success': True})
 
+
 def remove_block(request):
     blockid = request.POST.get('blockid')
     with connection.cursor() as cursor:
         cursor.execute(
-            "DELETE FROM sys_user_dashboard_block WHERE id = %s",[blockid]
+            "DELETE FROM sys_user_dashboard_block WHERE id = %s", [blockid]
         )
     return JsonResponse({'success': True})
