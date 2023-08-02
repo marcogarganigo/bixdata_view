@@ -1,14 +1,16 @@
 {% load define_action %}
-<!--JQuery UI-->
-<script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
+
 
 <div class="container fields_container" style="height: 100%" id="fields_container_{{ tableid }}_{{ recordid }}">
 
     <div id="fields-scroll-container"
          style="height: calc(100% - 100px); overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
 
+
+
         <style>
+
+
 
             #saved-alert-{{ recordid }} {
                 position: absolute;
@@ -82,7 +84,7 @@
                                     {% for valuecode in field.valuecode %}
                                         <div class="input-group mb-2">
                                             <select id="{{ fieldid }}" name="{{ fieldname }}"
-                                                    class="form-select {{ mandatory }}">
+                                                    class="js-example-basic-single {{ mandatory }}">
                                                 {% if field.lookupitems %}
                                                     <option value=""></option>
                                                     {% for item in field.lookupitems %}
@@ -142,7 +144,7 @@
                             {% if field.fieldtypeid == 'Utente' %}
                                 <div class="input-group mb-2">
                                     <select id="{{ fieldid }}" name="{{ fieldname }}"
-                                            class="form-select {{ mandatory }}">
+                                            class="js-example-basic-single {{ mandatory }}">
                                         <option id="" value=""></option>
                                         {% for items in field.lookupitems %}
                                             {% if items.id and items.firstname and items.lastname %}
@@ -353,6 +355,20 @@
         z-index: 99999;
     }
 </style>
+
+<script>
+
+    $('.js-example-basic-single').select2();
+
+    $(".selection").on("click", function () {
+        setTimeout(function () {
+            //$(this).closest('.RecordCard').find('.select2-container').css('z-index', 15000)
+            $('.select2-container').css('z-index', 15000)
+        }, 200)
+
+    });
+
+</script>
 
 
 

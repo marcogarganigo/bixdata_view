@@ -2091,4 +2091,4 @@ def new_report(request):
             [1, tableid, report_name, fieldid, operation, layout, groupby]
         )
 
-    return HttpResponse('ok')
+    return JsonResponse({'success': True})

@@ -571,13 +571,18 @@
 
                             <script>
                                 function setColor(el) {
-                                    var els = document.querySelectorAll('.side-nav-txt');
+                                        var els = document.querySelectorAll('.side-nav-txt');
                                     els.forEach(function (el) {
                                         el.classList.remove('active');
-                                        el.style.color = 'rgb(207, 211, 207)';
+                                        if ($("html").attr("data-sidenav-size") === 'default') {
+                                            el.style.color = '#bbafaf'
+                                        } else {
+                                            el.style.color = '#524d4d';
+                                        }
                                     });
                                     el.classList.add('active');
                                     el.style.color = 'red';
+
                                 }
 
                                 var els = document.querySelectorAll('.side-nav-txt');
