@@ -1,5 +1,9 @@
 {% load define_action %}
 
+<!--JQuery UI-->
+<script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
+
 
 <div class="container fields_container" style="height: 100%" id="fields_container_{{ tableid }}_{{ recordid }}">
 
@@ -10,7 +14,9 @@
 
         <style>
 
-
+            .select2-container--open {
+                z-index: 9999999;
+            }
 
             #saved-alert-{{ recordid }} {
                 position: absolute;
@@ -358,15 +364,11 @@
 
 <script>
 
-    $('.js-example-basic-single').select2();
-
-    $(".selection").on("click", function () {
-        setTimeout(function () {
-            //$(this).closest('.RecordCard').find('.select2-container').css('z-index', 15000)
-            $('.select2-container').css('z-index', 15000)
-        }, 200)
-
-    });
+    $('.js-example-basic-single').each(function () {
+    $(this).select2({
+        dropdownParent: $(this).parent(),
+    })
+})
 
 </script>
 

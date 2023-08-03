@@ -32,6 +32,7 @@
     <orderEntry type="library" name="sweetalert2" level="application" />
     <orderEntry type="library" name="bootstrap-select" level="application" />
     <orderEntry type="library" name="select2" level="application" />
+    <orderEntry type="library" name="jquery-ui" level="application" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />
