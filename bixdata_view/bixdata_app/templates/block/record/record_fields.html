@@ -40,6 +40,12 @@
 }
 
 
+.select2-selection__choice {
+    background-color: whitesmoke !important;
+    color: black !important;
+}
+
+
 
             .select2-container--open {
                 z-index: 9999999;
@@ -82,7 +88,7 @@
 
         {% for label,record_fields  in record_fields_labels.items %}
             {% if label != 'Dati' %}
-                <button class="dropdown-toggle btn btn-secondary" style="width: 100%" type="button" onclick="toggleCollapse(this)">
+                <button class="dropdown-toggle btn btn-secondary" style="width: 100%; background-color: #074048" type="button" onclick="toggleCollapse(this)">
                     {{ label }}
                 </button>
             {% endif %}
