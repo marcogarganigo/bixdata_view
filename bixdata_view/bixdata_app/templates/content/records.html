@@ -40,6 +40,15 @@
             }
         })
 
+
+        //if press f5 make an alert
+        $(document).keydown(function (e) {
+            if (e.which == 116) {
+                e.preventDefault();
+                refresh()
+            }
+        });
+
         if (window.innerWidth <= min_width) {
             $("#block-record-card-container").css('display', 'none');
             $("#block-records-search-container").css('width', '100%');

@@ -11,40 +11,41 @@
          style="height: calc(100% - 100px); overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
 
 
-
         <style>
 
 
-.select2-container--default .select2-selection--single {
+            .select2-container--default .select2-selection--single {
                 line-height: 28px;
                 font-size: 15px;
-                border: 1px solid #dee2e6  !important;
+                border: 1px solid #dee2e6 !important;
             }
 
 
-.select2-selection__rendered {
-    color: #6c757d !important;
-}
+            .select2-selection__rendered {
+                color: #6c757d !important;
+            }
 
-.select2-container {
-    width: 50% !important;
-}
-.select2-selection__rendered {
-    line-height: 37px !important;
-}
-.select2-container .select2-selection--single {
-    height: 41px !important;
-}
-.select2-selection__arrow {
-    height: 39px !important;
-}
+            .select2-container {
+                width: 50% !important;
+            }
+
+            .select2-selection__rendered {
+                line-height: 37px !important;
+            }
+
+            .select2-container .select2-selection--single {
+                height: 41px !important;
+            }
+
+            .select2-selection__arrow {
+                height: 39px !important;
+            }
 
 
-.select2-selection__choice {
-    background-color: whitesmoke !important;
-    color: black !important;
-}
-
+            .select2-selection__choice {
+                background-color: whitesmoke !important;
+                color: black !important;
+            }
 
 
             .select2-container--open {
@@ -62,6 +63,12 @@
                 z-index: 9999;
             }
         </style>
+
+    <script>
+                        function toggleCollapse(el) {
+                    $(el).next('.div-collapse').slideToggle(200);
+                }
+    </script>
 
 
         {% if contextfunction == 'view' %}
@@ -85,10 +92,10 @@
 
 
 
-
         {% for label,record_fields  in record_fields_labels.items %}
             {% if label != 'Dati' %}
-                <button class="dropdown-toggle btn btn-secondary" style="width: 100%; background-color: #074048" type="button" onclick="toggleCollapse(this)">
+                <button class="dropdown-toggle btn btn-secondary" style="width: 100%; background-color: #074048"
+                        type="button" onclick="toggleCollapse(this)">
                     {{ label }}
                 </button>
             {% endif %}
@@ -119,31 +126,35 @@
                         </div>
                         <div class="col field">
                             {% if field.fieldtypeid == 'Parola' %}
-                                 {% if field.fieldtypewebid == 'checkbox' %}
+                                {% if field.fieldtypewebid == 'checkbox' %}
 
-                                    <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
+                                    <input class="form-check-input mt-0" type="checkbox" value=""
+                                           aria-label="Checkbox for following text input">
 
                                 {% else %}
                                     {% if field.lookuptableid %}
                                         {% for valuecode in field.valuecode %}
                                             <div class="input-group mb-2">
                                                 {% if field.fieldtypewebid == 'multiselect' %}
-                                                    <select id="{{ fieldid }}" name="{{ fieldname }}" class="js-example-basic-single {{ mandatory }}" multiple="multiple">
+                                                    <select id="{{ fieldid }}" name="{{ fieldname }}"
+                                                            class="js-example-basic-single {{ mandatory }}"
+                                                            multiple="multiple">
                                                 {% else %}
-                                                    <select id="{{ fieldid }}" name="{{ fieldname }}" class="js-example-basic-single {{ mandatory }}" >
+                                                    <select id="{{ fieldid }}" name="{{ fieldname }}"
+                                                            class="js-example-basic-single {{ mandatory }}">
                                                 {% endif %}
-                                                        {% if field.lookupitems %}
-                                                            <option value=""></option>
-                                                            {% for item in field.lookupitems %}
-                                                                {% if item.itemcode == field.valuecode.0.code %}
-                                                                    <option selected
-                                                                            value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                                                                {% else %}
-                                                                    <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                                                                {% endif %}
-                                                            {% endfor %}
+                                                {% if field.lookupitems %}
+                                                    <option value=""></option>
+                                                    {% for item in field.lookupitems %}
+                                                        {% if item.itemcode == field.valuecode.0.code %}
+                                                            <option selected
+                                                                    value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                                                        {% else %}
+                                                            <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
                                                         {% endif %}
-                                                    </select>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                </select>
                                             </div>
                                         {% endfor %}
                                     {% else %}
@@ -406,16 +417,13 @@
 
 <script>
 
-$('.js-example-basic-single').select2({});
+    $('.js-example-basic-single').select2({});
 
-$(document).on('select2:open', function(e) {
-    window.setTimeout(function () {
-        document.querySelector('input.select2-search__field').focus();
-    }, 0);
-})
-
-
-
+    $(document).on('select2:open', function (e) {
+        window.setTimeout(function () {
+            document.querySelector('input.select2-search__field').focus();
+        }, 0);
+    })
 
 
 </script>
