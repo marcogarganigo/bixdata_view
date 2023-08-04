@@ -53,5 +53,7 @@
 
     var chart = new ApexCharts(document.querySelector("#chart{{ id }}"), options);
 
-    chart.render();
+    setTimeout(function () {
+        chart.render()
+    }, 0);
 </script>

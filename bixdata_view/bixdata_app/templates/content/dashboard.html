@@ -15,7 +15,7 @@
 <div style="!important; width: 100%; height: 100%; overflow: scroll" class="grid-stack">
     {% for block in blocks %}
         <div class="grid-elements" data-id="{{ block.id }}"
-             style="display: none" gs-x="{{ block.gsx }}" gs-y="{{ block.gsy }}"
+             gs-x="{{ block.gsx }}" gs-y="{{ block.gsy }}"
              gs-w="{{ block.gsw }}" gs-h="{{ block.gsh }}">
 
             <div class="grid-stack-item-content" style="background-color: white;">
@@ -113,9 +113,6 @@
 
 
             grid.makeWidget(cardBodies[i]); // Make the element a widget within the grid
-            //set the display to block
-            cardBodies[i].style.display = "block";
-            //create an icon to remove the widget
         }
 
         if ($('.pagination').length) {
