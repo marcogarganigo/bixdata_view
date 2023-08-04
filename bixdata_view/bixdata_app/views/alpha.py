@@ -2092,3 +2092,8 @@ def new_report(request):
         )
 
     return JsonResponse({'success': True})
+
+
+
+def test_select(request):
+    return render(request, 'other/test.html')

@@ -113,31 +113,40 @@
                         </div>
                         <div class="col field">
                             {% if field.fieldtypeid == 'Parola' %}
-                                {% if field.lookuptableid %}
-                                    {% for valuecode in field.valuecode %}
-                                        <div class="input-group mb-2">
-                                            <select id="{{ fieldid }}" name="{{ fieldname }}"
-                                                    class="js-example-basic-single {{ mandatory }}">
-                                                {% if field.lookupitems %}
-                                                    <option value=""></option>
-                                                    {% for item in field.lookupitems %}
-                                                        {% if item.itemcode == field.valuecode.0.code %}
-                                                            <option selected
-                                                                    value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                                                        {% else %}
-                                                            <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                {% endif %}
-                                            </select>
-                                        </div>
-                                    {% endfor %}
+                                 {% if field.fieldtypewebid == 'checkbox' %}
+
+                                    <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
+
                                 {% else %}
-                                    <label>
-                                        <input id="{{ fieldid }}" name="{{ fieldname }}"
-                                               class="form-control mb-2 {{ mandatory }}" type="text"
-                                               value="{{ field.value }}">
-                                    </label>
+                                    {% if field.lookuptableid %}
+                                        {% for valuecode in field.valuecode %}
+                                            <div class="input-group mb-2">
+                                                {% if field.fieldtypewebid == 'multiselect' %}
+                                                    <select id="{{ fieldid }}" name="{{ fieldname }}" class="js-example-basic-single {{ mandatory }}" multiple="multiple">
+                                                {% else %}
+                                                    <select id="{{ fieldid }}" name="{{ fieldname }}" class="js-example-basic-single {{ mandatory }}" >
+                                                {% endif %}
+                                                        {% if field.lookupitems %}
+                                                            <option value=""></option>
+                                                            {% for item in field.lookupitems %}
+                                                                {% if item.itemcode == field.valuecode.0.code %}
+                                                                    <option selected
+                                                                            value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                                                                {% else %}
+                                                                    <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    </select>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <label>
+                                            <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                                   class="form-control mb-2 {{ mandatory }}" type="text"
+                                                   value="{{ field.value }}">
+                                        </label>
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                             {% if field.fieldtypeid == 'Data' %}
@@ -391,11 +400,13 @@
 
 <script>
 
-$('.js-example-basic-single').each(function () {
-    $(this).select2({
-        dropdownParent: $(this).parent(),
-    });
-});
+$('.js-example-basic-single').select2({});
+
+$(document).on('select2:open', function(e) {
+    window.setTimeout(function () {
+        document.querySelector('input.select2-search__field').focus();
+    }, 0);
+})
 
 
 
