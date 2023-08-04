@@ -14,6 +14,33 @@
 
         <style>
 
+
+.select2-container--default .select2-selection--single {
+                line-height: 28px;
+                font-size: 15px;
+                border: 1px solid #dee2e6  !important;
+            }
+
+
+.select2-selection__rendered {
+    color: #6c757d !important;
+}
+
+.select2-container {
+    width: 50% !important;
+}
+.select2-selection__rendered {
+    line-height: 37px !important;
+}
+.select2-container .select2-selection--single {
+    height: 41px !important;
+}
+.select2-selection__arrow {
+    height: 39px !important;
+}
+
+
+
             .select2-container--open {
                 z-index: 9999999;
             }
@@ -55,7 +82,7 @@
 
         {% for label,record_fields  in record_fields_labels.items %}
             {% if label != 'Dati' %}
-                <button class="btn btn-secondary" type="button" onclick="toggleCollapse(this)">
+                <button class="dropdown-toggle btn btn-secondary" style="width: 100%" type="button" onclick="toggleCollapse(this)">
                     {{ label }}
                 </button>
             {% endif %}
@@ -364,11 +391,15 @@
 
 <script>
 
-    $('.js-example-basic-single').each(function () {
+$('.js-example-basic-single').each(function () {
     $(this).select2({
         dropdownParent: $(this).parent(),
-    })
-})
+    });
+});
+
+
+
+
 
 </script>
 
