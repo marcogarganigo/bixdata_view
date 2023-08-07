@@ -323,6 +323,33 @@
 
 
 <script>
+
+    function serializeForm(formElements) {
+        var formData = [];
+        //var formElements = document.getElementById("myForm").elements;
+        for (var i = 0; i < formElements.length; i++) {
+            var element = formElements[i];
+            if (element.name) {
+                if (element.type === "select-multiple") {
+                    var selectedOptions = [];
+                    for (var j = 0; j < element.options.length; j++) {
+                        if (element.options[j].selected) {
+                            selectedOptions.push(element.options[j].value);
+                        }
+                    }
+                    formData.push({ name: element.name, value: selectedOptions });
+                } else if (element.type === "checkbox") {
+                    if (element.checked) {
+                        formData.push({ name: element.name, value: element.value });
+                    }
+                } else {
+                    formData.push({ name: element.name, value: element.value });
+                }
+            }
+        }
+        return formData;
+    }
+    
     function save_record(el) {
         let necessaryFields = document.querySelectorAll('.necessary');
         let hasNecessaryFields = false;
@@ -346,8 +373,10 @@
 
 
             closeNewRecordModal()
-            var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
-            var serialized_json = convertFormToJSON(serialized_array);
+            //var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
+            //var serialized_json = convertFormToJSON(serialized_array);
+            serialized_form=serializeForm($(el).closest('.fields_container').find("select,textarea,input"));
+            serialized_json = convertFormToJSON(serialized_form);
             var post_data = [];
             post_data.push({name: 'tableid', value: '{{ tableid }}'});
             post_data.push({name: 'recordid', value: '{{ recordid }}'});

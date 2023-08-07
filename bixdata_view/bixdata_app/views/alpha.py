@@ -1112,6 +1112,8 @@ def save_record_fields(request):
     fields = request.POST.get('fields')
     contextfunction = request.POST.get('contextfunction')
 
+    selected_options = request.POST.getlist('service');
+    
     post_data = {
         'tableid': tableid,
         'recordid': recordid,
@@ -1651,17 +1653,15 @@ def rinnova_contratto(request):
     contract_hours = request.POST.get('contract_hours')
     invoicenr = request.POST.get('invoicenr')
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            f"SELECT * FROM user_servicecontract WHERE recordid_='{recordid}'"
-        )
-        rows = dictfetchall(cursor)
-        rows[0]['contracthours'] = contract_hours
-        rows[0]['invoiceno'] = invoicenr
-        rows[0]['startdate'] = datetime.datetime.now().strftime("%d/%m/%Y")
-        rows[0]['status'] = 'In progress'
+    
+    post_data = {
+            'recordid': recordid,
+            'contracthours': contract_hours,
+            'invoiceno': invoicenr,
+            'startdate':datetime.datetime.now().strftime("%Y-%m-%d")
+        }
+    response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/rinnova_contratto", data=post_data)
 
-    return rows[0]
 
 
 def sort_records(request):
