@@ -56,7 +56,7 @@
                 <td>{{ tms.worktime_decimal }}</td>
                 {% if excludetravel != 'Si' %}
                 <td>
-                  {% tms.traveltime_decimal is not None %}
+                  {% if tms.traveltime_decimal is not None %}
                     {{ tms.traveltime_decimal }}
                   {% endif %}
                 </td>
