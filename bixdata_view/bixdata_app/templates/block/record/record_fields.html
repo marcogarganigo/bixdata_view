@@ -130,8 +130,7 @@
                                     <input class="form-check-input mt-0" type="checkbox" value=""
                                            aria-label="Checkbox for following text input"
                                            onchange="set_checkbox_value(this)">
-                                    <input id="{{ fieldname }}-{{ recordid }}" type="hidden" name="{{ fieldname }}"
-                                           value="">
+                                    <input id="{{ fieldname }}-{{ recordid }}" type="hidden" name="{{ fieldname }}" value="{{ field.value }}">
                                     <script>
                                         function set_checkbox_value(el) {
                                             if (el.checked) {
