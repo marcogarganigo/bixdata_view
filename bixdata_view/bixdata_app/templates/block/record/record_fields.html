@@ -127,10 +127,7 @@
                         <div class="col field">
                             {% if field.fieldtypeid == 'Parola' %}
                                 {% if field.fieldtypewebid == 'checkbox' %}
-
-                                    <input class="form-check-input mt-0" type="checkbox" value=""
-                                           aria-label="Checkbox for following text input">
-
+                                    <input class="form-check-input mt-0" type="checkbox" name="{{ fieldname }}" value="Si" aria-label="Checkbox for following text input">
                                 {% else %}
                                     {% if field.lookuptableid %}
                                         {% for valuecode in field.valuecode %}
