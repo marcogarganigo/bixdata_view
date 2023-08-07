@@ -127,16 +127,19 @@
                         <div class="col field">
                             {% if field.fieldtypeid == 'Parola' %}
                                 {% if field.fieldtypewebid == 'checkbox' %}
-                                    <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input" onchange="set_checkbox_value(this)">
-                                    <input id="{{ fieldname }}-{{ recordid }}" type="hidden" name="{{ fieldname }}" value="">
+                                    <input class="form-check-input mt-0" type="checkbox" value=""
+                                           aria-label="Checkbox for following text input"
+                                           onchange="set_checkbox_value(this)">
+                                    <input id="{{ fieldname }}-{{ recordid }}" type="hidden" name="{{ fieldname }}"
+                                           value="">
                                     <script>
-                                    function set_checkbox_value(el) {
-                                        if (el.checked) {
-                                            $(el).next('input').val('Si');
-                                        } else {
-                                            $(el).next('input').val('No');
+                                        function set_checkbox_value(el) {
+                                            if (el.checked) {
+                                                $(el).next('input').val('Si');
+                                            } else {
+                                                $(el).next('input').val('No');
+                                            }
                                         }
-                                    }
                                     </script>
                                     <script>
 
@@ -427,7 +430,13 @@
 
 <script>
 
-    $('.js-example-basic-single').select2({});
+
+  $('#fields_container_{{ tableid }}_{{ recordid }}').find('.js-example-basic-single').each(function () {
+    $(this).select2({
+      dropdownParent: $(this).parent()
+    }).addClass('select2-initialized');
+  });
+
 
     $(document).on('select2:open', function (e) {
         window.setTimeout(function () {

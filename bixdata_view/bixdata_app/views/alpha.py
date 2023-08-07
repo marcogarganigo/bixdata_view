@@ -1646,6 +1646,8 @@ def get_block_ticket_timesheet(request, ticket, userid):
         return content
 
 
+from django.http import JsonResponse
+
 def rinnova_contratto(request):
     recordid = request.POST.get('recordid')
     contract_hours = request.POST.get('contract_hours')
@@ -1661,7 +1663,8 @@ def rinnova_contratto(request):
         rows[0]['startdate'] = datetime.datetime.now().strftime("%d/%m/%Y")
         rows[0]['status'] = 'In progress'
 
-    return rows[0]
+    return JsonResponse(rows[0])
+
 
 
 def sort_records(request):
@@ -1909,15 +1912,16 @@ def check_task_status(recordid):
                 email = user[0]['email']
                 username = user[0]['username']
                 description = user[0]['description']
-
+                """
                 message = render_to_string('other/close_task.html', {'username': username, 'description': description, 'task': task})
                 send_email(
                     emails=[email],
                     subject='Task chiuso',
                     html_message=message
                 )
+                """
 
-    return True
+        return render(request, 'other/close_task.html', {'username': username, 'description': description, 'task': task})
 
 
 def staff_only(view_func):
