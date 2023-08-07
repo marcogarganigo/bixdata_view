@@ -74,7 +74,7 @@
         {% if contextfunction == 'view' %}
             <style>
 
-                #save-button {
+                #save-button-{{ recordid }} {
                     display: none;
                 }
             </style>
@@ -84,7 +84,7 @@
                 $("#fields-scroll-container input").attr("disabled", true);
                 $("#fields-scroll-container select").attr("disabled", true);
                 $("#fields-scroll-container textarea").attr("disabled", true);
-                $("save-button").remove();
+                $("save-button-{{ recordid }}").remove();
 
 
             </script>
@@ -128,10 +128,23 @@
                             {% if field.fieldtypeid == 'Parola' %}
                                 {% if field.fieldtypewebid == 'checkbox' %}
                                     <input class="form-check-input mt-0" type="checkbox" value=""
+                                           id="checkbox-{{ recordid }}"
                                            aria-label="Checkbox for following text input"
                                            onchange="set_checkbox_value(this)">
-                                    <input id="{{ fieldname }}-{{ recordid }}" type="hidden" name="{{ fieldname }}" value="{{ field.value }}">
+                                    <input id="input-{{ recordid }}" type="hidden" name="{{ fieldname }}" value="{{ field.value }}">
+
                                     <script>
+                                    change_checkbox_view()
+
+                                        function change_checkbox_view() {
+                                            if ($('#input-{{ recordid }}').val() == 'Si') {
+                                                $('#input-{{ recordid }}').prev('input').prop('checked', true);
+                                            } else {
+                                                $('#close-task-button-{{ recordid }}').css('display', 'block')
+                                            }
+                                        }
+
+
                                         function set_checkbox_value(el) {
                                             if (el.checked) {
                                                 $(el).next('input').val('Si');
@@ -139,9 +152,6 @@
                                                 $(el).next('input').val('No');
                                             }
                                         }
-                                    </script>
-                                    <script>
-
                                     </script>
                                 {% else %}
                                     {% if field.lookuptableid %}
@@ -328,7 +338,7 @@
         </div>
 
 
-        <button id="save-button" data-recordid="{{ recordid }}" type="button" class="btn btn-primary"
+        <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class="btn btn-primary"
                 onclick="save_record(this)">Salva
         </button>
 

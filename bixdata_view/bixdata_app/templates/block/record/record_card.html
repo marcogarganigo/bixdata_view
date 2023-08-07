@@ -230,27 +230,9 @@
     }
 
 
-function rinnova_contratto() {
-    swal({
-        text: "Inserisci totale ore contrattuali",
-        content: "input",
-        button: {
-            text: "Rinnova",
-            closeModal: false,
-        },
-    }).then((response) => {
-        // Validate numeric input
-        var contract_hours = parseFloat(response);
-        if (isNaN(contract_hours)) {
-            swal({
-                text: "Inserisci un valore numerico per le ore contrattuali.",
-                icon: "error",
-            });
-            return; // Stop further execution
-        }
-
+    function rinnova_contratto() {
         swal({
-            text: "Inserisci numero fattura",
+            text: "Inserisci totale ore contrattuali",
             content: "input",
             button: {
                 text: "Rinnova",
@@ -258,40 +240,60 @@ function rinnova_contratto() {
             },
         }).then((response) => {
             // Validate numeric input
-            var invoicenr = response;
-            if (invoicenr === '') {
+            var contract_hours = parseFloat(response);
+            if (isNaN(contract_hours)) {
                 swal({
-                    text: "Inserisci un numero fattura.",
+                    text: "Inserisci un valore numerico per le ore contrattuali.",
                     icon: "error",
                 });
                 return; // Stop further execution
             }
 
-            $.ajax({
-                type: "POST",
-                url: "{% url 'rinnova_contratto' %}",
-                data: {
-                    'csrfmiddlewaretoken': '{{ csrf_token }}',
-                    'contract_hours': contract_hours,
-                    'invoicenr': invoicenr,
-                    'recordid': '{{ recordid }}',
+            swal({
+                text: "Inserisci numero fattura",
+                content: "input",
+                button: {
+                    text: "Rinnova",
+                    closeModal: false,
                 },
-                success: function (response) {
+            }).then((response) => {
+                // Validate numeric input
+                var invoicenr = response;
+                if (invoicenr === '') {
                     swal({
-                        text: "Contratto rinnovato",
-                        icon: "success",
-                        timer: 1000,
-                        buttons: false,
+                        text: "Inserisci un numero fattura.",
+                        icon: "error",
                     });
-                },
-                error: function (response) {
-                    alert('Ko')
+                    return; // Stop further execution
                 }
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'rinnova_contratto' %}",
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'contract_hours': contract_hours,
+                        'invoicenr': invoicenr,
+                        'recordid': '{{ recordid }}',
+                    },
+                    success: function (response) {
+                        $('#block_record_card-{{ recordid }}').slideToggle(200, function () {
+                        });
+                        refresh();
+                        swal({
+                            text: "Contratto rinnovato",
+                            icon: "success",
+                            timer: 1000,
+                            buttons: false,
+                        });
+                    },
+                    error: function (response) {
+                        alert('Ko')
+                    }
+                });
             });
         });
-    });
-}
-
+    }
 
 
     function validate_timesheet() {
@@ -366,6 +368,7 @@ function rinnova_contratto() {
                     </ul>
                 </div>
 
+
                 <div class="dropdown">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -380,13 +383,21 @@ function rinnova_contratto() {
                         {% elif tableid == 'ticket' %}
                             <li><a class="dropdown-item" onclick="open_freshdesk()">Apri in freshdesk</a></li>
                         {% endif %}
-                        <li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>
+                        <!--<li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>-->
 
                     </ul>
                 </div>
+                {% if tableid == 'task' %}
+                    <button style="display: none" id="close-task-button-{{ recordid }}" class="btn btn-success"
+                            type="button"
+                            onclick="$('#input-{{ recordid }}').val('Si'); change_checkbox_view(); $('#save-button-{{ recordid }}').click()">
+                        Chiudi task
+                    </button>
+                {% endif %}
 
                 {% if tableid == 'timesheet' and userid == 3 %}
-                    <button onclick="$('#field-validated').val('Si'); $('#save-button').click()" type="button"
+                    <button onclick="$('#field-validated').val('Si'); $('#save-button-{{ recordid }}').click()"
+                            type="button"
                             id="validate-button" style="display: none" class="btn btn-outline-success">Valida
                     </button>
                 {% endif %}
