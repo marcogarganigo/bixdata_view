@@ -54,7 +54,7 @@
                 <td>{{ tms.date|date:"d/m/Y" }}</td>
                 <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }}</td>
                 <td>{{ tms.worktime_decimal }}</td>
-                {% if excludetravel == '0' %}
+                {% if excludetravel != 'Si' %}
                 <td>{{ tms.traveltime }}</td>
                     <script>
                         document.getElementById("trasferta").removeAttribute("style");
