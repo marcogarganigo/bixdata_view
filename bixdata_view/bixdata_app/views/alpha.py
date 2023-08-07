@@ -1910,7 +1910,7 @@ def check_task_status(recordid):
                 username = user[0]['username']
                 description = user[0]['description']
 
-                message = f"Task '{description}' has been closed for user '{username}'."
+                message = render_to_string('other/close_task.html', {'username': username, 'description': description, 'task': task})
                 send_email(
                     emails=[email],
                     subject='Task chiuso',
