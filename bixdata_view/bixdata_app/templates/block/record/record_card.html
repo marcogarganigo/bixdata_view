@@ -14,15 +14,14 @@
 
     //document ready
 
-  $(document).ready(function () {
-      //timeout
+    $(document).ready(function () {
+        //timeout
         setTimeout(function () {
-    if ($('#field-validated').val() !== 'Si') {
-      $('#validate-button').show();
-    }
-    }, 250);
-  });
-
+            if ($('#field-validated').val() !== 'Si') {
+                $('#validate-button').show();
+            }
+        }, 250);
+    });
 
 
     function closeModal() {
@@ -170,17 +169,18 @@
             }
         });
     }
-/*
-    function stampa(tableid) {
-        var serialized_data = [];
-        var filename = tableid + new Date().getTime() + '.dockx';
-        var url = '/stampa_' + tableid + '/';
 
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: {
-                'recordid': '{{ recordid }}',
+    /*
+        function stampa(tableid) {
+            var serialized_data = [];
+            var filename = tableid + new Date().getTime() + '.dockx';
+            var url = '/stampa_' + tableid + '/';
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    'recordid': '{{ recordid }}',
                 'filename': filename,
             },
             xhrFields: {
@@ -207,81 +207,121 @@
     }
 */
 
-function stampa(tableid) {
-    var filename = tableid + new Date().getTime() + '.pdf';
-    var url = '/stampa_servicecontract/';
-
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: {
-            'recordid': '{{ recordid }}',
-            'filename': filename,
-        },
-        success: function (response) {
-
-            window.open('/static/pdf/' + filename, '_blank');
-
-        },
-        error: function (response) {
-            alert('stampa')
-        }
-    });
-}
-
-
-
-    function rinnova_contratto() {
-       var contract_hours = prompt("Inserisci totale ore contrattuali");
-       var invoicenr = prompt("Inserisci numero fattura");
-
+    function stampa(tableid) {
+        var filename = tableid + new Date().getTime() + '.pdf';
+        var url = '/stampa_servicecontract/';
 
         $.ajax({
             type: "POST",
-            url: "{% url 'rinnova_contratto' %}",
+            url: url,
             data: {
-                'csrfmiddlewaretoken': '{{ csrf_token }}',
-                'contract_hours': contract_hours,
-                'invoicenr': invoicenr,
                 'recordid': '{{ recordid }}',
+                'filename': filename,
             },
             success: function (response) {
-                alert('rinnova_contratto')
+
+                window.open('/static/pdf/' + filename, '_blank');
+
             },
             error: function (response) {
-                alert('rinnova_contratto')
+                alert('stampa')
             }
         });
     }
 
-function validate_timesheet() {
-    $.ajax({
-        type: "POST",
-        data: {
-            'csrfmiddlewaretoken': '{{ csrf_token }}',
-            'recordid': '{{ recordid }}'
+
+function rinnova_contratto() {
+    swal({
+        text: "Inserisci totale ore contrattuali",
+        content: "input",
+        button: {
+            text: "Rinnova",
+            closeModal: false,
         },
-        url: "{% url 'validate_timesheet' %}",
-        success: function (response) {
-             $('#fields_container_'+ '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
-            open_record(window.content,'{{ tableid }}','{{ recordid }}')
+    }).then((response) => {
+        // Validate numeric input
+        var contract_hours = parseFloat(response);
+        if (isNaN(contract_hours)) {
             swal({
-                text: "Timesheet validated",
-                icon: "success",
-                timer: 1000,
-                buttons: false,
+                text: "Inserisci un valore numerico per le ore contrattuali.",
+                icon: "error",
             });
-        },
-        error: function (xhr, status, error) {
-            alert('An error occurred while validating the timesheet.');
+            return; // Stop further execution
         }
+
+        swal({
+            text: "Inserisci numero fattura",
+            content: "input",
+            button: {
+                text: "Rinnova",
+                closeModal: false,
+            },
+        }).then((response) => {
+            // Validate numeric input
+            var invoicenr = response;
+            if (invoicenr === '') {
+                swal({
+                    text: "Inserisci un numero fattura.",
+                    icon: "error",
+                });
+                return; // Stop further execution
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'rinnova_contratto' %}",
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'contract_hours': contract_hours,
+                    'invoicenr': invoicenr,
+                    'recordid': '{{ recordid }}',
+                },
+                success: function (response) {
+                    swal({
+                        text: "Contratto rinnovato",
+                        icon: "success",
+                        timer: 1000,
+                        buttons: false,
+                    });
+                },
+                error: function (response) {
+                    alert('rinnova_contratto')
+                }
+            });
+        });
     });
 }
 
-function open_freshdesk() {
-    var url = 'https://swissbix.freshdesk.com/a/tickets/' + '{{ freshdeskid }}';
-    window.open(url, '_blank');
-}
+
+
+    function validate_timesheet() {
+        $.ajax({
+            type: "POST",
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'recordid': '{{ recordid }}'
+            },
+            url: "{% url 'validate_timesheet' %}",
+            success: function (response) {
+                $('#fields_container_' + '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
+                open_record(window.content, '{{ tableid }}', '{{ recordid }}')
+                swal({
+                    text: "Timesheet validated",
+                    icon: "success",
+                    timer: 1000,
+                    buttons: false,
+                });
+            },
+            error: function (xhr, status, error) {
+                alert('An error occurred while validating the timesheet.');
+            }
+        });
+    }
+
+    function open_freshdesk() {
+        var url = 'https://swissbix.freshdesk.com/a/tickets/' + '{{ freshdeskid }}';
+        window.open(url, '_blank');
+    }
 
 
 </script>
@@ -336,7 +376,7 @@ function open_freshdesk() {
                             <li><a class="dropdown-item" onclick="get_timesheet_serviceassets(this)">Servizi e
                                 risorse</a></li>
                         {% elif tableid == 'servicecontract' %}
-                              <li><a class="dropdown-item" onclick="rinnova_contratto()">Rinnova</a></li>
+                            <li><a class="dropdown-item" onclick="rinnova_contratto()">Rinnova</a></li>
                         {% elif tableid == 'ticket' %}
                             <li><a class="dropdown-item" onclick="open_freshdesk()">Apri in freshdesk</a></li>
                         {% endif %}
@@ -345,9 +385,11 @@ function open_freshdesk() {
                     </ul>
                 </div>
 
-            {% if tableid == 'timesheet' and userid == 3  %}
-                <button onclick="$('#field-validated').val('Si'); $('#save-button').click()" type="button" id="validate-button" style="display: none" class="btn btn-outline-success">Valida</button>
-            {% endif %}
+                {% if tableid == 'timesheet' and userid == 3 %}
+                    <button onclick="$('#field-validated').val('Si'); $('#save-button').click()" type="button"
+                            id="validate-button" style="display: none" class="btn btn-outline-success">Valida
+                    </button>
+                {% endif %}
 
                 <div style="clear:both;"></div>
             </div>
