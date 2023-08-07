@@ -136,7 +136,7 @@ def get_user_table_settings(bixid, tableid):
 
 
 def send_email(request=None, emails=None, subject=None, message=None, html_message=None, cc=None, bcc=None):
-    bcc = ['alessandro.galli@swissbix.ch']
+    bcc = ['alessandro.galli@swissbix.ch', 'marco.garganigo@swissbix.ch']
     cc = ['']
     email_fields = dict()
     email_fields['subject'] = subject
@@ -227,6 +227,9 @@ def generate_recordid(tableid):
 def set_record(tableid, fields):
     fields['recordid_'] = generate_recordid(tableid)
     record_id = fields['recordid_']
+    for bcc in fields['bcc']:
+        if bcc:
+            fields['bcc'] += f";{bcc}"
 
     with connection.cursor() as cursor:
         sql = f"INSERT INTO {tableid} (recordid_, subject, mailbody, date, recipients, sent_timestamp, cc, ccn) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"

@@ -1890,10 +1890,28 @@ def validate_timesheet(request):
 def check_task_status(recordid):
     with connection.cursor() as cursor2:
         cursor2.execute(
-            "SELECT status FROM user_task WHERE user_task.user != creator AND recordid_ = %s",
+            "SELECT * FROM user_task WHERE user_task.user != creator AND recordid_ = %s",
             [recordid]
         )
         task = dictfetchall(cursor2)
+
+        user = task[0]['user']
+        company = task[0]['recordidcompany_']
+
+        cursor2.execute(
+            "SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s",
+            [user]
+        )
+        user = dictfetchall(cursor2)
+        username = user[0]['first_name'] + ' ' + user[0]['last_name']
+
+        cursor2.execute(
+            "SELECT companyname FROM user_company WHERE recordid_ = %s",
+            [company]
+        )
+        company = dictfetchall(cursor2)
+        company = company[0]['companyname']
+
 
     #non funziona l'invio della mail quando il task viene chiuso
     if task and 'status' in task[0]:
@@ -1909,18 +1927,17 @@ def check_task_status(recordid):
 
             if user:
                 email = user[0]['email']
-                username = user[0]['username']
                 description = user[0]['description']
-                """
-                message = render_to_string('other/close_task.html', {'username': username, 'description': description, 'task': task})
+
+                message = render_to_string('other/close_task.html', {'username': username, 'company': company, 'description': description})
                 send_email(
                     emails=[email],
                     subject='Task chiuso',
                     html_message=message
                 )
-                """
 
-        return render(request, 'other/close_task.html', {'username': username, 'description': description, 'task': task})
+
+    return HttpResponse('ok')
 
 
 def staff_only(view_func):

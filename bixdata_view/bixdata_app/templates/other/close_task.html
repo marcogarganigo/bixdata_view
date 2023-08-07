@@ -1,32 +1,5 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col" style="width: 100px"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="width: 25px">
-            </td>
-            <td style="margin: 0; padding: 0; width: 200px">
-                <b>{{ companyname }}</b>
-                <p style="margin: 0;">Da: {{ username }}</p>
-            </td>
-            <td style="width: 100px">
-                <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20">
-                {{ duedate }}
-                <br>
-                {% if planneddate != None %}
-                <img alt="Pianificato" src="https://cdn-icons-png.flaticon.com/512/1322/1322186.png" width="20">
-                {{ planneddate }}
-                {% else %}
-                <img alt="Non Pianificato" src="https://cdn-icons-png.flaticon.com/512/4407/4407014.png" width="20">
-                {% endif %}
-            </td>
-        </tr>
-    </tbody>
-</table>
-
+{{ username }} ha chiuso un task
+<br>
 {{ description }}
+<br>
+Azienda: {{ company }}
