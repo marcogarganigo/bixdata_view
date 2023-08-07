@@ -1663,7 +1663,7 @@ def rinnova_contratto(request):
             'startdate':datetime.datetime.now().strftime("%Y-%m-%d")
         }
     response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/rinnova_contratto", data=post_data)
-
+    return HttpResponse('ok')
 
 
 def sort_records(request):
