@@ -632,6 +632,10 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
     z-index: 100000 !important;
 }
 
+.swal-modal {
+    z-index: 100001 !important;
+}
+
 
 
 

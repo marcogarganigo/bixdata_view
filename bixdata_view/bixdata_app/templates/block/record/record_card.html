@@ -231,6 +231,8 @@
 
 
     function rinnova_contratto() {
+        $('.modal').close().
+        $('.modal-backdrop').
         swal({
             text: "Inserisci totale ore contrattuali",
             content: "input",
@@ -246,6 +248,7 @@
                     text: "Inserisci un valore numerico per le ore contrattuali.",
                     icon: "error",
                 });
+
                 return; // Stop further execution
             }
 
