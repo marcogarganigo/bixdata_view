@@ -227,16 +227,17 @@ def generate_recordid(tableid):
 def set_record(tableid, fields):
     fields['recordid_'] = generate_recordid(tableid)
     record_id = fields['recordid_']
+    concatenated_bcc = ""
     for bcc in fields['bcc']:
         if bcc:
-            fields['bcc'] += f";{bcc}"
+            concatenated_bcc += bcc + ";"
 
     with connection.cursor() as cursor:
         sql = f"INSERT INTO {tableid} (recordid_, subject, mailbody, date, recipients, sent_timestamp, cc, ccn) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
         values = (
             record_id, fields['subject'], fields['mailbody'], fields['date'], fields['recipients'],
             fields['timestamp'],
-            fields['cc'], fields['bcc'])
+            fields['cc'], concatenated_bcc)
         cursor.execute(sql, values)
 
     return record_id
