@@ -52,7 +52,7 @@
         {% for tms in timesheets %}
             <tr>
                 <td>{{ tms.date|date:"d/m/Y" }}</td>
-                <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }}</td>
+                <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }} {{tms.excludetravel}}</td>
                 <td>{{ tms.worktime_decimal }}</td>
                 {% if tms.excludetravel != 'Si' %}
                   <td>
