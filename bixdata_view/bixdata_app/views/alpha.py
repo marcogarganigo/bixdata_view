@@ -592,9 +592,7 @@ def get_chart(request, sql, id, name, layout, fields):
         for num in range(0, len(fields_chart)):
             value.append([row[num] for row in rows])
 
-
         labels = [row[-1] for row in rows]
-
 
         if None in labels:
             labels = ['Non assegnato' if v is None else v for v in labels]
@@ -603,7 +601,6 @@ def get_chart(request, sql, id, name, layout, fields):
             for j in range(len(value[i])):
                 if value[i][j] is not None:
                     value[i][j] = round(value[i][j], 2)
-
 
         context = {
             'value': value,
@@ -1113,7 +1110,7 @@ def save_record_fields(request):
     contextfunction = request.POST.get('contextfunction')
 
     selected_options = request.POST.getlist('service');
-    
+
     post_data = {
         'tableid': tableid,
         'recordid': recordid,
@@ -1648,20 +1645,17 @@ def get_block_ticket_timesheet(request, ticket, userid):
         return content
 
 
-from django.http import JsonResponse
-
 def rinnova_contratto(request):
     recordid = request.POST.get('recordid')
     contract_hours = request.POST.get('contract_hours')
     invoicenr = request.POST.get('invoicenr')
 
-    
     post_data = {
-            'recordid': recordid,
-            'contracthours': contract_hours,
-            'invoiceno': invoicenr,
-            'startdate':datetime.datetime.now().strftime("%Y-%m-%d")
-        }
+        'recordid': recordid,
+        'contracthours': contract_hours,
+        'invoiceno': invoicenr,
+        'startdate': datetime.datetime.now().strftime("%Y-%m-%d")
+    }
     response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/rinnova_contratto", data=post_data)
     return HttpResponse('ok')
 
@@ -1894,12 +1888,14 @@ def check_task_status(recordid):
             [recordid]
         )
         task = dictfetchall(cursor2)
-
-        user = task[0]['user']
-        company = task[0]['recordidcompany_']
+        if task:
+            user = task[0]['user']
+            company = task[0]['recordidcompany_']
+        else:
+            return HttpResponse('ok')
 
         cursor2.execute(
-            "SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s",
+            "SELECT first_name, last_name   FROM v_users WHERE sys_user_id = %s",
             [user]
         )
         user = dictfetchall(cursor2)
@@ -1912,8 +1908,6 @@ def check_task_status(recordid):
         company = dictfetchall(cursor2)
         company = company[0]['companyname']
 
-
-    #non funziona l'invio della mail quando il task viene chiuso
     if task and 'status' in task[0]:
         status = task[0]['status']
         if status == 'Chiuso':
@@ -1929,13 +1923,13 @@ def check_task_status(recordid):
                 email = user[0]['email']
                 description = user[0]['description']
 
-                message = render_to_string('other/close_task.html', {'username': username, 'company': company, 'description': description})
+                message = render_to_string('other/close_task.html',
+                                           {'username': username, 'company': company, 'description': description})
                 send_email(
                     emails=[email],
                     subject='Task chiuso',
                     html_message=message
                 )
-
 
     return HttpResponse('ok')
 
@@ -2114,6 +2108,33 @@ def new_report(request):
     return JsonResponse({'success': True})
 
 
-
 def test_select(request):
     return render(request, 'other/test.html')
+
+
+def order_settings(request):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT id FROM sys_table"
+        )
+        tables = dictfetchall(cursor)
+
+        for table in tables:
+            table_id = table['id']
+            sql = f"SELECT DISTINCT fieldid FROM sys_field WHERE tableid = '{table_id}'"
+            cursor.execute(sql)
+            fields = dictfetchall(cursor)
+            table['fields'] = [field['fieldid'] for field in fields]
+
+    return render(request, 'other/order_settings.html', {'tables': tables})
+
+
+def get_table_fields(request):
+    tableid = request.POST.get('tableid')
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT DISTINCT fieldid FROM sys_field WHERE tableid = '{tableid}'"
+        )
+        fields = dictfetchall(cursor)
+
+    return JsonResponse({'fields': fields})

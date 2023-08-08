@@ -131,10 +131,11 @@
                                            id="checkbox-{{ recordid }}"
                                            aria-label="Checkbox for following text input"
                                            onchange="set_checkbox_value(this)">
-                                    <input id="input-{{ recordid }}" type="hidden" name="{{ fieldname }}" value="{{ field.value }}">
+                                    <input id="input-{{ recordid }}" type="hidden" name="{{ fieldname }}"
+                                           value="{{ field.value }}">
 
                                     <script>
-                                    change_checkbox_view()
+                                        change_checkbox_view()
 
                                         function change_checkbox_view() {
                                             if ($('#input-{{ recordid }}').val() == 'Si') {
@@ -252,6 +253,7 @@
                                 <input type="hidden" class="hidden-input {{ mandatory }}" name="{{ field.fieldid }}"
                                        value="{{ field.recordid }}">
 
+
                                 <script>
                                     $(function () {
                                         function log(message) {
@@ -274,9 +276,9 @@
                                                     }
                                                 });
                                             },
-                                            minLength: 2,
+                                            minLength: 0, // Set minLength to 0 to show autocomplete on focus
                                             select: function (event, ui) {
-                                                //console.log( "Selected: " + ui.item.id );
+                                                // console.log( "Selected: " + ui.item.id );
                                                 $(this).closest('.field').find('.hidden-input').val(ui.item.id);
                                                 $.ajax({
                                                     url: "{% url 'get_badge' %}",
@@ -289,6 +291,19 @@
                                                         response(data.data);
                                                     }
                                                 });
+                                            }
+                                        }).focus(function () {
+                                            // Trigger autocomplete on focus
+                                            $(this).autocomplete("search", "");
+                                        });
+
+                                        // Handle empty input
+                                        $("#{{ fieldid }}-{{ recordid }}").on("input", function () {
+                                            var inputValue = $(this).val();
+                                            if (inputValue === "") {
+                                                $(this).val(""); // Imposta il valore predefinito
+                                                $(this).closest('.field').find('.hidden-input').val("");
+
                                             }
                                         });
                                     });
@@ -314,6 +329,7 @@
                                             select: function (event, ui) {
                                                 //console.log( "Selected: " + ui.item.id );
                                                 $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+
                                             }
                                         });
                                     }
@@ -362,19 +378,19 @@
                             selectedOptions.push(element.options[j].value);
                         }
                     }
-                    formData.push({ name: element.name, value: selectedOptions });
+                    formData.push({name: element.name, value: selectedOptions});
                 } else if (element.type === "checkbox") {
                     if (element.checked) {
-                        formData.push({ name: element.name, value: element.value });
+                        formData.push({name: element.name, value: element.value});
                     }
                 } else {
-                    formData.push({ name: element.name, value: element.value });
+                    formData.push({name: element.name, value: element.value});
                 }
             }
         }
         return formData;
     }
-    
+
     function save_record(el) {
         let necessaryFields = document.querySelectorAll('.necessary');
         let hasNecessaryFields = false;
@@ -400,7 +416,7 @@
             closeNewRecordModal()
             //var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
             //var serialized_json = convertFormToJSON(serialized_array);
-            serialized_form=serializeForm($(el).closest('.fields_container').find("select,textarea,input"));
+            serialized_form = serializeForm($(el).closest('.fields_container').find("select,textarea,input"));
             serialized_json = convertFormToJSON(serialized_form);
             var post_data = [];
             post_data.push({name: 'tableid', value: '{{ tableid }}'});
@@ -469,11 +485,11 @@
 <script>
 
 
-  $('#fields_container_{{ tableid }}_{{ recordid }}').find('.js-example-basic-single').each(function () {
-    $(this).select2({
-      dropdownParent: $(this).parent()
-    }).addClass('select2-initialized');
-  });
+    $('#fields_container_{{ tableid }}_{{ recordid }}').find('.js-example-basic-single').each(function () {
+        $(this).select2({
+            dropdownParent: $(this).parent()
+        }).addClass('select2-initialized');
+    });
 
 
     $(document).on('select2:open', function (e) {

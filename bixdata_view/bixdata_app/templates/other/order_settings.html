@@ -1,0 +1,31 @@
+<div style="float: left">
+{% for table in tables %}
+    <button class=" btn btn-secondary" onclick="get_table_fields('{{ table.id }}')">{{ table.id }}</button>
+    <br>
+{% endfor%}
+        </div>
+
+<div class="card card-body" style="float: right; width: 50rem; height: 50rem">
+<div id="response-container">
+    {% for field in fields %}
+    {{ field }}
+    {% endfor %}
+</div>
+</div>
+
+<script>
+    function get_table_fields(tableid) {
+        $.ajax({
+            url: '/get_table_fields/',
+            type: 'POST',
+            data: {
+                tableid: tableid
+            },
+            success: function (response) {
+                $('#response-container').html(response.fields);
+                alert(response.fields)
+            }
+        });
+    }
+
+</script>

@@ -83,6 +83,24 @@
                 });
             }
 
+            function getAdminOrderSettings(page) {
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'order_settings' %}",
+                    data: {
+                        'page': page
+                    },
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
+
 
             function getRenderChartsView() {
                 var serialized_data = [];
@@ -668,6 +686,9 @@
                                         <ul class="side-nav-second-level">
                                             <li onclick="getContentRecordsAdmin($(this).find('a').text())">
                                                 <a class="side-nav-txt" onclick="setColor(this)">Grafici</a>
+                                            </li>
+                                            <li onclick="getAdminOrderSettings($(this).find('a').text())">
+                                                <a class="side-nav-txt" onclick="setColor(this)">Ordine campi</a>
                                             </li>
 
                                         </ul>
