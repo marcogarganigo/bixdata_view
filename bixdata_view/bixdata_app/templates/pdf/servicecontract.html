@@ -54,7 +54,7 @@
                 <td>{{ tms.date|date:"d/m/Y" }}</td>
                 <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }}</td>
                 <td>{{ tms.worktime_decimal }}</td>
-                {% if excludetravel != 'Si' %}
+                {% if tms.excludetravel != 'Si' %}
                   <td>
                     {% if tms.traveltime_decimal is not None %}
                       {{ tms.traveltime_decimal }}
