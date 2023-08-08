@@ -45,16 +45,16 @@
           <th><b>Data</b></th>
           <th><b>Tecnico</b></th>
           <th><b>Tempo</b></th>
-          <th id="trasferta" style="display: none"><b>Trasferta</b></th>
+          <th id="trasferta" style="display: none"><b>Trasferta: {{excludetravel}}</b></th>
           <th><b>Descrizione</b></th>
         </tr>
 
         {% for tms in timesheets %}
             <tr>
                 <td>{{ tms.date|date:"d/m/Y" }}</td>
-                <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }} {{tms.excludetravel}}</td>
+                <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }} </td>
                 <td>{{ tms.worktime_decimal }}</td>
-                {% if tms.excludetravel != 'Si' %}
+                {% if excludetravel != 'Si' %}
                   <td>
                     {% if tms.traveltime_decimal is not None %}
                       {{ tms.traveltime_decimal }}
