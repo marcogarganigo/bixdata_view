@@ -55,15 +55,15 @@
                 <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }}</td>
                 <td>{{ tms.worktime_decimal }}</td>
                 {% if excludetravel != 'Si' %}
-                <td>
-                  {% if tms.traveltime_decimal is not None %}
-                    {{ tms.traveltime_decimal }}
-                  {% endif %}
-                </td>
-                    <script>
-                        document.getElementById("trasferta").removeAttribute("style");
-                        document.getElementById("td-trasferta").removeAttribute("style");
-                    </script>
+                  <td>
+                    {% if tms.traveltime_decimal is not None %}
+                      {{ tms.traveltime_decimal }}
+                    {% endif %}
+                  </td>
+                  <script>
+                      document.getElementById("trasferta").removeAttribute("style");
+                      document.getElementById("td-trasferta").removeAttribute("style");
+                  </script>
                 {% endif %}
                 <td>{{ tms.description }}</td>
             </tr>
