@@ -1,31 +1,149 @@
 <div style="float: left">
-{% for table in tables %}
-    <button class=" btn btn-secondary" onclick="get_table_fields('{{ table.id }}')">{{ table.id }}</button>
+    {% for table in tables %}
+    <button class="btn btn-secondary table-button" data-table-id="{{ table.id }}">{{ table.id }}</button>
     <br>
-{% endfor%}
-        </div>
-
-<div class="card card-body" style="float: right; width: 50rem; height: 50rem">
-<div id="response-container">
-    {% for field in fields %}
-    {{ field }}
     {% endfor %}
 </div>
-</div>
 
-<script>
-    function get_table_fields(tableid) {
-        $.ajax({
-            url: '/get_table_fields/',
-            type: 'POST',
-            data: {
-                tableid: tableid
-            },
-            success: function (response) {
-                $('#response-container').html(response.fields);
-                alert(response.fields)
-            }
-        });
+<div id="response-container" style="float: left; margin-left: 40%;"></div>
+
+<button id="save-button" onclick="saveFieldsOrder()" class="btn btn-primary">Save</button>
+
+<input id="current-tableid" type="hidden">
+
+<style>
+
+    #status {
+        all: unset;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        padding: 10px;
+        justify-content: space-between;
+        background-color: white;
     }
 
+
+    .drag-item {
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        padding: 10px;
+        justify-content: space-between;
+        background-color: white;
+
+    }
+    .drag-item.hidden {
+        background-color: #f2f2f2;
+    }
+    .btn-toggle {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+    .btn-save {
+        margin-top: 10px;
+    }
+
+
+</style>
+
+
+<script>
+
+    $(document).ready(function () {
+        var drake;
+        var tsi_id = [];
+
+        $(".drag-item").each(function () {
+            tsi_id.push(this);
+        });
+
+        drake = dragula(tsi_id);
+        drake.on('drop', function (el, target) {
+            updateOrder();
+        });
+
+        $(".table-button").click(function () {
+            const tableId = $(this).data('table-id');
+            $('#current-tableid').val(tableId);
+            getTableFields(tableId);
+        });
+
+        function getTableFields(tableId) {
+            $.ajax({
+                url: '/get_table_fields/',
+                type: 'POST',
+                data: {
+                    tableid: tableId
+                },
+                success: function (response) {
+                    displayFields(response.fields);
+                }
+            });
+        }
+
+        function displayFields(fields) {
+            var fieldContainer = $('#response-container');
+            fieldContainer.empty();
+
+            fields.forEach(function (field, index) {
+                var fieldElement = $('<div>', {
+                    id: field,
+                    class: 'drag-item',
+                    'data-hidden': 'false',
+                    'data-order': index
+                });
+
+                var buttonElement = $('<button>', {
+                    class: 'btn btn-primary btn-toggle',
+                    text: 'Visible'
+                }).on('click', function () {
+                    var isHidden = fieldElement.attr('data-hidden');
+                    fieldElement.attr('data-hidden', isHidden === 'true' ? 'false' : 'true');
+                    buttonElement.text(isHidden === 'true' ? 'Visible' : 'Hidden');
+                });
+
+                fieldElement.append(buttonElement);
+                fieldElement.append($('<span>', { text: field }));
+                fieldContainer.append(fieldElement);
+            });
+
+            drake.containers.push(fieldContainer.get(0));
+        }
+
+        function updateOrder() {
+            var fieldElements = $('.drag-item');
+            fieldElements.each(function (index) {
+                $(this).attr('data-order', index);
+            });
+        }
+
+        function saveFieldsOrder() {
+            var fieldOrder = [];
+            $('.drag-item').each(function () {
+                var fieldId = this.id;
+                var fieldOrderValue = $(this).attr('data-order');
+                var isHidden = $(this).attr('data-hidden');
+                fieldOrder.push({
+                    id: fieldId,
+                    order: fieldOrderValue,
+                    hidden: isHidden
+                });
+            });
+
+            $.ajax({
+                url: '/save_fields_order/',
+                type: 'POST',
+                data: {
+                    fields: JSON.stringify(fieldOrder),
+                    tableid: $('#current-tableid').val()
+                },
+                success: function (response) {
+                    console.log('Field order saved:', response);
+                }
+            });
+        }
+    });
 </script>

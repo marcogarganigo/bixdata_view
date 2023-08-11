@@ -2119,22 +2119,52 @@ def order_settings(request):
         )
         tables = dictfetchall(cursor)
 
-        for table in tables:
-            table_id = table['id']
-            sql = f"SELECT DISTINCT fieldid FROM sys_field WHERE tableid = '{table_id}'"
-            cursor.execute(sql)
-            fields = dictfetchall(cursor)
-            table['fields'] = [field['fieldid'] for field in fields]
-
     return render(request, 'other/order_settings.html', {'tables': tables})
 
 
 def get_table_fields(request):
-    tableid = request.POST.get('tableid')
+    if request.method == 'POST':
+        tableid = request.POST.get('tableid')
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"SELECT DISTINCT fieldid FROM sys_field WHERE tableid = %s",
+                [tableid]
+            )
+            fields = [row[0] for row in cursor.fetchall()]
+
+        return JsonResponse({'fields': fields})
+
+
+def save_fields_order(request):
+    if request.method == 'POST':
+        tableid = request.POST.get('tableid')
+        fields_json = request.POST.get('fields')
+        fields = json.loads(fields_json)  # Parse JSON string to a Python list
+
+        with connection.cursor() as cursor:
+            for count, field in enumerate(fields):
+                cursor.execute(
+                    f"UPDATE sys_user_order SET userid = 1, fieldorder = {count} WHERE tableid = '{tableid}' AND fieldid = '{field['id']}'"
+                )
+
+        return JsonResponse({'success': True})
+
+
+def update_pending_timesheet(request):
     with connection.cursor() as cursor:
         cursor.execute(
-            f"SELECT DISTINCT fieldid FROM sys_field WHERE tableid = '{tableid}'"
+            "SELECT * FROM user_timesheet WHERE deleted_ = 'N' AND status = 'To Invoice when Ticket Closed' AND date >= '2023-07-01'"
         )
-        fields = dictfetchall(cursor)
+        timesheets = dictfetchall(cursor)
 
-    return JsonResponse({'fields': fields})
+        for timesheet in timesheets:
+            post_data = {
+                'tableid': timesheet['tableid'],
+                'recordid': timesheet['recordid_'],
+            }
+
+            response = requests.post(
+                f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
+
+    return HttpResponse('ok')
+

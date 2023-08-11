@@ -17413,14 +17413,7 @@ html[data-theme=dark] .text-secondary {
   z-index: 9999;
 }
 
-#status {
-  width: 80px;
-  height: 80px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin: -40px 0 0 -40px;
-}
+
 
 @-webkit-keyframes bouncing-loader {
   to {

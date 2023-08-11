@@ -79,7 +79,8 @@ urlpatterns = [
          name='password_reset'),
     path('get_badge/', alpha.get_badge, name='get_badge'),
     path('get_timesheet_serviceassets/', alpha.get_timesheet_serviceassets, name='get_timesheet_serviceassets'),
-    path('get_block_record_badge/', alpha.request_block_record_badge, kwargs={'http_response': True},name='get_block_record_badge'),
+    path('get_block_record_badge/', alpha.request_block_record_badge, kwargs={'http_response': True},
+         name='get_block_record_badge'),
     path('get_bixdata_updates/', alpha.get_bixdata_updates, name='get_bixdata_updates'),
     path('new_update/', alpha.new_update, name='new_update'),
     path('admin_page/', alpha.admin_page, name='admin_page'),
@@ -111,4 +112,6 @@ urlpatterns = [
     path('test_select/', alpha.test_select, name='test_select'),
     path('order_settings/', alpha.order_settings, name='order_settings'),
     path('get_table_fields/', alpha.get_table_fields, name='get_table_fields'),
+    path('save_fields_order/', alpha.save_fields_order, name='save_fields_order'),
+    path('update_pending_timesheet/', alpha.update_pending_timesheet, name='update_pending_timesheet'),
 ]
