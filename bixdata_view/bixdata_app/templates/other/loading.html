@@ -4,54 +4,92 @@
 
 <head>
     <style type="text/css">
-        .loaderBix {
-            border: 7px solid rgb(247, 247, 247, 1);
-            border-top: 7px solid black;
+        .cool-loader-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .cool-loader {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            animation: rotate 1.5s ease-in-out infinite;
+        }
+
+        .cool-loader:before,
+        .cool-loader:after {
+            content: '';
+            position: absolute;
+            border: 5px solid transparent;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spinloader 1.3s linear infinite;
-            box-sizing: content-box;
         }
 
-        .loaderBix img {
-            height: 60px;
-            width: 60px;
-            animation: spinlogo 1.3s linear infinite;
-            box-sizing: content-box;
+        .cool-loader:before {
+            border-top-color: #074048;
+            border-bottom-color: #074048;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            animation: spin 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
         }
 
-        @keyframes spinloader {
+        .cool-loader:after {
+            border-left-color: #e74c3c;
+            border-right-color: #e74c3c;
+            top: 6px;
+            left: 6px;
+            right: 6px;
+            bottom: 6px;
+            animation: spin-reverse 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+        }
+
+        .loader-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 60%;
+            max-height: 60%;
+        }
+
+        @keyframes rotate {
             0% {
                 transform: rotate(0deg);
             }
-
             100% {
                 transform: rotate(360deg);
             }
         }
 
-        @keyframes spinlogo {
+        @keyframes spin {
             0% {
-                transform: rotate(360deg);
-            }
-
-            100% {
                 transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(180deg);
+            }
+        }
+
+        @keyframes spin-reverse {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(-180deg);
             }
         }
     </style>
 </head>
 
 <body>
-    <p style="text-align: center">
-
-    <div class="loaderBix" style="margin: auto; margin-top: 20%">
-        <img src="{% static 'images/swissbix.logo-removebg-preview.png' %}" />
+    <div class="cool-loader-container">
+        <div class="cool-loader">
+            <img class="loader-image" src="{% static 'images/swissbix.logo-removebg-preview.png' %}" alt="Logo" />
+        </div>
     </div>
-
-    </p>
-
 </body>
 
 </html>

@@ -192,9 +192,18 @@
                             {% if field.fieldtypeid == 'Data' %}
                                 <label>
                                     <input id="{{ fieldid }}" name="{{ fieldname }}"
-                                           class="form-control mb-2 {{ mandatory }}" type="date"
+                                           class="form-control mb-2 datepicker {{ mandatory }}" type="date"
                                            value="{{ field.valuecode.0.code }}">
                                 </label>
+                                <script>
+                                    $(document).ready(function () {
+
+                                        // assuming the controls you want to attach the plugin to
+                                        // have the "datepicker" class set
+                                        $('input.datepicker').Zebra_DatePicker();
+
+                                    });
+                                </script>
                             {% endif %}
                             {% if field.fieldtypeid == 'Seriale' %}
                                 <p>{{ field.value }}</p>
@@ -424,7 +433,6 @@
             post_data.push({name: 'fields', value: serialized_json});
             contextfunction = '{{contextfunction}}'
             post_data.push({name: 'contextfunction', value: contextfunction});
-
 
             $.ajax({
                 type: "POST",

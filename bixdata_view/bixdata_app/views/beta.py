@@ -143,7 +143,7 @@ def send_email(request=None, emails=None, subject=None, message=None, html_messa
     email_fields['mailbody'] = message
     email_fields['date'] = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     email_fields['timestamp'] = datetime.datetime.now().strftime('%H:%M:%S')
-    email_fields['recipients'] = emails
+    email_fields['recipients'] = ';'.join(emails)
     email_fields['cc'] = cc
     email_fields['bcc'] = bcc
     recordid = set_record('user_email', email_fields)

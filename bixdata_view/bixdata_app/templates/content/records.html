@@ -47,6 +47,10 @@
                 e.preventDefault();
                 refresh()
             }
+            else if (e.ctrlKey && e.which == 75) {
+                e.preventDefault();
+                $("#searchTerm").focus();
+            }
         });
 
         if (window.innerWidth <= min_width) {

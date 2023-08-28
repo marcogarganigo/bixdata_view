@@ -1130,11 +1130,11 @@ def save_record_fields(request):
         if tableid == 'ticketbixdata' and 'description' in fields_dict:
             message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(
                 request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
-            send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'],
+            send_email(emails=['marco.garganigo@swissbix.ch','alessandro.galli@swissbix.ch'],
                        subject='Supporto bixdata',
-                       message=message)
+                       html_message=message)
 
-        if tableid == 'task':
+        elif tableid == 'task':
             if fields_dict['user'] != fields_dict['creator']:
                 with connection.cursor() as cursor:
                     cursor.execute("SELECT email FROM v_users WHERE sys_user_id = %s", [fields_dict['user']])
@@ -2167,4 +2167,6 @@ def update_pending_timesheet(request):
                 f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
 
     return HttpResponse('ok')
+
+
 
