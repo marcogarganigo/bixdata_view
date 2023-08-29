@@ -4,6 +4,8 @@
     <br>
     {% endfor %}
 </div>
+<button class="btn btn-secondary field-option" value="campiinserimento">campiinserimento</button>
+<button class="btn btn-secondary field-option" value="risultatiricerca">risultatiricerca</button>
 
 <div id="response-container" style="float: left; margin-left: 40%;"></div>
 
@@ -12,6 +14,10 @@
 <input id="current-tableid" type="hidden">
 
 <style>
+
+    .field-option {
+        display: none;
+    }
 
     #status {
         all: unset;
@@ -68,15 +74,22 @@
         $(".table-button").click(function () {
             const tableId = $(this).data('table-id');
             $('#current-tableid').val(tableId);
-            getTableFields(tableId);
+            $('.field-option').show();
+            $('.field-option').attr('data-table-id', tableId);
         });
 
-        function getTableFields(tableId) {
+        $(".field-option").click(function () {
+            const tableId = $(this).data('table-id');
+            getTableFields(tableId, $(this).text());
+        });
+
+        function getTableFields(tableId, type) {
             $.ajax({
                 url: '/get_table_fields/',
                 type: 'POST',
                 data: {
-                    tableid: tableId
+                    tableid: tableId,
+                    type: type
                 },
                 success: function (response) {
                     displayFields(response.fields);
@@ -84,34 +97,58 @@
             });
         }
 
-        function displayFields(fields) {
-            var fieldContainer = $('#response-container');
-            fieldContainer.empty();
+function displayFields(fields) {
+    var fieldContainer = $('#response-container');
+    fieldContainer.empty();
 
-            fields.forEach(function (field, index) {
-                var fieldElement = $('<div>', {
-                    id: field,
-                    class: 'drag-item',
-                    'data-hidden': 'false',
-                    'data-order': index
-                });
+    fields.forEach(function (field, index) {
+        var fieldElement = $('<div>', {
+            id: field,
+            class: 'drag-item',
+            'data-order': index
+        });
 
-                var buttonElement = $('<button>', {
-                    class: 'btn btn-primary btn-toggle',
-                    text: 'Visible'
-                }).on('click', function () {
-                    var isHidden = fieldElement.attr('data-hidden');
-                    fieldElement.attr('data-hidden', isHidden === 'true' ? 'false' : 'true');
-                    buttonElement.text(isHidden === 'true' ? 'Visible' : 'Hidden');
-                });
+        var checkboxElement = $('<input>', {
+            type: 'checkbox',
+            class: 'form-check-input',
+            id: 'exampleCheck1'
+        });
 
-                fieldElement.append(buttonElement);
-                fieldElement.append($('<span>', { text: field }));
-                fieldContainer.append(fieldElement);
-            });
+        var optionsDiv = $('<div>', {
+            class: 'options-div',
+            style: 'display: none;'
+        });
 
-            drake.containers.push(fieldContainer.get(0));
-        }
+        var spanElement1 = $('<span>', {
+            text: 'Option 1'
+        });
+        optionsDiv.append(spanElement1);
+
+        var spanElement2 = $('<span>', {
+            text: 'Option 2'
+        });
+        optionsDiv.append(spanElement2);
+
+        var buttonElement = $('<button>', {
+            class: 'btn btn-primary btn-toggle',
+            text: 'Options'
+        }).on('click', function () {
+            optionsDiv.slideToggle();
+        });
+
+        fieldElement.append(checkboxElement);
+        fieldElement.append($('<span>', { text: field }));
+        fieldElement.append(buttonElement);
+        fieldElement.append(optionsDiv);
+
+        fieldContainer.append(fieldElement);
+    });
+
+    drake.containers.push(fieldContainer.get(0));
+}
+
+
+
 
         function updateOrder() {
             var fieldElements = $('.drag-item');
@@ -125,11 +162,9 @@
             $('.drag-item').each(function () {
                 var fieldId = this.id;
                 var fieldOrderValue = $(this).attr('data-order');
-                var isHidden = $(this).attr('data-hidden');
                 fieldOrder.push({
                     id: fieldId,
                     order: fieldOrderValue,
-                    hidden: isHidden
                 });
             });
 

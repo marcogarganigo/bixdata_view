@@ -1024,13 +1024,13 @@ def get_block_record_fields(request):
     context['recordid'] = recordid
     context['master_tableid'] = master_tableid
     context['master_recordid'] = master_recordid
-    """
+
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()
         block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context,request=request)
     else:
-    """
-    block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
+
+        block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
 
     if (http_response):
         return HttpResponse(block_record_fields)
@@ -2125,10 +2125,11 @@ def order_settings(request):
 def get_table_fields(request):
     if request.method == 'POST':
         tableid = request.POST.get('tableid')
+        typepreference = request.POST.get('type')
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT DISTINCT fieldid FROM sys_field WHERE tableid = %s",
-                [tableid]
+                f"SELECT DISTINCT fieldid FROM sys_user_order WHERE tableid = %s and typepreference = %s",
+                [tableid, typepreference]
             )
             fields = [row[0] for row in cursor.fetchall()]
 
