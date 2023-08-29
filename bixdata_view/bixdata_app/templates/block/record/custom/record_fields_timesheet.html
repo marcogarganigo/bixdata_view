@@ -2,7 +2,6 @@
     function addNewRow() {
         // Get reference to the table body
         var tableBody = document.querySelector('#myTable-{{ timesheet }} tbody');
-        alert('mytable-{{ timesheet }}')
 
         // Create a new row
         var newRow = document.createElement('tr');
@@ -143,6 +142,75 @@
                 }
             });
         }
+    }
+
+    function getprojectid() {
+        var projectid = '00000000000000000000000000001317';
+        $.ajax({
+            type: "POST",
+            url: "{% url 'get_project_id' %}",
+            data: {projectid: projectid},
+            success: function (response) {
+              $.each(response, function(index, item) {
+                $.each(item, function(index, item) {
+
+                    //alert(item.quantity)
+
+                    // Get reference to the table body
+                    var tableBody = document.querySelector('#myTable-{{ timesheet }} tbody');
+
+                    // Create a new row
+                    var newRow = document.createElement('tr');
+                    //add a remove button
+                    var remove = document.createElement('i');
+                    remove.setAttribute('class', 'mdi mdi-close');
+                    remove.setAttribute('onclick', 'removeRow(this)');
+                    newRow.appendChild(remove);
+
+
+                    // Create three columns for the new row
+                    var column1 = document.createElement('td');
+                    var column1Input = document.createElement('input');
+                    column1Input.setAttribute('type', 'text');
+                    column1Input.setAttribute('class', 'form-control');
+                    column1Input.setAttribute('placeholder', 'Descrizione');
+                    column1Input.setAttribute('value', item.name);
+                    column1.appendChild(column1Input);
+
+                    var column2 = document.createElement('td');
+                    var column2Input = document.createElement('input');
+                    column2Input.setAttribute('type', 'number');
+                    column2Input.setAttribute('class', 'form-control');
+                    column2Input.setAttribute('placeholder', 'Quantità prevista');
+                    column2Input.setAttribute('value', item.quantity);
+                    column2.appendChild(column2Input);
+
+                    var column3 = document.createElement('td');
+                    var column3Input = document.createElement('input');
+                    column3Input.setAttribute('type', 'number');
+                    column3Input.setAttribute('class', 'form-control');
+                    column3Input.setAttribute('placeholder', 'Quantità installata');
+                    column3.appendChild(column3Input);
+
+                    // Append the columns to the new row
+                    newRow.appendChild(column1);
+                    newRow.appendChild(column2);
+                    newRow.appendChild(column3);
+
+                    // Append the new row to the table body
+                    tableBody.appendChild(newRow);
+
+                });
+
+                });
+
+            },
+            error: function () {
+                alert('ko')
+            }
+
+        })
+
     }
 </script>
 
@@ -328,6 +396,9 @@
             <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary mdi mdi-plus"
                     style="width: auto" onclick="addNewRow(this)">
 
+            </button>
+            <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary "
+                    style="width: auto" onclick="getprojectid()">recupera materiale progetto
             </button>
             <!-- Bootstrap table -->
             <table id="myTable-{{ timesheet }}" class="table">

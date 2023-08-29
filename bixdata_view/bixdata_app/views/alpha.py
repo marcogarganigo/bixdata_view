@@ -2170,4 +2170,19 @@ def update_pending_timesheet(request):
     return HttpResponse('ok')
 
 
+def get_project_id(request):
+    if request.method == 'POST':
+            projectid = request.POST.get('projectid')
+            print(projectid)
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"SELECT id, name, quantity FROM user_dealline WHERE recordidproject_ = '{projectid}'"
+                )
+                rows = dictfetchall(cursor)
+                print(rows)
+
+                return JsonResponse({'rows': rows})
+
+
+
 
