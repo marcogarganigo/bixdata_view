@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<button type="button" class="btn btn-primary" onclick="checkInstance()">
+  Launch demo modal
+</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+    const modal = document.getElementById('exampleModal');
+    const toggleButton = document.querySelector('.btn-primary');
+
+    function checkInstance() {
+        $.ajax({
+            url: "{% url 'test_lock' %}",
+            type: "GET",
+            dataType: "json",
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            success: function (data) {
+                if (!data.instance) {
+                    $.ajax({
+                        url: "{% url 'test_lock' %}",
+                        type: "POST",
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                            instance: 'True'
+                        },
+                        success: function () {
+                            toggleButton.disabled = true;
+                            $('.modal').modal('show');
+                        },
+                        error: function () {
+                            alert('Error');
+                        }
+                    });
+                } else {
+                    alert('Instance is locked');
+                }
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+    }
+
+    modal.addEventListener('hidden.bs.modal', function () {
+        $.ajax({
+            url: "{% url 'test_lock' %}",
+            type: "POST",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                instance: 'False'
+            },
+            success: function () {
+                toggleButton.disabled = false;
+            }
+        });
+    });
+</script>
+{% endblock %}

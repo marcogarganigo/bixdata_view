@@ -115,4 +115,6 @@ urlpatterns = [
     path('save_fields_order/', alpha.save_fields_order, name='save_fields_order'),
     path('update_pending_timesheet/', alpha.update_pending_timesheet, name='update_pending_timesheet'),
     path('get_project_id/', alpha.get_project_id, name='get_project_id'),
+    path('test_lock/', alpha.test_lock, name='test_lock'),
+    path('testtest/', alpha.testtest, name='testtest'),
 ]

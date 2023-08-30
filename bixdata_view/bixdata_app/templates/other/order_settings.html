@@ -83,7 +83,7 @@
             $('#current-tableid').val(tableId);
             $('.field-option').show();
             $('#save-button').show()
-            $('.field-option').attr('data-table-id', tableId);
+            $('.field-option').data('table-id', tableId)
         });
 
         $(".field-option").click(function () {

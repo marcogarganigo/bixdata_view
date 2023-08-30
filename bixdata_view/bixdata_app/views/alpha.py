@@ -1,5 +1,7 @@
 import tempfile
 import uuid
+import threading
+from django.contrib.sessions.models import Session
 
 import pyperclip
 from aiohttp.web_fileresponse import FileResponse
@@ -1027,7 +1029,8 @@ def get_block_record_fields(request):
 
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()
-        block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context,request=request)
+        block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context,
+                                               request=request)
     else:
 
         block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
@@ -1130,7 +1133,7 @@ def save_record_fields(request):
         if tableid == 'ticketbixdata' and 'description' in fields_dict:
             message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(
                 request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
-            send_email(emails=['marco.garganigo@swissbix.ch','alessandro.galli@swissbix.ch'],
+            send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'],
                        subject='Supporto bixdata',
                        html_message=message)
 
@@ -2172,17 +2175,41 @@ def update_pending_timesheet(request):
 
 def get_project_id(request):
     if request.method == 'POST':
-            projectid = request.POST.get('projectid')
-            print(projectid)
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    f"SELECT id, name, quantity FROM user_dealline WHERE recordidproject_ = '{projectid}'"
-                )
-                rows = dictfetchall(cursor)
-                print(rows)
+        projectid = request.POST.get('projectid')
+        print(projectid)
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"SELECT id, name, quantity FROM user_dealline WHERE recordidproject_ = '{projectid}'"
+            )
+            rows = dictfetchall(cursor)
+            print(rows)
 
-                return JsonResponse({'rows': rows})
+            return JsonResponse({'rows': rows})
 
 
+
+def testtest(request):
+    return render(request, 'other/test_lock.html')
+
+
+
+
+
+
+
+is_locked = False
+
+def test_lock(request):
+    global is_locked
+
+    if request.method == 'POST':
+        data = request.POST.get('instance')
+        if data == 'True':
+            is_locked = True
+        elif data == 'False':
+            is_locked = False
+        return JsonResponse({'instance': is_locked})
+    elif request.method == 'GET':
+        return JsonResponse({'instance': is_locked})
 
 
