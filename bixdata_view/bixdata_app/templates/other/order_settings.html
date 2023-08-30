@@ -4,18 +4,20 @@
     <br>
     {% endfor %}
 </div>
+
+<div style="margin-left: 45%" id="settings-container">
 <button class="btn btn-secondary field-option" value="campiinserimento">campiinserimento</button>
 <button class="btn btn-secondary field-option" value="risultatiricerca">risultatiricerca</button>
+    <button id="save-button" onclick="saveFieldsOrder()" class="btn btn-primary">Save</button>
+</div>
 
 <div id="response-container" style="float: left; margin-left: 40%;"></div>
-
-<button id="save-button" onclick="saveFieldsOrder()" class="btn btn-primary">Save</button>
 
 <input id="current-tableid" type="hidden">
 
 <style>
 
-    .field-option {
+    .field-option, #save-button {
         display: none;
     }
 
@@ -80,6 +82,7 @@
             const tableId = $(this).data('table-id');
             $('#current-tableid').val(tableId);
             $('.field-option').show();
+            $('#save-button').show()
             $('.field-option').attr('data-table-id', tableId);
         });
 
@@ -97,6 +100,7 @@
                     type: type
                 },
                 success: function (response) {
+                    console.info('Table fields:', response.fields);
                     displayFields(response.fields);
                 }
             });
