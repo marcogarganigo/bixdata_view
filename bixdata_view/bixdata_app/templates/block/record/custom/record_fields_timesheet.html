@@ -153,10 +153,12 @@
         // Print the array to the console
         console.log(rowsArray);
     }
-     
+
 
     function getprojectid() {
-        var projectid = '00000000000000000000000000001317';
+         //pick inpaut value by name
+        var projectid = document.getElementsByName("recordidproject_")[0].value;
+
         $.ajax({
             type: "POST",
             url: "{% url 'get_project_id' %}",
