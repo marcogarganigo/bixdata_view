@@ -2238,7 +2238,13 @@ def test_lock(request):
             if rows:
                 is_locked = True
                 lock_instance = rows[0]
-                return JsonResponse({'success': False})
+                with connection.cursor() as cursor1:
+                    cursor1.execute(
+                        "SELECT username FROM v_users WHERE sys_user_id = %s", [lock_instance[0]]
+                    )
+                    rows = dictfetchall(cursor1)
+                    user = rows[0]['username']
+                return JsonResponse({'success': False, 'user': user})
             else:
                 timestamp = time.time()
 
