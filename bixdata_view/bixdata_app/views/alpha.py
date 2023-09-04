@@ -1032,7 +1032,8 @@ def get_block_record_fields(request):
         context['block_record_fields'] = render_to_string('block/record/record_fields.html', context, request=request)
         block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context, request=request)
     else:
-        block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
+        context['block_record_fields'] = render_to_string('block/record/record_fields.html', context, request=request)
+        block_record_fields = render_to_string('block/record/record_fields_container.html', context, request=request)
 
     if (http_response):
         return HttpResponse(block_record_fields)
