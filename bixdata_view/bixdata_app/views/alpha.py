@@ -2134,7 +2134,12 @@ def order_settings(request):
         )
         tables = dictfetchall(cursor)
 
-    return render(request, 'other/order_settings.html', {'tables': tables})
+        cursor.execute(
+            "SELECT * FROM v_users WHERE is_active = 1"
+        )
+        users = dictfetchall(cursor)
+
+    return render(request, 'other/order_settings.html', {'tables': tables, 'users': users})
 
 
 def get_table_fields(request):
