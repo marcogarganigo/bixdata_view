@@ -1,37 +1,39 @@
-<div id="omni-container-timesheet"  style="height: calc(100% - 100px); overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
+<div id="universal-container-timesheet" style="height: 90%">
 
-<div>
-
-    <div id="fields-scroll-container">
-
-    {{ block_record_fields|safe }}
-
-                {% if contextfunction == 'view' %}
-            <style>
-
-                #save-button-{{ recordid }} {
-                    display: none;
-                }
-            </style>
-
-            <script>
-
-                $("#fields-scroll-container input").attr("disabled", true);
-                $("#fields-scroll-container select").attr("disabled", true);
-                $("#fields-scroll-container textarea").attr("disabled", true);
-                $("save-button-{{ recordid }}").remove();
+    <div id="omni-container-timesheet" style="height: 90%; overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
 
 
-            </script>
-        {% endif %}
+        <div id="fields-scroll-container">
 
-                <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class="btn btn-primary" onclick="save_record(this)">Salva</button>
+            {{ block_record_fields|safe }}
+
+            {% if contextfunction == 'view' %}
+                <style>
+
+                    #save-button-{{ recordid }} {
+                        display: none;
+                    }
+                </style>
+
+                <script>
+
+                    $("#fields-scroll-container input").attr("disabled", true);
+                    $("#fields-scroll-container select").attr("disabled", true);
+                    $("#fields-scroll-container textarea").attr("disabled", true);
+                    $("save-button-{{ recordid }}").remove();
 
 
+                </script>
+            {% endif %}
 
 
+        </div>
     </div>
-</div>
+
+
+    <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class="btn btn-primary"
+            onclick="save_record(this)">Salva
+    </button>
 
 
 </div>
@@ -62,7 +64,7 @@
             closeNewRecordModal()
             //var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
             //var serialized_json = convertFormToJSON(serialized_array);
-                serialized_form = serializeForm($(el).closest('#omni-container-timesheet').find('.fields_container').find("select,textarea,input"));
+            serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
             serialized_json = convertFormToJSON(serialized_form);
             var post_data = [];
             post_data.push({name: 'tableid', value: '{{ tableid }}'});
