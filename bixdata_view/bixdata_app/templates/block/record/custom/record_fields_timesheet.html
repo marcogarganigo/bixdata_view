@@ -1,6 +1,6 @@
 <script>
 
-    function save_record(el) {
+     function save_record(el) {
         let necessaryFields = document.querySelectorAll('.necessary');
         let hasNecessaryFields = false;
 
@@ -25,7 +25,7 @@
             closeNewRecordModal()
             //var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
             //var serialized_json = convertFormToJSON(serialized_array);
-            serialized_form = serializeForm($(el).closest('.fields_container').find("select,textarea,input"));
+            serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
             serialized_json = convertFormToJSON(serialized_form);
             var post_data = [];
             post_data.push({name: 'tableid', value: '{{ tableid }}'});
@@ -153,74 +153,7 @@
         // Print the array to the console
         console.log(rowsArray);
     }
-
-    function save_record(el) {
-        let necessaryFields = document.querySelectorAll('.necessary');
-        let hasNecessaryFields = false;
-
-        necessaryFields.forEach(function (field) {
-            if (field.value === null || field.value === "" || field.value === "None") {
-                hasNecessaryFields = true;
-            }
-        });
-
-        if (hasNecessaryFields === true) {
-            swal({
-                title: "Attenzione",
-                text: "Compilare tutti i campi obbligatori",
-                icon: "error",
-                button: "Ok",
-                dangerMode: true
-            });
-
-        } else {
-
-
-            closeNewRecordModal()
-            var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
-            var serialized_json = convertFormToJSON(serialized_array);
-            var post_data = [];
-            post_data.push({name: 'tableid', value: '{{ tableid }}'});
-            post_data.push({name: 'recordid', value: '{{ recordid }}'});
-            post_data.push({name: 'fields', value: serialized_json});
-
-
-            $.ajax({
-                type: "POST",
-                url: "{% url 'save_record_fields' %}",
-                data: post_data,
-                success: function (response) {
-                    contextfunction = '{{contextfunction}}'
-                    if (contextfunction == 'insert') {
-                        refresh();
-                    }
-                    setTimeout(function () {
-                        if ('{{ tableid }}' == 'ticketbixdata') {
-                            alert('Grazie per la segnalazione. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
-                        }
-                        var recordid = $(el).attr('data-recordid');
-                        //$("#saved-alert-" + recordid).css("display", "block");
-                        //$("#saved-alert-" + recordid).fadeOut(1500);
-                        swal({
-                            title: "Salvato!",
-                            text: "Il record è stato salvato",
-                            icon: "success",
-                            timer: 800,
-                            buttons: false,
-                        })
-                        //getContentRecords('{{ tableid }}')
-                        //$("#linked-container-{{ tableid }}").load('/loading/')
-                        load_linked(this, '{{ tableid }}')
-
-                    });
-
-                },
-                error: function () {
-                    alert('ko')
-                }
-            });
-        }
-    }
+     
 
     function getprojectid() {
         var projectid = '00000000000000000000000000001317';
@@ -229,56 +162,56 @@
             url: "{% url 'get_project_id' %}",
             data: {projectid: projectid},
             success: function (response) {
-              $.each(response, function(index, item) {
-                $.each(item, function(index, item) {
+                $.each(response, function (index, item) {
+                    $.each(item, function (index, item) {
 
-                    //alert(item.quantity)
+                        //alert(item.quantity)
 
-                    // Get reference to the table body
-                    var tableBody = document.querySelector('#myTable-{{ timesheet }} tbody');
+                        // Get reference to the table body
+                        var tableBody = document.querySelector('#myTable-{{ timesheet }} tbody');
 
-                    // Create a new row
-                    var newRow = document.createElement('tr');
-                    //add a remove button
-                    var remove = document.createElement('i');
-                    remove.setAttribute('class', 'mdi mdi-close');
-                    remove.setAttribute('onclick', 'removeRow(this)');
-                    newRow.appendChild(remove);
+                        // Create a new row
+                        var newRow = document.createElement('tr');
+                        //add a remove button
+                        var remove = document.createElement('i');
+                        remove.setAttribute('class', 'mdi mdi-close');
+                        remove.setAttribute('onclick', 'removeRow(this)');
+                        newRow.appendChild(remove);
 
 
-                    // Create three columns for the new row
-                    var column1 = document.createElement('td');
-                    var column1Input = document.createElement('input');
-                    column1Input.setAttribute('type', 'text');
-                    column1Input.setAttribute('class', 'form-control');
-                    column1Input.setAttribute('placeholder', 'Descrizione');
-                    column1Input.setAttribute('value', item.name);
-                    column1.appendChild(column1Input);
+                        // Create three columns for the new row
+                        var column1 = document.createElement('td');
+                        var column1Input = document.createElement('input');
+                        column1Input.setAttribute('type', 'text');
+                        column1Input.setAttribute('class', 'form-control');
+                        column1Input.setAttribute('placeholder', 'Descrizione');
+                        column1Input.setAttribute('value', item.name);
+                        column1.appendChild(column1Input);
 
-                    var column2 = document.createElement('td');
-                    var column2Input = document.createElement('input');
-                    column2Input.setAttribute('type', 'number');
-                    column2Input.setAttribute('class', 'form-control');
-                    column2Input.setAttribute('placeholder', 'Quantità prevista');
-                    column2Input.setAttribute('value', item.quantity);
-                    column2.appendChild(column2Input);
+                        var column2 = document.createElement('td');
+                        var column2Input = document.createElement('input');
+                        column2Input.setAttribute('type', 'number');
+                        column2Input.setAttribute('class', 'form-control');
+                        column2Input.setAttribute('placeholder', 'Quantità prevista');
+                        column2Input.setAttribute('value', item.quantity);
+                        column2.appendChild(column2Input);
 
-                    var column3 = document.createElement('td');
-                    var column3Input = document.createElement('input');
-                    column3Input.setAttribute('type', 'number');
-                    column3Input.setAttribute('class', 'form-control');
-                    column3Input.setAttribute('placeholder', 'Quantità installata');
-                    column3.appendChild(column3Input);
+                        var column3 = document.createElement('td');
+                        var column3Input = document.createElement('input');
+                        column3Input.setAttribute('type', 'number');
+                        column3Input.setAttribute('class', 'form-control');
+                        column3Input.setAttribute('placeholder', 'Quantità installata');
+                        column3.appendChild(column3Input);
 
-                    // Append the columns to the new row
-                    newRow.appendChild(column1);
-                    newRow.appendChild(column2);
-                    newRow.appendChild(column3);
+                        // Append the columns to the new row
+                        newRow.appendChild(column1);
+                        newRow.appendChild(column2);
+                        newRow.appendChild(column3);
 
-                    // Append the new row to the table body
-                    tableBody.appendChild(newRow);
+                        // Append the new row to the table body
+                        tableBody.appendChild(newRow);
 
-                });
+                    });
 
                 });
 
@@ -292,72 +225,73 @@
     }
 </script>
 
-<div id="omni-container-timesheet"  style="height: calc(100% - 100px); overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
+<div id="universal-container-timesheet" style="height: 100%">
 
-<div class="container fields_container" style="height: 100%" id="fields_container_{{ tableid }}_{{ recordid }}">
+    <div id="omni-container-timesheet" style="height: 90%; overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
 
-    <div id="fields-scroll-container">
+        <div id="fields-scroll-container">
 
 
-    <div class="container">
-        <div class="row">
-            <div>
-                {{ block_record_fields }}
+            <div class="container">
+                <div class="row">
+                    <div>
+                        {{ block_record_fields }}
+                    </div>
+                    <!-- Icon for adding a new row -->
+                    <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary mdi mdi-plus"
+                            style="width: auto" onclick="addNewRow(this)">
+
+                    </button>
+                    <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary "
+                            style="width: auto" onclick="getprojectid()">recupera materiale progetto
+                    </button>
+                    <!-- Bootstrap table -->
+                    <table id="myTable-{{ timesheet }}" class="table">
+                        <thead>
+                        <tr>
+                            <th>Descrizione</th>
+                            <th>Quantità prevista</th>
+                            <th>Quantità installata</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Existing table rows -->
+                        </tbody>
+                    </table>
+
+
+                </div>
             </div>
-            <!-- Icon for adding a new row -->
-            <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary mdi mdi-plus"
-                    style="width: auto" onclick="addNewRow(this)">
 
-            </button>
-            <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary "
-                    style="width: auto" onclick="getprojectid()">recupera materiale progetto
-            </button>
-            <!-- Bootstrap table -->
-            <table id="myTable-{{ timesheet }}" class="table">
-                <thead>
-                <tr>
-                    <th>Descrizione</th>
-                    <th>Quantità prevista</th>
-                    <th>Quantità installata</th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- Existing table rows -->
-                </tbody>
-            </table>
+            {% if contextfunction == 'view' %}
+                <style>
+
+                    #save-button-{{ recordid }} {
+                        display: none;
+                    }
+                </style>
+
+                <script>
+
+                    $("#fields-scroll-container input").attr("disabled", true);
+                    $("#fields-scroll-container select").attr("disabled", true);
+                    $("#fields-scroll-container textarea").attr("disabled", true);
+                    $("save-button-{{ recordid }}").remove();
+
+
+                </script>
+            {% endif %}
 
 
         </div>
-    </div>
-
-                        {% if contextfunction == 'view' %}
-            <style>
-
-                #save-button-{{ recordid }} {
-                    display: none;
-                }
-            </style>
-
-            <script>
-
-                $("#fields-scroll-container input").attr("disabled", true);
-                $("#fields-scroll-container select").attr("disabled", true);
-                $("#fields-scroll-container textarea").attr("disabled", true);
-                $("save-button-{{ recordid }}").remove();
-
-
-            </script>
-        {% endif %}
-
-                <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class="btn btn-primary"
-                onclick="save_record(this)">Salva
-        </button>
 
     </div>
 
-</div>
-</div>
+    <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class="btn btn-primary"
+            onclick="save_record(this)">Salva
+    </button>
 
+</div>
 
 
 <style>
