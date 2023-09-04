@@ -2,78 +2,105 @@
 {% load static %}
 
 {% block body %}
-<button type="button" class="btn btn-primary" onclick="checkInstance()">
-  Launch demo modal
-</button>
+    <button type="button" class="btn btn-primary" id="button1" data-recordid="1" data-tableid="test" data-user="marco"
+            onclick="checkInstance($(this).data('recordid'), $(this).data('tableid'), $(this).data('user') )">
+        Launch demo modal
+    </button>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
-      </div>
+    <button type="button" class="btn btn-primary" id="button2" data-recordid="2" data-tableid="test"
+            onclick="checkInstance($(this).data('recordid'), $(this).data('tableid'), $(this).data('user') )">
+        Launch demo modal
+    </button>
+
+
+    <button type="button" class="btn btn-primary" id="button3" data-recordid="3" data-tableid="test" data-user="marco"
+            onclick="checkInstance($(this).data('recordid'), $(this).data('tableid'), $(this).data('user') )">
+        Launch demo modal
+    </button>
+
+
+    <div class="modal fade" id="modal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                </div>
+            </div>
+        </div>
+
     </div>
-  </div>
 
-</div>
+    <script>
 
-<script>
-    const modal = document.getElementById('exampleModal');
-    const toggleButton = document.querySelector('.btn-primary');
+        const myModal = document.getElementById('modal1')
+        myModal.addEventListener('hidden.bs.modal', () => {
+            closeFunction()
+        })
 
-    function checkInstance() {
-        $.ajax({
-            url: "{% url 'test_lock' %}",
-            type: "GET",
-            dataType: "json",
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            success: function (data) {
-                if (!data.instance) {
-                    $.ajax({
-                        url: "{% url 'test_lock' %}",
-                        type: "POST",
-                        data: {
-                            csrfmiddlewaretoken: '{{ csrf_token }}',
-                            instance: 'True'
-                        },
-                        success: function () {
-                            toggleButton.disabled = true;
-                            $('.modal').modal('show');
-                        },
-                        error: function () {
-                            alert('Error');
-                        }
-                    });
-                } else {
-                    alert('Instance is locked');
+
+        function checkInstance(recordid, tableid, user) {
+            $.ajax({
+                url: "{% url 'test_lock' %}",
+                type: "GET",
+                dataType: "json",
+                data: {
+                    recordid: recordid,
+                    tableid: tableid,
+                },
+                success: function (data) {
+                    if (data.success) {
+                        // Set data attributes on modal
+                        $('#modal1').attr('data-recordid', recordid);
+                        $('#modal1').attr('data-tableid', tableid);
+                        $('#modal1').attr('data-user', user);
+
+                        // Show modal
+                        $('#modal1').modal('show');
+                    } else {
+                        alert('Instance is busy');
+                    }
+                },
+                error: function (data) {
+                    console.info(data)
+                    alert('Error');
                 }
-            },
-            error: function () {
-                alert('Error');
-            }
-        });
-    }
+            });
+        }
 
-    modal.addEventListener('hidden.bs.modal', function () {
-        $.ajax({
-            url: "{% url 'test_lock' %}",
-            type: "POST",
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                instance: 'False'
-            },
-            success: function () {
-                toggleButton.disabled = false;
-            }
-        });
-    });
-</script>
+        function closeFunction() {
+            //trigger a function when the modal is closed
+
+            var recordid = $('#modal1').data('recordid');
+            var tableid = $('#modal1').data('tableid');
+            var user = $('#modal1').data('user');
+
+            $.ajax({
+                url: "{% url 'test_lock' %}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    recordid: recordid,
+                    tableid: tableid,
+                },
+                success: function (data) {
+                    alert('instance is free')
+                },
+                error: function () {
+                    alert('Error');
+                }
+            });
+
+        }
+
+    </script>
 {% endblock %}

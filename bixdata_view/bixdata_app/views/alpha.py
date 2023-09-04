@@ -1983,12 +1983,24 @@ def schedule_job(request, funzione, interval):
 
 
 def test_scheduler(request):
-    timestamp = datetime.datetime.now().timestamp()
+
+    timestamp = time.time()
     with connection.cursor() as cursor:
         cursor.execute(
-            f"INSERT INTO test_scheduler (timestamp, nome_funzione) VALUES ({timestamp}, 'test_scheduler')"
+            "SELECT lock_time from sys_user"
         )
-    return HttpResponse('ok')
+        locks = dictfetchall(cursor)
+
+        for lock in locks:
+            lock_time = lock['lock_time']
+            if lock_time is not None:
+                if float(timestamp) - float(lock_time) > 60:
+                    with connection.cursor() as cursor1:
+                        cursor1.execute(
+                            "UPDATE sys_user SET lock_recordid = NULL, lock_tableid = NULL, lock_time = NULL WHERE lock_time = %s",
+                            [lock_time]
+                        )
+
 
 
 def check_mails():
@@ -2131,10 +2143,16 @@ def get_table_fields(request):
         typepreference = request.POST.get('type')
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT DISTINCT fieldid FROM sys_user_order WHERE tableid = %s and typepreference = %s",
+                f"SELECT user_field.fieldid AS fieldid_real, user_order.* FROM sys_user_order AS user_order LEFT JOIN sys_field AS user_field ON user_order.fieldid = user_field.fieldid AND user_order.tableid = user_field.tableid WHERE user_order.tableid = %s and user_order.typepreference = %s",
                 [tableid, typepreference]
             )
-            fields = [row[0] for row in cursor.fetchall()]
+            fields = dictfetchall(cursor)
+
+            for field in fields:
+                if field['fieldid_real'] is None:
+                    print(field['fieldid_real'])
+                    field['fieldid_real'] = 'None'
+
 
         return JsonResponse({'fields': fields})
 
@@ -2143,7 +2161,7 @@ def save_fields_order(request):
     if request.method == 'POST':
         tableid = request.POST.get('tableid')
         fields_json = request.POST.get('fields')
-        fields = json.loads(fields_json)  # Parse JSON string to a Python list
+        fields = json.loads(fields_json)
 
         with connection.cursor() as cursor:
             for count, field in enumerate(fields):
@@ -2187,29 +2205,65 @@ def get_project_id(request):
             return JsonResponse({'rows': rows})
 
 
-
 def testtest(request):
     return render(request, 'other/test_lock.html')
 
 
-
-
-
-
-
 is_locked = False
+lock_instance = []
 
 def test_lock(request):
     global is_locked
+    global lock_instance
 
-    if request.method == 'POST':
-        data = request.POST.get('instance')
-        if data == 'True':
-            is_locked = True
-        elif data == 'False':
-            is_locked = False
-        return JsonResponse({'instance': is_locked})
-    elif request.method == 'GET':
-        return JsonResponse({'instance': is_locked})
+    if request.method == 'GET':
+        recordid = request.GET.get('recordid')
+        tableid = request.GET.get('tableid')
+        user = request.user.id
 
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT sys_user_id FROM v_users WHERE id = %s", [user]
+            )
+            rows = dictfetchall(cursor)
+            user = rows[0]['sys_user_id']
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM sys_user WHERE lock_recordid = %s AND lock_tableid = %s",
+                [recordid, tableid]
+            )
+            rows = cursor.fetchall()
+
+            if rows:
+                is_locked = True
+                lock_instance = rows[0]
+                return JsonResponse({'success': False})
+            else:
+                timestamp = time.time()
+
+                with connection.cursor() as cursor1:
+                    cursor1.execute(
+                        "INSERT INTO sys_user (lock_recordid, lock_tableid, id, lock_time) "
+                        "VALUES (%s, %s, %s, %s) ON DUPLICATE KEY UPDATE lock_recordid = VALUES(lock_recordid), "
+                        "lock_tableid = VALUES(lock_tableid), lock_time = VALUES(lock_time)",
+                        [recordid, tableid, user, timestamp]
+                    )
+
+                is_locked = False
+                return JsonResponse({'success': True})
+
+    elif request.method == 'POST':
+        recordid = request.POST.get('recordid')
+        tableid = request.POST.get('tableid')
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE sys_user SET lock_recordid = NULL, lock_tableid = NULL, lock_time = NULL "
+                "WHERE lock_recordid = %s AND lock_tableid = %s",
+                [recordid, tableid]
+            )
+
+        is_locked = False
+        return JsonResponse({'success': True})
 

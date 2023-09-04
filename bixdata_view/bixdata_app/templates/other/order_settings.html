@@ -8,6 +8,7 @@
 <div style="margin-left: 45%" id="settings-container">
 <button class="btn btn-secondary field-option" value="campiinserimento">campiinserimento</button>
 <button class="btn btn-secondary field-option" value="risultatiricerca">risultatiricerca</button>
+<button class="btn btn-secondary field-option" value="keylabels">keylabel</button>
     <button id="save-button" onclick="saveFieldsOrder()" class="btn btn-primary">Save</button>
 </div>
 
@@ -111,6 +112,7 @@ function displayFields(fields) {
     fieldContainer.empty();
 
     fields.forEach(function (field, index) {
+
         var fieldElement = $('<div>', {
             id: field,
             class: 'drag-item',
@@ -122,6 +124,13 @@ function displayFields(fields) {
             class: 'form-check-input',
             id: 'exampleCheck1'
         });
+
+     if (field.fieldid_real !== 'None' ) {
+            checkboxElement.prop('checked', true);
+        } else {
+            checkboxElement.prop('checked', false);
+        }
+
 
         var optionsDiv = $('<div>', {
             class: 'options-div',
@@ -146,7 +155,7 @@ function displayFields(fields) {
         });
 
         fieldElement.append(checkboxElement);
-        fieldElement.append($('<span>', { text: field }));
+        fieldElement.append($('<span>', { text: field.fieldid }));
         fieldElement.append(buttonElement);
         fieldElement.append(optionsDiv);
 

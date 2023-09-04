@@ -5,6 +5,19 @@
     chart: {
         height: '100%',
       type: 'pie', // change chart type to pie
+        animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800,
+        animateGradually: {
+            enabled: true,
+            delay: 150
+        },
+        dynamicAnimation: {
+            enabled: true,
+            speed: 350
+        }
+    }
     },
     series: {{ value|safe|slice:"1:-1" }},
     labels: {{ labels|safe }},
