@@ -1032,7 +1032,8 @@ def get_block_record_fields(request):
         context['block_record_fields'] = render_to_string('block/record/record_fields.html', context, request=request)
         block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context, request=request)
     else:
-        block_record_fields = render_to_string('block/record/record_fields.html', context, request=request)
+        context['block_record_fields'] = render_to_string('block/record/record_fields.html', context, request=request)
+        block_record_fields = render_to_string('block/record/record_fields_container.html', context, request=request)
 
     if (http_response):
         return HttpResponse(block_record_fields)
@@ -2236,7 +2237,13 @@ def test_lock(request):
             if rows:
                 is_locked = True
                 lock_instance = rows[0]
-                return JsonResponse({'success': False})
+                with connection.cursor() as cursor1:
+                    cursor1.execute(
+                        "SELECT username FROM v_users WHERE sys_user_id = %s", [lock_instance[0]]
+                    )
+                    rows = dictfetchall(cursor1)
+                    user = rows[0]['username']
+                return JsonResponse({'success': False, 'user': user})
             else:
                 timestamp = time.time()
 
