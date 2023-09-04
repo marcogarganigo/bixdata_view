@@ -2142,14 +2142,13 @@ def get_table_fields(request):
         typepreference = request.POST.get('type')
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT user_field.fieldid AS fieldid_real, user_order.* FROM sys_user_order AS user_order LEFT JOIN sys_field AS user_field ON user_order.fieldid = user_field.fieldid AND user_order.tableid = user_field.tableid WHERE user_order.tableid = %s and user_order.typepreference = %s",
+                f"SELECT user_field.fieldid AS fieldid_real, user_order.* FROM sys_field AS user_field  LEFT JOIN sys_user_order AS user_order ON user_field.fieldid = user_order.fieldid  AND user_order.tableid = user_field.tableid WHERE user_order.tableid = %s and user_order.typepreference = %s",
                 [tableid, typepreference]
             )
             fields = dictfetchall(cursor)
 
             for field in fields:
                 if field['fieldid_real'] is None:
-                    print(field['fieldid_real'])
                     field['fieldid_real'] = 'None'
 
 
