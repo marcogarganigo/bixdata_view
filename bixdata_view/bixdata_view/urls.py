@@ -117,4 +117,5 @@ urlpatterns = [
     path('get_project_id/', alpha.get_project_id, name='get_project_id'),
     path('test_lock/', alpha.test_lock, name='test_lock'),
     path('testtest/', alpha.testtest, name='testtest'),
+    path('admin_table_settings/', alpha.admin_table_settings, name='admin_table_settings'),
 ]

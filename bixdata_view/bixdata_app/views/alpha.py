@@ -1030,7 +1030,8 @@ def get_block_record_fields(request):
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()
         context['block_record_fields'] = render_to_string('block/record/record_fields.html', context, request=request)
-        block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context, request=request)
+        block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context,
+                                               request=request)
     else:
         context['block_record_fields'] = render_to_string('block/record/record_fields.html', context, request=request)
         block_record_fields = render_to_string('block/record/record_fields_container.html', context, request=request)
@@ -1983,7 +1984,6 @@ def schedule_job(request, funzione, interval):
 
 
 def test_scheduler(request):
-
     timestamp = time.time()
     with connection.cursor() as cursor:
         cursor.execute(
@@ -2000,7 +2000,6 @@ def test_scheduler(request):
                             "UPDATE sys_user SET lock_recordid = NULL, lock_tableid = NULL, lock_time = NULL WHERE lock_time = %s",
                             [lock_time]
                         )
-
 
 
 def check_mails():
@@ -2158,7 +2157,6 @@ def get_table_fields(request):
                 if field['fieldid_real'] is None:
                     field['fieldid_real'] = 'None'
 
-
         return JsonResponse({'fields': fields})
 
 
@@ -2216,6 +2214,7 @@ def testtest(request):
 
 is_locked = False
 lock_instance = []
+
 
 def test_lock(request):
     global is_locked
@@ -2278,3 +2277,17 @@ def test_lock(request):
         is_locked = False
         return JsonResponse({'success': True})
 
+
+def admin_table_settings(request):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT id FROM sys_table"
+        )
+        tables = dictfetchall(cursor)
+
+        cursor.execute(
+            "SELECT * FROM v_users WHERE is_active = 1"
+        )
+        users = dictfetchall(cursor)
+
+    return render(request, 'other/admin_table_settings.html', {'tables': tables, 'users': users})

@@ -83,6 +83,24 @@
                 });
             }
 
+            function getAdminTableSettings(page) {
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'admin_table_settings' %}",
+                    data: {
+                        'page': page
+                    },
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
+
             function getAdminOrderSettings(page) {
                 $.ajax({
                     type: "POST",
@@ -688,7 +706,10 @@
                                                 <a class="side-nav-txt" onclick="setColor(this)">Grafici</a>
                                             </li>
                                             <li onclick="getAdminOrderSettings($(this).find('a').text())">
-                                                <a class="side-nav-txt" onclick="setColor(this)">Ordine campi</a>
+                                                <a class="side-nav-txt" onclick="setColor(this)">Impostazioni campi</a>
+                                            </li>
+                                            <li onclick="getAdminTableSettings($(this).find('a').text())">
+                                                <a class="side-nav-txt" onclick="setColor(this)">Impostazioni tabelle</a>
                                             </li>
 
                                         </ul>
