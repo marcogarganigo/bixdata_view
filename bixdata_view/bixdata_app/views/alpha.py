@@ -2148,8 +2148,9 @@ def get_table_fields(request):
         typepreference = request.POST.get('type')
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT user_field.fieldid AS fieldid_real, user_order.* FROM sys_field AS user_field  LEFT JOIN sys_user_order AS user_order ON user_field.fieldid = user_order.fieldid  AND user_order.tableid = user_field.tableid WHERE user_order.tableid = %s and user_order.typepreference = %s",
-                [tableid, typepreference]
+
+                f"SELECT sys_field.*,sys_user_order.fieldorder,sys_user_order.id AS fieldid_real FROM sys_field LEFT JOIN  (SELECT * FROM sys_user_order WHERE typepreference = '{typepreference}' ) AS sys_user_order ON sys_field.fieldid = sys_user_order.fieldid  AND sys_field.tableid = sys_user_order.tableid WHERE  sys_field.tableid = '{tableid}'"
+
             )
             fields = dictfetchall(cursor)
 
