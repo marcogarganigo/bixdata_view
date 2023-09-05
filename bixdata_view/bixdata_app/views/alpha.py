@@ -1787,7 +1787,6 @@ def send_active_task(request, requested_user=''):
             current_date_str = current_date.strftime("%Y-%m-%d")
             one_week_ago_str = one_week_ago.strftime("%Y-%m-%d")
 
-            # Modify the SQL query
             query = f"SELECT user_task.*, v_users.username, user_company.companyname FROM user_task \
                          LEFT JOIN v_users ON user_task.user = v_users.sys_user_id \
                          LEFT JOIN user_company ON user_task.recordidcompany_ = user_company.recordid_ \
@@ -1835,7 +1834,6 @@ def update_task_status(request):
         )
         tasks = dictfetchall(cursor)
 
-        # pick the current date
         current_date = datetime.date.today()
         current_date_str = current_date.strftime("%Y-%m-%d")
 
@@ -2014,7 +2012,7 @@ def check_mails():
 
 def save_scheduler_settings(request):
     tasks = request.POST.getlist('tasks')
-    tasks = json.loads(tasks[0])  # Decode the JSON string
+    tasks = json.loads(tasks[0])
 
     with connection.cursor() as cursor:
         for task in tasks:
@@ -2212,12 +2210,10 @@ def testtest(request):
     return render(request, 'other/test_lock.html')
 
 
-is_locked = False
 lock_instance = []
 
 
 def test_lock(request):
-    global is_locked
     global lock_instance
 
     if request.method == 'GET':
@@ -2240,7 +2236,6 @@ def test_lock(request):
             rows = cursor.fetchall()
 
             if rows:
-                is_locked = True
                 lock_instance = rows[0]
                 with connection.cursor() as cursor1:
                     cursor1.execute(
@@ -2260,7 +2255,6 @@ def test_lock(request):
                         [recordid, tableid, user, timestamp]
                     )
 
-                is_locked = False
                 return JsonResponse({'success': True})
 
     elif request.method == 'POST':
@@ -2274,7 +2268,6 @@ def test_lock(request):
                 [recordid, tableid]
             )
 
-        is_locked = False
         return JsonResponse({'success': True})
 
 
