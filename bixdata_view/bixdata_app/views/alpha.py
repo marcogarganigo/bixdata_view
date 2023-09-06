@@ -2,6 +2,7 @@ import tempfile
 import uuid
 import threading
 from django.contrib.sessions.models import Session
+import threading
 
 import pyperclip
 from aiohttp.web_fileresponse import FileResponse
@@ -1982,22 +1983,22 @@ def schedule_job(request, funzione, interval):
 
 
 def test_scheduler(request):
-    timestamp = time.time()
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT lock_time from sys_user"
-        )
-        locks = dictfetchall(cursor)
+    current_time = time.time()
+    locks_to_delete = []
 
-        for lock in locks:
-            lock_time = lock['lock_time']
-            if lock_time is not None:
-                if float(timestamp) - float(lock_time) > 60:
-                    with connection.cursor() as cursor1:
-                        cursor1.execute(
-                            "UPDATE sys_user SET lock_recordid = NULL, lock_tableid = NULL, lock_time = NULL WHERE lock_time = %s",
-                            [lock_time]
-                        )
+    for lock_key, lock_info in locker.locks.items():
+        lock_timestamp = lock_info['timestamp']
+        lock_user = lock_info['user']
+        if lock_user == request.user.id:
+            if current_time - lock_timestamp > 10:
+                locks_to_delete.append(lock_key)
+
+    with locker.lock:  # Use the lock for thread safety
+        for lock_key in locks_to_delete:
+            del locker.locks[lock_key]
+
+    if lock.locked():
+            return False
 
 
 def check_mails():
@@ -2210,66 +2211,78 @@ def testtest(request):
     return render(request, 'other/test_lock.html')
 
 
-lock_instance = []
+class Locker:
+    def __init__(self):
+        self.locks = {}  # Dictionary to store lock information
+        self.lock = threading.Lock()  # Create a lock for synchronization
 
+    def acquire_lock(self, recordid, tableid, user):
+        lock_key = (recordid, tableid)
+
+        with self.lock:  # Use the lock for thread safety
+            # Check if the lock is already acquired
+            if lock_key in self.locks:
+                return False, self.locks[lock_key]['user'], self.locks[lock_key]['timestamp']
+
+            # If not acquired, create the lock with a timestamp
+            timestamp = time.time()
+            self.locks[lock_key] = {'user': user, 'timestamp': timestamp}
+
+        return True, None, timestamp
+
+    def release_lock(self, recordid, tableid, user):
+        lock_key = (recordid, tableid)
+
+        with self.lock:  # Use the lock for thread safety
+            # Check if the lock exists and the user matches
+            if lock_key in self.locks:
+                if self.locks[lock_key]['user'] == user:
+                    del self.locks[lock_key]
+                    return True, None
+
+        # Lock doesn't exist or user doesn't match, nothing to release
+        return False, None
+# Example of how to use the Locker class
+locker = Locker()
 
 def test_lock(request):
-    global lock_instance
-
     if request.method == 'GET':
+
         recordid = request.GET.get('recordid')
         tableid = request.GET.get('tableid')
-        user = request.user.id
-
+        userid = request.user.id  # Replace this with your actual user identification
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT sys_user_id FROM v_users WHERE id = %s", [user]
+                f"SELECT username FROM v_users WHERE id = {userid}"
             )
-            rows = dictfetchall(cursor)
-            user = rows[0]['sys_user_id']
+            user = cursor.fetchone()[0]
 
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT * FROM sys_user WHERE lock_recordid = %s AND lock_tableid = %s",
-                [recordid, tableid]
-            )
-            rows = cursor.fetchall()
 
-            if rows:
-                lock_instance = rows[0]
-                with connection.cursor() as cursor1:
-                    cursor1.execute(
-                        "SELECT username FROM v_users WHERE sys_user_id = %s", [lock_instance[0]]
-                    )
-                    rows = dictfetchall(cursor1)
-                    user = rows[0]['username']
-                return JsonResponse({'success': False, 'user': user})
-            else:
-                timestamp = time.time()
+        with lock:  # Acquire the global lock to ensure only one user at a time
+            success, lock_user, timestamp = locker.acquire_lock(recordid, tableid, userid)
+            print(lock)
 
-                with connection.cursor() as cursor1:
-                    cursor1.execute(
-                        "INSERT INTO sys_user (lock_recordid, lock_tableid, id, lock_time) "
-                        "VALUES (%s, %s, %s, %s) ON DUPLICATE KEY UPDATE lock_recordid = VALUES(lock_recordid), "
-                        "lock_tableid = VALUES(lock_tableid), lock_time = VALUES(lock_time)",
-                        [recordid, tableid, user, timestamp]
-                    )
-
-                return JsonResponse({'success': True})
+        if success:
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'user': lock_user, 'timestamp': timestamp})
 
     elif request.method == 'POST':
         recordid = request.POST.get('recordid')
         tableid = request.POST.get('tableid')
 
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "UPDATE sys_user SET lock_recordid = NULL, lock_tableid = NULL, lock_time = NULL "
-                "WHERE lock_recordid = %s AND lock_tableid = %s",
-                [recordid, tableid]
-            )
+        userid = request.user.id  # Replace this with your actual user identification
 
-        return JsonResponse({'success': True})
+        with lock:  # Acquire the global lock to ensure only one user at a time
+            success = locker.release_lock(recordid, tableid, userid)
 
+        if success:
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False})
+
+# Global lock for ensuring only one user can access the Locker class at a time
+lock = threading.Lock()
 
 def admin_table_settings(request):
     with connection.cursor() as cursor:

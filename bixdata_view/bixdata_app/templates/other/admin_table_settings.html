@@ -2,7 +2,7 @@
     <div style="float: left">
         Utenti <br/>
         {% for user in users %}
-        <button class="btn btn-secondary table-button" data-table-id="{{ table.id }}">{{ user.username }}</button>
+        <button class="btn btn-secondary table-button" onclick="displayTableids(this)">{{ user.username }}</button>
         <br>
         {% endfor %}
 
@@ -10,9 +10,10 @@
     <div style="margin-left: 20px;float: left">
         Tabelle<br/>
         {% for table in tables %}
-            <button class="btn btn-secondary table-button" data-table-id="{{ table.id }}">{{ table.id }}</button>
-            <br>
+            <span class="tableid-span">{{ table.id }}</span>
+        <br>
         {% endfor %}
+
     </div>
 
     <div style="margin-left: 20px; float: left;" id="settings-container">
@@ -23,3 +24,31 @@
 
     <input id="current-tableid" type="hidden">
 </div>
+
+
+<script>
+
+    $(document).ready(function () {
+        var drake;
+        var tsi_id = [];
+
+        $(".drag-item").each(function () {
+            tsi_id.push(this);
+        });
+
+        drake = dragula(tsi_id);
+        drake.on('drop', function (el, target) {
+            updateOrder();
+        });
+    })
+
+    function displayTableids(el) {
+        $('.tableid-span').attr('data-user', $(el).text());
+
+    }
+
+</script>
+
+
+
+
