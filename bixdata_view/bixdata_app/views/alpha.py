@@ -2165,11 +2165,11 @@ def save_fields_order(request):
         fields_json = request.POST.get('fields')
         fields = json.loads(fields_json)
 
-        with connection.cursor() as cursor:
-            for count, field in enumerate(fields):
-                cursor.execute(
-                    f"UPDATE sys_user_order SET userid = 1, fieldorder = {count} WHERE tableid = '{tableid}' AND fieldid = '{field['id']}'"
-                )
+        #with connection.cursor() as cursor:
+            #for count, field in enumerate(fields):
+                #cursor.execute(
+                 #   f"UPDATE sys_user_order SET userid = 1, fieldorder = {count} WHERE tableid = '{tableid}' AND fieldid = '{field['id']}'"
+                #)
 
         return JsonResponse({'success': True})
 

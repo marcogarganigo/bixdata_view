@@ -156,11 +156,18 @@ function displayFields(fields) {
             });
         }
 
-        function saveFieldsOrder() {
+        
+    });
+
+    function saveFieldsOrder() {
+            alert('salva');
             var fieldOrder = [];
             $('.drag-item').each(function () {
                 var fieldId = this.id;
                 var fieldOrderValue = $(this).attr('data-order');
+                if ($(this).find(".form-check-input").first().is(":checked")) {
+                    alert("Checkbox is checked");
+                }
                 fieldOrder.push({
                     id: fieldId,
                     order: fieldOrderValue,
@@ -179,7 +186,7 @@ function displayFields(fields) {
                 }
             });
         }
-    });
+
 </script>
 
 <div id="order_settings">
@@ -210,7 +217,7 @@ function displayFields(fields) {
         <button class="btn btn-secondary field-option" value="keylabels">keylabel</button>
         <br>
         <br>
-        <button id="save-button" onclick="saveFieldsOrder()" class="btn btn-primary">Save</button>
+        <button id="save-button" onclick="saveFieldsOrder()" class="btn btn-primary">Salva</button>
     </div>
     
     <div id="response-container" style="float: left; margin-left: 20px;"></div>
