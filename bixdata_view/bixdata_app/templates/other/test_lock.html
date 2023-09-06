@@ -59,12 +59,9 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        // Set data attributes on modal
                         $('#modal1').attr('data-recordid', recordid);
                         $('#modal1').attr('data-tableid', tableid);
                         $('#modal1').attr('data-user', user);
-
-                        // Show modal
                         $('#modal1').modal('show');
                     } else {
                         alert('Instance is busy by ' + data.user + '');
@@ -78,8 +75,6 @@
         }
 
         function closeFunction() {
-            //trigger a function when the modal is closed
-
             var recordid = $('#modal1').data('recordid');
             var tableid = $('#modal1').data('tableid');
             var user = $('#modal1').data('user');
