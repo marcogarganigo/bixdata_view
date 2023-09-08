@@ -28,7 +28,7 @@
         $("#recordModal").modal("hide");
     }
 
-    //appena la card carica aprire collegato di default
+    //appena la card carica aprire collegati di default
     var recordtab_{{recordid}} = '{{user_table_settings.default_recordtab}}';
     $('#block_record_card-{{recordid}}').ready(function () {
         if (recordtab_{{recordid}} === 'Linked') {
@@ -242,7 +242,7 @@
         }).then((response) => {
             // Validate numeric input
             var contract_hours = parseFloat(response);
-            if (isNaN(contract_hours)) {
+            if (isNaN(contract_hours) ) {
                 swal({
                     text: "Inserisci un valore numerico per le ore contrattuali.",
                     icon: "error",

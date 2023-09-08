@@ -46,8 +46,7 @@
             if (e.which == 116) {
                 e.preventDefault();
                 refresh()
-            }
-            else if (e.ctrlKey && e.which == 75) {
+            } else if (e.ctrlKey && e.which == 75) {
                 e.preventDefault();
                 $("#searchTerm").focus();
             }
@@ -211,7 +210,7 @@
     }
 
     function export_excel() {
-          var serialized_data = [];
+        var serialized_data = [];
         serialized_data.push({
             name: 'tableid',
             value: '{{tableid}}'
@@ -238,24 +237,24 @@
             value: $('#content-table').find('#block_records_table').data('order')
         });
 
-$.ajax({
-    type: "POST",
-    url: "{% url 'export_excel' %}",
-    data: serialized_data,
-    xhrFields: {
-        responseType: 'blob' // Set the response type to 'blob'
-    },
-     success: function (response, status, xhr) {
-        const filename = xhr.getResponseHeader('filename')
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(response); // Create a Blob URL
-        link.download = filename;
-        link.click(); // Simulate a click event to trigger the download
-    },
-    error: function () {
-        // Handle error
-    }
-});
+        $.ajax({
+            type: "POST",
+            url: "{% url 'export_excel' %}",
+            data: serialized_data,
+            xhrFields: {
+                responseType: 'blob' // Set the response type to 'blob'
+            },
+            success: function (response, status, xhr) {
+                const filename = xhr.getResponseHeader('filename')
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(response); // Create a Blob URL
+                link.download = filename;
+                link.click(); // Simulate a click event to trigger the download
+            },
+            error: function () {
+                // Handle error
+            }
+        });
 
     }
 
@@ -391,26 +390,22 @@ $.ajax({
     }
 
 
-
-
-$(document).ready(function() {
-    $.ajax({
-        type: "POST",
-        url: "{% url 'get_records_grouped' %}",
-        data: {
-            csrf: '{{ csrf_token }}',
-            tableid: '{{ tableid }}',
-        },
-        success: function (response) {
-            $("#group-tab-pane").html(response);
-        },
-        error: function (response) {
-            $("#group-tab-pane").html(response);
-        }
+    $(document).ready(function () {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'get_records_grouped' %}",
+            data: {
+                csrf: '{{ csrf_token }}',
+                tableid: '{{ tableid }}',
+            },
+            success: function (response) {
+                $("#group-tab-pane").html(response);
+            },
+            error: function (response) {
+                $("#group-tab-pane").html(response);
+            }
+        });
     });
-});
-
-
 
 
 </script>
@@ -420,20 +415,13 @@ $(document).ready(function() {
         height: 50px;
     }
 
-
-</style>
-
-
-
-
-
-{% if layout_setting == 'modal' %}
-    <style>
+    {% if layout_setting == 'modal' %}
         #block-records-search-container {
             width: 100% !important;
         }
-    </style>
-{% endif %}
+    {% endif %}
+
+</style>
 
 
 <div id="content-records" style="height: 98%">
@@ -496,7 +484,8 @@ $(document).ready(function() {
                                                 Esporta
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#" onclick="export_excel()">Esporta dati excel</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="export_excel()">Esporta
+                                                    dati excel</a></li>
                                                 <li><a class="dropdown-item" href="#">Esporta elenco</a></li>
                                                 <li><a class="dropdown-item" href="#">Esporta migrazione</a></li>
                                             </ul>
@@ -515,8 +504,8 @@ $(document).ready(function() {
 
                                 <div class="container text-center">
                                     <div class="row">
-                                        {% for search_field in  search_fields%}
-                                            {{search_field.component}}
+                                        {% for search_field in  search_fields %}
+                                            {{ search_field.component }}
                                         {% endfor %}
 
                                         <div class="col">
@@ -592,12 +581,12 @@ $(document).ready(function() {
                         <!-- Nav menu start -->
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             {% if active_panel_setting == 'table' %}
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab"
-                                        data-bs-target="#records_table_container" type="button" role="tab"
-                                        aria-controls="records_table_container" aria-selected="false">Tabella
-                                </button>
-                            </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="tutti-tab" data-bs-toggle="tab"
+                                            data-bs-target="#records_table_container" type="button" role="tab"
+                                            aria-controls="records_table_container" aria-selected="false">Tabella
+                                    </button>
+                                </li>
                                 <!--
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="group-tab" data-bs-toggle="tab"
@@ -607,12 +596,12 @@ $(document).ready(function() {
                             </li>
                             -->
                             {% else %}
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tutti-tab" data-bs-toggle="tab"
-                                        data-bs-target="#records_table_container" type="button" role="tab"
-                                        aria-controls="records_table_container" aria-selected="false">Tabella
-                                </button>
-                            </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="tutti-tab" data-bs-toggle="tab"
+                                            data-bs-target="#records_table_container" type="button" role="tab"
+                                            aria-controls="records_table_container" aria-selected="false">Tabella
+                                    </button>
+                                </li>
                                 <!--
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="group-tab" data-bs-toggle="tab"
@@ -622,59 +611,60 @@ $(document).ready(function() {
                             </li>
                             -->
                             {% endif %}
-                          <!--
+                            <!--
 
-                            <li class="nav-item" role="presentation">
-                                <button onclick="underConstruction('#chart-tab-pane')" class="nav-link" id="chart-tab"
-                                        data-bs-toggle="tab" data-bs-target="#chart-tab-pane" type="button" role="tab"
-                                        aria-controls="chart-tab-pane" href="chart" aria-selected="false">Grafico
-                                </button>
-                            </li>
-                            <li id="nav-calendar" class="nav-item" role="presentation">
-                                <button class="nav-link"
-                                        id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane"
-                                        type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar"
-                                        aria-selected="false">Calendario
-                                </button>
-                            </li>
-                            <li id="nav-kanban" class="nav-item" role="presentation">
-                                <button class="nav-link" id="kanban-tab"
-                                        data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab"
-                                        aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban
-                                </button>
-                            </li>
-                            <li id="nav-gantt" class="nav-item" role="presentation">
-                                <button onclick="underConstruction('#gantt-tab-pane')" class="nav-link" id="gantt-tab"
-                                        data-bs-toggle="tab" data-bs-target="#gantt-tab-pane" type="button" role="tab"
-                                        aria-controls="gantt-tab-pane" href="#gantt" aria-selected="false">Gantt
-                                </button>
-                            </li>
-                            -->
+                              <li class="nav-item" role="presentation">
+                                  <button onclick="underConstruction('#chart-tab-pane')" class="nav-link" id="chart-tab"
+                                          data-bs-toggle="tab" data-bs-target="#chart-tab-pane" type="button" role="tab"
+                                          aria-controls="chart-tab-pane" href="chart" aria-selected="false">Grafico
+                                  </button>
+                              </li>
+                              <li id="nav-calendar" class="nav-item" role="presentation">
+                                  <button class="nav-link"
+                                          id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane"
+                                          type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar"
+                                          aria-selected="false">Calendario
+                                  </button>
+                              </li>
+                              <li id="nav-kanban" class="nav-item" role="presentation">
+                                  <button class="nav-link" id="kanban-tab"
+                                          data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab"
+                                          aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban
+                                  </button>
+                              </li>
+                              <li id="nav-gantt" class="nav-item" role="presentation">
+                                  <button onclick="underConstruction('#gantt-tab-pane')" class="nav-link" id="gantt-tab"
+                                          data-bs-toggle="tab" data-bs-target="#gantt-tab-pane" type="button" role="tab"
+                                          aria-controls="gantt-tab-pane" href="#gantt" aria-selected="false">Gantt
+                                  </button>
+                              </li>
+                              -->
                         </ul>
                         <!-- Nav menu end -->
                         <!-- Nav content start-->
                         <div class="tab-content" id="myTabContent" style="height: 100%">
                             {% if active_panel_setting == 'table' %}
-                            <div class="tab-pane fade show active" id="records_table_container" role="tabpanel"
-                                 aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
-                                {{ records_table }}
-                            </div>
+                                <div class="tab-pane fade show active" id="records_table_container" role="tabpanel"
+                                     aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
+                                    {{ records_table }}
+                                </div>
 
-                            <div class="tab-pane fade" id="group-tab-pane" style="height: 100%; overflow: hidden"
-                                 role="tabpanel" aria-labelledby="grouped-tab" tabindex="0">
+                                <div class="tab-pane fade" id="group-tab-pane" style="height: 100%; overflow: hidden"
+                                     role="tabpanel" aria-labelledby="grouped-tab" tabindex="0">
 
-                            </div>
+                                </div>
 
                             {% else %}
-                            <div class="tab-pane fade" id="records_table_container" role="tabpanel"
-                                 aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
-                                {{ records_table }}
-                            </div>
+                                <div class="tab-pane fade" id="records_table_container" role="tabpanel"
+                                     aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
+                                    {{ records_table }}
+                                </div>
 
-                            <div class="tab-pane fade show active" id="group-tab-pane" style="height: 100%; overflow: hidden"
-                                 role="tabpanel" aria-labelledby="grouped-tab" tabindex="0">
+                                <div class="tab-pane fade show active" id="group-tab-pane"
+                                     style="height: 100%; overflow: hidden"
+                                     role="tabpanel" aria-labelledby="grouped-tab" tabindex="0">
 
-                            </div>
+                                </div>
 
                             {% endif %}
 

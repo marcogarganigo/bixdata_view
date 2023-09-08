@@ -2251,11 +2251,6 @@ def test_lock(request):
         recordid = request.GET.get('recordid')
         tableid = request.GET.get('tableid')
         userid = request.user.id  # Replace this with your actual user identification
-        with connection.cursor() as cursor:
-            cursor.execute(
-                f"SELECT username FROM v_users WHERE id = {userid}"
-            )
-            user = cursor.fetchone()[0]
 
 
         with lock:  # Acquire the global lock to ensure only one user at a time
@@ -2265,7 +2260,14 @@ def test_lock(request):
         if success:
             return JsonResponse({'success': True})
         else:
-            return JsonResponse({'success': False, 'user': lock_user, 'timestamp': timestamp})
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f"SELECT username FROM v_users WHERE id = {lock_user}"
+                )
+                user_inside = cursor.fetchone()[0]
+
+            return JsonResponse({'success': False, 'user': user_inside, 'timestamp': timestamp})
 
     elif request.method == 'POST':
         recordid = request.POST.get('recordid')

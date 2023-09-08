@@ -244,16 +244,16 @@
                     if ($(el).attr('data-fieldtype') === 'linked') {
                         $('#linked-table-modal').modal('show');
                         $(".modal-backdrop:last").css("z-index", 11200);
-                        //$("#linked-table-modal-content").load('/loading/');
+                        $("#linked-table-modal-content").load('/loading/');
                     } else {
 
                         if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
                             $('#linked-table-modal').modal('show');
                             $(".modal-backdrop:last").css("z-index", 11200);
-                            //$("#linked-table-modal-content").load('/loading/');
+                            $("#linked-table-modal-content").load('/loading/');
                         } else {
                             $('#recordModal').modal('show');
-                            //$("#record-modal-content").load('/loading/');
+                            $("#record-modal-content").load('/loading/');
                         }
                     }
 
@@ -262,14 +262,14 @@
                     if ($(el).attr('data-fieldtype') === 'linked') {
                         $('#linked-table-modal').modal('show');
                         $(".modal-backdrop:last").css("z-index", 11200);
-                        //$("#linked-table-modal-content").load('/loading/');
+                        $("#linked-table-modal-content").load('/loading/');
                     } else {
                         if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
                             $('#linked-table-modal').modal('show');
-                            //$("#linked-table-modal-content").load('/loading/');
+                            $("#linked-table-modal-content").load('/loading/');
                         } else {
                             if (window.innerWidth > min_width) {
-                                //$("#block-record-card-container").load('/loading/');
+                                $("#block-record-card-container").load('/loading/');
                             }
                         }
                     }
