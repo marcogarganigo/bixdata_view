@@ -3,6 +3,10 @@ import uuid
 import threading
 from django.contrib.sessions.models import Session
 import threading
+#import models from models.py
+from bixdata_app.models import *
+
+
 
 import pyperclip
 from aiohttp.web_fileresponse import FileResponse
@@ -30,8 +34,7 @@ from django.db import connection
 from django.http import JsonResponse
 from django.contrib.auth.models import Group, Permission, User, Group
 from django_user_agents.utils import get_user_agent
-from bixdata_app.models import MyModel
-from bixdata_app.models import CustomUser
+#from bixdata_app.models import MyModel
 import os
 from django.conf import settings
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -304,11 +307,10 @@ def get_render_index(request, content=''):
     # role = username.role
     context = {}
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT description FROM sys_user WHERE bixid = %s", [request.user.id]
-        )
-        role = cursor.fetchone()[0]
+    sys_user = SysUser.objects.get(bixid=request.user.id)
+    role = sys_user.description
+
+
 
     theme = get_user_setting(request, 'theme')
     #

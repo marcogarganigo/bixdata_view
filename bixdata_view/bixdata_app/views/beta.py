@@ -17,7 +17,7 @@ from django.db import connection, connections
 from django.http import JsonResponse
 from django.contrib.auth.models import Group, Permission, User, Group
 from django_user_agents.utils import get_user_agent
-from bixdata_app.models import MyModel
+#from bixdata_app.models import MyModel
 from .alpha import *
 from django import template
 from bs4 import BeautifulSoup
