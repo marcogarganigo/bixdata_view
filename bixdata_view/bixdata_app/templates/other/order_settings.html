@@ -4,61 +4,18 @@
         display: none;
     }
 
-    #status {
-        all: unset;
-        border: 1px solid black;
-        display: flex;
-        align-items: center;
-        margin-bottom: 5px;
-        padding: 10px;
-        justify-content: space-between;
-        background-color: white;
-    }
 
     .table-button {
         width: 100%;
         margin-top: 5%;
     }
 
-
-    .drag-item {
-        border: 1px solid black;
-        display: flex;
-        align-items: center;
-        margin-bottom: 5px;
-        padding: 10px;
-        justify-content: space-between;
-        background-color: white;
-
-    }
-    .drag-item.hidden {
-        background-color: #f2f2f2;
-    }
-    .btn-toggle {
-        padding: 5px 10px;
-        font-size: 12px;
-    }
-    .btn-save {
-        margin-top: 10px;
-    }
-
-
 </style>
 
 <script>
 
     $(document).ready(function () {
-        var drake;
-        var tsi_id = [];
 
-        $(".drag-item").each(function () {
-            tsi_id.push(this);
-        });
-
-        drake = dragula(tsi_id);
-        drake.on('drop', function (el, target) {
-            updateOrder();
-        });
 
         $(".table-button").click(function () {
             const tableId = $(this).data('table-id');
@@ -83,109 +40,93 @@
                 },
                 success: function (response) {
                     console.info('Table fields:', response.fields);
-                    displayFields(response.fields);
+                    $('#response-container').html(response)
                 }
             });
         }
 
-function displayFields(fields) {
-    var fieldContainer = $('#response-container');
-    fieldContainer.empty();
+        function displayFields(fields) {
+            var fieldContainer = $('#response-container');
+            fieldContainer.empty();
 
-    fields.forEach(function (field, index) {
+            fields.forEach(function (field, index) {
 
-        var fieldElement = $('<div>', {
-            id: field,
-            class: 'drag-item',
-            'data-order': index
-        });
+                var fieldElement = $('<div>', {
+                    id: field,
+                    class: 'drag-item',
+                    'data-order': index
+                });
 
-        var checkboxElement = $('<input>', {
-            type: 'checkbox',
-            class: 'form-check-input',
-            id: 'exampleCheck1'
-        });
-
-     if (field.fieldid_real !== 'None' ) {
-            checkboxElement.prop('checked', true);
-        } else {
-            checkboxElement.prop('checked', false);
-        }
+                var checkboxElement = $('<input>', {
+                    type: 'checkbox',
+                    class: 'form-check-input',
+                    id: 'exampleCheck1'
+                });
 
 
-        var optionsDiv = $('<div>', {
-            class: 'options-div',
-            style: 'display: none;'
-        });
+                var optionsDiv = $('<div>', {
+                    class: 'options-div',
+                    style: 'display: none;'
+                });
 
-        var spanElement1 = $('<span>', {
-            text: 'Option 1'
-        });
-        optionsDiv.append(spanElement1);
+                var spanElement1 = $('<span>', {
+                    text: 'Option 1'
+                });
+                optionsDiv.append(spanElement1);
 
-        var spanElement2 = $('<span>', {
-            text: 'Option 2'
-        });
-        optionsDiv.append(spanElement2);
+                var spanElement2 = $('<span>', {
+                    text: 'Option 2'
+                });
+                optionsDiv.append(spanElement2);
 
-        var buttonElement = $('<button>', {
-            class: 'btn btn-primary btn-toggle',
-            text: 'Options'
-        }).on('click', function () {
-            optionsDiv.slideToggle();
-        });
+                var buttonElement = $('<button>', {
+                    class: 'btn btn-primary btn-toggle',
+                    text: 'Options'
+                }).on('click', function () {
+                    optionsDiv.slideToggle();
+                });
 
-        fieldElement.append(checkboxElement);
-        fieldElement.append($('<span>', { text: field.fieldid }));
-        fieldElement.append(buttonElement);
-        fieldElement.append(optionsDiv);
+                fieldElement.append(checkboxElement);
+                fieldElement.append($('<span>', {text: field.fieldid}));
+                fieldElement.append(buttonElement);
+                fieldElement.append(optionsDiv);
 
-        fieldContainer.append(fieldElement);
-    });
-
-    drake.containers.push(fieldContainer.get(0));
-}
-
-
-
-
-        function updateOrder() {
-            var fieldElements = $('.drag-item');
-            fieldElements.each(function (index) {
-                $(this).attr('data-order', index);
+                fieldContainer.append(fieldElement);
             });
+
+            drake.containers.push(fieldContainer.get(0));
         }
 
-        
+
     });
 
     function saveFieldsOrder() {
-            alert('salva');
-            var fieldOrder = [];
-            $('.drag-item').each(function () {
-                var fieldId = this.id;
-                var fieldOrderValue = $(this).attr('data-order');
-                if ($(this).find(".form-check-input").first().is(":checked")) {
-                    alert("Checkbox is checked");
-                }
-                fieldOrder.push({
-                    id: fieldId,
-                    order: fieldOrderValue,
-                });
+        alert('salva');
+        var fieldOrder = [];
+        $('.drag-item').each(function () {
+            var fieldId = this.id;
+            var fieldOrderValue = $(this).attr('data-order');
+            if ($(this).find(".form-check-input").first().is(":checked")) {
+                alert("Checkbox is checked");
+            }
+            fieldOrder.push({
+                id: fieldId,
+                order: fieldOrderValue,
             });
+        });
 
-            $.ajax({
-                url: '/save_fields_order/',
-                type: 'POST',
-                data: {
-                    fields: JSON.stringify(fieldOrder),
-                    tableid: $('#current-tableid').val()
-                },
-                success: function (response) {
-                    console.log('Field order saved:', response);
-                }
-            });
-        }
+        $.ajax({
+            url: '/save_fields_order/',
+            type: 'POST',
+            data: {
+                fields: JSON.stringify(fieldOrder),
+                tableid: $('#current-tableid').val()
+            },
+            success: function (response) {
+                console.log('Field order saved:', response);
+            }
+        });
+    }
 
 </script>
 
@@ -193,10 +134,10 @@ function displayFields(fields) {
     <div style="float: left">
         Utenti <br/>
         {% for user in users %}
-        <button class="btn btn-secondary table-button">{{ user.username }}</button>
-        <br>
+            <button class="btn btn-secondary table-button">{{ user.username }}</button>
+            <br>
         {% endfor %}
-    
+
     </div>
     <div style="margin-left: 20px;float: left">
         Tabelle<br/>
@@ -205,7 +146,7 @@ function displayFields(fields) {
             <br>
         {% endfor %}
     </div>
-    
+
     <div style="margin-left: 20px; float: left;" id="settings-container">
         Contesto<br/>
         <button class="btn btn-secondary field-option" value="campiinserimento">campiinserimento</button>
@@ -219,9 +160,9 @@ function displayFields(fields) {
         <br>
         <button id="save-button" onclick="saveFieldsOrder()" class="btn btn-primary">Salva</button>
     </div>
-    
+
     <div id="response-container" style="float: left; margin-left: 20px;"></div>
-    
+
     <input id="current-tableid" type="hidden">
 </div>
 

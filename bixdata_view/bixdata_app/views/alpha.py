@@ -487,15 +487,10 @@ def get_render_content_dashboard(request):
 
             context['userid'] = bixid
 
-            cursor.execute(
-                "SELECT * FROM sys_user_dashboard_block where userid = %s", [bixid]
-            )
-            datas = dictfetchall(cursor)
 
-            cursor.execute(
-                "SELECT * FROM sys_dashboard_block"
-            )
-            all_blocks = dictfetchall(cursor)
+            datas = SysUserDashboardBlock.objects.filter(userid=bixid).values()
+
+            all_blocks = SysDashboardBlock.objects.all()
 
             for block in all_blocks:
                 context['block_list'].append(block)
@@ -572,11 +567,14 @@ def save_block_order(request):
     values = json.loads(values)
     print(values)
     for value in values:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "UPDATE sys_user_dashboard_block SET gsx = %s, gsy = %s, gsw = %s, gsh = %s WHERE id = %s",
-                [value['gsX'], value['gsY'], value['gsW'], value['gsH'], value['id']]
-            )
+        record_id = value.get('id')
+        gsx = value.get('gsX')
+        gsy = value.get('gsY')
+        gsw = value.get('gsW')
+        gsh = value.get('gsH')
+
+        if record_id is not None:
+            SysUserDashboardBlock.objects.filter(id=record_id).update(gsx=gsx, gsy=gsy, gsw=gsw, gsh=gsh)
 
     return JsonResponse({'success': True})
 
@@ -1001,11 +999,12 @@ def get_block_record_fields(request):
     contextfunction = request.POST.get('contextfunction')
     contextreference = request.POST.get('contextreference')
 
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT id FROM sys_user WHERE bixid = %s", [request.user.id])
-        row = cursor.fetchone()
-        if row:
-            userid = row[0]
+
+
+    row = SysUser.objects.filter(bixid=request.user.id).values('id')
+
+    if row:
+        userid = row[0]
     post = {
         'tableid': tableid,
         'recordid': recordid,
@@ -1250,11 +1249,10 @@ def support(request):
 def save_settings(request):
     id = None
 
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT id FROM sys_user WHERE bixid = %s", [request.user.id])
-        row = cursor.fetchone()
-        if row:
-            id = row[0]
+    row = SysUser.objects.filter(bixid=request.user.id).values('id').first()
+
+    if row:
+        id = row['id']
 
     if request.method == 'POST':
         layout = request.POST.get('record_open_layout')
@@ -1307,21 +1305,20 @@ def update_profile_pic(request):
 @login_required(login_url='/login/')
 def admin_page(request):
     page = request.POST.get('page')
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM sys_user_dashboard"
-                       )
-        rows = dictfetchall(cursor)
 
-        userids = [row['userid'] for row in rows]
-        dashboardids = [row['dashboardid'] for row in rows]
+    rows = SysUserDashboard.objects.all().values()
 
-    with connection.cursor() as cursor2:
-        cursor2.execute(
-            "SELECT firstname, lastname FROM sys_user where id in (SELECT userid FROM sys_user_dashboard)"
-        )
-        rows2 = dictfetchall(cursor2)
+    userids = [row['userid'] for row in rows]
+    dashboardids = [row['dashboardid'] for row in rows]
 
-        names = [row['firstname'] + ' ' + row['lastname'] for row in rows2]
+    rows2 = SysUser.objects.filter(id__in=userids).values('firstname', 'lastname')
+
+    names = [row['firstname'] + ' ' + row['lastname'] for row in rows2]
+
+    rows4 = SysView.objects.all().values()
+    rows5 = SysReport.objects.all().values()
+    tables = SysTable.objects.all().values('id')
+    fields = SysField.objects.all().values('tableid', 'fieldid')
 
     with connection.cursor() as cursor3:
         cursor3.execute(
@@ -1331,28 +1328,6 @@ def admin_page(request):
 
         chart_names = [row['name'] for row in rows3]
         chart_dashboard_id = [row['dashboardid'] for row in rows3]
-
-    with connection.cursor() as cursor4:
-        cursor4.execute(
-            "SELECT * FROM sys_view"
-        )
-        rows4 = dictfetchall(cursor4)
-
-    with connection.cursor() as cursor5:
-        cursor5.execute(
-            "SELECT * FROM sys_report"
-        )
-        rows5 = dictfetchall(cursor5)
-
-        cursor5.execute(
-            "SELECT id FROM sys_table"
-        )
-        tables = dictfetchall(cursor5)
-
-        cursor5.execute(
-            "SELECT tableid, fieldid FROM sys_field"
-        )
-        fields = dictfetchall(cursor5)
 
     context = {
         'userids': userids,
@@ -1378,13 +1353,10 @@ def save_chart_settings(request):
         names = request.POST.getlist('chartnames[]')
         chartdashboardids = request.POST.getlist('chartdashboardids[]')
 
-        with connection.cursor() as cursor:
-            for i in range(len(userids)):
-                user_id = userids[i]
-                dashboard_id = dashboardids[i]
-
-                cursor.execute('UPDATE sys_user_dashboard SET dashboardid = %s WHERE userid = %s',
-                               [dashboard_id, user_id])
+        for i in range(len(userids)):
+            user_id = userids[i]
+            dashboard_id = dashboardids[i]
+            SysUserDashboard.objects.filter(userid=user_id).update(dashboardid=dashboard_id)
 
         with connection.cursor() as cursor:
             for i in range(len(names)):
@@ -1405,10 +1377,16 @@ def new_chart_block(request):
         view_id = request.POST.get('view_id')
         report_id = request.POST.get('report_id')
 
-        with connection.cursor() as cursor:
-            cursor.execute(
-                'INSERT INTO sys_dashboard_block (dashboardid, name, userid, viewid, reportid) VALUES (%s, %s, %s, %s, %s)',
-                [dashboard_id, name, 1, view_id, report_id])
+        SysDashboardBlock.objects.create(
+            dashboardid=dashboard_id,
+            name=name,
+            userid=1,
+            viewid=view_id,
+            reportid=report_id
+        )
+
+
+
     return redirect('index')
 
 
@@ -1953,26 +1931,20 @@ def staff_only(view_func):
 
 @staff_only
 def scheduler(request):
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT * from sys_scheduler_tasks"
-        )
-        tasks = dictfetchall(cursor)
 
-        cursor.execute(
-            "SELECT * from sys_scheduler_tasks where status = 'running'"
-        )
-        running_tasks = dictfetchall(cursor)
+    tasks = SysSchedulerTasks.objects.all().values()
 
-        if running_tasks:
-            button = 'stop'
-        else:
-            button = 'run'
+    running_tasks = SysSchedulerTasks.objects.filter(status='running').values()
 
-        data = {
-            'tasks': tasks,
-            'button': button
-        }
+    if running_tasks:
+        button = 'stop'
+    else:
+        button = 'run'
+
+    data = {
+        'tasks': tasks,
+        'button': button
+    }
 
     return render(request, 'scheduler/scheduler.html', data)
 
@@ -2021,10 +1993,9 @@ def save_scheduler_settings(request):
         for task in tasks:
             name = task['name']
             value = task['value']
-            cursor.execute(
-                "UPDATE sys_scheduler_tasks SET active = %s WHERE funzione = %s",
-                [value, name]
-            )
+
+            SysSchedulerTasks.objects.filter(funzione=name).update(active=value)
+
             if value == '0':
                 cursor.execute(
                     "UPDATE sys_scheduler_tasks SET active = %s, status = %s WHERE funzione = %s",
@@ -2158,7 +2129,9 @@ def get_table_fields(request):
                 if field['fieldid_real'] is None:
                     field['fieldid_real'] = 'None'
 
-        return JsonResponse({'fields': fields})
+            returned = render_to_string('other/settings_fields.html', {'fields': fields})
+
+            return HttpResponse(returned)
 
 
 def save_fields_order(request):

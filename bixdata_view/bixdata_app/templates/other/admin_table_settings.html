@@ -10,8 +10,11 @@
     <div style="margin-left: 20px;float: left">
         Tabelle<br/>
         {% for table in tables %}
+            <div class="table-container">
             <span class="tableid-span">{{ table.id }}</span>
-        <br>
+                    <input class="form-check-input mt-0" type="checkbox" value=""
+                   aria-label="Checkbox for following text input">
+            </div>
         {% endfor %}
 
     </div>
@@ -48,6 +51,24 @@
     }
 
 </script>
+
+<style>
+        .table-container {
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        padding: 10px;
+        justify-content: space-between;
+        background-color: white;
+
+    }
+
+            .table-button {
+        width: 100%;
+        margin-top: 5%;
+    }
+</style>
 
 
 

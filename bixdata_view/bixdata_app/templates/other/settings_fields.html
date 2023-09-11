@@ -1,0 +1,81 @@
+<div id="" class="drag-item">
+    {% for field in fields %}
+        <div data-order="{{ forloop.counter }}" class="drag-item2">
+        {{ field.fieldid }}
+            {% if field.fieldid_real != 'None' %}
+            <input class="form-check-input mt-0" type="checkbox" checked value=""
+                   aria-label="Checkbox for following text input">
+        {% else %}
+        <input class="form-check-input mt-0" type="checkbox" value=""
+                   aria-label="Checkbox for following text input">
+        {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+<style>
+
+
+    .drag-item2 {
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        padding: 10px;
+        justify-content: space-between;
+        background-color: white;
+
+    }
+
+    #status {
+        all: unset;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        padding: 10px;
+        justify-content: space-between;
+        background-color: white;
+    }
+
+
+    .drag-item.hidden {
+        background-color: #f2f2f2;
+    }
+
+    .btn-toggle {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .btn-save {
+        margin-top: 10px;
+    }
+
+</style>
+
+
+<script>
+    $(document).ready(function () {
+        var drake;
+        var tsi_id = [];
+
+        $(".drag-item").each(function () {
+            tsi_id.push(this);
+        });
+
+        drake = dragula(tsi_id);
+        drake.on('drop', function (el, target) {
+            updateOrder();
+        });
+    });
+
+
+    function updateOrder() {
+        var fieldElements = $('.drag-item2');
+        fieldElements.each(function (index) {
+            $(this).attr('data-order', index);
+        });
+    }
+
+</script>
