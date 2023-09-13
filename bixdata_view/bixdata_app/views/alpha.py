@@ -1003,6 +1003,8 @@ def get_block_record_fields(request):
 
     row = SysUser.objects.filter(bixid=request.user.id).values('id')
 
+
+
     if row:
         userid = row[0]
     post = {
@@ -1997,10 +1999,7 @@ def save_scheduler_settings(request):
             SysSchedulerTasks.objects.filter(funzione=name).update(active=value)
 
             if value == '0':
-                cursor.execute(
-                    "UPDATE sys_scheduler_tasks SET active = %s, status = %s WHERE funzione = %s",
-                    [value, 'stopped', name]
-                )
+                SysSchedulerTasks.objects.filter(funzione=name).update(active=value, status='stopped')
 
     return HttpResponse('Settings saved successfully')
 
@@ -2009,38 +2008,30 @@ def run_tasks(request):
     button = request.POST.get('button')
 
     if button == 'run':
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT * from sys_scheduler_tasks where active = 1"
-            )
-            tasks = dictfetchall(cursor)
+
+        tasks = SysSchedulerTasks.objects.filter(active=1).values()
 
         if tasks:
             with connection.cursor() as cursor:
                 for task in tasks:
                     funzione = task['funzione']
-                    cursor.execute(
-                        "UPDATE sys_scheduler_tasks SET status = 'running' WHERE funzione = %s", [funzione]
-                    )
+
+                    SysSchedulerTasks.objects.filter(funzione=funzione).update(status='running')
+
                     schedule_job(request, funzione, task['intervallo'])
                     button = 'stop'
 
     else:
         stop_job()
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "SELECT * from sys_scheduler_tasks where active = 1"
-            )
-            tasks = dictfetchall(cursor)
+
+        tasks = SysSchedulerTasks.objects.filter(active=1).values()
 
         if tasks:
-            with connection.cursor() as cursor:
-                for task in tasks:
-                    funzione = task['funzione']
-                    cursor.execute(
-                        "UPDATE sys_scheduler_tasks SET status = 'stopped' WHERE funzione = %s", [funzione]
-                    )
-                    button = 'run'
+            for task in tasks:
+                funzione = task['funzione']
+
+                SysSchedulerTasks.objects.filter(funzione=funzione).update(status='stopped')
+                button = 'run'
 
     return button
 
@@ -2061,20 +2052,19 @@ def test_gridstack(request):
 def new_block(request):
     blockid = request.POST.get('blockid')
     userid = request.POST.get('userid')
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "INSERT INTO sys_user_dashboard_block (userid, dashboard_block_id) VALUES (%s, %s)",
-            [userid, blockid]
-        )
+
+    SysUserDashboardBlock.objects.create(
+        userid=userid,
+        dashboard_block_id=blockid
+    )
+
     return JsonResponse({'success': True})
 
 
 def remove_block(request):
     blockid = request.POST.get('blockid')
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "DELETE FROM sys_user_dashboard_block WHERE id = %s", [blockid]
-        )
+    SysUserDashboardBlock.objects.filter(id=blockid).delete()
+
     return JsonResponse({'success': True})
 
 
@@ -2085,11 +2075,15 @@ def new_report(request):
     operation = request.POST.get('operation')
     layout = request.POST.get('layout')
     groupby = request.POST.get('groupby')
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "INSERT INTO sys_report (userid, tableid, name, fieldid, operation, layout, groupby) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-            [1, tableid, report_name, fieldid, operation, layout, groupby]
-        )
+    SysReport.objects.create(
+        userid=1,
+        tableid=tableid,
+        name=report_name,
+        fieldid=fieldid,
+        operation=operation,
+        layout=layout,
+        groupby=groupby
+    )
 
     return JsonResponse({'success': True})
 
@@ -2099,12 +2093,10 @@ def test_select(request):
 
 
 def order_settings(request):
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT id FROM sys_table"
-        )
-        tables = dictfetchall(cursor)
 
+    tables = SysTable.objects.all().values('id')
+
+    with connection.cursor() as cursor:
         cursor.execute(
             "SELECT * FROM v_users WHERE is_active = 1"
         )
@@ -2262,12 +2254,9 @@ def test_lock(request):
 lock = threading.Lock()
 
 def admin_table_settings(request):
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT id FROM sys_table"
-        )
-        tables = dictfetchall(cursor)
 
+    tables = SysTable.objects.all().values('id')
+    with connection.cursor() as cursor:
         cursor.execute(
             "SELECT * FROM v_users WHERE is_active = 1"
         )

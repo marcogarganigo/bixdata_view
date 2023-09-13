@@ -103,6 +103,7 @@
 
 
         $('#fields_container_{{ tableid }}_{{ recordid }}').find('.js-example-basic-single').each(function () {
+            //alert('{{ tableid }}_{{ recordid }}');
             $(this).select2({
                 dropdownParent: $(this).parent()
             }).addClass('select2-initialized');
@@ -114,16 +115,6 @@
                 document.querySelector('input.select2-search__field').focus();
             }, 0);
         })
-
-        change_checkbox_view()
-
-        function change_checkbox_view() {
-            if ($('#input-{{ recordid }}').val() == 'Si') {
-                $('#input-{{ recordid }}').prev('input').prop('checked', true);
-            } else {
-                $('#close-task-button-{{ recordid }}').css('display', 'block')
-            }
-        }
 
 
         function set_checkbox_value(el) {
@@ -142,85 +133,6 @@
 
         });
 
-
-        $(function () {
-            function log(message) {
-                $("<div>").text(message).prependTo("#log");
-                $("#log").scrollTop(0);
-            }
-
-            $("#{{ fieldid }}-{{ recordid }}").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: "{% url 'get_autocomplete_data' %}",
-                        data: {
-                            'term': request.term,
-                            'tableid': '{{tableid}}',
-                            'mastertableid': '{{ field.tablelink }}'
-                        },
-                        success: function (data) {
-                            console.info(data)
-                            response(data.data);
-                        }
-                    });
-                },
-                minLength: 0, // Set minLength to 0 to show autocomplete on focus
-                select: function (event, ui) {
-                    // console.log( "Selected: " + ui.item.id );
-                    $(this).closest('.field').find('.hidden-input').val(ui.item.id);
-                    $.ajax({
-                        url: "{% url 'get_badge' %}",
-                        data: {
-                            'recordid': ui.item.id,
-                            'tableid': '{{tableid}}',
-                        },
-                        success: function (data) {
-                            console.info(data)
-                            response(data.data);
-                        }
-                    });
-                }
-            }).focus(function () {
-                // Trigger autocomplete on focus
-                $(this).autocomplete("search", "");
-            });
-
-            // Handle empty input
-            $("#{{ fieldid }}-{{ recordid }}").on("input", function () {
-                var inputValue = $(this).val();
-                if (inputValue === "") {
-                    $(this).val(""); // Imposta il valore predefinito
-                    $(this).closest('.field').find('.hidden-input').val("");
-
-                }
-            });
-        });
-
-
-        function showOptions() {
-            $(this).autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: "{% url 'get_autocomplete_data' %}",
-                        data: {
-                            'term': request.term,
-                            'tableid': '{{tableid}}',
-                            'mastertableid': '{{ field.tablelink }}'
-                        },
-                        success: function (data) {
-                            console.info(data)
-                            response(data.data);
-                        }
-                    });
-                },
-                minLength: 0,
-                select: function (event, ui) {
-                    //console.log( "Selected: " + ui.item.id );
-                    $(this).closest('.field').find('.hidden-input').val(ui.item.id);
-
-                }
-            });
-        }
 
     </script>
 
@@ -266,6 +178,20 @@
                                        onchange="set_checkbox_value(this)">
                                 <input id="input-{{ recordid }}" type="hidden" name="{{ fieldname }}"
                                        value="{{ field.value }}">
+
+                                <script>
+
+                                    change_checkbox_view()
+
+                                    function change_checkbox_view() {
+                                        if ($('#input-{{ recordid }}').val() == 'Si') {
+                                            $('#input-{{ recordid }}').prev('input').prop('checked', true);
+                                        } else {
+                                            $('#close-task-button-{{ recordid }}').css('display', 'block')
+                                        }
+                                    }
+
+                                </script>
 
                             {% else %}
                                 {% if field.lookuptableid %}
@@ -358,7 +284,7 @@
                         {% if field.fieldtypeid == 'linkedmaster' %}
                             <div>
                                 <input class="form-select mb-2 {{ mandatory }}"
-                                       id="{{ fieldid }}-{{ recordid }}" style="width: 80%"
+                                       id="{{ fieldid }}-{{ recordid }}-autocomplete" style="width: 80%"
                                        value="{{ field.valuecode.0.value }}"
                                        onfocus="selectAllText(this); showOptions(this)">
                             </div>
@@ -372,6 +298,89 @@
                 {% for items in field.valuecode %}
                     {% if items.value and items.code %}
                     {% endif %}
+
+                    <script>
+
+                        $(function () {
+                            function log(message) {
+                                $("<div>").text(message).prependTo("#log");
+                                $("#log").scrollTop(0);
+                            }
+
+                            $("#{{ fieldid }}-{{ recordid }}-autocomplete").autocomplete({
+                                source: function (request, response) {
+                                    $.ajax({
+                                        url: "{% url 'get_autocomplete_data' %}",
+                                        data: {
+                                            'term': request.term,
+                                            'tableid': '{{tableid}}',
+                                            'mastertableid': '{{ field.tablelink }}'
+                                        },
+                                        success: function (data) {
+                                            console.info(data)
+                                            response(data.data);
+                                        }
+                                    });
+                                },
+                                minLength: 0, // Set minLength to 0 to show autocomplete on focus
+                                select: function (event, ui) {
+                                    // console.log( "Selected: " + ui.item.id );
+                                    $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+                                    $.ajax({
+                                        url: "{% url 'get_badge' %}",
+                                        data: {
+                                            'recordid': ui.item.id,
+                                            'tableid': '{{tableid}}',
+                                        },
+                                        success: function (data) {
+                                            console.info(data)
+                                            response(data.data);
+                                        }
+                                    });
+                                }
+                            }).focus(function () {
+                                // Trigger autocomplete on focus
+                                $(this).autocomplete("search", "");
+                            });
+
+                            // Handle empty input
+                            $("#{{ fieldid }}-{{ recordid }}").on("input", function () {
+                                var inputValue = $(this).val();
+                                if (inputValue === "") {
+                                    $(this).val(""); // Imposta il valore predefinito
+                                    $(this).closest('.field').find('.hidden-input').val("");
+
+                                }
+                            });
+                        });
+
+
+                        function showOptions() {
+                            $(this).autocomplete({
+                                source: function (request, response) {
+                                    $.ajax({
+                                        url: "{% url 'get_autocomplete_data' %}",
+                                        data: {
+                                            'term': request.term,
+                                            'tableid': '{{tableid}}',
+                                            'mastertableid': '{{ field.tablelink }}'
+                                        },
+                                        success: function (data) {
+                                            console.info(data)
+                                            response(data.data);
+                                        }
+                                    });
+                                },
+                                minLength: 0,
+                                select: function (event, ui) {
+                                    //console.log( "Selected: " + ui.item.id );
+                                    $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+
+                                }
+                            });
+                        }
+                    </script>
+
                 {% endfor %}
             {% endwith %}
         {% endwith %}

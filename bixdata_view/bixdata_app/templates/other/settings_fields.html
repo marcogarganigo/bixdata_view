@@ -1,14 +1,22 @@
 <div id="" class="drag-item">
     {% for field in fields %}
-        <div data-order="{{ forloop.counter }}" class="drag-item2">
-        {{ field.fieldid }}
+        <div data-order="{{ forloop.counter0 }}" class="drag-item2">
+            {{ field.fieldid }}
+
             {% if field.fieldid_real != 'None' %}
-            <input class="form-check-input mt-0" type="checkbox" checked value=""
-                   aria-label="Checkbox for following text input">
-        {% else %}
-        <input class="form-check-input mt-0" type="checkbox" value=""
-                   aria-label="Checkbox for following text input">
-        {% endif %}
+                <input class="form-check-input mt-0" type="checkbox" checked value=""
+                       aria-label="Checkbox for following text input">
+            {% else %}
+                <input class="form-check-input mt-0" type="checkbox" value=""
+                       aria-label="Checkbox for following text input">
+            {% endif %}
+
+            <button class="btn btn-primary" onclick="$(this).siblings('.card').fadeToggle()">test</button>
+
+            <div class="card" style="width: 18rem; display: none">
+                <div class="card-body">
+                </div>
+            </div>
         </div>
     {% endfor %}
 </div>
@@ -24,7 +32,6 @@
         padding: 10px;
         justify-content: space-between;
         background-color: white;
-
     }
 
     #status {
