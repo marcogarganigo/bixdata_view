@@ -102,8 +102,8 @@
         }
 
 
+
         $('#fields_container_{{ tableid }}_{{ recordid }}').find('.js-example-basic-single').each(function () {
-            //alert('{{ tableid }}_{{ recordid }}');
             $(this).select2({
                 dropdownParent: $(this).parent()
             }).addClass('select2-initialized');
@@ -229,6 +229,7 @@
                             {% endif %}
                         {% endif %}
                         {% if field.fieldtypeid == 'Data' %}
+                            <label>
                             <label>
                                 <input id="{{ fieldid }}" name="{{ fieldname }}"
                                        class="form-control mb-2 datepicker {{ mandatory }}" type="date"

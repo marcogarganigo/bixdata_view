@@ -998,10 +998,12 @@ def get_block_record_fields(request):
     master_recordid = request.POST.get('master_recordid')
     contextfunction = request.POST.get('contextfunction')
     contextreference = request.POST.get('contextreference')
+    #creator = request.POST.get('creator')
 
 
 
     row = SysUser.objects.filter(bixid=request.user.id).values('id')
+
 
 
 
@@ -1030,6 +1032,7 @@ def get_block_record_fields(request):
     context['recordid'] = recordid
     context['master_tableid'] = master_tableid
     context['master_recordid'] = master_recordid
+    context['userid'] = userid
 
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()

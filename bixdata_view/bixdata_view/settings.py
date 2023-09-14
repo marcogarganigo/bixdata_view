@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'corsheaders',
-    'bixdata_app',
+    'bixdata_app'
 ]
 
 # AUTH_USER_MODEL = 'bixdata_app.CustomUser'

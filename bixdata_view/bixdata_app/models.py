@@ -8,6 +8,21 @@
 from django.db import models
 
 
+
+class UserTable(models.Model):
+    tableid = models.CharField(primary_key=True, max_length=32)
+    recordid = models.CharField(max_length=32)
+
+    def insert(self):
+        return True
+
+    def delete(self):
+        return True
+
+    def update(self):
+        return True
+
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
 
@@ -379,6 +394,7 @@ class SysField(models.Model):
     fieldtypewebid = models.CharField(max_length=255, blank=True, null=True)
     linkfieldid = models.CharField(max_length=255, blank=True, null=True)
     explanation = models.TextField(blank=True, null=True)
+
 
     class Meta:
         managed = False
