@@ -1009,6 +1009,7 @@ def get_block_record_fields(request):
 
     if row:
         userid = row[0]
+        userid = userid['id']
     post = {
         'tableid': tableid,
         'recordid': recordid,
@@ -1032,7 +1033,6 @@ def get_block_record_fields(request):
     context['recordid'] = recordid
     context['master_tableid'] = master_tableid
     context['master_recordid'] = master_recordid
-    context['userid'] = userid
 
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()
