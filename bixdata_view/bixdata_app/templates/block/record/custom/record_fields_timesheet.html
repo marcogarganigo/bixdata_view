@@ -40,6 +40,7 @@
                 data: post_data,
                 success: function (response) {
                     master_tableid = '{{ master_tableid }}';
+                    alert(contextfunction)
                     if ((contextfunction == 'insert') && (master_tableid == 'None')) {
                         refresh();
                     } else {
@@ -51,8 +52,11 @@
                         }
                         var recordid = $(el).attr('data-recordid');
 
-                        $('#fields_container_' + '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
-                        open_record(window.content, '{{ tableid }}', '{{ recordid }}')
+                        if (contextfunction !== 'insert') {
+                            $('#fields_container_' + '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
+                            open_record(window.content, '{{ tableid }}', '{{ recordid }}')
+                        }
+
                         swal({
                             title: "Salvato!",
                             text: "Il record è stato salvato",
