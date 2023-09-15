@@ -5,6 +5,19 @@
         chart: {
             height: '100%',
             type: 'bar',
+            animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800,
+        animateGradually: {
+            enabled: true,
+            delay: 150
+        },
+        dynamicAnimation: {
+            enabled: true,
+            speed: 350
+        }
+    }
         },
         series: [
             {% for val in value %}
