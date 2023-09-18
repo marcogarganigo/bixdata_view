@@ -879,6 +879,17 @@ def get_block_records_calendar(request):
     return render(request, 'block/records/records_calendar.html')
 
 
+
+    """
+    This function retrieves block records from a server and returns a rendered HTML table of the
+    records.
+    
+    :param request: The `request` parameter is an object that represents the HTTP request made by the
+    client. It contains information such as the request method, headers, user session, and other data
+    related to the request. In this code snippet, the `request` object is used to access the POST data
+    sent by the
+    :return: the rendered HTML template for the records table.
+    """
 @login_required(login_url='/login/')
 def get_block_record(request):
     table = request.POST.get('table')
@@ -1139,11 +1150,8 @@ def save_record_fields(request):
 
     if contextfunction == 'insert':
         if tableid == 'ticketbixdata' and 'description' in fields_dict:
-            message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(
-                request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
-            send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'],
-                       subject='Supporto bixdata',
-                       html_message=message)
+            message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
+            send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'],subject='Supporto bixdata',html_message=message)
 
         elif tableid == 'task':
             if fields_dict['user'] != fields_dict['creator']:
@@ -1255,7 +1263,7 @@ def save_settings(request):
     id = None
 
     row = SysUser.objects.filter(bixid=request.user.id).values('id').first()
-
+    
     if row:
         id = row['id']
 
