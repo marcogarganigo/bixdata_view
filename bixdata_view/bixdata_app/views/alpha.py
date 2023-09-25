@@ -47,7 +47,7 @@ from apscheduler.executors.pool import ThreadPoolExecutor
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
-
+# Questa funzione blocca l'accesso a bixdata da firefox
 def firefox_check(view_func):
     def wrapped_view(request, *args, **kwargs):
         user_agent = request.META.get('HTTP_USER_AGENT', '')
@@ -60,11 +60,11 @@ def firefox_check(view_func):
 
     return wrapped_view
 
-
+# Questa funzione ritorna la pagina test_autocomplete.html
 def get_test_autocomplete(request):
     return render(request, 'test_autocomplete.html')
 
-
+# Questa funzione ritorna i dati richiesti con i select autocomplete
 def get_autocomplete_data(request):
     term = request.GET.get('term')
     tableid = request.GET.get('tableid')
@@ -83,7 +83,7 @@ def get_autocomplete_data(request):
         data) if term.lower() in item.lower()]
     return JsonResponse({'data': response})
 
-
+# Questa funzione sarebbe da rimuovere
 def get_test_query(request, name=None):
     with connection.cursor() as cursor1:
         cursor1.execute(
@@ -290,7 +290,7 @@ def get_chart4(request):
 
         return render(request, 'other/chart4.html', {'data': data})
 
-
+# Questa funzione ritorna la pagina index.html con le variabili riguardanti il menu, il nome utente, il ruolo, il tema e il contenuto
 @firefox_check
 @xframe_options_exempt
 @login_required(login_url='/login/')
@@ -327,12 +327,14 @@ def get_render_index(request, content=''):
     return user_agent(request, 'index.html', 'index2.html', context)
     # return render(request, 'index.html', context)
 
-
+# Questa funzione ritorna il loading
 def get_render_loading(request):
     return render(request, 'other/loading.html')
 
 
 # request: {tableid}
+
+# Questa funzione ritorna la pagina records.html ovvero la tabella, la vista della tabella e le impostazioni rigurdanti la tabella
 @login_required(login_url='/login/')
 def get_content_records(request):
     context = dict()
@@ -378,6 +380,7 @@ def get_content_records(request):
     # return render(request, 'content/records.html', context)
 
 
+# Questa funzione serve per la ricerca dei record
 def get_search_fields_data(tableid):
     search_fields = []
     with connection.cursor() as cursor:
@@ -391,7 +394,7 @@ def get_search_fields_data(tableid):
                 search_fields.append(field)
     return search_fields
 
-
+# Questa funzione ritorna i record delle tabelle collegate
 def get_records_linked(request):
     tableid = request.POST.get('tableid')
     master_tableid = request.POST.get('master_tableid')
@@ -400,6 +403,7 @@ def get_records_linked(request):
     return HttpResponse(records_table)
 
 
+# Questa funzione è un test per i grafici
 @login_required(login_url='/login/')
 def get_render_content_chart(request):
     with connection.cursor() as cursor:
