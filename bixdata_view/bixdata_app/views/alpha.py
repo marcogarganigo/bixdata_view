@@ -3,7 +3,6 @@ import uuid
 import threading
 from django.contrib.sessions.models import Session
 import threading
-#import models from models.py
 from bixdata_app.models import *
 
 
@@ -25,7 +24,6 @@ from django.contrib.auth.decorators import login_required
 import time
 
 import pdfkit
-# from docx import Document
 
 from ..forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
@@ -34,7 +32,6 @@ from django.db import connection
 from django.http import JsonResponse
 from django.contrib.auth.models import Group, Permission, User, Group
 from django_user_agents.utils import get_user_agent
-#from bixdata_app.models import MyModel
 import os
 from django.conf import settings
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -446,12 +443,6 @@ def get_block_records_chart(request):
     records_table = render_to_string(
         'block/records/records_chart.html', chart_data, request=request)
     return HttpResponse(records_table)
-
-
-@login_required(login_url='/login/')
-def get_test(request):
-    num = 1
-    return render(request, 'content/../templates/pdf/test.html', {'num': num})
 
 
 @login_required(login_url='/login/')

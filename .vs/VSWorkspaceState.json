@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\bixdata_view",
+    "\\bixdata_view\\bixdata_app",
+    "\\bixdata_view\\bixdata_app\\templates",
+    "\\bixdata_view\\bixdata_app\\templates\\admin_settings",
+    "\\bixdata_view\\bixdata_app\\templates\\block",
+    "\\bixdata_view\\bixdata_app\\views"
+  ],
+  "SelectedNode": "\\bixdata_view\\bixdata_app\\views\\view_settings.py",
+  "PreviewInSolutionExplorer": false
+}

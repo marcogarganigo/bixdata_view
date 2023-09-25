@@ -83,7 +83,26 @@
                 });
             }
 
+            function getTestContent(content_page) {
+                var serialized_data = [];
+                serialized_data.push({name: 'content_page', value: content_page});
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'test_content' %}",
+                    data: serialized_data,
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
+
             function getAdminTableSettings(page) {
+                
                 $.ajax({
                     type: "POST",
                     crossDomain: true,
@@ -106,6 +125,24 @@
                     type: "POST",
                     crossDomain: true,
                     url: "{% url 'order_settings' %}",
+                    data: {
+                        'page': page
+                    },
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
+
+            function getViewSettingsTable(page) {
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'settings_table' %}",
                     data: {
                         'page': page
                     },
@@ -708,7 +745,7 @@
                                             <li onclick="getAdminOrderSettings($(this).find('a').text())">
                                                 <a class="side-nav-txt" onclick="setColor(this)">Impostazioni campi</a>
                                             </li>
-                                            <li onclick="getAdminTableSettings($(this).find('a').text())">
+                                            <li onclick="getViewSettingsTable($(this).find('a').text())">
                                                 <a class="side-nav-txt" onclick="setColor(this)">Impostazioni tabelle</a>
                                             </li>
                                             <li onclick="">
@@ -736,6 +773,24 @@
                                                    class="side-nav-txt" onclick="setColor(this)" target="_blank">Fatturazione</a>
                                             </li>
 
+                                        </ul>
+                                    </div>
+
+                                </li>
+                            {% endif %}
+
+                            {% if username|lower == 'martina.panetta' or username|lower == 'alessandro.galli' or username|lower == 'davide.crudo' %}
+                                <li class="side-nav-item">
+                                    <a data-bs-toggle="collapse" href="#sidebarTest" aria-expanded="false" aria-controls="sidebarAdmin" class="side-nav-link">
+                                        <i class="uil-briefcase"></i>
+                                        <span>Test</span>
+                                        <span class="menu-arrow"></span>
+                                    </a>
+                                    <div class="collapse" id="sidebarTest">
+                                        <ul class="side-nav-second-level">
+                                            <li onclick="getTestContent('generico')">
+                                                <a class="side-nav-txt" onclick="setColor(this)">Test generico</a>
+                                            </li>
                                         </ul>
                                     </div>
 

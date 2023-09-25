@@ -8,21 +8,6 @@
 from django.db import models
 
 
-
-class UserTable(models.Model):
-    tableid = models.CharField(primary_key=True, max_length=32)
-    recordid = models.CharField(max_length=32)
-
-    def insert(self):
-        return True
-
-    def delete(self):
-        return True
-
-    def update(self):
-        return True
-
-
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
 
@@ -181,7 +166,7 @@ class DjangoSession(models.Model):
 
 
 class SysAlert(models.Model):
-    tableid = models.CharField(max_length=255, blank=True, null=True)
+    tableid = models.ForeignKey('SysTable', models.DO_NOTHING, db_column='tableid', blank=True, null=True)
     alert_condition = models.TextField(blank=True, null=True)
     alert_type = models.CharField(max_length=255, blank=True, null=True)
     alert_param = models.TextField(blank=True, null=True)
@@ -272,8 +257,8 @@ class SysBatchFile(models.Model):
 
 class SysCalendar(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
-    userid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    tableid = models.CharField(max_length=255, blank=True, null=True)
+    userid = models.ForeignKey('SysUser', models.DO_NOTHING, db_column='userid', blank=True, null=True)
+    tableid = models.ForeignKey('SysTable', models.DO_NOTHING, db_column='tableid', blank=True, null=True)
     field_data = models.CharField(max_length=255, blank=True, null=True)
     field_orainizio = models.CharField(max_length=255, blank=True, null=True)
     field_orafine = models.CharField(max_length=255, blank=True, null=True)
@@ -289,20 +274,6 @@ class SysCalendar(models.Model):
         db_table = 'sys_calendar'
 
 
-class SysClientServer(models.Model):
-    clientserver = models.CharField(max_length=50)
-    pcname = models.CharField(max_length=50, blank=True, null=True)
-    ip = models.CharField(max_length=50, blank=True, null=True)
-    connected = models.CharField(max_length=1, blank=True, null=True)
-    starttime = models.DateTimeField(blank=True, null=True)
-    endtime = models.DateTimeField(blank=True, null=True)
-    username = models.CharField(max_length=25, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_client_server'
-
-
 class SysDashboard(models.Model):
     userid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
@@ -315,12 +286,12 @@ class SysDashboard(models.Model):
 
 
 class SysDashboardBlock(models.Model):
-    dashboardid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    dashboardid = models.ForeignKey(SysDashboard, models.DO_NOTHING, db_column='dashboardid', blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     userid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    viewid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    reportid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    calendarid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    viewid = models.ForeignKey('SysView', models.DO_NOTHING, db_column='viewid', blank=True, null=True)
+    reportid = models.ForeignKey('SysReport', models.DO_NOTHING, db_column='reportid', blank=True, null=True)
+    calendarid = models.ForeignKey(SysCalendar, models.DO_NOTHING, db_column='calendarid', blank=True, null=True)
     width = models.CharField(max_length=255, blank=True, null=True)
     height = models.CharField(max_length=255, blank=True, null=True)
     order = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
@@ -334,44 +305,8 @@ class SysDashboardBlock(models.Model):
         db_table = 'sys_dashboard_block'
 
 
-class SysElencocampiordinati(models.Model):
-    link = models.CharField(max_length=255, blank=True, null=True)
-    fieldid = models.CharField(max_length=255, blank=True, null=True)
-    description = models.CharField(max_length=255, blank=True, null=True)
-    fieldtypeid = models.CharField(max_length=255, blank=True, null=True)
-    lookuptableid = models.CharField(max_length=255, blank=True, null=True)
-    tablelink = models.CharField(max_length=255, blank=True, null=True)
-    keyfieldlink = models.CharField(max_length=255, blank=True, null=True)
-    labelorder = models.IntegerField(blank=True, null=True)
-    fieldorder = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_elencocampiordinati'
-
-
-class SysExport(models.Model):
-    userid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    tableid = models.CharField(max_length=255, blank=True, null=True)
-    query = models.TextField(blank=True, null=True)
-    name = models.CharField(max_length=255, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_export'
-
-
-class SysFeature(models.Model):
-    description = models.CharField(max_length=255)
-    reference = models.CharField(max_length=5)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_feature'
-
-
 class SysField(models.Model):
-    tableid = models.CharField(primary_key=True, max_length=32)  # The composite primary key (tableid, fieldid) found, that is not supported. The first column is selected.
+    tableid = models.OneToOneField('SysTable', models.DO_NOTHING, db_column='tableid', primary_key=True, related_name='table_fields')
     fieldid = models.CharField(max_length=32)
     sync_fieldid = models.CharField(max_length=255, blank=True, null=True)
     master_field = models.CharField(max_length=255, blank=True, null=True)
@@ -381,11 +316,11 @@ class SysField(models.Model):
     decimalposition = models.IntegerField(blank=True, null=True)
     description = models.CharField(max_length=100, blank=True, null=True)
     fieldorder = models.IntegerField(blank=True, null=True)
-    lookuptableid = models.CharField(max_length=255, blank=True, null=True)
+    lookuptableid = models.ForeignKey('SysLookupTable', models.DO_NOTHING, db_column='lookuptableid', to_field='tableid', blank=True, null=True)
     lookupcodedesc = models.CharField(max_length=1, blank=True, null=True)
     lookupdesclen = models.IntegerField(blank=True, null=True)
     label = models.CharField(max_length=32)
-    tablelink = models.CharField(max_length=32, blank=True, null=True)
+    tablelink = models.ForeignKey('SysTable', models.DO_NOTHING, db_column='tablelink', blank=True, null=True,related_name='tablelink_fields')
     keyfieldlink = models.CharField(max_length=128, blank=True, null=True)
     default = models.CharField(max_length=255, blank=True, null=True)
     sublabel = models.CharField(max_length=255, blank=True, null=True)
@@ -395,32 +330,10 @@ class SysField(models.Model):
     linkfieldid = models.CharField(max_length=255, blank=True, null=True)
     explanation = models.TextField(blank=True, null=True)
 
-
     class Meta:
         managed = False
         db_table = 'sys_field'
         unique_together = (('tableid', 'fieldid'),)
-
-
-class SysFieldFeature(models.Model):
-    tableid = models.CharField(primary_key=True, max_length=32)  # The composite primary key (tableid, featureid, fieldid) found, that is not supported. The first column is selected.
-    fieldid = models.CharField(max_length=32)
-    featureid = models.IntegerField()
-    enabled = models.CharField(max_length=1)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_field_feature'
-        unique_together = (('tableid', 'featureid', 'fieldid'),)
-
-
-class SysFieldType(models.Model):
-    id = models.CharField(primary_key=True, max_length=16)
-    description = models.CharField(max_length=50)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_field_type'
 
 
 class SysGroup(models.Model):
@@ -437,50 +350,15 @@ class SysGroup(models.Model):
         db_table = 'sys_group'
 
 
-class SysGroupPermission(models.Model):
-    groupid = models.IntegerField(primary_key=True)  # The composite primary key (groupid, permissionid) found, that is not supported. The first column is selected.
-    permissionid = models.IntegerField()
-    enabled = models.CharField(max_length=1, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_group_permission'
-        unique_together = (('groupid', 'permissionid'),)
-
-
 class SysGroupUser(models.Model):
-    groupid = models.IntegerField(primary_key=True)  # The composite primary key (groupid, userid) found, that is not supported. The first column is selected.
-    userid = models.IntegerField()
+    groupid = models.OneToOneField(SysGroup, models.DO_NOTHING, db_column='groupid', primary_key=True)
+    userid = models.ForeignKey('SysUser', models.DO_NOTHING, db_column='userid')
     disabled = models.CharField(max_length=1, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'sys_group_user'
         unique_together = (('groupid', 'userid'),)
-
-
-class SysIndex(models.Model):
-    id = models.CharField(primary_key=True, max_length=64)  # The composite primary key (id, tableid, keyfieldids) found, that is not supported. The first column is selected.
-    description = models.CharField(max_length=50, blank=True, null=True)
-    tableid = models.CharField(max_length=32)
-    keyfieldids = models.CharField(max_length=160)
-    ord = models.CharField(max_length=4, blank=True, null=True)
-    keyorder = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_index'
-        unique_together = (('id', 'tableid', 'keyfieldids'),)
-
-
-class SysInfo(models.Model):
-    id = models.CharField(primary_key=True, max_length=512)
-    description = models.CharField(max_length=512, blank=True, null=True)
-    value = models.CharField(max_length=512, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_info'
 
 
 class SysLog(models.Model):
@@ -517,7 +395,7 @@ class SysLogquery(models.Model):
 
 class SysLookupTable(models.Model):
     description = models.CharField(max_length=255, blank=True, null=True)
-    tableid = models.CharField(max_length=255, blank=True, null=True)
+    tableid = models.CharField(unique=True, max_length=255, blank=True, null=True)
     itemtype = models.CharField(max_length=255, blank=True, null=True)
     codelen = models.IntegerField(blank=True, null=True)
     desclen = models.IntegerField(blank=True, null=True)
@@ -530,7 +408,7 @@ class SysLookupTable(models.Model):
 
 
 class SysLookupTableItem(models.Model):
-    lookuptableid = models.CharField(primary_key=True, max_length=255)  # The composite primary key (lookuptableid, itemcode) found, that is not supported. The first column is selected.
+    lookuptableid = models.CharField(primary_key=True, max_length=255)
     itemcode = models.CharField(max_length=255)
     itemdesc = models.CharField(max_length=255, blank=True, null=True)
     linkvalue = models.CharField(max_length=255, blank=True, null=True)
@@ -542,68 +420,11 @@ class SysLookupTableItem(models.Model):
         unique_together = (('lookuptableid', 'itemcode'),)
 
 
-class SysMedia(models.Model):
-    id = models.CharField(primary_key=True, max_length=32)
-    numpages = models.IntegerField(blank=True, null=True)
-    numbytes = models.DecimalField(max_digits=20, decimal_places=0, blank=True, null=True)
-    clusterdimension = models.IntegerField(blank=True, null=True)
-    maxmegabytes = models.IntegerField(blank=True, null=True)
-    maxfiles = models.IntegerField(blank=True, null=True)
-    closed = models.CharField(max_length=1)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_media'
-
-
-class SysMediaUserPath(models.Model):
-    mediaid = models.CharField(primary_key=True, max_length=32)  # The composite primary key (mediaid, userid) found, that is not supported. The first column is selected.
-    userid = models.CharField(max_length=32)
-    path = models.CharField(max_length=255, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_media_user_path'
-        unique_together = (('mediaid', 'userid'),)
-
-
-class SysOperation(models.Model):
-    id = models.IntegerField(primary_key=True)
-    description = models.CharField(max_length=50)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_operation'
-
-
-class SysPermission(models.Model):
-    name = models.CharField(max_length=50, blank=True, null=True)
-    description = models.CharField(max_length=255, blank=True, null=True)
-    method = models.CharField(max_length=255, blank=True, null=True)
-    topic = models.CharField(max_length=50, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_permission'
-
-
-class SysPropagation(models.Model):
-    userid = models.IntegerField(blank=True, null=True)
-    tableid = models.CharField(max_length=255, blank=True, null=True)
-    fieldid = models.CharField(max_length=255, blank=True, null=True)
-    mastertableid = models.CharField(max_length=255, blank=True, null=True)
-    masterfieldid = models.CharField(max_length=255, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_propagation'
-
-
 class SysReport(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     userid = models.CharField(max_length=255, blank=True, null=True)
-    tableid = models.CharField(max_length=255, blank=True, null=True)
-    fieldid = models.CharField(max_length=255, blank=True, null=True)
+    tableid = models.ForeignKey('SysTable', models.DO_NOTHING, db_column='tableid', blank=True, null=True)
+    fieldid = models.ForeignKey(SysField, models.DO_NOTHING, db_column='fieldid', blank=True, null=True)
     operation = models.CharField(max_length=255, blank=True, null=True)
     groupby = models.CharField(max_length=255, blank=True, null=True)
     layout = models.CharField(max_length=255, blank=True, null=True)
@@ -615,6 +436,7 @@ class SysReport(models.Model):
     class Meta:
         managed = False
         db_table = 'sys_report'
+        unique_together = [('tableid', 'fieldid')]
 
 
 class SysReportViews(models.Model):
@@ -666,16 +488,6 @@ class SysSettings(models.Model):
         db_table = 'sys_settings'
 
 
-class SysStatWwws(models.Model):
-    data = models.DateTimeField(blank=True, null=True)
-    ww = models.IntegerField(blank=True, null=True)
-    ws = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_stat_wwws'
-
-
 class SysTable(models.Model):
     id = models.CharField(primary_key=True, max_length=32)
     description = models.CharField(max_length=255, blank=True, null=True)
@@ -709,7 +521,7 @@ class SysTable(models.Model):
 
 
 class SysTableFeature(models.Model):
-    tableid = models.CharField(primary_key=True, max_length=32)  # The composite primary key (tableid, featureid) found, that is not supported. The first column is selected.
+    tableid = models.CharField(primary_key=True, max_length=32)
     featureid = models.IntegerField()
     enabled = models.CharField(max_length=1)
 
@@ -720,7 +532,7 @@ class SysTableFeature(models.Model):
 
 
 class SysTableLabel(models.Model):
-    tableid = models.CharField(primary_key=True, max_length=32)  # The composite primary key (tableid, labelname) found, that is not supported. The first column is selected.
+    tableid = models.CharField(primary_key=True, max_length=32)
     labelname = models.CharField(max_length=32)
     labelorder = models.SmallIntegerField(blank=True, null=True)
 
@@ -731,8 +543,8 @@ class SysTableLabel(models.Model):
 
 
 class SysTableLink(models.Model):
-    tableid = models.CharField(primary_key=True, max_length=32)  # The composite primary key (tableid, tablelinkid) found, that is not supported. The first column is selected.
-    tablelinkid = models.CharField(max_length=32)
+    tableid = models.OneToOneField(SysTable, models.DO_NOTHING, db_column='tableid', primary_key=True,related_name='tablelink_table')
+    tablelinkid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='tablelinkid',related_name='tablelink_tablelink')
 
     class Meta:
         managed = False
@@ -740,19 +552,8 @@ class SysTableLink(models.Model):
         unique_together = (('tableid', 'tablelinkid'),)
 
 
-class SysTablePageCategory(models.Model):
-    tableid = models.CharField(max_length=255, blank=True, null=True)
-    cat_id = models.CharField(max_length=255, blank=True, null=True)
-    cat_description = models.CharField(max_length=255, blank=True, null=True)
-    cat_order = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_table_page_category'
-
-
 class SysTableSettings(models.Model):
-    tableid = models.CharField(max_length=255, blank=True, null=True)
+    tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='tableid', blank=True, null=True)
     settingid = models.CharField(max_length=255, blank=True, null=True)
     value = models.CharField(max_length=255, blank=True, null=True)
 
@@ -761,18 +562,8 @@ class SysTableSettings(models.Model):
         db_table = 'sys_table_settings'
 
 
-class SysTableStack(models.Model):
-    tableid = models.CharField(max_length=32)
-    ip = models.CharField(max_length=30)
-    pcname = models.CharField(max_length=30)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_table_stack'
-
-
 class SysTableSublabel(models.Model):
-    tableid = models.CharField(primary_key=True, max_length=32)  # The composite primary key (tableid, sublabelname) found, that is not supported. The first column is selected.
+    tableid = models.CharField(primary_key=True, max_length=32)
     sublabelname = models.CharField(max_length=32)
     sublabelorder = models.SmallIntegerField(blank=True, null=True)
     showedbytableid = models.CharField(max_length=255, blank=True, null=True)
@@ -787,7 +578,7 @@ class SysTableSublabel(models.Model):
 
 class SysTableWorkspace(models.Model):
     workspaceid = models.AutoField(primary_key=True)
-    userid = models.IntegerField(blank=True, null=True)
+    userid = models.ForeignKey('SysUser', models.DO_NOTHING, db_column='userid', blank=True, null=True)
     name = models.CharField(max_length=50, blank=True, null=True)
     icon = models.CharField(max_length=1000, blank=True, null=True)
     order = models.IntegerField(blank=True, null=True)
@@ -825,8 +616,8 @@ class SysUser(models.Model):
 
 
 class SysUserDashboard(models.Model):
-    userid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    dashboardid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    userid = models.ForeignKey(SysUser, models.DO_NOTHING, db_column='userid', blank=True, null=True)
+    dashboardid = models.ForeignKey(SysDashboard, models.DO_NOTHING, db_column='dashboardid', blank=True, null=True)
     height = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     width = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     order = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
@@ -838,9 +629,9 @@ class SysUserDashboard(models.Model):
 
 
 class SysUserDashboardBlock(models.Model):
-    userid = models.IntegerField(blank=True, null=True)
-    dashboard_block_id = models.IntegerField(blank=True, null=True)
-    dashboardid = models.IntegerField(blank=True, null=True)
+    userid = models.ForeignKey(SysUser, models.DO_NOTHING, db_column='userid', blank=True, null=True)
+    dashboard_block = models.ForeignKey(SysDashboardBlock, models.DO_NOTHING, blank=True, null=True)
+    dashboardid = models.ForeignKey(SysDashboard, models.DO_NOTHING, db_column='dashboardid', blank=True, null=True)
     gsx = models.IntegerField(blank=True, null=True)
     gsy = models.IntegerField(blank=True, null=True)
     gsw = models.IntegerField(blank=True, null=True)
@@ -852,9 +643,9 @@ class SysUserDashboardBlock(models.Model):
 
 
 class SysUserDefaultView(models.Model):
-    userid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    tableid = models.CharField(max_length=255, blank=True, null=True)
-    viewid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    userid = models.ForeignKey(SysUser, models.DO_NOTHING, db_column='userid', blank=True, null=True)
+    tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='tableid', blank=True, null=True)
+    viewid = models.ForeignKey('SysView', models.DO_NOTHING, db_column='viewid', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -862,21 +653,22 @@ class SysUserDefaultView(models.Model):
 
 
 class SysUserFieldOrder(models.Model):
-    userid = models.IntegerField(blank=True, null=True)
-    tableid = models.CharField(max_length=32, blank=True, null=True)
-    fieldid = models.CharField(max_length=32, blank=True, null=True)
+    userid = models.ForeignKey(SysUser, models.DO_NOTHING, db_column='userid', blank=True, null=True)
+    tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='tableid', blank=True, null=True)
+    fieldid = models.ForeignKey(SysField, models.DO_NOTHING, db_column='fieldid', blank=True, null=True)
     fieldorder = models.IntegerField(blank=True, null=True)
     typepreference = models.CharField(max_length=32, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'sys_user_field_order'
+        unique_together = [('tableid', 'fieldid')]
 
 
 class SysUserFieldSettings(models.Model):
-    userid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    tableid = models.CharField(max_length=255, blank=True, null=True)
-    fieldid = models.CharField(max_length=255, blank=True, null=True)
+    userid = models.ForeignKey(SysUser, models.DO_NOTHING, db_column='userid', blank=True, null=True)
+    tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='tableid', blank=True, null=True)
+    fieldid = models.ForeignKey(SysField, models.DO_NOTHING, db_column='fieldid',  blank=True, null=True)
     settingid = models.CharField(max_length=255, blank=True, null=True)
     value = models.CharField(max_length=255, blank=True, null=True)
     context = models.CharField(max_length=50, blank=True, null=True)
@@ -885,11 +677,12 @@ class SysUserFieldSettings(models.Model):
     class Meta:
         managed = False
         db_table = 'sys_user_field_settings'
+        unique_together = [('tableid', 'fieldid')]
 
 
 class SysUserOrder(models.Model):
-    userid = models.IntegerField(blank=True, null=True)
-    tableid = models.CharField(max_length=32, blank=True, null=True)
+    userid = models.ForeignKey(SysUser, models.DO_NOTHING, db_column='userid', blank=True, null=True)
+    tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='tableid', blank=True, null=True)
     fieldid = models.CharField(max_length=32, blank=True, null=True)
     fieldorder = models.IntegerField(blank=True, null=True)
     typepreference = models.CharField(max_length=32, blank=True, null=True)
@@ -900,7 +693,7 @@ class SysUserOrder(models.Model):
 
 
 class SysUserPermission(models.Model):
-    userid = models.IntegerField(primary_key=True)  # The composite primary key (userid, permissionid) found, that is not supported. The first column is selected.
+    userid = models.IntegerField(primary_key=True)
     permissionid = models.IntegerField()
     enabled = models.CharField(max_length=1)
 
@@ -944,7 +737,7 @@ class SysUserSchedesalvate(models.Model):
 
 
 class SysUserSettings(models.Model):
-    userid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    userid = models.ForeignKey(SysUser, models.DO_NOTHING, db_column='userid', blank=True, null=True)
     setting = models.CharField(max_length=255, blank=True, null=True)
     value = models.CharField(max_length=255, blank=True, null=True)
 
@@ -966,8 +759,20 @@ class SysUserTableDefaultvalue(models.Model):
         db_table = 'sys_user_table_defaultvalue'
 
 
+class SysUserTableOrder(models.Model):
+    userid = models.ForeignKey(SysUser, models.DO_NOTHING, db_column='userid', blank=True, null=True)
+    tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='tableid', blank=True, null=True,related_name='table_orders')
+    tableorder = models.IntegerField(blank=True, null=True)
+    typepreference = models.CharField(max_length=255, blank=True, null=True)
+    master_tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='master_tableid', blank=True, null=True,related_name='master_table_orders')
+
+    class Meta:
+        managed = False
+        db_table = 'sys_user_table_order'
+
+
 class SysUserTableSearchField(models.Model):
-    userid = models.IntegerField(primary_key=True)  # The composite primary key (userid, tableid, fieldid) found, that is not supported. The first column is selected.
+    userid = models.IntegerField(primary_key=True)
     tableid = models.CharField(max_length=32)
     linkedtableid = models.CharField(max_length=50, blank=True, null=True)
     linkedmastetableid = models.CharField(max_length=50, blank=True, null=True)
@@ -981,8 +786,8 @@ class SysUserTableSearchField(models.Model):
 
 
 class SysUserTableSettings(models.Model):
-    userid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    tableid = models.CharField(max_length=255, blank=True, null=True)
+    userid = models.ForeignKey(SysUser, models.DO_NOTHING, db_column='userid', blank=True, null=True)
+    tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='tableid', blank=True, null=True)
     settingid = models.CharField(max_length=255, blank=True, null=True)
     value = models.CharField(max_length=255, blank=True, null=True)
 
@@ -993,8 +798,8 @@ class SysUserTableSettings(models.Model):
 
 class SysView(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
-    userid = models.CharField(max_length=255, blank=True, null=True)
-    tableid = models.CharField(max_length=255, blank=True, null=True)
+    userid = models.ForeignKey(SysUser, models.DO_NOTHING, db_column='userid', blank=True, null=True)
+    tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='tableid', blank=True, null=True)
     post = models.TextField(blank=True, null=True)
     creation = models.DateTimeField(blank=True, null=True)
     query_conditions = models.TextField(blank=True, null=True)
@@ -1007,92 +812,13 @@ class SysView(models.Model):
 
 
 class SysViewReports(models.Model):
-    viewid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    reportid = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    viewid = models.ForeignKey(SysView, models.DO_NOTHING, db_column='viewid', blank=True, null=True)
+    reportid = models.ForeignKey(SysReport, models.DO_NOTHING, db_column='reportid', blank=True, null=True)
     reportorder = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'sys_view_reports'
-
-
-class SysWfIter(models.Model):
-    id = models.CharField(primary_key=True, max_length=32)
-    description = models.CharField(max_length=255)
-    tableid = models.CharField(max_length=32)
-    time = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_wf_iter'
-
-
-class SysWfNode(models.Model):
-    id = models.CharField(primary_key=True, max_length=32)
-    description = models.CharField(max_length=255, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_wf_node'
-
-
-class SysWfStep(models.Model):
-    id = models.IntegerField(primary_key=True)
-    iterid = models.CharField(max_length=32, blank=True, null=True)
-    tableid = models.CharField(max_length=32, blank=True, null=True)
-    creationtime = models.DateTimeField()
-    lastupdatetime = models.DateTimeField()
-    timein = models.DateTimeField()
-    timeout = models.DateTimeField(blank=True, null=True)
-    expirationtimeout = models.DateTimeField()
-    currentnodeid = models.CharField(max_length=32, blank=True, null=True)
-    currentstep = models.IntegerField(blank=True, null=True)
-    previuosnodeid = models.CharField(max_length=32, blank=True, null=True)
-    nextnodeid = models.CharField(max_length=32, blank=True, null=True)
-    userid = models.IntegerField(blank=True, null=True)
-    comment = models.CharField(max_length=255, blank=True, null=True)
-    openclosed = models.CharField(max_length=1, blank=True, null=True)
-    openclosediter = models.CharField(max_length=1, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_wf_step'
-
-
-class SysWfStepIter(models.Model):
-    iterid = models.CharField(primary_key=True, max_length=32)  # The composite primary key (iterid, steporder, nodeid) found, that is not supported. The first column is selected.
-    steporder = models.IntegerField()
-    nodeid = models.CharField(max_length=32)
-    time = models.IntegerField(blank=True, null=True)
-    info = models.CharField(max_length=255, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_wf_step_iter'
-        unique_together = (('iterid', 'steporder', 'nodeid'),)
-
-
-class SysWfTableLink(models.Model):
-    iterid = models.CharField(primary_key=True, max_length=32)  # The composite primary key (iterid, stepid, tableid, recordid) found, that is not supported. The first column is selected.
-    stepid = models.CharField(max_length=32)
-    tableid = models.CharField(max_length=32)
-    recordid = models.CharField(max_length=32)
-    time = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'sys_wf_table_link'
-        unique_together = (('iterid', 'stepid', 'tableid', 'recordid'),)
-
-
-class SysWfUserNode(models.Model):
-    nodeid = models.CharField(primary_key=True, max_length=32)  # The composite primary key (nodeid, userid) found, that is not supported. The first column is selected.
-    userid = models.IntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'sys_wf_user_node'
-        unique_together = (('nodeid', 'userid'),)
 
 
 class Test(models.Model):
