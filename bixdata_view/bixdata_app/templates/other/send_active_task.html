@@ -34,33 +34,33 @@
     </thead>
     <tbody>
         {% for task in data %}
-        <tr>
-            <td style="width: 25px">
-                {% if task.status == 'Scaduto' %}
-                <img alt="Scaduto" src="https://www.swissbix.ch/img/rosso_trasparente.png" width="20">
-                {% elif task.status == 'Aperto' or task.status == "Pianificato" %}
-                <img alt="Aperto" src="https://www.swissbix.ch/img/verde_pieno_trasparente.png" width="20">
-                {% elif task.status == 'In Scadenza' %}
-                <img alt="In Scadenza" src="https://www.swissbix.ch/img/giallo_trasparente.png" width="20">
-                {% endif %}
-            </td>
-            <td style="margin: 0; padding: 0; width: 200px">
-                <b>{{ task.companyname }}</b>
-                <a href="http://bixcrm01:8000/get_record_path/task/{{ task.recordid_ }}" class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</a>
-                <p style="margin: 0;">Da: {{ task.username }}</p>
-            </td>
-            <td style="width: 100px">
-                <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20">
-                {{ task.duedate|date:"d/m/Y" }}
-                <br>
-                {% if task.planneddate != None %}
-                <img alt="Pianificato" src="https://cdn-icons-png.flaticon.com/512/1322/1322186.png" width="20">
-                {{ task.planneddate|date:"d/m/Y" }}
-                {% else %}
-                <img alt="Non Pianificato" src="https://cdn-icons-png.flaticon.com/512/4407/4407014.png" width="20">
-                {% endif %}
-            </td>
-        </tr>
+            <tr>
+                <td style="width: 25px">
+                    {% if task.status == 'Scaduto' %}
+                        <img alt="Scaduto" src="https://www.swissbix.ch/img/rosso_trasparente.png" width="20">
+                    {% elif task.status == 'Aperto' or task.status == "Pianificato" %}
+                        <img alt="Aperto" src="https://www.swissbix.ch/img/verde_pieno_trasparente.png" width="20">
+                    {% elif task.status == 'In Scadenza' %}
+                        <img alt="In Scadenza" src="https://www.swissbix.ch/img/giallo_trasparente.png" width="20">
+                    {% endif %}
+                </td>
+                <td style="margin: 0; padding: 0; width: 200px">
+                    <b>{{ task.companyname }}</b>
+                    <a href="http://bixcrm01:8000/get_record_path/task/{{ task.recordid_ }}" class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</a>
+                    <p style="margin: 0;">Da: {{ task.username }}</p>
+                </td>
+                <td style="width: 100px">
+                    <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20">
+                    {{ task.duedate|date:"d/m/Y" }}
+                    <br>
+                    {% if task.planneddate != None %}
+                        <img alt="Pianificato" src="https://cdn-icons-png.flaticon.com/512/1322/1322186.png" width="20">
+                        {{ task.planneddate|date:"d/m/Y" }}
+                    {% else %}
+                        <img alt="Non Pianificato" src="https://cdn-icons-png.flaticon.com/512/4407/4407014.png" width="20">
+                    {% endif %}
+                </td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>
@@ -79,33 +79,33 @@
     </thead>
     <tbody>
         {% for task in data_created %}
-        <tr>
-             <td style="width: 25px">
-                {% if task.status == 'Scaduto' %}
-                <img alt="Scaduto" src="https://www.swissbix.ch/img/rosso_trasparente.png" width="20">
-                {% elif task.status == 'Aperto' %}
-                <img alt="Aperto" src="https://www.swissbix.ch/img/verde_pieno_trasparente.png" width="20">
-                {% elif task.status == 'In Scadenza' %}
-                <img alt="In Scadenza" src="https://www.swissbix.ch/img/giallo_trasparente.png" width="20">
-                {% endif %}
-            </td>
-             <td style="margin: 0; padding: 0; width: 200px">
-                <b>{{ task.companyname }}</b>
-                <a href="http://bixcrm01:8000/get_record_path/task/{{ task.recordid_ }}" class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</a>
-                <p style="margin: 0;">Assegnato a: {{ task.username }}</p>
-            </td>
-            <td style="width: 100px">
-                <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20">
-                {{ task.duedate|date:"d/m/Y" }}
-                <br>
-                {% if task.planneddate != None %}
-                <img alt="Pianificato" src="https://cdn-icons-png.flaticon.com/512/1322/1322186.png" width="20">
-                {{ task.planneddate|date:"d/m/Y" }}
-                {% else %}
-                <img alt="Non Pianificato" src="https://cdn-icons-png.flaticon.com/512/4407/4407014.png" width="20">
-                {% endif %}
-            </td>
-        </tr>
+            <tr>
+                 <td style="width: 25px">
+                    {% if task.status == 'Scaduto' %}
+                        <img alt="Scaduto" src="https://www.swissbix.ch/img/rosso_trasparente.png" width="20">
+                    {% elif task.status == 'Aperto' %}
+                        <img alt="Aperto" src="https://www.swissbix.ch/img/verde_pieno_trasparente.png" width="20">
+                    {% elif task.status == 'In Scadenza' %}
+                        <img alt="In Scadenza" src="https://www.swissbix.ch/img/giallo_trasparente.png" width="20">
+                    {% endif %}
+                 </td>
+                 <td style="margin: 0; padding: 0; width: 200px">
+                    <b>{{ task.companyname }}</b>
+                    <a href="http://bixcrm01:8000/get_record_path/task/{{ task.recordid_ }}" class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</a>
+                    <p style="margin: 0;">Assegnato a: {{ task.username }}</p>
+                </td>
+                <td style="width: 100px">
+                    <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20">
+                    {{ task.duedate|date:"d/m/Y" }}
+                    <br>
+                    {% if task.planneddate != None %}
+                        <img alt="Pianificato" src="https://cdn-icons-png.flaticon.com/512/1322/1322186.png" width="20">
+                        {{ task.planneddate|date:"d/m/Y" }}
+                    {% else %}
+                        <img alt="Non Pianificato" src="https://cdn-icons-png.flaticon.com/512/4407/4407014.png" width="20">
+                    {% endif %}
+                </td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>
@@ -126,28 +126,28 @@
     </thead>
     <tbody>
         {% for task in tasks_completed %}
-        <tr>
-            <td style="width: 25px">
-                <img alt="Completato" src="https://www.swissbix.ch/img/verde_trasparente.png" width="20">
-            </td>
-            <td style="margin: 0; padding: 0; width: 200px">
-                <b>{{ task.companyname }}</b>
-                <a href="http://bixcrm01:8000/get_record_path/task/'{{ task.recordid_ }}'" class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</a>
-                <p style="margin: 0;">Assegnato a: {{ task.username }}</p>
-            </td>
-           <td style="width: 100px">
-                <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20">
-                {{ task.duedate|date:"d/m/Y" }}
-                <br>
-                {% if task.planneddate != None %}
-                <img alt="Pianificato" src="https://cdn-icons-png.flaticon.com/512/1322/1322186.png" width="20">
-                {{ task.planneddate|date:"d/m/Y" }}
-                {% else %}
-                <img alt="Non Pianificato" src="https://cdn-icons-png.flaticon.com/512/4407/4407014.png" width="20">
-                {% endif %}
-                {{ task.closedate|date:"d/m/Y" }}
-            </td>
-        </tr>
+            <tr>
+                <td style="width: 25px">
+                    <img alt="Completato" src="https://www.swissbix.ch/img/verde_trasparente.png" width="20">
+                </td>
+                <td style="margin: 0; padding: 0; width: 200px">
+                    <b>{{ task.companyname }}</b>
+                    <a href="http://bixcrm01:8000/get_record_path/task/'{{ task.recordid_ }}'" class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</a>
+                    <p style="margin: 0;">Assegnato a: {{ task.username }}</p>
+                </td>
+               <td style="width: 100px">
+                    <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20">
+                    {{ task.duedate|date:"d/m/Y" }}
+                    <br>
+                    {% if task.planneddate != None %}
+                        <img alt="Pianificato" src="https://cdn-icons-png.flaticon.com/512/1322/1322186.png" width="20">
+                        {{ task.planneddate|date:"d/m/Y" }}
+                    {% else %}
+                        <img alt="Non Pianificato" src="https://cdn-icons-png.flaticon.com/512/4407/4407014.png" width="20">
+                    {% endif %}
+                    {{ task.closedate|date:"d/m/Y" }}
+                </td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>

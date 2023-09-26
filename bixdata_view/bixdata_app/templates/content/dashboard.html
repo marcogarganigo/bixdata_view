@@ -1,7 +1,5 @@
-<button id="save-order-button" onclick="save_order()" class="btn btn-success" style="float: left">Salva disposizione
-</button>
-<select id="select-block" class="form-select" aria-label="Default select example"
-        style="width: 10%; float: left; margin-left: 5%">
+<button id="save-order-button" onclick="save_order()" class="btn btn-success" style="float: left">Salva disposizione</button>
+<select id="select-block" class="form-select" aria-label="Default select example" style="width: 10%; float: left; margin-left: 5%">
     {% for block in block_list %}
         <!--skippa i primi 4 per i sales che ora danno errore-->
         {% if forloop.counter > 4 %}
@@ -23,11 +21,7 @@
                 <i class="mdi mdi-delete" onclick="remove_widget(this)"
                    style="position: absolute; bottom: 5px; left: 5px;"></i>
             </div>
-
-
         </div>
-
-
     {% endfor %}
 
 
@@ -45,15 +39,13 @@
         }
     </style>
 
+
     <script>
-
-
         button = document.createElement("button");
         button.innerHTML = "Rimuovi";
         button.onclick = function () {
             remove_widget(this.parentNode.parentNode.parentNode);
         };
-
 
         function remove_widget(el) {
             swal({
@@ -182,5 +174,4 @@
             background-color: white !important;
         }
     </style>
-
 </div>

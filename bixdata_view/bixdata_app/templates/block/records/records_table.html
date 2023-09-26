@@ -5,7 +5,6 @@
         width: 100%;
     }
 
-
     #results-row {
         display: table;
         width: 100%;
@@ -99,8 +98,6 @@
             height: 500px !important;
         }
     {% endif %}
-
-
 </style>
 
 <script>
@@ -129,7 +126,6 @@
         });
     });
 
-
     function activeRow(el, id) {
 
         var row = document.getElementById(id);
@@ -142,11 +138,8 @@
         if (el.classList.contains('clicked')) {
             el.style.border = '2px solid black';
         } else {
-
         }
-
     }
-
 
     function modalShow() {
         //$("#recordModal").load('/loading/');
@@ -156,7 +149,6 @@
             }
         });
     }
-
 
     function popoverContent() {
         var responseblock = 'response block';
@@ -178,16 +170,13 @@
                 responseblock = 'error';
             }
         });
-
         return responseblock;
     }
 
     function sort(el) {
-
         $('#block_records_table').attr('data-order-field', $(el).text().trim())
 
         if ($(el).find('i').hasClass('mdi-arrow-down-thin')) {
-
             $(el).find('i').removeClass('mdi-arrow-down-thin')
             $(el).find('i').removeClass('mdi')
             $('#block_records_table').attr('data-order', 'desc')
@@ -196,7 +185,6 @@
             $(el).find('i').removeClass('mdi')
             $('#block_records_table').attr('data-order', 'asc')
         }
-
         refresh()
     }
 
@@ -208,131 +196,120 @@
     <div class="col s12 m6 l6" id="pagination-container">
         <table id="results-table" class="">
             <thead id="results-head">
-            <tr id="results-row">
-                {% for column in columns %}
-                    {% if column.desc != 'recordid_' and column.desc != 'recordstatus_' and column.desc != 'recordcss_' %}
-                        {% if column.fieldtypeid == 'Numero' %}
-                            {% if column.desc == order_field %}
-                                <th onclick="sort(this)" style="text-align: right">{{ column.desc }} <i
-                                        class="{{ icon }}"></i></th>
+                <tr id="results-row">
+                    {% for column in columns %}
+                        {% if column.desc != 'recordid_' and column.desc != 'recordstatus_' and column.desc != 'recordcss_' %}
+                            {% if column.fieldtypeid == 'Numero' %}
+                                {% if column.desc == order_field %}
+                                    <th onclick="sort(this)" style="text-align: right">{{ column.desc }} <i class="{{ icon }}"></i></th>
+                                {% else %}
+                                    <th onclick="sort(this)" style="text-align: right">{{ column.desc }} <i class=""></i></th>
+                                {% endif %}
                             {% else %}
-                                <th onclick="sort(this)" style="text-align: right">{{ column.desc }} <i class=""></i>
-                                </th>
-                            {% endif %}
-                        {% else %}
-                            {% if column.desc == order_field %}
-                                <th onclick="sort(this)">{{ column.desc }} <i class="{{ icon }}"></i></th>
-                            {% else %}
-                                <th onclick="sort(this)">{{ column.desc }} <i class=""></i></th>
+                                {% if column.desc == order_field %}
+                                    <th onclick="sort(this)">{{ column.desc }} <i class="{{ icon }}"></i></th>
+                                {% else %}
+                                    <th onclick="sort(this)">{{ column.desc }} <i class=""></i></th>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
-                    {% endif %}
-                {% endfor %}
-            </tr>
+                    {% endfor %}
+                </tr>
             </thead id="results-head">
             <tbody id="results-body">
-            {% for record in records %}
-            {% if record.2 %}
-                <tr style="{{ record.2.value }};" id="results-row"
-                    onclick="activeRow(this, '{{ column_value.link_tableid }}')">
+                {% for record in records %}
+                    {% if record.2 %}
+                        <tr style="{{ record.2.value }};" id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
                     {% else %}
-                <tr id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
-            {% endif %}
-            {% for column_value in record %}
-            {% if forloop.counter0 > 2 %}
-            {% if column_value.fieldtype == 'linked' %}
-            <td class="records-linked" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                data-fieldtype="standard" data-layout="recordcard" style="font-weight: bold !important;">
-                <!--
-                                        <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')"
-                                            data-fieldtype="{{ column_value.fieldtype }}"
-                                            class="linked-field popover-linked"
-                                            data-bs-toggle="popover"
-                                            data-bs-trigger="hover focus"
-                                            data-bs-title="Qui non c'è ancora niente ma ci stiamo lavorando"
-                                            data-bs-content="<img src={% static 'images/mauro&lorenzo.jpg' %} width='400px'>" data-bs-container="body"
-                                            data-bs-html="true"
-                                              data-bs-custom-class="popover-custom"
-                                            style="width: 300px"
-                                            >{{column_value.value}}</span>
+                        <tr id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
+                    {% endif %}
+                {% for column_value in record %}
+                    {% if forloop.counter0 > 2 %}
+                        {% if column_value.fieldtype == 'linked' %}
+                            <td class="records-linked" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="standard" data-layout="recordcard" style="font-weight: bold !important;">
+                                <!--
+                                                        <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')"
+                                                            data-fieldtype="{{ column_value.fieldtype }}"
+                                                            class="linked-field popover-linked"
+                                                            data-bs-toggle="popover"
+                                                            data-bs-trigger="hover focus"
+                                                            data-bs-title="Qui non c'è ancora niente ma ci stiamo lavorando"
+                                                            data-bs-content="<img src={% static 'images/mauro&lorenzo.jpg' %} width='400px'>" data-bs-container="body"
+                                                            data-bs-html="true"
+                                                              data-bs-custom-class="popover-custom"
+                                                            style="width: 300px"
+                                                            >{{column_value.value}}</span>
 
-                                        <script>$('.popover-linked').popover();</script>
-                                        -->
-                <span data-layout="modal"
-                      onclick="event.stopPropagation(); open_record(this,'{{ column_value.link_tableid }}','{{ column_value.link_recordid }}')"
-                      data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
-                      data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
-                      data-linkedtableid="{{ column_value.link_tableid }}"
-                      data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe|truncatechars:50 }}</span>
-                <script>
-                    $('.popover-linked').popover({
-                        content: popoverContent,
-                        html: true,
-                        placement: 'right',
-                        trigger: 'hover focus'
-                    });
-                </script>
+                                                        <script>$('.popover-linked').popover();</script>
+                                                        -->
+                                <span data-layout="modal"
+                                      onclick="event.stopPropagation(); open_record(this,'{{ column_value.link_tableid }}','{{ column_value.link_recordid }}')"
+                                      data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
+                                      data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
+                                      data-linkedtableid="{{ column_value.link_tableid }}"
+                                      data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe|truncatechars:50 }}</span>
+                                <script>
+                                    $('.popover-linked').popover({
+                                        content: popoverContent,
+                                        html: true,
+                                        placement: 'right',
+                                        trigger: 'hover focus'
+                                    });
+                                </script>
 
-                <style>
-                    .popover-custom {
-                        max-width: 500px;
-                    }
-                </style>
+                                <style>
+                                    .popover-custom {
+                                        max-width: 500px;
+                                    }
+                                </style>
+                            </td>
 
+                        {% elif column_value.fieldtype == 'Numero' %}
+                            <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-number" data-layout="recordcard"
+                                style="text-align: right;">
+                                {{ column_value.value }}
+                            </td>
+                        {% elif column_value.fieldtype == 'Memo' %}
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
+                                {{ column_value.value|truncatechars:50 }}
+                            </td>
 
-            </td>
+                        {% elif column_value.fieldtype == 'Utente' %}
+                        {% if column_value.value %}
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                                <img src="{% static 'images/users/' %}{{ column_value.code }}.png?v={{ date }}" alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
+                                {{ column_value.value }}
+                        {% else %}
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                            {{ column_value.value }}
+                        {% endif %}
+                        {% elif column_value.fieldtype == 'lookup' %}
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                                <div class="badge" style="background-color: {{ column_value.fieldbackground }}; font-size: 10.5pt">{{ column_value.value }}</div>
+                            </td>
 
-            {% elif column_value.fieldtype == 'Numero' %}
-            <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                data-fieldtype="{{ column_value.fieldtype }}" class="records-number" data-layout="recordcard"
-                style="text-align: right;">
-                {{ column_value.value }}
-            </td>
-            {% elif column_value.fieldtype == 'Memo' %}
-            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
-                {{ column_value.value|truncatechars:50 }}</td>
-
-            {% elif column_value.fieldtype == 'Utente' %}
-            {% if column_value.value %}
-                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                    data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                    <img src="{% static 'images/users/' %}{{ column_value.code }}.png?v={{ date }}"
-                         alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
-                    {{ column_value.value }}
-                    {% else %}
-                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                    data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                {{ column_value.value }}
-            {% endif %}
-            {% elif column_value.fieldtype == 'lookup' %}
-            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                <div class="badge"
-                     style="background-color: {{ column_value.fieldbackground }}; font-size: 10.5pt">{{ column_value.value }}</div>
-
-
-            </td>
-
-            {% else %}
-            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
-                {% autoescape off %}
-                {% if column_value.fieldtypeweb == 'custom_bexiourl' %}
-                    <a onclick="event.stopPropagation();"
-                       href="https://office.bexio.com/index.php/kb_order/show/id/{{ column_value.value }}"
-                       target="blank_">{{ column_value.value }}</a>
-                {% else %}
-                    {{ column_value.value }}
-                {% endif %}
-                {% endautoescape %}
-            </td>
-
-            {% endif %}
-            {% endif %}
-            {% endfor %}
-            </tr>
-            {% endfor %}
+                        {% else %}
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
+                                {% autoescape off %}
+                                    {% if column_value.fieldtypeweb == 'custom_bexiourl' %}
+                                        <a onclick="event.stopPropagation();"
+                                           href="https://office.bexio.com/index.php/kb_order/show/id/{{ column_value.value }}"
+                                           target="blank_">{{ column_value.value }}</a>
+                                    {% else %}
+                                        {{ column_value.value }}
+                                    {% endif %}
+                                {% endautoescape %}
+                            </td>
+                        {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

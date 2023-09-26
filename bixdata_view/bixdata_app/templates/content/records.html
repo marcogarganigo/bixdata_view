@@ -3,10 +3,7 @@
 
 <script type="text/javascript">
     $("#tables").ready(function () {
-
-
         $('[data-bs-toggle="popover"]').popover();
-
 
         $('button[data-bs-toggle="tab"]').each(function (i) {
             if ($(this).attr("id") == 'gantt-tab') {
@@ -17,7 +14,6 @@
             if ($(this).attr("id") == 'kanban-tab') {
                 $(this)[0].addEventListener('shown.bs.tab', function (event) {
                     searchKanban()
-
                 })
             }
             if ($(this).attr("id") == 'calendar-tab') {
@@ -311,14 +307,11 @@
             data: serialized_data,
             success: function (response) {
                 $("#fullwidth_modal_newrecord").html(response);
-
             },
             error: function () {
                 $("#bixdata_recordcard_container").html(response);
             }
         });
-
-
     }
 
 
@@ -365,7 +358,6 @@
     function closeNewRecordModal() {
         $("#newRecordModal").modal("hide");
     }
-
 
     function closeLinkedTableModal() {
         $("#linked-table-modal").modal("hide");
@@ -423,7 +415,6 @@
 
 <div id="content-records" style="height: 98%">
     <div class="row" style="width: 100%; height: 99%; margin-top: 1%">
-
         <!--Content tables start-->
         <div id="block-records-search-container" class="col-xl-8 col-md-8 mb-4" style="height: 100%;">
             <div id="content-table" class="card shadow mb-4" style="height: 100%;"> <!--card-->
@@ -435,108 +426,71 @@
                         <div class="text-center">
                             <div class="row">
                                 <div class="col filter-column">
-
                                     <div>
-                                        <select id="viewid" class="form-select" aria-label="Default select example"
-                                                style="width: 20%; float: left" onchange="refresh()">
+                                        <select id="viewid" class="form-select" aria-label="Default select example" style="width: 20%; float: left" onchange="refresh()">
                                             {% for view in views %}
                                                 {% if view.id == user_table_settings.default_viewid %}
                                                     <option selected value="{{ view.id }}">{{ view.name }}</option>
                                                 {% else %}
                                                     <option value="{{ view.id }}">{{ view.name }}</option>
                                                 {% endif %}
-
                                             {% endfor %}
                                         </select>
                                         <input class="form-control me-2" type="search" placeholder="Ricerca"
                                                aria-label="Search" style="width: 50%; float: left" id="searchTerm"
                                                autocomplete="off"
                                                onkeydown="if(event.keyCode === 13) { event.preventDefault(); refresh(); }">
-                                        <button class="btn btn-outline-danger" type="button" style=" float: left"
-                                                onclick="refresh()">Cerca
-                                        </button>
-
+                                        <button class="btn btn-outline-danger" type="button" style=" float: left" onclick="refresh()">Cerca</button>
                                     </div>
 
-                                    <button type="button" class="btn btn-outline-secondary"
-                                            style=" margin-left: 1%; float: left"
-                                            onclick="$('#filters').toggle(100);">Filtri
-                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" style=" margin-left: 1%; float: left" onclick="$('#filters').toggle(100);">Filtri</button>
 
                                 </div>
                                 <div class="col filter-column">
-
-
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end"
-                                         style="margin-top: 3px; margin-right: 3px">
-                                        <button class="btn btn-outline-danger me-md-2" type="button"
-                                                onclick="refresh()">Ricarica
-                                        </button>
-                                        <button class="btn btn-outline-danger me-md-2" type="button"
-                                                onclick="newRecord()">Nuovo
-                                        </button>
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
+                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="refresh()">Ricarica</button>
+                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()">Nuovo</button>
                                         <div class="dropdown">
-                                            <button class="btn btn-outline-secondary me md-2 dropdown-toggle"
-                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Esporta
-                                            </button>
+                                            <button class="btn btn-outline-secondary me md-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Esporta</button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#" onclick="export_excel()">Esporta
-                                                    dati excel</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="export_excel()">Esporta dati excel</a></li>
                                                 <li><a class="dropdown-item" href="#">Esporta elenco</a></li>
                                                 <li><a class="dropdown-item" href="#">Esporta migrazione</a></li>
                                             </ul>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
-
                         <div id="filters" style="display: none;">
-                            <div class="card shadow-sm p-3 mb-5 bg-body rounded"
-                                 style="margin-left: 30px;margin-right: 30px;">
+                            <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="margin-left: 30px;margin-right: 30px;">
                                 <p class="card-text">
-
                                 <div class="container text-center">
                                     <div class="row">
                                         {% for search_field in  search_fields %}
                                             {{ search_field.component }}
                                         {% endfor %}
-
                                         <div class="col">
-                                            <button type="button" class="btn btn-outline-secondary"
-                                                    onclick="$('#hiddenCardAF').toggle(100);">Filtri Avanzati
-                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary" onclick="$('#hiddenCardAF').toggle(100);">Filtri Avanzati</button>
                                             </br>
                                         </div>
-
-
                                     </div>
                                 </div>
-
                                 </p>
                             </div>
 
                             <div id="hiddenCardAF" style="display: none; margin-top: -40px">
-                                <div class="card shadow-sm p-3 mb-5 bg-body rounded"
-                                     style="margin-left: 30px;margin-right: 30px;">
+                                <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="margin-left: 30px;margin-right: 30px;">
                                     <div class="card-body">
-
                                         <div class="container text-center">
                                             <div class="row">
                                                 <div class="col">
-
                                                     <label for="birthday">inserisci una data</label>
                                                     <input type="date" id="birthday" name="birthday">
-
                                                 </div>
                                                 <div class="col">
-
                                                     <div class="input-group mb-3">
-                                                        <label class="input-group-text"
-                                                               for="inputGroupSelect01">Options</label>
+                                                        <label class="input-group-text" for="inputGroupSelect01">Options</label>
                                                         <select class="form-select" id="inputGroupSelect01">
                                                             <option selected>Choose...</option>
                                                             <option value="1">One</option>
@@ -544,22 +498,15 @@
                                                             <option value="3">Three</option>
                                                         </select>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
-
-
                     </div>
                     <!-- Filters end-->
-
                     <script>
                         function underConstruction(el) {
                             $.ajax({
@@ -571,8 +518,6 @@
                             });
                         }
                     </script>
-
-
                     <!-- Results start-->
                     <div id="result-tabs" style="height: 92%">
                         <!-- Nav menu start -->
@@ -645,67 +590,41 @@
                                      aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
                                     {{ records_table }}
                                 </div>
-
                                 <div class="tab-pane fade" id="group-tab-pane" style="height: 100%; overflow: hidden"
                                      role="tabpanel" aria-labelledby="grouped-tab" tabindex="0">
-
                                 </div>
-
                             {% else %}
                                 <div class="tab-pane fade" id="records_table_container" role="tabpanel"
                                      aria-labelledby="tutti-tab" tabindex="0" style="height: 100%;overflow: hidden;">
                                     {{ records_table }}
                                 </div>
-
                                 <div class="tab-pane fade show active" id="group-tab-pane"
                                      style="height: 100%; overflow: hidden"
                                      role="tabpanel" aria-labelledby="grouped-tab" tabindex="0">
-
                                 </div>
-
                             {% endif %}
-
                             <div class="tab-pane fade" id="report-tab-pane" style="height: 100%; width: 100%"
                                  role="tabpanel" aria-labelledby="report-tab" tabindex="0">
-
-
                             </div>
-
                             <div class="tab-pane fade " id="chart-tab-pane" role="tabpanel" aria-labelledby="chart-tab"
                                  tabindex="0" style="overflow: hidden">
-
-
                             </div>
-
                             <div class="tab-pane fade " id="calendar-tab-pane" role="tabpanel"
                                  aria-labelledby="calendar-tab" tabindex="0" style="overflow: hidden">
-
-
                             </div>
-
                             <div class="tab-pane fade" id="kanban-tab-pane" role="tabpanel" aria-labelledby="kanban-tab"
                                  tabindex="0">
-
                             </div>
-
                             <div class="tab-pane fade" id="gantt-tab-pane" role="tabpanel" aria-labelledby="tutti-tab"
                                  tabindex="0" style="height: 100%;overflow-x: scroll; overflow-y: scroll">
-
                             </div>
-
-
                         </div>
                     </div>
                     <!-- nav content end-->
                 </div>
                 <!-- Results end-->
-
             </div>
         </div>
-
-        <div id="block-record-card-container" class="col-xl-4 col-md-4 mb-4" style="height: 100%">
-
-        </div>
-
+        <div id="block-record-card-container" class="col-xl-4 col-md-4 mb-4" style="height: 100%"></div>
     </div>
 </div>

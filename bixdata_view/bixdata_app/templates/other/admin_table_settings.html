@@ -2,10 +2,9 @@
     <div style="float: left">
         Utenti <br/>
         {% for user in users %}
-        <button class="btn btn-secondary table-button" onclick="displayTableids(this)">{{ user.username }}</button>
-        <br>
+            <button class="btn btn-secondary table-button" onclick="displayTableids(this)">{{ user.username }}</button>
+            <br>
         {% endfor %}
-
     </div>
     <div style="margin-left: 20px;float: left">
         Tabelle<br/>
@@ -16,7 +15,6 @@
                    aria-label="Checkbox for following text input">
             </div>
         {% endfor %}
-
     </div>
 
     <div style="margin-left: 20px; float: left;" id="settings-container">
@@ -24,13 +22,11 @@
     </div>
 
     <div id="response-container" style="float: left; margin-left: 20px;"></div>
-
     <input id="current-tableid" type="hidden">
 </div>
 
 
 <script>
-
     $(document).ready(function () {
         var drake;
         var tsi_id = [];
@@ -53,7 +49,7 @@
 </script>
 
 <style>
-        .table-container {
+    .table-container {
         border: 1px solid black;
         display: flex;
         align-items: center;
@@ -64,7 +60,7 @@
 
     }
 
-            .table-button {
+    .table-button {
         width: 100%;
         margin-top: 5%;
     }

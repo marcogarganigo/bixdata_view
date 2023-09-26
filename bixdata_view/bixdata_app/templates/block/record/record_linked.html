@@ -7,9 +7,7 @@
             $(el).css('background-color', 'whitesmoke');
             $(el).css('color', '#074048');
         }
-
         load_linked(tablelinkid, tableid, masterrecordid, mastertableid);
-
     }
 
     function toggleCollapse(el) {
@@ -19,7 +17,7 @@
     function load_linked(linkedtableid, tableid, masterrecordid, mastertableid) {
         var masterrecordid = masterrecordid
         var mastertableid = mastertableid
-         $("#linked-container-" + linkedtableid).load('/loading/')
+        $("#linked-container-" + linkedtableid).load('/loading/')
         $.ajax({
             url: "{% url 'get_records_linked' %}",
             type: 'POST',
@@ -32,7 +30,8 @@
             success: function (response) {
                 //$(collapse).find('.linked_container').html(response);
                  $("#linked-container-" + linkedtableid).html(response)
-            }, error: function (response) {
+            },
+            error: function (response) {
             }
         });
     }
@@ -42,7 +41,6 @@
     });
 
     function linked_newRecord(el, linkedtableid) {
-        //console.info(el)
         var master_tableid = '{{tableid}}'
         var master_recordid = '{{recordid}}'
         $("#fullwidth_modal_newrecord").html("");
@@ -70,8 +68,8 @@
         //$("#linked-container-" + linkedtableid).load('/loading/')
         load_linked(el, linkedtableid)
     }
-
 </script>
+
 <style>
     #top-label:hover {
         background-color: #e1dfdf !important;
@@ -87,45 +85,39 @@
                 data-recordid="{{ recordid }}"
                 style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 10px"
                 onclick="toggleCollapse(this); triggerCollapse(this,'{{ linked_table.tableid }}', '{{ linked_table.tableid }}-{{ recordid }}', '{{ linked_table.tableid }}', '{{ recordid }}', '{{ tableid }}')">
-      <span style="width: 97%; margin:auto; display: block ">
-  {% if linked_table.table_count == 0 %}
-      <div class="container" style="margin: 0">
-      <div class="row">
-      <div class="col-1" style="padding:5px; width: 2%">
-      <span class="badge bg-danger"
-            style="float: left; color: #d9d4d4; background-color: red; border-radius: 7.5%; visibility: hidden">{{ linked_table.table_count }}</span>
-      </div>
-        <div class="col-11" style="padding: 0">
-          {{ linked_table.table_name }}
-        </div>
-        </div>
-      </div>
-  {% else %}
-      <div class="container" style="margin: 0">
-      <div class="row">
-      <div class="col-1" style="padding:5px; width: 2%">
-    <span class="badge bg-danger"
-          style=" color: #d9d4d4; background-color: red; border-radius: 7.5%; float:right">{{ linked_table.table_count }}</span>
-            </div>
-        <div class="col-11" style="padding: 0">
-        {{ linked_table.table_name }}
-        </div>
-      </div>
-    </div>
-  {% endif %}
-      </span>
+            <span style="width: 97%; margin:auto; display: block ">
+              {% if linked_table.table_count == 0 %}
+                  <div class="container" style="margin: 0">
+                      <div class="row">
+                          <div class="col-1" style="padding:5px; width: 2%">
+                              <span class="badge bg-danger" style="float: left; color: #d9d4d4; background-color: red; border-radius: 7.5%; visibility: hidden">{{ linked_table.table_count }}</span>
+                          </div>
+                          <div class="col-11" style="padding: 0">
+                              {{ linked_table.table_name }}
+                          </div>
+                      </div>
+                  </div>
+              {% else %}
+                  <div class="container" style="margin: 0">
+                      <div class="row">
+                          <div class="col-1" style="padding:5px; width: 2%">
+                              <span class="badge bg-danger" style=" color: #d9d4d4; background-color: red; border-radius: 7.5%; float:right">{{ linked_table.table_count }}</span>
+                          </div>
+                          <div class="col-11" style="padding: 0">
+                              {{ linked_table.table_name }}
+                          </div>
+                      </div>
+                  </div>
+              {% endif %}
+            </span>
         </button>
 
-        <div class="div-collapse" id="collapse-{{ linked_table.tableid }}-{{ recordid }}"
-             style="margin-top: 10px; display: none">
+        <div class="div-collapse" id="collapse-{{ linked_table.tableid }}-{{ recordid }}" style="margin-top: 10px; display: none">
             <div class="card card-body">
                 <button class="btn btn-secondary d-flex justify-content-center align-items-center"
                         onclick="linked_newRecord(this, '{{ linked_table.tableid }}')" style="width: 5%;"><span
                         class="material-symbols-outlined">add</span></button>
-                <div id="linked-container-{{ linked_table.tableid }}-{{ recordid }}" class="linked_container">
-
-                </div>
-
+                <div id="linked-container-{{ linked_table.tableid }}-{{ recordid }}" class="linked_container"></div>
             </div>
         </div>
     {% endfor %}

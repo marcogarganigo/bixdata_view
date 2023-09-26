@@ -1,41 +1,25 @@
 <div id="universal-container-timesheet" style="height: 100%">
-
     <div id="omni-container-timesheet" style="height: 90%; overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
-
-
         <div id="fields-scroll-container">
-
             {{ block_record_fields|safe }}
 
             {% if contextfunction == 'view' %}
                 <style>
-
                     #save-button-{{ recordid }} {
                         display: none;
                     }
                 </style>
 
                 <script>
-
                     $("#fields-scroll-container input").attr("disabled", true);
                     $("#fields-scroll-container select").attr("disabled", true);
                     $("#fields-scroll-container textarea").attr("disabled", true);
                     $("save-button-{{ recordid }}").remove();
-
-
                 </script>
             {% endif %}
-
-
         </div>
     </div>
-
-
-    <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class="btn btn-primary"
-            onclick="save_record(this)">Salva
-    </button>
-
-
+    <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class="btn btn-primary" onclick="save_record(this)">Salva</button>
 </div>
 
 <script>
@@ -59,8 +43,6 @@
             });
 
         } else {
-
-
             closeNewRecordModal()
             //var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
             //var serialized_json = convertFormToJSON(serialized_array);
@@ -105,8 +87,6 @@
                         //$("#linked-container-{{ tableid }}").load('/loading/')
 
                         //alert('test')
-
-
                     });
 
                 },
