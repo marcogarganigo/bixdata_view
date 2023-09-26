@@ -1,3 +1,12 @@
+<!--
+    tables.selected: list di tutte le tabelle selezionate e visibili all'utente
+    tables.notselected: list di tutte le tabelle non selezionate dall'utente
+
+    CAMPI di table
+    id: id della tabella
+    description: nome di descrizione della tabella
+    order: numero dell'ordinamento (le tabelle selezionate arrivano già ordinate)
+-->
 <div id="settings_block_user_tables" style="height: 90%;overflow: scroll;">
     <ul>
         {% for row in tables.selected %}
