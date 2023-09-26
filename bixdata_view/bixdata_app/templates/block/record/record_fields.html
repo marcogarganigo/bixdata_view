@@ -5,136 +5,133 @@
 <link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
 
 
-<div class="container fields_container" style="height: 100%" id="fields_container_{{ tableid }}_{{ recordid }}">
+<style>
+    .select2-container--default .select2-selection--single {
+        line-height: 28px;
+        font-size: 15px;
+        border: 1px solid #dee2e6 !important;
+    }
 
 
-    <style>
+    .select2-selection__rendered {
+        color: #6c757d !important;
+    }
 
-        .select2-container--default .select2-selection--single {
-            line-height: 28px;
-            font-size: 15px;
-            border: 1px solid #dee2e6 !important;
-        }
+    .select2-container {
+        width: 50% !important;
+    }
 
+    .select2-selection__rendered {
+        line-height: 37px !important;
+    }
 
-        .select2-selection__rendered {
-            color: #6c757d !important;
-        }
+    .select2-container .select2-selection--single {
+        height: 41px !important;
+    }
 
-        .select2-container {
-            width: 50% !important;
-        }
-
-        .select2-selection__rendered {
-            line-height: 37px !important;
-        }
-
-        .select2-container .select2-selection--single {
-            height: 41px !important;
-        }
-
-        .select2-selection__arrow {
-            height: 39px !important;
-        }
+    .select2-selection__arrow {
+        height: 39px !important;
+    }
 
 
-        .select2-selection__choice {
-            background-color: whitesmoke !important;
-            color: black !important;
-        }
+    .select2-selection__choice {
+        background-color: whitesmoke !important;
+        color: black !important;
+    }
 
 
-        .select2-container--open {
-            z-index: 9999999;
-        }
+    .select2-container--open {
+        z-index: 9999999;
+    }
 
-        #saved-alert-{{ recordid }} {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 20%;
-            min-width: 200px;
-            max-width: 400px;
-            height: auto;
-            z-index: 9999;
-        }
+    #saved-alert-{{ recordid }} {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 20%;
+        min-width: 200px;
+        max-width: 400px;
+        height: auto;
+        z-index: 9999;
+    }
 
 
-        ul.ui-autocomplete {
-            z-index: 99999;
-        }
-    </style>
+    ul.ui-autocomplete {
+        z-index: 99999;
+    }
+</style>
 
-    <script>
-        function toggleCollapse(el) {
-            $(el).next('.div-collapse').slideToggle(200);
-        }
 
-        function serializeForm(formElements) {
-            var formData = [];
-            //var formElements = document.getElementById("myForm").elements;
-            for (var i = 0; i < formElements.length; i++) {
-                var element = formElements[i];
-                if (element.name) {
-                    if (element.type === "select-multiple") {
-                        var selectedOptions = [];
-                        for (var j = 0; j < element.options.length; j++) {
-                            if (element.options[j].selected) {
-                                selectedOptions.push(element.options[j].value);
-                            }
+<script>
+    function toggleCollapse(el) {
+        $(el).next('.div-collapse').slideToggle(200);
+    }
+
+    function serializeForm(formElements) {
+        var formData = [];
+        //var formElements = document.getElementById("myForm").elements;
+        for (var i = 0; i < formElements.length; i++) {
+            var element = formElements[i];
+            if (element.name) {
+                if (element.type === "select-multiple") {
+                    var selectedOptions = [];
+                    for (var j = 0; j < element.options.length; j++) {
+                        if (element.options[j].selected) {
+                            selectedOptions.push(element.options[j].value);
                         }
-                        formData.push({name: element.name, value: selectedOptions});
-                    } else if (element.type === "checkbox") {
-                        if (element.checked) {
-                            formData.push({name: element.name, value: element.value});
-                        }
-                    } else {
+                    }
+                    formData.push({name: element.name, value: selectedOptions});
+                } else if (element.type === "checkbox") {
+                    if (element.checked) {
                         formData.push({name: element.name, value: element.value});
                     }
+                } else {
+                    formData.push({name: element.name, value: element.value});
                 }
             }
-            return formData;
         }
+        return formData;
+    }
 
 
-        function selectAllText(input) {
-            input.setSelectionRange(0, input.value.length);
+    function selectAllText(input) {
+        input.setSelectionRange(0, input.value.length);
+    }
+
+
+
+    $('#fields_container_{{ tableid }}_{{ recordid }}').find('.js-example-basic-single').each(function () {
+        $(this).select2({
+            dropdownParent: $(this).parent()
+        }).addClass('select2-initialized');
+    });
+
+
+    $(document).on('select2:open', function (e) {
+        window.setTimeout(function () {
+            document.querySelector('input.select2-search__field').focus();
+        }, 0);
+    })
+
+
+    function set_checkbox_value(el) {
+        if (el.checked) {
+            $(el).next('input').val('Si');
+        } else {
+            $(el).next('input').val('No');
         }
+    }
+
+    //non funziona
+    $(document).ready(function () {
+        $('input.datepicker').Zebra_DatePicker();
+    });
 
 
-
-        $('#fields_container_{{ tableid }}_{{ recordid }}').find('.js-example-basic-single').each(function () {
-            $(this).select2({
-                dropdownParent: $(this).parent()
-            }).addClass('select2-initialized');
-        });
+</script>
 
 
-        $(document).on('select2:open', function (e) {
-            window.setTimeout(function () {
-                document.querySelector('input.select2-search__field').focus();
-            }, 0);
-        })
-
-
-        function set_checkbox_value(el) {
-            if (el.checked) {
-                $(el).next('input').val('Si');
-            } else {
-                $(el).next('input').val('No');
-            }
-        }
-
-        $(document).ready(function () {
-
-            // assuming the controls you want to attach the plugin to
-            // have the "datepicker" class set
-            $('input.datepicker').Zebra_DatePicker();
-
-        });
-
-
-    </script>
+<div class="container fields_container" style="height: 100%" id="fields_container_{{ tableid }}_{{ recordid }}">
 
 
     {% for label,record_fields  in record_fields_labels.items %}

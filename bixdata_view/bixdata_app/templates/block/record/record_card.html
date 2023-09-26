@@ -7,15 +7,10 @@
 
 <script type="text/javascript">
     $("#RecordCard").ready(function () {
-
-        $('[data-bs-toggle="tooltip"]').tooltip();
-
+        $('[data-bs-toggle="tooltip"]').tooltip()
     });
 
-    //document ready
-
     $(document).ready(function () {
-        //timeout
         setTimeout(function () {
             if ($('#field-validated').val() !== 'Si') {
                 $('#validate-button').show();
@@ -91,7 +86,6 @@
                 link: link
             },
         });
-
     }
 
     function duplicateFunc() {
@@ -141,7 +135,6 @@
                     }
                 });
             } else {
-                // Handle the case when the user clicks "Stop" or closes the SweetAlert dialog
             }
         });
     }
@@ -219,9 +212,7 @@
                 'filename': filename,
             },
             success: function (response) {
-
                 window.open('/static/pdf/' + filename, '_blank');
-
             },
             error: function (response) {
                 alert('stampa')
@@ -247,8 +238,7 @@
                     text: "Inserisci un valore numerico per le ore contrattuali.",
                     icon: "error",
                 });
-
-                return; // Stop further execution
+                return;
             }
 
             swal({
@@ -279,8 +269,7 @@
                         'recordid': '{{ recordid }}',
                     },
                     success: function (response) {
-                        $('#block_record_card-{{ recordid }}').slideToggle(200, function () {
-                        });
+                        $('#block_record_card-{{ recordid }}').slideToggle(200, function () {});
                         refresh();
                         swal({
                             text: "Contratto rinnovato",
@@ -326,8 +315,6 @@
         var url = 'https://swissbix.freshdesk.com/a/tickets/' + '{{ freshdeskid }}';
         window.open(url, '_blank');
     }
-
-
 </script>
 
 <div id="block_record_card-{{ recordid }}" class="block_record_card" style="height: 100%;width: 100%;">
@@ -336,7 +323,6 @@
             <p class="card-text">
 
             <div id="card-menu">
-
                 <button type="button" id="close-button" class="btn-close button-recordcard" data-bs-dismiss="modal"
                         aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="chiudi"
                         onclick="closeCard(this)"></button>
@@ -372,36 +358,28 @@
 
 
                 <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Funzioni
                     </button>
                     <ul class="dropdown-menu">
                         {% if tableid == 'timesheet' %}
-                            <li><a class="dropdown-item" onclick="get_timesheet_serviceassets(this)">Servizi e
-                                risorse</a></li>
+                            <li><a class="dropdown-item" onclick="get_timesheet_serviceassets(this)">Servizi e risorse</a></li>
                         {% elif tableid == 'servicecontract' %}
                             <li><a class="dropdown-item" onclick="rinnova_contratto()">Rinnova</a></li>
                         {% elif tableid == 'ticket' %}
                             <li><a class="dropdown-item" onclick="open_freshdesk()">Apri in freshdesk</a></li>
                         {% endif %}
                         <!--<li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>-->
-
                     </ul>
                 </div>
                 {% if tableid == 'task' %}
-                    <button style="display: none" id="close-task-button-{{ recordid }}" class="btn btn-success"
-                            type="button"
-                            onclick="$('#input-{{ recordid }}').val('Si'); change_checkbox_view(); $('#save-button-{{ recordid }}').click()">
+                    <button style="display: none" id="close-task-button-{{ recordid }}" class="btn btn-success" type="button" onclick="$('#input-{{ recordid }}').val('Si'); change_checkbox_view(); $('#save-button-{{ recordid }}').click()">
                         Chiudi task
                     </button>
                 {% endif %}
 
                 {% if tableid == 'timesheet' and userid == 3 %}
-                    <button onclick="$('#field-validated').val('Si'); $('#save-button-{{ recordid }}').click()"
-                            type="button"
-                            id="validate-button" style="display: none" class="btn btn-outline-success">Valida
-                    </button>
+                    <button onclick="$('#field-validated').val('Si'); $('#save-button-{{ recordid }}').click()" type="button" id="validate-button" style="display: none" class="btn btn-outline-success">Valida</button>
                 {% endif %}
 
                 <div style="clear:both;"></div>
@@ -412,9 +390,7 @@
                 {{ block_record_badge }}
             </div>
 
-
             </br>
-
 
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -495,7 +471,6 @@
                      role="tabpanel"
                      aria-labelledby="fields-tab" tabindex="0" style="height: 100%">
                     {{ block_record_fields }}
-
                 </div>
 
                 <div class="tab-pane fade" id="linked-tab-pane-{{ recordid }}" role="tabpanel"

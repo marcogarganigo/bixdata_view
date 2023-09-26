@@ -448,12 +448,12 @@ def get_block_records_chart(request):
         'block/records/records_chart.html', chart_data, request=request)
     return HttpResponse(records_table)
 
-
+# Questa funzione
 @login_required(login_url='/login/')
 def get_block_reload(request):
     return render(request)
 
-
+# Questa funzione builda i dashboard blocks e li mette insieme nella pagina dashboard che ritorna
 @login_required(login_url='/login/')
 def get_render_content_dashboard(request):
     context = {}
@@ -556,6 +556,7 @@ def get_render_content_dashboard(request):
     return user_agent(request, 'content/dashboard.html', 'content/dashboard_mobile.html', context)
 
 
+# Questa funzione serve per salvare le posizioni e le dimensioni dei blocchi della dashboard
 def save_block_order(request):
     values = request.POST.get('value_list')
 
@@ -574,6 +575,7 @@ def save_block_order(request):
     return JsonResponse({'success': True})
 
 
+# Questa funzione prende in input i dati per comporre i grafici e ritorna il template del tipo di grafico in base alla variabile layout_chart
 @login_required(login_url='/login/')
 def get_chart(request, sql, id, name, layout, fields):
     query = sql
@@ -621,6 +623,7 @@ def record_card_duplicate(request):
     return render(request)
 
 
+# Questa funzione serve per copiare la path del record
 @login_required(login_url='/login/')
 def record_card_copy(request):
     link = request.POST.get('link')
@@ -629,6 +632,7 @@ def record_card_copy(request):
     return True
 
 
+# Questa funzione serve per elimiare un record in safe mode
 @login_required(login_url='/login/')
 def get_record_card_delete(request):
     if request.method == 'POST':
@@ -651,6 +655,7 @@ def get_render_gestione_utenti(request):
 #   @login_required(login_url='/login/')
 
 
+# Questa funzione prende in post tutte le variabili e ritorna i records della tabella richiesta
 @login_required(login_url='/login/')
 def get_records_table_render(request):
     tableid = request.POST.get('tableid')
@@ -668,6 +673,7 @@ def get_records_table_render(request):
     return HttpResponse(render)
 
 
+# Questa funzione prende tutti i record della tabella richiesta e li ritorna
 @login_required(login_url='/login/')
 def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=1,
                       order_field='', order=''):
@@ -767,6 +773,7 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
     return records_table
 
 
+# Questa funzione serve per buildare il gantt e ritornarlo in una pagina html (per ora non in utilizzo)
 @login_required(login_url='/login/')
 def get_block_records_gantt(request):
     context = dict()
@@ -803,6 +810,8 @@ def get_block_records_gantt(request):
     return HttpResponse(records_table)
 
 
+
+# Questa funzione serve per buildare il kanban e ritornarlo in una pagina html (per ora non in utilizzo)
 @login_required(login_url='/login/')
 def get_block_records_kanban(request):
     context = dict()
@@ -875,16 +884,7 @@ def get_block_records_calendar(request):
 
 
 
-    """
-    This function retrieves block records from a server and returns a rendered HTML table of the
-    records.
-    
-    :param request: The `request` parameter is an object that represents the HTTP request made by the
-    client. It contains information such as the request method, headers, user session, and other data
-    related to the request. In this code snippet, the `request` object is used to access the POST data
-    sent by the
-    :return: the rendered HTML template for the records table.
-    """
+# Questa funzione
 @login_required(login_url='/login/')
 def get_block_record(request):
     table = request.POST.get('table')
@@ -921,6 +921,7 @@ def get_block_record(request):
     return records_table
 
 
+# Questa funzione richiama la funzione per creare la record card e ritorna la card come http response
 @login_required(login_url='/login/')
 def request_block_record_card(request):
     tableid = request.POST.get('tableid')
@@ -929,6 +930,7 @@ def request_block_record_card(request):
     return HttpResponse(get_block_record_card(tableid, recordid, userid))
 
 
+# Questa funzione serve per creare la record card e ritorna la card come stringa
 def get_block_record_card(tableid, recordid, userid):
     context = dict()
     context['block_record_badge'] = get_block_record_badge(tableid, recordid)
@@ -947,6 +949,7 @@ def get_block_record_card(tableid, recordid, userid):
     return render_to_string('block/record/record_card.html', context)
 
 
+# Questa funzione richiama la funzione per creare il badge e lo ritorna
 @login_required(login_url='/login/')
 def request_block_record_badge(request, http_response=False):
     tableid = request.POST.get('tableid')
@@ -954,6 +957,7 @@ def request_block_record_badge(request, http_response=False):
     return get_block_record_badge(tableid, recordid)
 
 
+# Questa funzione serve per creare il badge
 def get_block_record_badge(tableid, recordid):
     context = dict()
 
@@ -992,7 +996,7 @@ def get_block_record_badge(tableid, recordid):
     return records_table
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='/login/s')
 def get_block_record_fields(request):
     context = dict()
     http_response = request.POST.get('http_response')

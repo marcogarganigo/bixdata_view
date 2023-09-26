@@ -3,7 +3,6 @@
         <h3>Aggiorna dashboard degli utenti</h3>
         {% csrf_token %}
         <div class="row">
-
             {% for item in context.userids %}
                 <div class="flex-fill" style="display: none">
                     <input type="text" name="userids[]" hidden value="{{ item }}">
@@ -35,7 +34,6 @@
         <h3>Aggiorna dashboard dei grafici</h3>
         {% csrf_token %}
         <div class="row">
-
             {% for item in context.chart_names %}
                 <div class="flex-fill" style="display: none">
                     <input style="width: 100%" type="text" name="chartnames[]" hidden value="{{ item }}">
@@ -67,12 +65,11 @@
 
 <div class="container text-center card card-body" style="margin-top: 2%">
     <h4>Aggiungi dashboard block</h4>
-
     <select id="table-select" class="form-select" aria-label="Default select example" name="tableid-form-block">
-    <option selected></option>
-        {% for table in context.tables %}
-            <option value="{{ table.id }}">{{ table.id }}</option>
-        {% endfor %}
+        <option selected></option>
+            {% for table in context.tables %}
+                <option value="{{ table.id }}">{{ table.id }}</option>
+            {% endfor %}
     </select>
     <button style="width: 10%; float: right" class="btn btn-secondary" type="button" onclick="select_table()">Seleziona</button>
 
@@ -92,23 +89,23 @@
             <div class="col-md-4 d-flex flex-column">
                 <h4>View name</h4>
                 <select class="form-select build-form" aria-label="Default select example" name="view_id">
-                <option selected></option>
-                    {% for item in context.views %}
-                        <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }}
-                            - {{ item.tableid }}</option>
-                    {% endfor %}
+                    <option selected></option>
+                        {% for item in context.views %}
+                            <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }}
+                                - {{ item.tableid }}</option>
+                        {% endfor %}
                 </select>
             </div>
 
             <div class="col-md-4 d-flex flex-column">
                 <h4>Report name</h4>
                 <select class="form-select build-form" aria-label="Default select example" name="report_id">
-                <option selected></option>
-                <option value="0">Nessun report</option>
-                    {% for item in context.reports %}
-                        <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }}
-                            - {{ item.tableid }}</option>
-                    {% endfor %}
+                    <option selected></option>
+                    <option value="0">Nessun report</option>
+                        {% for item in context.reports %}
+                            <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }}
+                                - {{ item.tableid }}</option>
+                        {% endfor %}
                 </select>
             </div>
 
@@ -125,74 +122,73 @@
 
     <h4>Nuovo Report</h4>
 
- <form method="post" action="{% url 'new_report' %}" class="container text-center" style="float: left">
+    <form method="post" action="{% url 'new_report' %}" class="container text-center" style="float: left">
 
-    <div class="row">
+        <div class="row">
 
-        <div class="col-md-4 d-flex flex-column">
-            <h4>Tableid</h4>
-            <select class="form-select" id="table-select-report" aria-label="Default select example" name="tableid">
-            <option selected></option>
-                {% for table in context.tables %}
-                    <option value="{{ table.id }}">{{ table.id }}</option>
-                {% endfor %}
-            </select>
-            <button class="btn btn-secondary" type="button" onclick="select_table_report()">Seleziona</button>
-        </div>
-
-
-        <div class="col-md-4 d-flex flex-column">
-            <h4>Nome report</h4>
-            <div class="flex-fill">
-                <input style="width: 100%" type="text" name="report_name">
+            <div class="col-md-4 d-flex flex-column">
+                <h4>Tableid</h4>
+                <select class="form-select" id="table-select-report" aria-label="Default select example" name="tableid">
+                    <option selected></option>
+                    {% for table in context.tables %}
+                        <option value="{{ table.id }}">{{ table.id }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-secondary" type="button" onclick="select_table_report()">Seleziona</button>
             </div>
-        </div>
-
-        <div class="col-md-4 d-flex flex-column">
-            <h4>Fieldid</h4>
-            <select class="form-select build-form-report" aria-label="Default select example" name="fieldid">
-            <option selected></option>
-                {% for field in context.fields %}
-                    <option data-tableid="{{ field.tableid }}" value="{{ field.fieldid }}">{{ field.fieldid }}</option>
-                {% endfor %}
-            </select>
-        </div>
 
 
-        <div class="col-md-4 d-flex flex-column">
-            <h4>Operation</h4>
-            <select class="form-select" aria-label="Default select example" name="operation">
-                <option value="somma">sum</option>
-                <option value="media">avg</option>
-                <option value="conteggio">count</option>
-            </select>
-        </div>
-
-
-        <div class="col-md-4 d-flex flex-column">
-            <h4>Layout</h4>
-            <select class="form-select" aria-label="Default select example" name="layout">
-                <option value="barchart">column</option>
-                <option value="linechart">line</option>
-                <option value="piechart">pie</option>
-                <option value="table">table</option>
-            </select>
-        </div>
-
-
-        <div class="col-md-4 d-flex flex-column">
-            <h4>Group by</h4>
-            <div class="flex-fill">
-                <input style="width: 100%" type="text" name="groupby">
+            <div class="col-md-4 d-flex flex-column">
+                <h4>Nome report</h4>
+                <div class="flex-fill">
+                    <input style="width: 100%" type="text" name="report_name">
+                </div>
             </div>
+
+            <div class="col-md-4 d-flex flex-column">
+                <h4>Fieldid</h4>
+                <select class="form-select build-form-report" aria-label="Default select example" name="fieldid">
+                    <option selected></option>
+                    {% for field in context.fields %}
+                        <option data-tableid="{{ field.tableid }}" value="{{ field.fieldid }}">{{ field.fieldid }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
+            <div class="col-md-4 d-flex flex-column">
+                <h4>Operation</h4>
+                <select class="form-select" aria-label="Default select example" name="operation">
+                    <option value="somma">sum</option>
+                    <option value="media">avg</option>
+                    <option value="conteggio">count</option>
+                </select>
+            </div>
+
+
+            <div class="col-md-4 d-flex flex-column">
+                <h4>Layout</h4>
+                <select class="form-select" aria-label="Default select example" name="layout">
+                    <option value="barchart">column</option>
+                    <option value="linechart">line</option>
+                    <option value="piechart">pie</option>
+                    <option value="table">table</option>
+                </select>
+            </div>
+
+
+            <div class="col-md-4 d-flex flex-column">
+                <h4>Group by</h4>
+                <div class="flex-fill">
+                    <input style="width: 100%" type="text" name="groupby">
+                </div>
+            </div>
+
+
         </div>
 
-
-    </div>
-
- <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
-
- </form>
+    <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
+    </form>
 
 
 </div>
