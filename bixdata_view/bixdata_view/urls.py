@@ -115,6 +115,7 @@ urlpatterns = [
     path('admin_table_settings/', alpha.admin_table_settings, name='admin_table_settings'),
     path('settings_table/', view_settings.settings_table, name='settings_table'),
     path('block_user_tables/', view_settings.block_user_tables, name='block_user_tables'),
+    path('get_query_to_test/', alpha.get_query_to_test, name='get_query_to_test'),
     
     
 ]

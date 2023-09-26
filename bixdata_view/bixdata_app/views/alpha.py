@@ -83,36 +83,9 @@ def get_autocomplete_data(request):
         data) if term.lower() in item.lower()]
     return JsonResponse({'data': response})
 
-# Questa funzione sarebbe da rimuovere
+# Questa funzione è per il testing delle query
 def get_test_query(request, name=None):
-    with connection.cursor() as cursor1:
-        cursor1.execute(
-            "SELECT query_conditions FROM sys_view WHERE id = 9"
-        )
-        query = cursor1.fetchone()[0]
-
-        with connection.cursor() as cursor2:
-            cursor2.execute(query)
-            rows = cursor2.fetchall()
-
-            users = [row[0] for row in rows]
-            effective_margins = [row[1] for row in rows]
-            expected_margins = [row[2] for row in rows]
-            amounts = [row[3] for row in rows]
-
-            data = {
-                'users': users,
-                'effective_margins': effective_margins,
-                'expected_margins': expected_margins,
-                'amounts': amounts,
-            }
-
-            permission = Permission.objects.get(codename='can_do_something')
-
-            user = User.objects.get(username='test')
-            user.user_permissions.add(permission)
-
-    return render(request, 'other/test_query.html', {'data': data})
+    return render(request, 'other/test_query.html')
 
 
 def get_full_data(request):
@@ -2273,3 +2246,23 @@ def admin_table_settings(request):
         users = dictfetchall(cursor)
 
     return render(request, 'other/admin_table_settings.html', {'tables': tables, 'users': users})
+
+
+def get_query_to_test(request):
+    query = request.POST.get('query')
+    print(query)
+    query = 'test_' + query
+
+    function = globals()[query]
+    return HttpResponse(function(request))
+
+
+def test_query1(request):
+    print('done')
+    return HttpResponse('contenuto query 1')
+
+
+def test_query2(request):
+    print('done')
+    return HttpResponse('contenuto query 2')
+
