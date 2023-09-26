@@ -2248,21 +2248,5 @@ def admin_table_settings(request):
     return render(request, 'other/admin_table_settings.html', {'tables': tables, 'users': users})
 
 
-def get_query_to_test(request):
-    query = request.POST.get('query')
-    print(query)
-    query = 'test_' + query
 
-    function = globals()[query]
-    return HttpResponse(function(request))
-
-
-def test_query1(request):
-    print('done')
-    return HttpResponse('contenuto query 1')
-
-
-def test_query2(request):
-    print('done')
-    return HttpResponse('contenuto query 2')
 

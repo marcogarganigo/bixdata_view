@@ -67,3 +67,19 @@ def test_content(request):
     bl_returned=None
     vh.context['bl_returned']=bl.bl_test(1)
     return vh.render_template('test/test_content.html')
+
+def get_query_to_test(request):
+    query = request.POST.get('query')
+    print(query)
+    query = 'test_' + query
+
+    function = globals()[query]
+    return HttpResponse(function(request))
+
+
+def test_query1(request):
+    return HttpResponse('contenuto query 1')
+
+
+def test_query2(request):
+    return HttpResponse('contenuto query 2')
