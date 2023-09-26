@@ -1,1 +1,25 @@
-{{users_list}}
+<script>
+
+
+    function getUserTablesList(userid)
+    {
+        $("#settings_tables_list").html('Loading');
+        var serialized_data = [];
+        serialized_data.push({ name: 'userid', value: userid });
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'block_user_tables' %}",
+            data: serialized_data,
+            success: function (response) {
+                $("#settings_tables_list").html(response);
+            },
+            error: function () {
+                $("#content_container").html(response);
+            }
+        });
+    }
+</script>
+
+{{block_users_list}}
+

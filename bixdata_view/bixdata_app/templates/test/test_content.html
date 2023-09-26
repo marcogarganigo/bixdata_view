@@ -1,5 +1,14 @@
-test content <br/>
+<B>VARIABILE:</B>
+<br/>
 {{bl_returned}}
+<br/><br/><br/>
+<B>CICLO</B>
+<br/>
 {% for row in bl_returned %}
-        {{row.setting}}<br/>
+        <ul>
+                {% for key, value in row.items %}
+                        <li>{{ key }}: {{ value }}</li>
+                {% endfor %}
+        </ul>
+        <b>--------------------------------------------------------------------------</b><br/>
 {% endfor %}

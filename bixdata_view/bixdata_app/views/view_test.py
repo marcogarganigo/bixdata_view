@@ -67,4 +67,3 @@ def test_content(request):
     bl_returned=None
     vh.context['bl_returned']=bl.bl_test(1)
     return vh.render_template('test/test_content.html')
-    return render(request, 'test/test_content.html', {'bl_returned': bl_returned})

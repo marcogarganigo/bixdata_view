@@ -114,8 +114,7 @@ urlpatterns = [
     path('get_project_id/', alpha.get_project_id, name='get_project_id'),
     path('admin_table_settings/', alpha.admin_table_settings, name='admin_table_settings'),
     path('settings_table/', view_settings.settings_table, name='settings_table'),
-    path('block_users_list/', view_settings.block_users_list, name='block_users_list'),
-    path('user_tables_list/', view_settings.user_tables_list, name='user_tables_list'),
+    path('block_user_tables/', view_settings.block_user_tables, name='block_user_tables'),
     
     
 ]

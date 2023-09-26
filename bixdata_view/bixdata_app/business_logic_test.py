@@ -32,20 +32,30 @@ class BusinessLogicTest:
     
     def bl_test(self,userid):
         ## recuperare un record e il record collegato e trasformarlo da object a dict
-        #e = SysUserSettings.objects.get(id=3)
-        #b = e.userid
+        e = SysUserSettings.objects.get(id=3)
+        b = e.userid
         #return_value = b.__dict__
         
-        # Hits the database.
+        ## recuperare un record collegato e trasformarlo in dct usando la select_related
         e = SysUserSettings.objects.select_related("userid").get(id=3)
         b = e.userid
-        return_value = b.__dict__
+        #return_value = b.__dict__
 
-        #my_queryset = SysUserSettings.objects.select_related('userid').all()
-        #related_settings = my_queryset.user
+        ## recuperare una query set di tutte le impostazioni 
+        my_queryset = SysUserSettings.objects.all()
         #return_value = list(my_queryset.values())
-        #return_value = b.values().first()
         
+        ## recuperare una query set di tutte le impostazioni filtrate per tipo
+        my_queryset = SysUserSettings.objects.filter(setting='theme')
+        return_value = list(my_queryset.values())
+        
+        ## recuperare una query set di tutte le impostazioni filtrate per utente nella tabella collegata
+        my_queryset = SysUserSettings.objects.filter(userid__username='superuser')
+        #return_value = list(my_queryset.values())
+        
+        ## recuperare una query set di impostazioni e impostazioni utente in join
+        my_queryset=SysUserSettings.objects.select_related("userid").all()
+        return_value = list(my_queryset.values())
         
         return return_value
     

@@ -1,18 +1,31 @@
 from .alpha import *
 from .view_helper import *
+from django.db.models import OuterRef, Subquery
 
 @login_required(login_url='/login/')
 def settings_table(request):
     vh=ViewHelper(request)
-    vh.context['users_list']=block_users_list(request)
+    vh.context['block_users_list']=block_users(request)
     return vh.render_template('admin_settings/settings_table.html')
     
-def block_users_list(request):
+def block_users(request):
     vh=ViewHelper(request)
     users = SysUser.objects.all().values()
     vh.context['users']=users
-    return vh.get_template('admin_settings/settings_users_list.html')
+    return vh.get_template('admin_settings/settings_block_users.html')
 
-def user_tables_list(request):
+def block_user_tables(request):
     vh=ViewHelper(request)
-    return vh.render_template('admin_settings/user_tables_list.html')
+    userid=request.POST.get('userid')
+    #vh.context['tables']=list(SysUserOrder.objects.select_related('tableid').filter(userid=userid).filter(typepreference='keylabel_scheda').values('tableid__description'))
+    #vh.context['tables']=SysUserOrder.objects.select_related('tableid').filter(userid=userid).filter(typepreference='keylabel_scheda')
+    
+    
+    #tables=SysTable.objects.all()
+    #tables=tables.values('id','description')
+    
+    subquery = SysUserTableOrder.objects.filter(tableid=OuterRef('id')).values('tableorder')[:1]
+    tables = SysTable.objects.annotate(qwe=Subquery(subquery)).filter(qwe__isnull=False).values('id','description','qwe')    
+    
+    vh.context['tables']=tables
+    return vh.render_template('admin_settings/settings_block_user_tables.html')

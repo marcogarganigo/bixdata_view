@@ -101,6 +101,24 @@
                 });
             }
 
+            function getTestQuery(content_page) {
+                var serialized_data = [];
+                serialized_data.push({name: 'content_page', value: content_page});
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'test_query' %}",
+                    data: serialized_data,
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
+
             function getAdminTableSettings(page) {
                 
                 $.ajax({
@@ -790,6 +808,9 @@
                                         <ul class="side-nav-second-level">
                                             <li onclick="getTestContent('generico')">
                                                 <a class="side-nav-txt" onclick="setColor(this)">Test generico</a>
+                                            </li>
+                                            <li onclick="getTestQuery('generico')">
+                                                <a class="side-nav-txt" onclick="setColor(this)">Test query</a>
                                             </li>
                                         </ul>
                                     </div>
