@@ -17,12 +17,6 @@ def block_users(request):
 def block_user_tables(request):
     vh=ViewHelper(request)
     userid=request.POST.get('userid')
-    #vh.context['tables']=list(SysUserOrder.objects.select_related('tableid').filter(userid=userid).filter(typepreference='keylabel_scheda').values('tableid__description'))
-    #vh.context['tables']=SysUserOrder.objects.select_related('tableid').filter(userid=userid).filter(typepreference='keylabel_scheda')
-    
-    
-    #tables=SysTable.objects.all()
-    #tables=tables.values('id','description')
     
     subquery = SysUserTableOrder.objects.filter(tableid=OuterRef('id')).values('tableorder')[:1]
     tables = SysTable.objects.annotate(qwe=Subquery(subquery)).filter(qwe__isnull=False).values('id','description','qwe')    

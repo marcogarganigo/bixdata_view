@@ -60,9 +60,23 @@ class BusinessLogicTest:
         
         return return_value
     
+    def test_join(self):
+        tables=SysUserOrder.objects.select_related('tableid').filter(userid=userid).filter(typepreference='keylabel_scheda')
+        return tables
+    
     def test_leftjoin(self):
         subquery = SysUserTableOrder.objects.filter(tableid=OuterRef('id')).values('tableorder')[:1]
         # il filtro is null lo metto o meno se voglio filtrare sui risultati presenti della tabella relativa
         tables = SysTable.objects.annotate(qwe=Subquery(subquery)).filter(qwe__isnull=False).values('id','description','qwe')  
         return tables  
+    
+    def test_select_all(self):
+        tables=SysTable.objects.all()
+        tables=tables.values('id','description')
+        return tables
+    
+    
+    def test_select_filters(self):
+        tables=list(SysUserOrder.objects.select_related('tableid').filter(userid=1).filter(typepreference='keylabel_scheda').values('tableid__description'))
+        return tables
     
