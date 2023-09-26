@@ -13,7 +13,7 @@ import json
 import datetime
 from django.contrib.auth.decorators import login_required
 import time
-from .forms import LoginForm
+from ...forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db import connection, connections
@@ -23,4 +23,17 @@ from django_user_agents.utils import get_user_agent
 #from bixdata_app.models import MyModel
 from django import template
 from bs4 import BeautifulSoup
+from django.db.models import OuterRef, Subquery
 
+
+class SettingsBusinessLogic:
+    
+    def __init__(self):
+        self.test=None
+    
+    def get_user_tables(self):
+        subquery = SysUserTableOrder.objects.filter(tableid=OuterRef('id')).values('tableorder')[:1]
+        tables=dict()
+        tables['selected'] = SysTable.objects.annotate(order=Subquery(subquery)).filter(order__isnull=False).order_by('order').values('id','description','order')  
+        tables['notselected'] = SysTable.objects.annotate(order=Subquery(subquery)).filter(order__isnull=True).order_by('id').values('id','description','order') 
+        return tables

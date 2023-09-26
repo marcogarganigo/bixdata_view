@@ -1,8 +1,13 @@
-TEST
-<ul>
-    {% for row in tables %}
-    <li>{{row}}</li>
-    {% endfor %}  
-</ul>
+<div id="settings_block_user_tables" style="height: 90%;overflow: scroll;">
+    <ul>
+        {% for row in tables.selected %}
+                <li style="color:red">{{row.id}}: {{row.description}}</li>
+        {% endfor %}  
 
-<br>/
+        {% for row in tables.notselected %}
+                <li>{{row.id}}: {{row.description}}</li>
+        {% endfor %}  
+    </ul>
+</div>
+
+

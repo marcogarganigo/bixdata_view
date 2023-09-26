@@ -13,7 +13,7 @@ import json
 import datetime
 from django.contrib.auth.decorators import login_required
 import time
-from .forms import LoginForm
+from ...forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db import connection, connections
@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
 
 
-class BusinessLogicTest:
+class TestBusinessLogic:
     
     def __init__(self):
         self.test=None

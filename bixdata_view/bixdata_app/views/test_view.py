@@ -4,10 +4,10 @@ import threading
 from django.contrib.sessions.models import Session
 import threading
 from bixdata_app.models import *
-from ..business_logic_general import *
+from .businesslogic.test_business_logic import *
 
 
-from ..business_logic_helper import *
+from .businesslogic.helper_business_logic import *
 from bixdata_app.models import *
 
 
@@ -48,8 +48,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor
-from .view_helper import *
-from ..business_logic_test import *
+from .helper_view import *
 
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
@@ -61,7 +60,7 @@ def test(request):
 @login_required(login_url='/login/')
 def test_content(request):
     vh=ViewHelper(request)
-    bl= BusinessLogicTest()
+    bl= TestBusinessLogic()
     
     
     content_page = request.POST.get('content_page')
@@ -85,11 +84,11 @@ def get_query_to_test(request):
 
 
 def test_leftjoin(request):
-    vh=ViewHelper(request)
-    bl=BusinessLogicTest()
+    hv=HelperView(request)
+    bl=TestBusinessLogic()
     tables=bl.test_leftjoin()
-    vh.context['tables']=tables
-    return vh.render_template('admin_settings/settings_block_user_tables.html')
+    hv.context['tables']=tables
+    return hv.render_template('admin_settings/settings_block_user_tables.html')
 
 
 def test_query1(request):

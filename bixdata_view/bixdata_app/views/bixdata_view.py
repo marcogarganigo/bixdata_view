@@ -4,9 +4,7 @@ import threading
 from django.contrib.sessions.models import Session
 import threading
 from bixdata_app.models import *
-from ..business_logic import *
-from ..business_logic_test import *
-from ..business_logic_helper import *
+from .businesslogic.helper_business_logic import *
 from bixdata_app.models import *
 
 

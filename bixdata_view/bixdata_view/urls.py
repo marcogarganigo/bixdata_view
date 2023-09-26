@@ -19,16 +19,17 @@ from django.contrib.auth import views as auth_views
 
 from bixdata_app.views import alpha
 from bixdata_app.views import beta
-from bixdata_app.views import view_test
-from bixdata_app.views import view_settings
+from bixdata_app.views import test_view
+from bixdata_app.views import settings_view
+from bixdata_app.views import bixdata_view
 
 urlpatterns = [
     path('', alpha.get_render_index, name='index'),
     path('index/', alpha.get_render_index, name='index'),
     path('loading/', alpha.get_render_loading, name='loading'),
-    path('test/', view_test.test, name='test'),
-    path('test_content/', view_test.test_content, name='test_content'),
-    path('test_query/', view_test.get_test_query, name='test_query'),
+    path('test/', test_view.test, name='test'),
+    path('test_content/', test_view.test_content, name='test_content'),
+    path('test_query/', test_view.get_test_query, name='test_query'),
     path('test_query2/', alpha.get_test_query2, name='test_query2'),
     path('test_autocomplete/', alpha.get_test_autocomplete, name='test_autocomplete'),
     path('test_gridstack/', alpha.test_gridstack, name='test_gridstack'),
@@ -113,9 +114,9 @@ urlpatterns = [
     path('update_pending_timesheet/', alpha.update_pending_timesheet, name='update_pending_timesheet'),
     path('get_project_id/', alpha.get_project_id, name='get_project_id'),
     path('admin_table_settings/', alpha.admin_table_settings, name='admin_table_settings'),
-    path('settings_table/', view_settings.settings_table, name='settings_table'),
-    path('block_user_tables/', view_settings.block_user_tables, name='block_user_tables'),
-    path('get_query_to_test/', view_test.get_query_to_test, name='get_query_to_test'),
+    path('settings_table/', settings_view.settings_table, name='settings_table'),
+    path('block_user_tables/', settings_view.block_user_tables, name='block_user_tables'),
+    path('get_query_to_test/', test_view.get_query_to_test, name='get_query_to_test'),
     
     
 ]

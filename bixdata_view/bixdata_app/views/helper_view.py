@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 
-class ViewHelper:
+class HelperView:
     
     def __init__(self,request):
         self.request=request
