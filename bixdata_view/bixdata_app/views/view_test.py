@@ -5,7 +5,8 @@ from django.contrib.sessions.models import Session
 import threading
 from bixdata_app.models import *
 from ..business_logic_general import *
-from ..business_logic_test import *
+
+
 from ..business_logic_helper import *
 from bixdata_app.models import *
 
@@ -68,6 +69,11 @@ def test_content(request):
     vh.context['bl_returned']=bl.bl_test(1)
     return vh.render_template('test/test_content.html')
 
+# Questa funzione è per il testing delle query
+def get_test_query(request, name=None):
+    return render(request, 'other/test_query.html')
+
+
 def get_query_to_test(request):
     query = request.POST.get('query')
     print(query)
@@ -78,7 +84,11 @@ def get_query_to_test(request):
 
 
 def test_query1(request):
-    return HttpResponse('contenuto query 1')
+    vh=ViewHelper(request)
+    bl=BusinessLogicTest()
+    tables=bl.test_leftjoin()
+    vh.context['tables']=tables
+    return vh.render_template('admin_settings/settings_block_user_tables.html')
 
 
 def test_query2(request):

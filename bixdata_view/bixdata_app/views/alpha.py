@@ -83,9 +83,7 @@ def get_autocomplete_data(request):
         data) if term.lower() in item.lower()]
     return JsonResponse({'data': response})
 
-# Questa funzione è per il testing delle query
-def get_test_query(request, name=None):
-    return render(request, 'other/test_query.html')
+
 
 
 def get_full_data(request):

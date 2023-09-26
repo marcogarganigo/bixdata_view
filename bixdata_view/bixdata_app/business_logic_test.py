@@ -23,6 +23,7 @@ from django_user_agents.utils import get_user_agent
 #from bixdata_app.models import MyModel
 from django import template
 from bs4 import BeautifulSoup
+from django.db.models import OuterRef, Subquery
 
 
 class BusinessLogicTest:
@@ -58,4 +59,10 @@ class BusinessLogicTest:
         return_value = list(my_queryset.values())
         
         return return_value
+    
+    def test_leftjoin(self):
+        subquery = SysUserTableOrder.objects.filter(tableid=OuterRef('id')).values('tableorder')[:1]
+        # il filtro is null lo metto o meno se voglio filtrare sui risultati presenti della tabella relativa
+        tables = SysTable.objects.annotate(qwe=Subquery(subquery)).filter(qwe__isnull=False).values('id','description','qwe')  
+        return tables  
     
