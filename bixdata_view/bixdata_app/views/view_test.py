@@ -79,11 +79,12 @@ def get_query_to_test(request):
     print(query)
     query = 'test_' + query
 
-    function = globals()[query]
+    if query in globals() and callable(globals()[query]):
+        function = globals()[query]
     return HttpResponse(function(request))
 
 
-def test_query1(request):
+def test_leftjoin(request):
     vh=ViewHelper(request)
     bl=BusinessLogicTest()
     tables=bl.test_leftjoin()
@@ -91,5 +92,5 @@ def test_query1(request):
     return vh.render_template('admin_settings/settings_block_user_tables.html')
 
 
-def test_query2(request):
+def test_query1(request):
     return HttpResponse('contenuto query 2')
