@@ -111,6 +111,7 @@ DATABASES = {
         'PASSWORD': env('DATABASE_PASSWORD'),
         'HOST': env('DATABASE_HOST'),
         'PORT': env('DATABASE_PORT'),
+        'ATOMIC_REQUESTS': True,  # gestione automatica delle transazioni. ogni funzione della view è trattata come singola transazione e se capitano errori va in rollback
     }
 }
 
