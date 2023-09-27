@@ -91,7 +91,7 @@
             {% for row in tables.selected %}
                  <div data-order="{{ row.order }}" class="drag-item2">
                     <li>{{row.id}}: {{row.description}} {{row.order}}</li>
-                     <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
+                        <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
                     <input class="form-check-input mt-0" type="checkbox" checked value="" aria-label="Checkbox for following text input">
                  </div>
             {% endfor %}
@@ -99,7 +99,7 @@
             {% for row in tables.notselected %}
                  <div class="drag-item2">
                     <li>{{row.id}}: {{row.description}} {{row.order}}</li>
-                     <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
+                        <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
                     <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
                 </div>
             {% endfor %}
