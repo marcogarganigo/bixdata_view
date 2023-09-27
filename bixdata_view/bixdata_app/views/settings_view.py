@@ -27,7 +27,7 @@ def block_user_tables(request):
 
 
 def save_table_settings(request):
-    
+
 
     SysUserTableOrder.objects.filter(userid=1, typepreference='menu').delete()
 
