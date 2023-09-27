@@ -20,31 +20,31 @@
         });
     }
 
-    function saveTableSettings() {
-        // pick the data-order of all .drag-item2 that contains a checked checkbox and save it in an array
-        var array = [];
-        $('.drag-item2').each(function () {
-            if ($(this).find('input[type="checkbox"]').is(':checked')) {
-                array.push($(this).data('order'));
-            }
-        });
-        console.info(array);
+function saveTableSettings() {
+    var orderArray = [];
 
-        $.ajax({
-            type: "POST",
-            crossDomain: true,
-            url: "{% url 'save_table_settings' %}",
-            data: { 'order': array },
-            success: function (response) {
-                $("#table_options").html(response);
-            },
-            error: function () {
+    $('.drag-item2').each(function () {
+        if ($(this).find('input[type="checkbox"]').is(':checked')) {
+            orderArray.push($(this).data('tableid'));
+        }
+    });
 
-            }
-        });
+    console.info(orderArray);
 
+    orderArray = JSON.stringify(orderArray);
 
-    }
+    $.ajax({
+        type: "POST",
+        url: '{% url 'save_table_settings' %}',
+        data: { 'order': orderArray, csrfmiddlewaretoken: '{{ csrf_token }}' },
+        success: function (response) {
+            $("#table_options").html(response);
+        },
+        error: function () {
+        }
+    });
+}
+
 
 </script>
 

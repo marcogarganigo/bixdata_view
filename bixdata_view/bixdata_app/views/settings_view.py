@@ -28,10 +28,17 @@ def block_user_tables(request):
 
 def save_table_settings(request):
     
-    SysUserTableOrder.objects.filter(userid=1,typepreference='menu').delete()
-    order=request.POST.get('order')
-    
-    return True
+
+    SysUserTableOrder.objects.filter(userid=1, typepreference='menu').delete()
+
+
+    order = request.POST.getlist('order')
+    print(order)
+
+
+
+    return JsonResponse({'success': True})
+
 
 def settings_table_admin(request):
     tableid = request.POST.get('tableid')
