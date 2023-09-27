@@ -55,7 +55,7 @@
     function updateOrder() {
         var fieldElements = $('.drag-item2');
         fieldElements.each(function (index) {
-            $(this).attr('data-order', index);
+            $(this).attr('data-order', index + 1);
         });
     }
 
@@ -89,7 +89,7 @@
     <div id="" class="drag-item">
 
             {% for row in tables.selected %}
-                 <div data-order="{{ forloop.counter }}" class="drag-item2">
+                 <div data-order="{{ row.order }}" class="drag-item2">
                     <li>{{row.id}}: {{row.description}} {{row.order}}</li>
                      <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
                     <input class="form-check-input mt-0" type="checkbox" checked value="" aria-label="Checkbox for following text input">
@@ -97,8 +97,9 @@
             {% endfor %}
 
             {% for row in tables.notselected %}
-                 <div data-order="{{ forloop.counter}}" class="drag-item2">
+                 <div class="drag-item2">
                     <li>{{row.id}}: {{row.description}} {{row.order}}</li>
+                     <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
                     <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
                 </div>
             {% endfor %}
