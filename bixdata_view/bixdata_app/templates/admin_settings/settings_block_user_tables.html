@@ -58,6 +58,21 @@
             $(this).attr('data-order', index);
         });
     }
+
+    function settingsTableAdmin() {
+        var tableid = $(this).closest('.drag-item2').text();
+
+        $.ajax({
+            url: '{% url 'settings_table_admin' %}',
+            type: 'POST',
+            data: {
+                'tableid': tableid,
+            },
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
 </script>
 
 
@@ -74,14 +89,15 @@
     <div id="" class="drag-item">
 
             {% for row in tables.selected %}
-                 <div data-order="{{ forloop.counter0 }}" class="drag-item2">
+                 <div data-order="{{ forloop.counter }}" class="drag-item2">
                     <li>{{row.id}}: {{row.description}}</li>
+                     <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
                     <input class="form-check-input mt-0" type="checkbox" checked value="" aria-label="Checkbox for following text input">
                  </div>
             {% endfor %}
 
             {% for row in tables.notselected %}
-                 <div data-order="{{ forloop.counter0 }}" class="drag-item2">
+                 <div data-order="{{ forloop.counter}}" class="drag-item2">
                     <li>{{row.id}}: {{row.description}}</li>
                     <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
                 </div>

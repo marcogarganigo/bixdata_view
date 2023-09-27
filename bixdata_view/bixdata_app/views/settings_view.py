@@ -24,3 +24,11 @@ def block_user_tables(request):
     
     hv.context['tables']=tables
     return hv.render_template('admin_settings/settings_block_user_tables.html')
+
+
+def save_table_settings(request):
+    return True
+
+def settings_table_admin(request):
+    tableid = request.POST.get('tableid')
+    return HttpResponse('test')

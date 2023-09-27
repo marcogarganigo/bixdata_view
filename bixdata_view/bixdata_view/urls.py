@@ -117,6 +117,8 @@ urlpatterns = [
     path('settings_table/', settings_view.settings_table, name='settings_table'),
     path('block_user_tables/', settings_view.block_user_tables, name='block_user_tables'),
     path('get_query_to_test/', test_view.get_query_to_test, name='get_query_to_test'),
+    path('save_table_settings/', settings_view.save_table_settings, name='save_table_settings'),
+    path('settings_table_admin/', settings_view.settings_table_admin, name='settings_table_admin'),
     
     
 ]

@@ -19,14 +19,46 @@
             }
         });
     }
+
+    function saveTableSettings() {
+        // pick the data-order of all .drag-item2 that contains a checked checkbox and save it in an array
+        var array = [];
+        $('.drag-item2').each(function () {
+            if ($(this).find('input[type="checkbox"]').is(':checked')) {
+                array.push($(this).data('order'));
+            }
+        });
+        console.info(array);
+
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'save_table_settings' %}",
+            data: { 'order': array },
+            success: function (response) {
+                $("#table_options").html(response);
+            },
+            error: function () {
+
+            }
+        });
+
+
+    }
+
 </script>
 
 <div id="settings_table" style="height: 100%;">
     <div id="block_users" style="width: 20%;float: left;">
+        <button type="button" class="btn btn-primary" onclick="saveTableSettings()">Salva</button>
         {{block_users}}
     </div>
     <div id="block_user_tables" style="width: 20%;float: left;">
         
+    </div>
+
+    <div id="table_options">
+
     </div>
 </div>
 
