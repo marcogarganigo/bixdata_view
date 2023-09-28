@@ -33,22 +33,25 @@
     .btn-save {
         margin-top: 10px;
     }
+
+    .drag-item {
+        border: 1px solid red;
+    }
 </style>
 
 
 <script>
     $(document).ready(function () {
-        var drake;
-        var tsi_id = [];
+  dragula([document.querySelector('#settings_block_user_tables')], {
+    moves: function(el, container, handle) {
+      return !handle.classList.contains('drag-item2');
+    }
+  });
 
-        $(".drag-item").each(function () {
-            tsi_id.push(this);
-        });
+  dragula([].slice.apply(document.querySelectorAll('.drag-item')), {
+    direction: 'horizontal'
+  });
 
-        drake = dragula(tsi_id);
-        drake.on('drop', function (el, target) {
-            updateOrder();
-        });
     });
 
 
@@ -87,9 +90,12 @@
     description: nome di descrizione della tabella
     order: numero dell'ordinamento (le tabelle selezionate arrivano già ordinate)
 -->
-<div id="settings_block_user_tables" style="height: 95%">
+
     <button type="button" class="btn btn-primary" onclick="saveTableSettings()">Salva</button>
-    <div id="" class="drag-item" style="height: 100%; overflow: scroll">
+
+
+<div id="settings_block_user_tables" style="height: 95%; overflow: scroll">
+    <div id="" class="drag-item">
             {% for row in tables.selected %}
                  <div data-order="{{ row.order }}" data-tableid="{{ row.id }}" class="drag-item2">
                   <input class="form-check-input mt-0" type="checkbox" checked value="" aria-label="Checkbox for following text input">
@@ -97,7 +103,8 @@
                         <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
                  </div>
             {% endfor %}
-
+    </div>
+    <div id="" class="drag-item">
             {% for row in tables.notselected %}
                  <div data-tableid="{{ row.id }}" data-order="{{ row.order }}" class="drag-item2">
                   <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
@@ -105,8 +112,9 @@
                         <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
                 </div>
             {% endfor %}
+    </div>
 
     </div>
-</div>
+
 
 
