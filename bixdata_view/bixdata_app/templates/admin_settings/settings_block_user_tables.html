@@ -89,6 +89,15 @@
     id: id della tabella
     description: nome di descrizione della tabella
     order: numero dell'ordinamento (le tabelle selezionate arrivano già ordinate)
+
+
+
+    workspaces: dict con elencati i workspace
+        workspaces.name: nome del workspace
+        workspace.tables: dict con le tabelle che fanno parte del workspace
+            workspace.table.id: identificativo della tabella
+            workspace.table.description: nome descrittivo della tabella
+            workspace.table.order: numero dell'ordinamento(le tabelle arrivano già ordinate). In caso in cui sia "None" vuol dire che la tabella non è selezionata
 -->
 
     <button type="button" class="btn btn-primary" onclick="saveTableSettings()">Salva</button>

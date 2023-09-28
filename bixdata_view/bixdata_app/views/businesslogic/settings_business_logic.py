@@ -32,8 +32,20 @@ class SettingsBusinessLogic:
         self.test=None
     
     def get_user_tables(self):
+        returnvalue=dict()
         subquery = SysUserTableOrder.objects.filter(tableid=OuterRef('id')).values('tableorder')[:1]
         tables=dict()
-        tables['selected'] = SysTable.objects.annotate(order=Subquery(subquery)).filter(order__isnull=False).order_by('workspace','order').values('id','description','workspace','order')  
+        tablesdict=dict()
+        workspaces=dict()
+        workspace_rows=SysTableWorkspace.objects.all()
+        for workspace_row in workspace_rows:
+            workspaces[workspace_row.name]=dict()
+            workspaces[workspace_row.name]['name']=workspace_row.name
+            workspace_name=workspace_row.name
+            tablesdict=SysTable.objects.annotate(order=Subquery(subquery)).filter(workspace=workspace_name).order_by('workspace','order').values('id','description','workspace','order')  
+            workspaces[workspace_row.name]['tables']=tablesdict
+        tables['selected'] = SysTable.objects.annotate(order=Subquery(subquery)).filter(order__isnull=False).order_by('workspace','order').values('id','description','workspace','order') 
         tables['notselected'] = SysTable.objects.annotate(order=Subquery(subquery)).filter(order__isnull=True).order_by('workspace','id').values('id','description','workspace','order') 
-        return tables
+        returnvalue['tables']=tables
+        returnvalue['workspaces']=workspaces
+        return returnvalue

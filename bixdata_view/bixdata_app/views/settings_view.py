@@ -20,9 +20,9 @@ def block_user_tables(request):
     bl=SettingsBusinessLogic()
     userid=request.POST.get('userid')
     
-    tables=bl.get_user_tables()  
-    
-    hv.context['tables']=tables
+    returned=bl.get_user_tables()  
+    hv.context['tables']=returned['tables']
+    hv.context['workspaces']=returned['workspaces']
     return hv.render_template('admin_settings/settings_block_user_tables.html')
 
 
