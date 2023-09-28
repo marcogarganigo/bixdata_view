@@ -21,6 +21,8 @@
     }
 
 function saveTableSettings() {
+    var serialized_data = [];
+    
     var orderArray = [];
 
     $('.drag-item2').each(function () {
@@ -29,14 +31,13 @@ function saveTableSettings() {
         }
     });
 
-    console.info(orderArray);
 
     orderArray = JSON.stringify(orderArray);
-
+    serialized_data.push({ name: 'tables', value: orderArray });
     $.ajax({
         type: "POST",
-        url: '{% url 'save_table_settings' %}',
-        data: { 'order': orderArray, csrfmiddlewaretoken: '{{ csrf_token }}' },
+        url: "{% url 'save_table_settings' %}",
+        data: serialized_data,
         success: function (response) {
             $("#table_options").html(response);
         },

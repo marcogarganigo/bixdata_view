@@ -63,7 +63,7 @@
         var tableid = $(this).closest('.drag-item2').text();
 
         $.ajax({
-            url: '{% url 'settings_table_admin' %}',
+            url: "{% url 'settings_table_admin' %}",
             type: 'POST',
             data: {
                 'tableid': tableid,
@@ -90,7 +90,7 @@
 
             {% for row in tables.selected %}
                  <div data-order="{{ row.order }}" data-tableid="{{ row.id }}" class="drag-item2">
-                    <li>{{row.id}}: {{row.description}} {{row.order}}</li>
+                    <li>{{row.workspace}}: {{row.description}}</li>
                         <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
                     <input class="form-check-input mt-0" type="checkbox" checked value="" aria-label="Checkbox for following text input">
                  </div>
@@ -98,7 +98,7 @@
 
             {% for row in tables.notselected %}
                  <div data-tableid="{{ row.id }}" class="drag-item2">
-                    <li>{{row.id}}: {{row.description}} {{row.order}}</li>
+                    <li>{{row.workspace}}: {{row.description}}</li>
                         <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
                     <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
                 </div>

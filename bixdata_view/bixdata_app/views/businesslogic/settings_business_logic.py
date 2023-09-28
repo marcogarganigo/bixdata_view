@@ -34,6 +34,6 @@ class SettingsBusinessLogic:
     def get_user_tables(self):
         subquery = SysUserTableOrder.objects.filter(tableid=OuterRef('id')).values('tableorder')[:1]
         tables=dict()
-        tables['selected'] = SysTable.objects.annotate(order=Subquery(subquery)).filter(order__isnull=False).order_by('order').values('id','description','order')  
-        tables['notselected'] = SysTable.objects.annotate(order=Subquery(subquery)).filter(order__isnull=True).order_by('id').values('id','description','order') 
+        tables['selected'] = SysTable.objects.annotate(order=Subquery(subquery)).filter(order__isnull=False).order_by('workspace','order').values('id','description','workspace','order')  
+        tables['notselected'] = SysTable.objects.annotate(order=Subquery(subquery)).filter(order__isnull=True).order_by('workspace','id').values('id','description','workspace','order') 
         return tables

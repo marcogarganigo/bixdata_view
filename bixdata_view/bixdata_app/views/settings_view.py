@@ -31,11 +31,13 @@ def save_table_settings(request):
 
     SysUserTableOrder.objects.filter(userid=1, typepreference='menu').delete()
 
-
-    order = request.POST.getlist('order')
-    print(order)
-
-
+    tables = request.POST.get('tables')
+    tables=json.loads(tables)
+    order=0;
+    for tableid in tables:
+        x=SysUserTableOrder(userid=SysUser.objects.get(id=1),tableid=SysTable.objects.get(id=tableid),typepreference='menu',tableorder=order)
+        x.save()
+        order+=1
 
     return JsonResponse({'success': True})
 
