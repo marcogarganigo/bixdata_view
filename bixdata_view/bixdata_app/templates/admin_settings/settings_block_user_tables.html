@@ -59,6 +59,8 @@
         });
     }
 
+    updateOrder();  
+
     function settingsTableAdmin() {
         var tableid = $(this).closest('.drag-item2').text();
 
@@ -97,8 +99,8 @@
             {% endfor %}
 
             {% for row in tables.notselected %}
-                 <div data-tableid="{{ row.id }}" class="drag-item2">
-                    <li>{{row.workspace}}: {{row.description}}</li>
+                 <div data-tableid="{{ row.id }}" data-order="{{ row.order }}" class="drag-item2">
+                    <li>{{row.id}}: {{row.description}} {{row.order}}</li>
                         <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
                     <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
                 </div>
