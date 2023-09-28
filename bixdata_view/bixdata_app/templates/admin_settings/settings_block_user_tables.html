@@ -34,25 +34,30 @@
         margin-top: 10px;
     }
 
-    .drag-item {
-        border: 1px solid red;
-    }
 </style>
 
 
 <script>
-    $(document).ready(function () {
-  dragula([document.querySelector('#settings_block_user_tables')], {
-    moves: function(el, container, handle) {
-      return !handle.classList.contains('drag-item2');
-    }
-  });
 
-  dragula([].slice.apply(document.querySelectorAll('.drag-item')), {
-    direction: 'horizontal'
-  });
+        (function() {
+    var drake = dragula([document.querySelector('#settings_block_user_tables')], {
+        moves: function (el, container, handle) {
+            return !handle.classList.contains('drag-item2');
+        }
+    });
+
+    dragula([].slice.apply(document.querySelectorAll('.drag-item')), {
+        direction: 'vertical'
+    });
+
+    drake.on('drop', function (el, target, source, sibling) {
+            alert('siu')
+            updateOrder();
 
     });
+
+    })();
+
 
 
     function updateOrder() {
@@ -60,9 +65,13 @@
         fieldElements.each(function (index) {
             $(this).attr('data-order', index + 1);
         });
-    }
 
-    updateOrder();  
+        var fieldElementsWs = $('.drag-item');
+        fieldElementsWs.each(function (index) {
+            $(this).attr('data-order', index + 1);
+        });
+    }
+    updateOrder();
 
     function settingsTableAdmin() {
         var tableid = $(this).closest('.drag-item2').text();
@@ -103,27 +112,32 @@
     <button type="button" class="btn btn-primary" onclick="saveTableSettings()">Salva</button>
 
 
+
+
+
 <div id="settings_block_user_tables" style="height: 95%; overflow: scroll">
-    <div id="" class="drag-item">
-            {% for row in tables.selected %}
-                 <div data-order="{{ row.order }}" data-tableid="{{ row.id }}" class="drag-item2">
-                  <input class="form-check-input mt-0" type="checkbox" checked value="" aria-label="Checkbox for following text input">
-                    <p>{{row.workspace}}: {{row.description}}</p>
-                        <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
-                 </div>
-            {% endfor %}
-    </div>
-    <div id="" class="drag-item">
-            {% for row in tables.notselected %}
-                 <div data-tableid="{{ row.id }}" data-order="{{ row.order }}" class="drag-item2">
-                  <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
-                    <p>{{row.workspace}}: {{row.description}}</p>
-                        <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
+    {% for index, value in workspaces.items %}
+         <div id="" class="drag-item card card-body">
+         <h5>{{ value.name }}</h5>
+            {% for table in value.tables %}
+                <div data-order="{{ table.order }}" data-tableid="{{ table.id }}" class="drag-item2">
+                    {% if table.order != null %}
+                        <input class="form-check-input mt-0" type="checkbox" checked value="" aria-label="Checkbox for following text input">
+                    {% else %}
+                        <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
+                    {% endif %}
+                    {{ table.id }}
+                    <button class="btn btn-secondary" onclick="settingsTableAdmin()">Impostazioni</button>
                 </div>
             {% endfor %}
-    </div>
+         </div>
+    {% endfor %}
+</div>
 
-    </div>
+
+
+
+
 
 
 
