@@ -39,6 +39,13 @@ function saveTableSettings() {
         url: "{% url 'save_table_settings' %}",
         data: serialized_data,
         success: function (response) {
+            swal({
+                title: "Impostazioni salvate",
+                text: "Le impostazioni sono state salvate correttamente",
+                icon: "success",
+                timer: 800,
+                buttons: false,
+            })
             $("#table_options").html(response);
         },
         error: function () {
@@ -51,10 +58,9 @@ function saveTableSettings() {
 
 <div id="settings_table" style="height: 100%;">
     <div id="block_users" style="width: 20%;float: left;">
-        <button type="button" class="btn btn-primary" onclick="saveTableSettings()">Salva</button>
         {{block_users}}
     </div>
-    <div id="block_user_tables" style="width: 20%;float: left;">
+    <div id="block_user_tables" style="width: 20%;float: left; height: 100%">
         
     </div>
 
