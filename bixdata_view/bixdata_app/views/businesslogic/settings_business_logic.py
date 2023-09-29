@@ -31,7 +31,7 @@ class SettingsBusinessLogic:
     def __init__(self):
         self.test=None
     
-    def get_user_tables(self):
+    def get_user_tables(self,userid):
         returnvalue=dict()
         subquery = SysUserTableOrder.objects.filter(tableid=OuterRef('id')).values('tableorder')[:1]
         tables=dict()
@@ -42,10 +42,6 @@ class SettingsBusinessLogic:
             workspaces[workspace_row.name]=dict()
             workspaces[workspace_row.name]['name']=workspace_row.name
             workspace_name=workspace_row.name
-            tablesdict=SysTable.objects.annotate(order=Subquery(subquery)).filter(workspace=workspace_name).order_by('workspace','order').values('id','description','workspace','order')  
+            tablesdict=SysTable.objects.annotate(order=Subquery(subquery)).filter(userid=userid, workspace=workspace_name).order_by('workspace','order').values('id','description','workspace','order')  
             workspaces[workspace_row.name]['tables']=tablesdict
-        tables['selected'] = SysTable.objects.annotate(order=Subquery(subquery)).filter(order__isnull=False).order_by('workspace','order').values('id','description','workspace','order') 
-        tables['notselected'] = SysTable.objects.annotate(order=Subquery(subquery)).filter(order__isnull=True).order_by('workspace','id').values('id','description','workspace','order') 
-        returnvalue['tables']=tables
-        returnvalue['workspaces']=workspaces
-        return returnvalue
+        return workspaces

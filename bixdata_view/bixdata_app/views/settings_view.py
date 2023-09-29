@@ -16,9 +16,7 @@ def settings_table_user_tables(request):
     bl=SettingsBusinessLogic()
     userid=request.POST.get('userid')
     
-    returned=bl.get_user_tables()  
-    hv.context['tables']=returned['tables']
-    hv.context['workspaces']=returned['workspaces']
+    hv.context['workspaces']=bl.get_user_tables(userid)  
     return hv.render_template('admin_settings/settings_table_user_tables.html')
 
 
