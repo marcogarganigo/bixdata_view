@@ -42,12 +42,14 @@ class SettingsBusinessLogic:
             workspaces[workspace_row.name]=dict()
             workspaces[workspace_row.name]['name']=workspace_row.name
             workspace_name=workspace_row.name
-            tablesdict=SysTable.objects.annotate(order=Subquery(subquery)).filter(workspace=workspace_name).order_by('workspace','order').values('id','description','workspace','order')  
+            tablesdict=SysTable.objects.annotate(order=Subquery(subquery)).filter(workspace=workspace_name).order_by('workspace','order').values('id','description','workspace','order') 
+            print(tablesdict.query) 
             workspaces[workspace_row.name]['tables']=tablesdict
         return workspaces
 
 
     def get_search_column_results(self,userid,tableid):
-        subquery = SysUserFieldOrder.objects.filter(tableid=OuterRef('tableid'),fieldid=OuterRef('fieldid')).values('tableorder')[:1]
-        fields=SysField.objects.annotate(order=Subquery(subquery)).order_by('fieldorder').values('fieldid','tableid','fieldorder')
-        return True
+        subquery = SysUserFieldOrder.objects.filter(tableid=OuterRef('tableid'),fieldid=OuterRef('fieldid')).values('fieldorder')[:1]
+        fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('order').values('fieldid','tableid','order')
+        print(fields.query)
+        return fields

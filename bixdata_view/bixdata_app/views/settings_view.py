@@ -52,5 +52,5 @@ def column_search_results(request):
     userid = request.POST.get('userid')
     hv = HelperView(request)
     bl = SettingsBusinessLogic()
-    returned = bl.get_search_column_results(userid, tableid)
+    hv.context['fields'] = bl.get_search_column_results(userid, tableid)
     return hv.render_template('admin_settings/settings_table_column_search_results.html')
