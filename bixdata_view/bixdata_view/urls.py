@@ -119,6 +119,7 @@ urlpatterns = [
     path('get_query_to_test/', test_view.get_query_to_test, name='get_query_to_test'),
     path('save_table_settings/', settings_view.save_table_settings, name='save_table_settings'),
     path('settings_table_admin/', settings_view.settings_table_admin, name='settings_table_admin'),
+    path('column_search_results/', settings_view.column_search_results, name='column_search_results'),
     
     
 ]
