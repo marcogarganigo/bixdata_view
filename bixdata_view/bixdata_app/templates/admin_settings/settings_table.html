@@ -28,20 +28,21 @@ function saveTableSettings(el) {
     var orderArray = [];
 
     $('.drag-item').each(function () {
-    var workspace = $(this).attr('data-workspace');
+
+            var workspace = $(this).attr('data-workspace');
 
 
-    var tables = [];
+            var tables = [];
 
 
-    $(this).find('.drag-item2').each(function () {
-        var tableid = $(this).attr('data-tableid');
-        tables.push(tableid);
+            $(this).find('.drag-item2').each(function () {
+                if ($(this).find('.checkbox').is(':checked')) {
+                    var tableid = $(this).attr('data-tableid');
+                    tables.push(tableid);
+                }
+            });
+        orderArray.push({workspace: workspace, tables: tables});
     });
-
-
-    orderArray.push({ workspace: workspace, tables: tables });
-});
 
     orderArray = JSON.stringify(orderArray);
     console.info(orderArray)
