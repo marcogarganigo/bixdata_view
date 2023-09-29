@@ -49,3 +49,7 @@ class SettingsBusinessLogic:
         returnvalue['tables']=tables
         returnvalue['workspaces']=workspaces
         return returnvalue
+
+
+def get_search_column_results(self,userid,tableid):
+    return True

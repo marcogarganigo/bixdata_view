@@ -47,3 +47,12 @@ def save_table_settings(request):
 def settings_table_admin(request):
     tableid = request.POST.get('tableid')
     return HttpResponse('test')
+
+
+def column_search_results(request):
+    tableid = request.POST.get('tableid')
+    userid = request.POST.get('userid')
+    hv = HelperView(request)
+    bl = SettingsBusinessLogic()
+    returned = bl.get_search_column_results(userid, tableid)
+    return hv.render_template('admin_settings/settings_table_column_search_results.html')

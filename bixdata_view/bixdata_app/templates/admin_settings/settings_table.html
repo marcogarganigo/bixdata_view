@@ -74,6 +74,23 @@ function saveTableSettings(el) {
     });
 }
 
+function columnSearchResults() {
+
+    var tableid = $('#table_settings_menu').attr('data-tableid');
+    var userid = $('#user_username').attr('data-userid');
+
+    $.ajax({
+        type: "POST",
+        url: "{% url 'column_search_results' %}",
+        data: {tableid: tableid, userid: userid},
+        success: function (response) {
+            $("#settings_col4").html(response);
+        },
+        error: function () {
+        }
+    });
+}
+
 
 </script>
 
@@ -81,7 +98,7 @@ function saveTableSettings(el) {
     <div id="settings_table_users" style="width: 20%;float: left;">
         Utenti <br/>
         {% for user in users %}
-            <button class="btn btn-secondary table-button" onclick="getUserTablesList('{{ user.id }}'); $('#user_username').val('{{ user.username }}')">{{ user.username }}</button>
+            <button class="btn btn-secondary table-button"onclick="getUserTablesList('{{ user.id }}'); $('#user_username').val('{{ user.username }}'); $('#user_username').attr('data-userid', '{{ user.id }}')">{{ user.username }}</button>
             <br>
         {% endfor %}
         <input type="text" disabled id="user_username" value="">
@@ -90,8 +107,8 @@ function saveTableSettings(el) {
 
     </div>
 
-    <div id="table_settings_menu">
-        <button class="btn btn-secondary table-button" onclick="">Colonne risultati ricerca</button>
+    <div id="table_settings_menu" style="display:none">
+        <button class="btn btn-secondary table-button" onclick="columnSearchResults()">Colonne risultati ricerca</button>
     </div>
 
     <div id="settings_col4">
