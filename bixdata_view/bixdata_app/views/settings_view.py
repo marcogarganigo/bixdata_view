@@ -6,16 +6,12 @@ from .businesslogic.settings_business_logic import *
 @login_required(login_url='/login/')
 def settings_table(request):
     hv=HelperView(request)
-    hv.context['block_users']=block_users(request)
-    return hv.render_template('admin_settings/settings_table.html')
-    
-def block_users(request):
-    hv=HelperView(request)
     users = SysUser.objects.all().values()
     hv.context['users']=users
-    return hv.get_template('admin_settings/settings_block_users.html')
+    return hv.render_template('admin_settings/settings_table.html')
+    
 
-def block_user_tables(request):
+def settings_table_user_tables(request):
     hv=HelperView(request)
     bl=SettingsBusinessLogic()
     userid=request.POST.get('userid')
@@ -23,7 +19,7 @@ def block_user_tables(request):
     returned=bl.get_user_tables()  
     hv.context['tables']=returned['tables']
     hv.context['workspaces']=returned['workspaces']
-    return hv.render_template('admin_settings/settings_block_user_tables.html')
+    return hv.render_template('admin_settings/settings_table_user_tables.html')
 
 
 def save_table_settings(request):

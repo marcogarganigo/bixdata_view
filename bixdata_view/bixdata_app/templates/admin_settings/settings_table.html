@@ -1,21 +1,29 @@
+<style>
+    .table-button {
+        width: 20%;
+        text-align: left;
+        margin-bottom: 5px;
+    }
+</style>
+
 <script>
 
 
     function getUserTablesList(userid)
     {
-        $("#block_user_tables").html('Loading');
+        $("#settings_table_user_tables").html('Loading');
         var serialized_data = [];
         serialized_data.push({ name: 'userid', value: userid });
         $.ajax({
             type: "POST",
             crossDomain: true,
-            url: "{% url 'block_user_tables' %}",
+            url: "{% url 'settings_table_user_tables' %}",
             data: serialized_data,
             success: function (response) {
-                $("#block_user_tables").html(response);
+                $("#settings_table_user_tables").html(response);
             },
             error: function () {
-                $("#block_user_tables").html(response);
+                $("#settings_table_user_tables").html(response);
             }
         });
     }
@@ -45,7 +53,7 @@ function saveTableSettings(el) {
     serialized_data.push({ name: 'tables', value: orderArray });
     $.ajax({
         type: "POST",
-        url: "{% url 'save_table_settings' %}",
+        url: "{% url 'settings_table_user_tables' %}",
         data: serialized_data,
         success: function (response) {
             swal({
@@ -66,10 +74,14 @@ function saveTableSettings(el) {
 </script>
 
 <div id="settings_table" style="height: 100%;">
-    <div id="block_users" style="width: 20%;float: left;">
-        {{block_users}}
+    <div id="settings_table_users" style="width: 20%;float: left;">
+        Utenti <br/>
+        {% for user in users %}
+            <button class="btn btn-secondary table-button" onclick="getUserTablesList('{{ user.id }}')">{{ user.username }}</button>
+            <br>
+        {% endfor %}
     </div>
-    <div id="block_user_tables" style="width: 20%;float: left; height: 100%">
+    <div id="settings_table_user_tables" style="width: 20%;float: left; height: 100%">
         
     </div>
 
