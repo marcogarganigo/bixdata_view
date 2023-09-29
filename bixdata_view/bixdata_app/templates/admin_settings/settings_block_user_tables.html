@@ -39,23 +39,16 @@
 
 <script>
 
-        (function() {
-    var drake = dragula([document.querySelector('#settings_block_user_tables')], {
-        moves: function (el, container, handle) {
-            return !handle.classList.contains('drag-item2');
-        }
-    });
+    (function() {
+        var drake = dragula([document.querySelector('#settings_block_user_tables')], {
+            moves: function (el, container, handle) {
+                return !handle.classList.contains('drag-item2');
+            }
+        });
 
-    dragula([].slice.apply(document.querySelectorAll('.drag-item')), {
-        direction: 'vertical'
-    });
-
-    drake.on('drop', function (el, target, source, sibling) {
-            alert('siu')
-            updateOrder();
-
-    });
-
+        dragula([].slice.apply(document.querySelectorAll('.drag-item')), {
+            direction: 'vertical'
+        });
     })();
 
 
@@ -71,9 +64,9 @@
             $(this).attr('data-order', index + 1);
         });
     }
-    updateOrder();
 
     function settingsTableAdmin() {
+
         var tableid = $(this).closest('.drag-item2').text();
 
         $.ajax({

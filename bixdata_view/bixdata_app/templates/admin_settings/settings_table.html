@@ -22,6 +22,8 @@
 
 function saveTableSettings(el) {
 
+    updateOrder();
+
     var serialized_data = []
     var orderArray = [];
 
@@ -42,6 +44,7 @@ function saveTableSettings(el) {
 });
 
     orderArray = JSON.stringify(orderArray);
+    console.info(orderArray)
     serialized_data.push({ name: 'tables', value: orderArray });
     $.ajax({
         type: "POST",
