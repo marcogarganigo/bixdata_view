@@ -95,7 +95,9 @@ function saveTableSettingsOptions() {
     updateOrder()
     var orderArray = []
     $('#settings_block_user_tables .settings_block_user_tables_fieldid').each(function() {
-        orderArray.push($(this).text());
+        if ($(this).find('.checkbox').is(':checked')) {
+            orderArray.push($(this).text());
+        }
     });
 
     orderArray = JSON.stringify(orderArray);
