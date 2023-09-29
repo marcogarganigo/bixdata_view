@@ -33,7 +33,7 @@ class SettingsBusinessLogic:
     
     def get_user_tables(self,userid):
         returnvalue=dict()
-        subquery = SysUserTableOrder.objects.filter(tableid=OuterRef('id')).values('tableorder')[:1]
+        subquery = SysUserTableOrder.objects.filter(tableid=OuterRef('id'),userid=userid).values('tableorder')[:1]
         tables=dict()
         tablesdict=dict()
         workspaces=dict()
@@ -42,6 +42,6 @@ class SettingsBusinessLogic:
             workspaces[workspace_row.name]=dict()
             workspaces[workspace_row.name]['name']=workspace_row.name
             workspace_name=workspace_row.name
-            tablesdict=SysTable.objects.annotate(order=Subquery(subquery)).filter(userid=userid, workspace=workspace_name).order_by('workspace','order').values('id','description','workspace','order')  
+            tablesdict=SysTable.objects.annotate(order=Subquery(subquery)).filter(workspace=workspace_name).order_by('workspace','order').values('id','description','workspace','order')  
             workspaces[workspace_row.name]['tables']=tablesdict
         return workspaces
