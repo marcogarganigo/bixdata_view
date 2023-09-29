@@ -47,7 +47,7 @@ class SettingsBusinessLogic:
         return workspaces
 
 
-def get_search_column_results(self,userid,tableid):
-    subquery = SysUserFieldOrder.objects.filter(tableid=OuterRef('tableid'),fieldid=OuterRef('fieldid')).values('tableorder')[:1]
-    fields=SysField.objects.annotate(order=Subquery(subquery)).order_by('fieldorder').values('fieldid','tableid','fieldorder')  
-    return True
+    def get_search_column_results(self,userid,tableid):
+        subquery = SysUserFieldOrder.objects.filter(tableid=OuterRef('tableid'),fieldid=OuterRef('fieldid')).values('tableorder')[:1]
+        fields=SysField.objects.annotate(order=Subquery(subquery)).order_by('fieldorder').values('fieldid','tableid','fieldorder')
+        return True
