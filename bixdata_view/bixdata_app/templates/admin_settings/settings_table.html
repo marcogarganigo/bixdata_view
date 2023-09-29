@@ -57,7 +57,7 @@ function saveTableSettings(el) {
     serialized_data.push({ name: 'tables', value: orderArray });
     $.ajax({
         type: "POST",
-        url: "{% url 'settings_table_user_tables' %}",
+        url: "{% url 'save_table_settings' %}",
         data: serialized_data,
         success: function (response) {
             swal({
@@ -89,8 +89,12 @@ function saveTableSettings(el) {
         
     </div>
 
-    <div id="table_options">
+    <div id="table_settings_menu">
+        <button class="btn btn-secondary table-button" onclick="">Colonne risultati ricerca</button>
+    </div>
 
+    <div id="settings_col4">
+        
     </div>
 </div>
 

@@ -27,13 +27,19 @@ def save_table_settings(request):
 
     SysUserTableOrder.objects.filter(userid=1, typepreference='menu').delete()
 
-    tables = request.POST.get('tables')
-    tables=json.loads(tables)
+    workspaces = request.POST.get('tables')
+    workspaces=json.loads(workspaces)
     order=0;
-    for tableid in tables:
-        x=SysUserTableOrder(userid=SysUser.objects.get(id=1),tableid=SysTable.objects.get(id=tableid),typepreference='menu',tableorder=order)
-        x.save()
-        order+=1
+    for workspace in workspaces:
+        workspace_name=workspace['workspace']
+        tables=workspace['tables']
+        for tableid in tables:
+            t=SysTable.objects.get(id=tableid)
+            t.workspace=workspace_name
+            t.save()
+            t=SysUserTableOrder(userid=SysUser.objects.get(id=1),tableid=SysTable.objects.get(id=tableid),typepreference='menu',tableorder=order)
+            t.save()
+            order+=1
 
     return JsonResponse({'success': True})
 
