@@ -40,7 +40,7 @@
 <script>
 
     (function() {
-        var drake = dragula([document.querySelector('#settings_block_user_tables')], {
+        var drake = dragula([document.querySelector('.drag-elements-container')], {
             moves: function (el, container, handle) {
                 return !handle.classList.contains('drag-item2');
             }
@@ -109,7 +109,7 @@
 
 
 
-<div id="settings_block_user_tables" style="height: 95%; overflow: scroll">
+<div id="settings_block_user_tables" class="drag-elements-container" style="height: 95%; overflow: scroll">
     {% for index, value in workspaces.items %}
          <div id="" data-workspace="{{ value.name }}" class="drag-item card card-body">
          <h5>{{ value.name }}</h5>
@@ -121,7 +121,7 @@
                         <input class="form-check-input mt-0 checkbox" type="checkbox" value="" aria-label="Checkbox for following text input">
                     {% endif %}
                     <p class="drag-item2-tableid">{{ table.id }}</p>
-                    <button class="btn btn-secondary" onclick="$('#table_settings_menu').css('display', 'block'); $('#table_settings_menu').attr('data-tableid', '{{ table.id }}')">Impostazioni</button>
+                    <button class="btn btn-secondary" onclick="$('#settings_col4').css('display', 'block'); $('#table_settings_menu').attr('data-tableid', '{{ table.id }}')">Impostazioni</button>
                 </div>
             {% endfor %}
          </div>

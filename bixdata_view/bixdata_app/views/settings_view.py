@@ -54,3 +54,8 @@ def column_search_results(request):
     bl = SettingsBusinessLogic()
     hv.context['fields'] = bl.get_search_column_results(userid, tableid)
     return hv.render_template('admin_settings/settings_table_column_search_results.html')
+
+
+def settings_table_save_table_settings_options(request):
+    fields = request.POST.get('orderArray')
+    return HttpResponse({'success': True})

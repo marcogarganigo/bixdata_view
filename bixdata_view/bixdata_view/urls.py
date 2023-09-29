@@ -120,6 +120,7 @@ urlpatterns = [
     path('save_table_settings/', settings_view.save_table_settings, name='save_table_settings'),
     path('settings_table_admin/', settings_view.settings_table_admin, name='settings_table_admin'),
     path('column_search_results/', settings_view.column_search_results, name='column_search_results'),
+    path('settings_table_save_table_settings_options/', settings_view.settings_table_save_table_settings_options, name='settings_table_save_table_settings_options'),
     
     
 ]

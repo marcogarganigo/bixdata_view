@@ -84,7 +84,34 @@ function columnSearchResults() {
         url: "{% url 'column_search_results' %}",
         data: {tableid: tableid, userid: userid},
         success: function (response) {
-            $("#settings_col4").html(response);
+            $("#results-column-container").html(response);
+        },
+        error: function () {
+        }
+    });
+}
+
+function saveTableSettingsOptions() {
+    updateOrder()
+    var orderArray = []
+    $('#settings_block_user_tables .settings_block_user_tables_fieldid').each(function() {
+        orderArray.push($(this).text());
+    });
+
+    orderArray = JSON.stringify(orderArray);
+
+    $.ajax({
+        type: "POST",
+        url: "{% url 'settings_table_save_table_settings_options' %}",
+        data: {orderArray: orderArray},
+        success: function (response) {
+            swal({
+                title: "Impostazioni salvate",
+                text: "Le impostazioni sono state salvate correttamente",
+                icon: "success",
+                timer: 800,
+                buttons: false,
+            })
         },
         error: function () {
         }
@@ -107,12 +134,15 @@ function columnSearchResults() {
 
     </div>
 
-    <div id="table_settings_menu" style="display:none">
-        <button class="btn btn-secondary table-button" onclick="columnSearchResults()">Colonne risultati ricerca</button>
+    <div id="table_settings_menu">
     </div>
 
-    <div id="settings_col4">
-        
+    <div id="settings_col4" style="height: 100%; width: 20%;  float: right; display:none">
+        <button class="btn btn-secondary" onclick="columnSearchResults()">Colonne risultati ricerca</button>
+        <button class="btn btn-primary" onclick="saveTableSettingsOptions()">Salva</button>
+        <div id="results-column-container"style="height: 100%; overflow: scroll">
+
+        </div>
     </div>
 </div>
 

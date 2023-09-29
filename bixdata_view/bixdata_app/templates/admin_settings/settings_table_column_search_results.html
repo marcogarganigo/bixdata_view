@@ -1,7 +1,29 @@
-<div id="settings_block_user_tables" style="height: 95%; overflow: scroll">
-
-    {% for field in fields %}
-        {{field}}<br/><br/>
-    {% endfor %}
-
+<div id="settings_block_user_tables" class="drag-elements-container" style="height: 95%; overflow: scroll">
+    <div class="drag-item">
+        {% for field in fields %}
+            <div class="drag-item2">
+             {% if field.order != null %}
+                 <input class="form-check-input mt-0 checkbox" type="checkbox" checked value="" aria-label="Checkbox for following text input">
+             {% else %}
+                 <input class="form-check-input mt-0 checkbox" type="checkbox" value="" aria-label="Checkbox for following text input">
+             {% endif %}
+            <p class="settings_block_user_tables_fieldid">{{field.fieldid}}</p>
+            <button class="btn btn-secondary">Impostazioni</button>
+            </div>
+        {% endfor %}
+    </div>
 </div>
+
+<script>
+    (function() {
+        var drake = dragula([document.querySelector('.drag-elements-container')], {
+            moves: function (el, container, handle) {
+                return !handle.classList.contains('drag-item2');
+            }
+        });
+
+        dragula([].slice.apply(document.querySelectorAll('.drag-item')), {
+            direction: 'vertical'
+        });
+    })();
+</script>
