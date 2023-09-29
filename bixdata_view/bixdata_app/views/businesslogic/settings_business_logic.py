@@ -45,3 +45,7 @@ class SettingsBusinessLogic:
             tablesdict=SysTable.objects.annotate(order=Subquery(subquery)).filter(workspace=workspace_name).order_by('workspace','order').values('id','description','workspace','order')  
             workspaces[workspace_row.name]['tables']=tablesdict
         return workspaces
+
+
+def get_search_column_results(self,userid,tableid):
+    return True
