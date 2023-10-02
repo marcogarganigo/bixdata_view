@@ -1,4 +1,4 @@
-<div id="settings_block_user_tables" class="drag-elements-container" style="height: 95%; overflow: scroll">
+<div id="settings_block_user_tables_settings" class="drag-elements-container" style="height: 95%; overflow: scroll">
     <div class="drag-item">
         {% for field in fields %}
             <div class="drag-item2">
@@ -8,7 +8,7 @@
                  <input class="form-check-input mt-0 checkbox" type="checkbox" value="" aria-label="Checkbox for following text input">
              {% endif %}
             <p class="settings_block_user_tables_fieldid">{{field.fieldid}}</p>
-            <button class="btn btn-secondary">Impostazioni</button>
+            <button class="btn btn-secondary" onclick="settingsTableColumnSearchResultsOptions('{{ field.fieldid }}')">Impostazioni</button>
             </div>
         {% endfor %}
     </div>
@@ -26,4 +26,17 @@
             direction: 'vertical'
         });
     })();
+
+    function settingsTableColumnSearchResultsOptions(fieldid) {
+    $.ajax({
+            url: "{% url 'settings_table_column_search_results_options' %}",
+            type: 'POST',
+            data: {
+                'fieldid': fieldid,
+            },
+            success: function (data) {
+                $('#table_settings_menu_options').html(data);
+            }
+        });
+    }
 </script>

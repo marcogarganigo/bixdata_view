@@ -84,6 +84,7 @@ function columnSearchResults() {
         url: "{% url 'column_search_results' %}",
         data: {tableid: tableid, userid: userid},
         success: function (response) {
+            $("#settings_col4").css('display', 'block');
             $("#results-column-container").html(response);
         },
         error: function () {
@@ -94,13 +95,15 @@ function columnSearchResults() {
 function saveTableSettingsOptions() {
     updateOrder()
     var orderArray = []
-    $('#settings_block_user_tables .settings_block_user_tables_fieldid').each(function() {
+    $('#settings_block_user_tables_settings').find('.drag-item2').each(function () {
         if ($(this).find('.checkbox').is(':checked')) {
-            orderArray.push($(this).text());
+            var tableid = $(this).find('.settings_block_user_tables_fieldid').text();
+            orderArray.push(tableid);
         }
     });
 
     orderArray = JSON.stringify(orderArray);
+    console.info(orderArray)
 
     $.ajax({
         type: "POST",
@@ -136,18 +139,23 @@ function saveTableSettingsOptions() {
 
     </div>
 
-    <div id="table_settings_menu">
-    </div>
-
-    <div id="settings_col4" style="height: 100%; width: 20%;  float: right; display:none">
+    <div id="table_settings_menu" style="height: 100%; float: left; display: none">
         <button class="btn btn-secondary" onclick="columnSearchResults()">Campi risultati ricerca</button><br/>
         <button class="btn btn-secondary" onclick="columnSearchResults()">Campi inserimento</button><br/>
         <button class="btn btn-secondary" onclick="columnSearchResults()">Campi visualizzazione</button>
+    </div>
+
+    <div id="settings_col4" style="height: 100%; width: 20%;  float: left; display: none">
         <button class="btn btn-primary" onclick="saveTableSettingsOptions()">Salva</button>
         <div id="results-column-container"style="height: 100%; overflow: scroll">
 
         </div>
     </div>
+
+    <div id="table_settings_menu_options" style="height: 100%; float:left">
+
+    </div>
+
 </div>
 
 
