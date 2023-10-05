@@ -98,4 +98,4 @@ def table_column_linked(request):
     hv.context['linked_tables']=linked_tables2
     bl = SettingsBusinessLogic()
     #hv.context['fields'] = bl.get_search_column_results(userid, tableid, fields_type)
-    return hv.render_template('admin_settings/settings_table_columnlinked.html')
+    return hv.render_template('admin_settings/settings_table_columnlinked.html') 
