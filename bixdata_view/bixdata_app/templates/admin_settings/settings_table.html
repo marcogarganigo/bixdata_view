@@ -144,9 +144,9 @@ function saveTableSettingsOptions() {
     function setColorTableButton(el) {
             var els = document.querySelectorAll('.table-button');
         els.forEach(function (el) {
-            el.style.color = 'white';
+            el.style.backgroundColor = '#6c757d';
         });
-        el.style.color = 'black';
+        el.style.backgroundColor = '#3b3c3e';
 
     }
 
@@ -168,29 +168,27 @@ function saveTableSettingsOptions() {
         {% endfor %}
         <input type="text" hidden="true" disabled id="user_username" value="">
     </div>
-    <div id="settings_table_content_container">
-        <div id="settings_table_usertables" style="width: 20%;float: left; height: 100%">
+    <div id="settings_table_usertables" style="width: 20%;float: left; height: 100%">
+
+    </div>
+
+    <div id="table_settings_menu" style="height: 20%; float: left; display: none; margin-left: 5%; ">
+        Campi
+        <br>
+        <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi risultati ricerca</button><br/>
+        <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi inserimento</button><br/>
+        <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi visualizzazione</button>
+    </div>
+
+    <div id="settings_col4" style="height: 100%; width: 20%;  float: left; display: none; margin-left: 10%">
+        <button class="btn btn-primary" onclick="saveTableSettingsOptions()">Salva</button>
+        <div id="results-column-container"style="height: 100%; overflow: scroll">
 
         </div>
+    </div>
 
-        <div id="table_settings_menu" style="height: 20%; float: left; display: none; margin-left: 5%; ">
-            Campi
-            <br>
-            <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi risultati ricerca</button><br/>
-            <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi inserimento</button><br/>
-            <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi visualizzazione</button>
-        </div>
+    <div id="table_settings_menu_options" style="height: 100%; float:left">
 
-        <div id="settings_col4" style="height: 100%; width: 20%;  float: left; display: none; margin-left: 10%">
-            <button class="btn btn-primary" onclick="saveTableSettingsOptions()">Salva</button>
-            <div id="results-column-container"style="height: 100%; overflow: scroll">
-
-            </div>
-        </div>
-
-        <div id="table_settings_menu_options" style="height: 100%; float:left">
-
-        </div>
     </div>
 </div>
 
