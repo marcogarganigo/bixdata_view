@@ -84,15 +84,18 @@ function saveTableSettings(el) {
     });
 }
 
-function columnSearchResults() {
+function setFieldsOrder(fields_type) {
 
     var tableid = $('#table_settings_menu').attr('data-tableid');
     var userid = $('#user_username').attr('data-userid');
 
+    $('#user_username').attr('data-fields_type', fields_type);
+
+
     $.ajax({
         type: "POST",
-        url: "{% url 'settings_table_columnsearchresults' %}",
-        data: {tableid: tableid, userid: userid},
+        url: "{% url 'set_fields_order' %}",
+        data: {tableid: tableid, userid: userid, fields_type: fields_type},
         success: function (response) {
             $("#settings_col4").css('display', 'block');
             $("#results-column-container").html(response);
@@ -102,12 +105,13 @@ function columnSearchResults() {
     });
 }
 
-function saveTableSettingsOptions() {
+function setFieldsOrderSave() {
     updateOrder()
     var orderArray = []
 
     var userid = $('#user_username').attr('data-userid');
     var tableid = $('#table_settings_menu').attr('data-tableid');
+    var fields_type = $('#user_username').attr('data-fields_type');
 
     $('#settings_block_usertables_settings').find('.drag-item2').each(function () {
         if ($(this).find('.checkbox').is(':checked')) {
@@ -121,11 +125,12 @@ function saveTableSettingsOptions() {
 
     $.ajax({
         type: "POST",
-        url: "{% url 'settings_table_columnsearchresults_save' %}",
+        url: "{% url 'set_fields_order_save' %}",
         data: {
           'orderArray': orderArray,
           'userid': userid,
-          'tableid': tableid
+          'tableid': tableid,
+          'fields_type': fields_type,
         },
         success: function (response) {
             swal({
@@ -175,17 +180,17 @@ function saveTableSettingsOptions() {
     <div id="table_settings_menu" style="height: 20%; float: left; display: none; margin-left: 5%; ">
         Campi
         <br>
-        <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Impostazioni tabella</button><br/>
-        <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Colonne in tabelle collegate</button><br/>
-        <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi risultati ricerca</button><br/>
-        <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi inserimento</button><br/>
-        <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi ricerca</button>
-        <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi visualizzazione</button>
-        <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi badge</button>
+        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder()">Impostazioni tabella</button><br/>
+        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder()">Colonne in tabelle collegate</button><br/>
+        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('search_results_fields')">Campi risultati ricerca</button><br/>
+        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('insert_fields')">Campi inserimento</button><br/>
+        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('search_fields')">Campi ricerca</button>
+        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('view_fields')">Campi visualizzazione</button>
+        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('badge_fields')">Campi badge</button>
     </div>
     <div id="settings_col4" style="height: 100%; width: 20%;  float: left; display: none; margin-left: 10%">
 
-    <button class="btn btn-primary" onclick="saveTableSettingsOptions()">Salva</button>
+    <button class="btn btn-primary" onclick="setFieldsOrderSave()">Salva</button>
         <div id="results-column-container"style="height: 100%; overflow: scroll">
 
         </div>

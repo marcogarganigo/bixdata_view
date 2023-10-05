@@ -119,8 +119,8 @@ urlpatterns = [
     path('get_query_to_test/', test_view.get_query_to_test, name='get_query_to_test'),
     path('settings_table_usertables_save/', settings_view.settings_table_usertables_save, name='settings_table_usertables_save'),
     path('settings_table_admin/', settings_view.settings_table_admin, name='settings_table_admin'),
-    path('settings_table_columnsearchresults/', settings_view.settings_table_columnsearchresults, name='settings_table_columnsearchresults'),
-    path('settings_table_columnsearchresults_save/', settings_view.settings_table_columnsearchresults_save, name='settings_table_columnsearchresults_save'),
+    path('set_fields_order/', settings_view.set_fields_order, name='set_fields_order'),
+    path('set_fields_order_save/', settings_view.set_fields_order_save, name='set_fields_order_save'),
     path('settings_table_fieldsettings/', settings_view.settings_table_fieldsettings, name='settings_table_fieldsettings'),
     
     

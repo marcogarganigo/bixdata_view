@@ -48,19 +48,21 @@ def settings_table_admin(request):
     return HttpResponse('test')
 
 
-def settings_table_columnsearchresults(request):
+def set_fields_order(request):
     tableid = request.POST.get('tableid')
     userid = request.POST.get('userid')
+    fields_type = request.POST.get('fields_type')
     hv = HelperView(request)
     bl = SettingsBusinessLogic()
-    hv.context['fields'] = bl.get_search_column_results(userid, tableid)
+    hv.context['fields'] = bl.get_search_column_results(userid, tableid, fields_type)
     return hv.render_template('admin_settings/settings_table_column_search_results.html')
 
 
-def settings_table_columnsearchresults_save(request):
+def set_fields_order_save(request):
     tableid= request.POST.get('tableid')
     userid = request.POST.get('userid')
-    SysUserFieldOrder.objects.filter(userid=userid, tableid=tableid, typepreference='columnsearchresults').delete()
+    fields_type = request.POST.get('fields_type')
+    SysUserFieldOrder.objects.filter(userid=userid, tableid=tableid, typepreference=fields_type).delete()
     fields = request.POST.get('orderArray')
     fields = json.loads(fields)
     order = 0;
@@ -68,7 +70,7 @@ def settings_table_columnsearchresults_save(request):
         user=SysUser.objects.get(id=userid)
         table=SysTable.objects.get(id=tableid)
         field=SysField.objects.get(id=fieldid)
-        t = SysUserFieldOrder(userid=user, tableid=table, fieldid=field, typepreference='columnsearchresults', fieldorder=order)
+        t = SysUserFieldOrder(userid=user, tableid=table, fieldid=field, typepreference=fields_type, fieldorder=order)
         t.save()
         order += 1
     return HttpResponse({'success': True})

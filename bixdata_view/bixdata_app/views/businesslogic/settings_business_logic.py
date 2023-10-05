@@ -48,8 +48,8 @@ class SettingsBusinessLogic:
         return workspaces
 
 
-    def get_search_column_results(self,userid,tableid):
-        subquery = SysUserFieldOrder.objects.filter(fieldid=OuterRef('id')).values('fieldorder')[:1]
+    def get_search_column_results(self,userid,tableid, fields_type):
+        subquery = SysUserFieldOrder.objects.filter(fieldid=OuterRef('id')).filter(typepreference=fields_type).values('fieldorder')[:1]
         fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('-order').values('id','fieldid','tableid','order')
         print(fields.query)
         return fields
