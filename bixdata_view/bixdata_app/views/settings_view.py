@@ -67,7 +67,7 @@ def settings_table_columnsearchresults_save(request):
     for fieldid in fields:
         user=SysUser.objects.get(id=userid)
         table=SysTable.objects.get(id=tableid)
-        field=SysField.objects.get(fieldid=fieldid,tableid=tableid)
+        field=SysField.objects.get(id=fieldid)
         t = SysUserFieldOrder(userid=user, tableid=table, fieldid=field, typepreference='columnsearchresults', fieldorder=order)
         t.save()
         order += 1
