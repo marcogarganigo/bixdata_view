@@ -655,10 +655,11 @@ class SysUserDefaultView(models.Model):
 
 class SysUserFieldOrder(models.Model):
     userid = models.ForeignKey(SysUser, models.DO_NOTHING, db_column='userid', blank=True, null=True)
-    tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='tableid', blank=True, null=True)
+    tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='tableid', blank=True, null=True, related_name='tableid')
     fieldid = models.ForeignKey(SysField, models.DO_NOTHING, db_column='fieldid', blank=True, null=True)
     fieldorder = models.IntegerField(blank=True, null=True)
     typepreference = models.CharField(max_length=32, blank=True, null=True)
+    master_tableid = models.ForeignKey(SysTable, models.DO_NOTHING, db_column='master_tableid', blank=True, null=True, related_name='master_tableid')
 
     class Meta:
         managed = False
