@@ -177,13 +177,22 @@ function setFieldsOrderSave() {
 
 
     function tableColumnLinked() {
+
+        var userid = $('#user_username').attr('data-userid');
+        var tableid = $('#table_settings_menu').attr('data-tableid');
+
         $.ajax({
             type: "POST",
+            data: {
+                'userid': userid,
+                'tableid': tableid,
+            },
             url: "{% url 'table_column_linked' %}",
             success: function (response) {
-                alert('ok')
+               $('#results-column-container').html(response)
             },
-            error: function () {
+            error: function (response) {
+                $('#results-column-container').html(response)
             }
         });
     }

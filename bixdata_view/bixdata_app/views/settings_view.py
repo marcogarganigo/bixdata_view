@@ -87,11 +87,15 @@ def table_settings_settings(request):
 
 
 def table_column_linked(request):
-    tableid='timesheet'
+    fields_type = 'linked_table_fields'
+    userid = request.POST.get('userid')
+    tableid = request.POST.get('tableid')
     hv=HelperView(request)
     linked_tables=list(SysTableLink.objects.filter(tablelinkid=tableid).values())
     linked_tables2=list()
     for linked_table in linked_tables:
         linked_tables2.append(linked_table['tableid_id'])
     hv.context['linked_tables']=linked_tables2
-    return hv.render_template('settings_table_columnlinked.html')
+    bl = SettingsBusinessLogic()
+    #hv.context['fields'] = bl.get_search_column_results(userid, tableid, fields_type)
+    return hv.render_template('admin_settings/settings_table_columnlinked.html')
