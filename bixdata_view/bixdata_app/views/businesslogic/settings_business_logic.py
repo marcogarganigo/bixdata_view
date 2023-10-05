@@ -53,3 +53,17 @@ class SettingsBusinessLogic:
         fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('order').values('fieldid','tableid','order')
         print(fields.query)
         return fields
+    
+    def get_usersettings(self,bixid):
+        userid=SysUser.objects.get(bixid=bixid).id
+        us=UserSettings(userid)
+        return us
+    
+    
+class UserSettings:
+    record_open_layout='rightcard'
+    theme='default'
+    active_panel='table'
+    def __init__(self,userid):
+        record_open_layout='rightcard'
+        

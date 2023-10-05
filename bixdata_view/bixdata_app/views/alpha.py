@@ -251,42 +251,7 @@ def get_chart4(request):
 
         return render(request, 'other/chart4.html', {'data': data})
 
-# Questa funzione ritorna la pagina index.html con le variabili riguardanti il menu, il nome utente, il ruolo, il tema e il contenuto
-@firefox_check
-@xframe_options_exempt
-@login_required(login_url='/login/')
-def get_render_index(request, content=''):
-    response = requests.get(
-        f"{bixdata_server}bixdata/index.php/rest_controller/get_tables_menu")
-    menu_list = json.loads(response.text)
 
-    username = request.user
-
-    # role = username.role
-    context = {}
-
-    sys_user = SysUser.objects.get(bixid=request.user.id)
-    role = sys_user.description
-
-
-
-    theme = get_user_setting(request, 'theme')
-    #
-    #
-    #
-
-    context = {
-        'menu_list': menu_list,
-        'date': datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'),
-        'username': username,
-        'role': role,
-        'theme': theme,
-        'content': content,
-        'layout_setting': get_user_setting(request, 'record_open_layout'),
-    }
-
-    return user_agent(request, 'index.html', 'index2.html', context)
-    # return render(request, 'index.html', context)
 
 # Questa funzione ritorna il loading
 def get_render_loading(request):
@@ -295,50 +260,7 @@ def get_render_loading(request):
 
 # request: {tableid}
 
-# Questa funzione ritorna la pagina records.html ovvero la tabella, la vista della tabella e le impostazioni rigurdanti la tabella
-@login_required(login_url='/login/')
-def get_content_records(request):
-    context = dict()
-    # records_table = get_block_records_table(request)
-    context['records_table'] = ''
-    tableid = request.POST.get('tableid')
-    context['table'] = tableid.upper()
-    context['tableid'] = tableid
-    context['views'] = dict()
-    context['user_table_settings'] = get_user_table_settings(request.user.id, tableid)
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT * FROM sys_view WHERE userid = 1 AND tableid='%s'" % (tableid)
-        )
-        result = dictfetchall(cursor)
-        if result:
-            context['views'] = result
 
-    layout_setting = get_user_setting(request, 'record_open_layout')
-    active_panel_setting = get_user_setting(request, 'active_panel')
-
-    context['layout_setting'] = layout_setting
-    context['active_panel_setting'] = active_panel_setting
-    context['loading'] = render_to_string('other/loading.html', context, request)
-
-    #  search fields
-    search_fields = dict()
-    with connection.cursor() as cursor:
-        cursor.execute(
-            f"SELECT f.* FROM sys_user_table_search_field AS s join sys_field as f on s.tableid=f.tableid and s.fieldid=f.fieldid  WHERE s.tableid='{tableid}'"
-        )
-        result = dictfetchall(cursor)
-        if result:
-            search_fields = result
-    for search_field_key, search_field in enumerate(search_fields):
-        context_search_field = dict()
-        context_search_field['search_field'] = search_field
-        search_fields[search_field_key]['component'] = render_to_string('components/search_field.html',
-                                                                        context_search_field, request)
-
-    context['search_fields'] = search_fields
-    return user_agent(request, 'content/records.html', 'content/records_mobile.html', context)
-    # return render(request, 'content/records.html', context)
 
 
 # Questa funzione serve per la ricerca dei record
