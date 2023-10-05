@@ -111,8 +111,8 @@ function saveTableSettingsOptions() {
 
     $('#settings_block_usertables_settings').find('.drag-item2').each(function () {
         if ($(this).find('.checkbox').is(':checked')) {
-            var tableid = $(this).find('.settings_block_usertables_fieldid').text();
-            orderArray.push(tableid);
+            var fieldid = $(this).find('.settings_block_usertables_fieldid').attr('data-fieldid');
+            orderArray.push(fieldid);
         }
     });
 
