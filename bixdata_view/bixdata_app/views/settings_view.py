@@ -81,3 +81,10 @@ def settings_table_fieldsettings(request):
     hv = HelperView(request)
 
     return hv.render_template('admin_settings/settings_table_column_search_results_options.html')
+
+def table_settings_settings(request):
+    return HttpResponse({'success': True})
+
+
+def table_column_linked(request):
+    return HttpResponse({'success': True})

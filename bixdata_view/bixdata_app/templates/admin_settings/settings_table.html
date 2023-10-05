@@ -162,6 +162,32 @@ function setFieldsOrderSave() {
         });
     });
 
+
+    function tableSettingsSettings() {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'table_settings_settings' %}",
+            success: function (response) {
+                alert('ok')
+            },
+            error: function () {
+            }
+        });
+    }
+
+
+    function tableColumnLinked() {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'table_column_linked' %}",
+            success: function (response) {
+                alert('ok')
+            },
+            error: function () {
+            }
+        });
+    }
+
 </script>
 
 <div id="settings_table" style="height: 100%;">
@@ -180,8 +206,8 @@ function setFieldsOrderSave() {
     <div id="table_settings_menu" style="height: 20%; float: left; display: none; margin-left: 5%; ">
         Campi
         <br>
-        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder()">Impostazioni tabella</button><br/>
-        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder()">Colonne in tabelle collegate</button><br/>
+        <button class="btn btn-secondary fields-button" onclick="tableSettingsSettings()">Impostazioni tabella</button><br/>
+        <button class="btn btn-secondary fields-button" onclick="tableColumnLinked()">Colonne in tabelle collegate</button><br/>
         <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('search_results_fields')">Campi risultati ricerca</button><br/>
         <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('insert_fields')">Campi inserimento</button><br/>
         <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('search_fields')">Campi ricerca</button>

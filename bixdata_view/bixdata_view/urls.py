@@ -122,6 +122,6 @@ urlpatterns = [
     path('set_fields_order/', settings_view.set_fields_order, name='set_fields_order'),
     path('set_fields_order_save/', settings_view.set_fields_order_save, name='set_fields_order_save'),
     path('settings_table_fieldsettings/', settings_view.settings_table_fieldsettings, name='settings_table_fieldsettings'),
-    
-    
+    path('table_settings_settings/', settings_view.table_settings_settings, name='table_settings_settings'),
+    path('table_column_linked/', settings_view.table_column_linked, name='table_column_linked'),
 ]
