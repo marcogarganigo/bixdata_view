@@ -24,7 +24,7 @@ from bixdata_app.views import settings_view
 from bixdata_app.views import bixdata_view
 
 urlpatterns = [
-    path('', alpha.get_render_index, name='index'),
+    path('', bixdata_view.index, name='index'),
     path('index/', bixdata_view.index, name='index'),
     path('loading/', alpha.get_render_loading, name='loading'),
     path('test/', test_view.test, name='test'),
@@ -38,7 +38,7 @@ urlpatterns = [
     path('stampa_servicecontract_test/', alpha.stampa_servicecontract_test, name='stampa_servicecontract_test'),
     path('test_lock/', alpha.test_lock, name='test_lock'),
     path('testtest/', alpha.testtest, name='testtest'),
-    path('content_records/', alpha.get_content_records, name='content_records'),
+    path('content_records/', bixdata_view.get_content_records, name='content_records'),
     path('chart/', alpha.get_render_content_chart, name='charts_view'),
     path('block_records_table/', alpha.get_records_table_render, name='block_records_table'),
     path('block_records_gantt/', alpha.get_block_records_gantt, name='block_records_gantt'),
