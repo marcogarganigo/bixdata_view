@@ -121,7 +121,7 @@
                         <input class="form-check-input mt-0 checkbox" type="checkbox" value="" aria-label="Checkbox for following text input">
                     {% endif %}
                     <p class="drag-item2-tableid">{{ table.id }}</p>
-                    <button class="btn btn-secondary" onclick="$('#table_settings_menu').css('display', 'block'); $('#table_settings_menu').attr('data-tableid', '{{ table.id }}'); $('#settings_col4').css('display', 'none')">Impostazioni</button>
+                    <button class="btn btn-secondary" onclick="$('#table_settings_menu').css('display', 'block'); $('#table_settings_menu').attr('data-tableid', '{{ table.id }}'); $('#settings_col4').css('display', 'none'); $('#user_username').attr('data-tableid', '{{ table.id }}')">Impostazioni</button>
                 </div>
             {% endfor %}
          </div>
