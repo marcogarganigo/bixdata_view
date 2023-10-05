@@ -87,4 +87,11 @@ def table_settings_settings(request):
 
 
 def table_column_linked(request):
-    return HttpResponse({'success': True})
+    tableid='timesheet'
+    hv=HelperView(request)
+    linked_tables=list(SysTableLink.objects.filter(tablelinkid=tableid).values())
+    linked_tables2=list()
+    for linked_table in linked_tables:
+        linked_tables2.append(linked_table['tableid_id'])
+    hv.context['linked_tables']=linked_tables2
+    return hv.render_template('settings_table_columnlinked.html')
