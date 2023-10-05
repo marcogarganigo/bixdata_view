@@ -4,6 +4,11 @@
         text-align: left;
         margin-bottom: 5px;
     }
+
+    .fields-button {
+        width: 100%;
+        margin-bottom: 5px;
+    }
 </style>
 
 <script>
@@ -11,7 +16,8 @@
 
     function getUserTablesList(userid)
     {
-        $("#settings_table_usertables").html('Loading');
+        //$("#settings_table_usertables").load('/loading/')
+        $("#settings_table_content_container").css('display', 'block');
         var serialized_data = [];
         serialized_data.push({ name: 'userid', value: userid });
         $.ajax({
@@ -33,6 +39,7 @@ function saveTableSettings(el) {
     updateOrder();
 
     var serialized_data = []
+    var userid = $('#user_username').attr('data-userid');
     var orderArray = [];
 
     $('.drag-item').each(function () {
@@ -58,7 +65,10 @@ function saveTableSettings(el) {
     $.ajax({
         type: "POST",
         url: "{% url 'settings_table_usertables_save' %}",
-        data: serialized_data,
+        data: {
+            'tables': orderArray,
+            'userid': userid
+        },
         success: function (response) {
             swal({
                 title: "Impostazioni salvate",
@@ -81,7 +91,7 @@ function columnSearchResults() {
 
     $.ajax({
         type: "POST",
-        url: "{% url 'column_search_results' %}",
+        url: "{% url 'settings_table_columnsearchresults' %}",
         data: {tableid: tableid, userid: userid},
         success: function (response) {
             $("#settings_col4").css('display', 'block');
@@ -95,6 +105,10 @@ function columnSearchResults() {
 function saveTableSettingsOptions() {
     updateOrder()
     var orderArray = []
+
+    var userid = $('#user_username').attr('data-userid');
+    var tableid = $('#table_settings_menu').attr('data-tableid');
+
     $('#settings_block_usertables_settings').find('.drag-item2').each(function () {
         if ($(this).find('.checkbox').is(':checked')) {
             var tableid = $(this).find('.settings_block_usertables_fieldid').text();
@@ -107,8 +121,12 @@ function saveTableSettingsOptions() {
 
     $.ajax({
         type: "POST",
-        url: "{% url 'settings_table_save_table_settings_options' %}",
-        data: {orderArray: orderArray},
+        url: "{% url 'settings_table_columnsearchresults_save' %}",
+        data: {
+          'orderArray': orderArray,
+          'userid': userid,
+          'tableid': tableid
+        },
         success: function (response) {
             swal({
                 title: "Impostazioni salvate",
@@ -123,6 +141,21 @@ function saveTableSettingsOptions() {
     });
 }
 
+    function setColorTableButton(el) {
+            var els = document.querySelectorAll('.table-button');
+        els.forEach(function (el) {
+            el.style.color = 'white';
+        });
+        el.style.color = 'black';
+
+    }
+
+    var els = document.querySelectorAll('.table-button');
+    els.forEach(function (el) {
+        el.addEventListener('click', function () {
+            setColorTableButton(el);
+        });
+    });
 
 </script>
 
@@ -130,32 +163,35 @@ function saveTableSettingsOptions() {
     <div id="settings_table_users" style="width: 20%;float: left;">
         Utenti <br/>
         {% for user in users %}
-            <button class="btn btn-secondary table-button"onclick="getUserTablesList('{{ user.id }}'); $('#user_username').val('{{ user.username }}'); $('#user_username').attr('data-userid', '{{ user.id }}')">{{ user.username }}</button>
+            <button class="btn btn-secondary table-button "onclick="getUserTablesList('{{ user.id }}'); $('#user_username').attr('data-userid', '{{ user.id }}')">{{ user.username }}</button>
             <br>
         {% endfor %}
-        <input type="text" disabled id="user_username" value="">
+        <input type="text" hidden="true" disabled id="user_username" value="">
     </div>
-    <div id="settings_table_usertables" style="width: 20%;float: left; height: 100%">
+    <div id="settings_table_content_container">
+        <div id="settings_table_usertables" style="width: 20%;float: left; height: 100%">
 
-    </div>
+        </div>
 
-    <div id="table_settings_menu" style="height: 100%; float: left; display: none">
-        <button class="btn btn-secondary" onclick="columnSearchResults()">Campi risultati ricerca</button><br/>
-        <button class="btn btn-secondary" onclick="columnSearchResults()">Campi inserimento</button><br/>
-        <button class="btn btn-secondary" onclick="columnSearchResults()">Campi visualizzazione</button>
-    </div>
+        <div id="table_settings_menu" style="height: 20%; float: left; display: none; margin-left: 5%; ">
+            Campi
+            <br>
+            <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi risultati ricerca</button><br/>
+            <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi inserimento</button><br/>
+            <button class="btn btn-secondary fields-button" onclick="columnSearchResults()">Campi visualizzazione</button>
+        </div>
 
-    <div id="settings_col4" style="height: 100%; width: 20%;  float: left; display: none">
-        <button class="btn btn-primary" onclick="saveTableSettingsOptions()">Salva</button>
-        <div id="results-column-container"style="height: 100%; overflow: scroll">
+        <div id="settings_col4" style="height: 100%; width: 20%;  float: left; display: none; margin-left: 10%">
+            <button class="btn btn-primary" onclick="saveTableSettingsOptions()">Salva</button>
+            <div id="results-column-container"style="height: 100%; overflow: scroll">
+
+            </div>
+        </div>
+
+        <div id="table_settings_menu_options" style="height: 100%; float:left">
 
         </div>
     </div>
-
-    <div id="table_settings_menu_options" style="height: 100%; float:left">
-
-    </div>
-
 </div>
 
 

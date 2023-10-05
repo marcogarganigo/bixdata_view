@@ -22,6 +22,8 @@ def settings_table_usertables(request):
 
 
 def settings_table_usertables_save(request):
+
+    userid = request.POST.get('userid')
     SysUserTableOrder.objects.filter(userid=1, typepreference='menu').delete()
 
     workspaces = request.POST.get('tables')
@@ -46,7 +48,7 @@ def settings_table_admin(request):
     return HttpResponse('test')
 
 
-def column_search_results(request):
+def settings_table_columnsearchresults(request):
     tableid = request.POST.get('tableid')
     userid = request.POST.get('userid')
     hv = HelperView(request)
@@ -55,12 +57,21 @@ def column_search_results(request):
     return hv.render_template('admin_settings/settings_table_column_search_results.html')
 
 
-def settings_table_save_table_settings_options(request):
+def settings_table_columnsearchresults_save(request):
+    tableid= request.POST.get('tableid')
+    userid = request.POST.get('userid')
+    SysUserFieldOrder.objects.filter(userid=userid, tableid=tableid, typepreference='columnsearchresults').delete()
     fields = request.POST.get('orderArray')
+    fields = json.loads(fields)
+    order = 0;
+    for fieldid in fields:
+        t = SysUserFieldOrder(userid=SysUser.objects.get(id=userid), tableid=SysTable.objects.get(id=tableid), fieldid=SysField.objects.get(id=fieldid), typepreference='columnsearchresults', fieldorder=order)
+        t.save()
+        order += 1
     return HttpResponse({'success': True})
 
 
-def settings_table_column_search_results_options(request):
+def settings_table_fieldsettings(request):
     fieldid = request.POST.get('fieldid')
     hv = HelperView(request)
 
