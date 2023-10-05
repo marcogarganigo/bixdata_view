@@ -65,7 +65,10 @@ def settings_table_columnsearchresults_save(request):
     fields = json.loads(fields)
     order = 0;
     for fieldid in fields:
-        t = SysUserFieldOrder(userid=SysUser.objects.get(id=userid), tableid=SysTable.objects.get(id=tableid), fieldid=SysField.objects.get(id=fieldid), typepreference='columnsearchresults', fieldorder=order)
+        user=SysUser.objects.get(id=userid)
+        table=SysTable.objects.get(id=tableid)
+        field=SysField.objects.get(fieldid=fieldid,tableid=tableid)
+        t = SysUserFieldOrder(userid=user, tableid=table, fieldid=field, typepreference='columnsearchresults', fieldorder=order)
         t.save()
         order += 1
     return HttpResponse({'success': True})

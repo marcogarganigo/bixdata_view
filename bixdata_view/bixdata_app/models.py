@@ -306,7 +306,8 @@ class SysDashboardBlock(models.Model):
 
 
 class SysField(models.Model):
-    tableid = models.OneToOneField('SysTable', models.DO_NOTHING, db_column='tableid', primary_key=True, related_name='table_fields')
+    id = models.CharField(primary_key=True, max_length=255)
+    tableid = models.ForeignKey('SysTable', models.DO_NOTHING, db_column='tableid', blank=True, null=True)
     fieldid = models.CharField(max_length=32)
     sync_fieldid = models.CharField(max_length=255, blank=True, null=True)
     master_field = models.CharField(max_length=255, blank=True, null=True)
@@ -320,7 +321,7 @@ class SysField(models.Model):
     lookupcodedesc = models.CharField(max_length=1, blank=True, null=True)
     lookupdesclen = models.IntegerField(blank=True, null=True)
     label = models.CharField(max_length=32)
-    tablelink = models.ForeignKey('SysTable', models.DO_NOTHING, db_column='tablelink', blank=True, null=True,related_name='tablelink_fields')
+    tablelink = models.CharField(max_length=255, blank=True, null=True)
     keyfieldlink = models.CharField(max_length=128, blank=True, null=True)
     default = models.CharField(max_length=255, blank=True, null=True)
     sublabel = models.CharField(max_length=255, blank=True, null=True)

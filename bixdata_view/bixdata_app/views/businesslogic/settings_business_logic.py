@@ -50,7 +50,7 @@ class SettingsBusinessLogic:
 
     def get_search_column_results(self,userid,tableid):
         subquery = SysUserFieldOrder.objects.filter(tableid=OuterRef('tableid'),fieldid=OuterRef('fieldid')).values('fieldorder')[:1]
-        fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('order').values('fieldid','tableid','order')
+        fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('order').values('id','fieldid','tableid','order')
         print(fields.query)
         return fields
     
