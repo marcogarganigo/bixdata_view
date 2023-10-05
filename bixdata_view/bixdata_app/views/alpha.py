@@ -37,6 +37,7 @@ from django.conf import settings
 from django.views.decorators.clickjacking import xframe_options_exempt
 import subprocess
 from .beta import *
+from .helper_view import *
 from htmldocx import HtmlToDocx
 import csv
 from functools import wraps
@@ -47,18 +48,7 @@ from apscheduler.executors.pool import ThreadPoolExecutor
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
-# Questa funzione blocca l'accesso a bixdata da firefox
-def firefox_check(view_func):
-    def wrapped_view(request, *args, **kwargs):
-        user_agent = request.META.get('HTTP_USER_AGENT', '')
 
-        if 'firefox' in user_agent.lower():
-
-            return render(request, 'other/firefox.html')
-        else:
-            return view_func(request, *args, **kwargs)
-
-    return wrapped_view
 
 # Questa funzione ritorna la pagina test_autocomplete.html
 def get_test_autocomplete(request):

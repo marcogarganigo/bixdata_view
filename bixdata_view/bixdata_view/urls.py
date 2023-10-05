@@ -25,7 +25,7 @@ from bixdata_app.views import bixdata_view
 
 urlpatterns = [
     path('', alpha.get_render_index, name='index'),
-    path('index/', alpha.get_render_index, name='index'),
+    path('index/', bixdata_view.index, name='index'),
     path('loading/', alpha.get_render_loading, name='loading'),
     path('test/', test_view.test, name='test'),
     path('test_content/', test_view.test_content, name='test_content'),
@@ -115,9 +115,9 @@ urlpatterns = [
     path('get_project_id/', alpha.get_project_id, name='get_project_id'),
     path('admin_table_settings/', alpha.admin_table_settings, name='admin_table_settings'),
     path('settings_table/', settings_view.settings_table, name='settings_table'),
-    path('settings_table_user_tables/', settings_view.settings_table_user_tables, name='settings_table_user_tables'),
+    path('settings_table_usertables/', settings_view.settings_table_usertables, name='settings_table_usertables'),
     path('get_query_to_test/', test_view.get_query_to_test, name='get_query_to_test'),
-    path('save_table_settings/', settings_view.save_table_settings, name='save_table_settings'),
+    path('settings_table_usertables_save/', settings_view.settings_table_usertables_save, name='settings_table_usertables_save'),
     path('settings_table_admin/', settings_view.settings_table_admin, name='settings_table_admin'),
     path('column_search_results/', settings_view.column_search_results, name='column_search_results'),
     path('settings_table_save_table_settings_options/', settings_view.settings_table_save_table_settings_options, name='settings_table_save_table_settings_options'),

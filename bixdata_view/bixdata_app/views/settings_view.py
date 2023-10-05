@@ -12,7 +12,7 @@ def settings_table(request):
     return hv.render_template('admin_settings/settings_table.html')
 
 
-def settings_table_user_tables(request):
+def settings_table_usertables(request):
     hv = HelperView(request)
     bl = SettingsBusinessLogic()
     userid = request.POST.get('userid')
@@ -21,7 +21,7 @@ def settings_table_user_tables(request):
     return hv.render_template('admin_settings/settings_table_user_tables.html')
 
 
-def save_table_settings(request):
+def settings_table_usertables_save(request):
     SysUserTableOrder.objects.filter(userid=1, typepreference='menu').delete()
 
     workspaces = request.POST.get('tables')
@@ -34,8 +34,7 @@ def save_table_settings(request):
             t = SysTable.objects.get(id=tableid)
             t.workspace = workspace_name
             t.save()
-            t = SysUserTableOrder(userid=SysUser.objects.get(id=1), tableid=SysTable.objects.get(id=tableid),
-                                  typepreference='menu', tableorder=order)
+            t = SysUserTableOrder(userid=SysUser.objects.get(id=1), tableid=SysTable.objects.get(id=tableid),typepreference='menu', tableorder=order)
             t.save()
             order += 1
 

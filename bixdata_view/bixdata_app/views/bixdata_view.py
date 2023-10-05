@@ -38,6 +38,7 @@ from django.conf import settings
 from django.views.decorators.clickjacking import xframe_options_exempt
 import subprocess
 from .beta import *
+from .helper_view import *
 from htmldocx import HtmlToDocx
 import csv
 from functools import wraps
@@ -45,6 +46,35 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor
-
+from .businesslogic.bixdata_business_logic import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
+
+# Questa funzione ritorna la pagina index.html con le variabili riguardanti il menu, il nome utente, il ruolo, il tema e il contenuto
+@firefox_check
+@xframe_options_exempt
+@login_required(login_url='/login/')
+def index(request, content=''):
+    hv=HelperView(request)
+    bl=BixdataBusinessLogic()
+    
+    sys_user = SysUser.objects.get(bixid=request.user.id)
+    username = sys_user.username
+    role = sys_user.description
+    userid=sys_user.id
+    
+    menu_tables=bl.get_menu_tables(userid)
+    response = requests.get(f"{bixdata_server}bixdata/index.php/rest_controller/get_tables_menu")
+    menu_list = json.loads(response.text)
+
+    
+
+    hv.context['menu_tables']=menu_tables
+    hv.context['menu_list']=menu_list
+    hv.context['date']=datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+    hv.context['username']=username
+    hv.context['role']=role
+    hv.context['theme']=get_user_setting(request, 'theme')
+    hv.context['content']=content
+    hv.context['layout_setting']=get_user_setting(request, 'record_open_layout')
+    return hv.render_template('index.html')

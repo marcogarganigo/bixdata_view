@@ -11,19 +11,19 @@
 
     function getUserTablesList(userid)
     {
-        $("#settings_table_user_tables").html('Loading');
+        $("#settings_table_usertables").html('Loading');
         var serialized_data = [];
         serialized_data.push({ name: 'userid', value: userid });
         $.ajax({
             type: "POST",
             crossDomain: true,
-            url: "{% url 'settings_table_user_tables' %}",
+            url: "{% url 'settings_table_usertables' %}",
             data: serialized_data,
             success: function (response) {
-                $("#settings_table_user_tables").html(response);
+                $("#settings_table_usertables").html(response);
             },
             error: function () {
-                $("#settings_table_user_tables").html(response);
+                $("#settings_table_usertables").html(response);
             }
         });
     }
@@ -57,7 +57,7 @@ function saveTableSettings(el) {
     serialized_data.push({ name: 'tables', value: orderArray });
     $.ajax({
         type: "POST",
-        url: "{% url 'save_table_settings' %}",
+        url: "{% url 'settings_table_usertables_save' %}",
         data: serialized_data,
         success: function (response) {
             swal({
@@ -95,9 +95,9 @@ function columnSearchResults() {
 function saveTableSettingsOptions() {
     updateOrder()
     var orderArray = []
-    $('#settings_block_user_tables_settings').find('.drag-item2').each(function () {
+    $('#settings_block_usertables_settings').find('.drag-item2').each(function () {
         if ($(this).find('.checkbox').is(':checked')) {
-            var tableid = $(this).find('.settings_block_user_tables_fieldid').text();
+            var tableid = $(this).find('.settings_block_usertables_fieldid').text();
             orderArray.push(tableid);
         }
     });
@@ -135,7 +135,7 @@ function saveTableSettingsOptions() {
         {% endfor %}
         <input type="text" disabled id="user_username" value="">
     </div>
-    <div id="settings_table_user_tables" style="width: 20%;float: left; height: 100%">
+    <div id="settings_table_usertables" style="width: 20%;float: left; height: 100%">
 
     </div>
 
