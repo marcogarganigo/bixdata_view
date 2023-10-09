@@ -50,3 +50,40 @@ class BixdataBusinessLogic:
             if len(workspace['tables'])>0:
                 workspace2[key]=workspace
         return workspace2
+    
+    
+
+class BixdataRecord:
+    userid=None
+    tableid=None
+    recordid=None
+    fields=dict()
+    
+    def __init__(self,user_id,table_id,record_id=None):
+        userid=user_id
+        tableid=table_id
+        recordid=record_id
+        
+    def save(self):
+        for field_key,field_value in self.fields:
+            print(field_key,field_value)
+        if self.tableid != 'log':
+            bdl=BixdataLogRecord(self.userid,self.tableid,self.recordid)
+            bdl.save()    
+        
+        return True
+    
+class BixdataLogRecord:
+    userid=None
+    tableid=None
+    recordid=None
+    
+    def __init__(self,user_id,table_id,record_id):
+        userid=user_id
+        tableid=table_id
+        recordid=record_id
+    
+    def save(self):
+        bdr=BixdataRecord('log')
+        bdr.save()
+        return True
