@@ -75,7 +75,6 @@ def set_fields_order_save(request):
         order += 1
     return HttpResponse({'success': True})
 
-
 def settings_table_fieldsettings(request):
     fieldid = request.POST.get('fieldid')
     hv = HelperView(request)

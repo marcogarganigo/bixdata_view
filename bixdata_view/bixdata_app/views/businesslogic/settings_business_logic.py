@@ -51,7 +51,6 @@ class SettingsBusinessLogic:
     def get_search_column_results(self,userid,tableid, fields_type):
         subquery = SysUserFieldOrder.objects.filter(fieldid=OuterRef('id')).filter(typepreference=fields_type).values('fieldorder')[:1]
         fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('-order').values('id','fieldid','tableid','order')
-        print(fields.query)
         return fields
     
     def get_usersettings(self,bixid):
@@ -61,9 +60,16 @@ class SettingsBusinessLogic:
     
     
 class UserSettings:
+    userid=0
     record_open_layout='rightcard'
     theme='default'
     active_panel='table'
-    def __init__(self,userid):
-        record_open_layout='rightcard'
+    def __init__(self,user_id):
+        userid=user_id
+        
+    def get_fieldsorder(tableid,typepreference):
+        subquery = SysUserFieldOrder.objects.filter(fieldid=OuterRef('id')).filter(typepreference=typepreference).values('fieldorder')[:1]
+        fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('-order').values('id','fieldid','tableid','order')
+        return fields
+
         
