@@ -43,7 +43,7 @@ class BixdataBusinessLogic:
             workspaces[workspace_row.name]['name']=workspace_row.name
             workspaces[workspace_row.name]['icon']=workspace_row.icon
             workspace_name=workspace_row.name
-            tables=list(SysTable.objects.annotate(order=Subquery(subquery)).filter(workspace=workspace_name).filter(order__isnull=False).order_by('workspace','-order').values('id','description','workspace','order'))
+            tables=list(SysTable.objects.annotate(order=Subquery(subquery)).filter(workspace=workspace_name).filter(order__isnull=False).order_by('workspace','order').values('id','description','workspace','order'))
             workspaces[workspace_row.name]['tables']=tables
         workspace2=dict()    
         for key,workspace in workspaces.items():
