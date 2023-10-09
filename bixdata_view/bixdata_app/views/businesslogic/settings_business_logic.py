@@ -42,7 +42,7 @@ class SettingsBusinessLogic:
             workspaces[workspace_row.name]=dict()
             workspaces[workspace_row.name]['name']=workspace_row.name
             workspace_name=workspace_row.name
-            tablesdict=SysTable.objects.annotate(order=Subquery(subquery)).filter(workspace=workspace_name).order_by('workspace','-order').values('id','description','workspace','order') 
+            tablesdict=SysTable.objects.annotate(order=Subquery(subquery)).filter(workspace=workspace_name).order_by('workspace','order').values('id','description','workspace','order') 
             print(tablesdict.query) 
             workspaces[workspace_row.name]['tables']=tablesdict
         return workspaces
@@ -50,7 +50,7 @@ class SettingsBusinessLogic:
 
     def get_search_column_results(self,userid,tableid, fields_type):
         subquery = SysUserFieldOrder.objects.filter(fieldid=OuterRef('id')).filter(typepreference=fields_type).values('fieldorder')[:1]
-        fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('-order').values('id','fieldid','tableid','order')
+        fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('order').values('id','fieldid','tableid','order')
         return fields
     
     def get_usersettings(self,bixid):
@@ -69,7 +69,7 @@ class UserSettings:
         
     def get_fieldsorder(tableid,typepreference):
         subquery = SysUserFieldOrder.objects.filter(fieldid=OuterRef('id')).filter(typepreference=typepreference).values('fieldorder')[:1]
-        fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('-order').values('id','fieldid','tableid','order')
+        fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('order').values('id','fieldid','tableid','order')
         return fields
 
         
