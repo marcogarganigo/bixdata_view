@@ -97,5 +97,5 @@ def table_column_linked(request):
         linked_tables2.append(linked_table['tableid_id'])
     hv.context['linked_tables']=linked_tables2
     bl = SettingsBusinessLogic()
-    #hv.context['fields'] = bl.get_search_column_results(userid, tableid, fields_type)
+    hv.context['fields'] = bl.get_search_column_results(userid, tableid, fields_type)
     return hv.render_template('admin_settings/settings_table_columnlinked.html') 

@@ -1,1 +1,22 @@
-asdads
+<select class="form-select form-select-lg mb-3" aria-label="Large select example">
+    {% for table in linked_tables %}
+        <option value="{{ table }}">{{ table }}</option>
+    {% endfor %}
+</select>
+
+
+<div id="settings_block_columnlinked" class="drag-elements-container" style="height: 90%; overflow: scroll">
+    <div class="drag-item">
+        {% for field in fields %}
+            <div class="drag-item2">
+             {% if field.order != null %}
+                 <input class="form-check-input mt-0 checkbox" type="checkbox" checked value="" aria-label="Checkbox for following text input">
+             {% else %}
+                 <input class="form-check-input mt-0 checkbox" type="checkbox" value="" aria-label="Checkbox for following text input">
+             {% endif %}
+            <p class="settings_block_usertables_fieldid" data-fieldid="{{ field.id }}">{{field.fieldid}}</p>
+            <button class="btn btn-secondary" onclick="settingsTableColumnSearchResultsOptions('{{ field.id }}')">Impostazioni</button>
+            </div>
+        {% endfor %}
+    </div>
+</div>

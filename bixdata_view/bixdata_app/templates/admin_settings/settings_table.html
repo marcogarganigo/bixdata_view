@@ -13,11 +13,21 @@
 
 <script>
 
+    function hideSettings() {
+        var els = document.querySelectorAll('.visible');
+        els.forEach(function (el) {
+            el.classList.remove('visible');
+            el.html('');
+            //el.classList.add('hidden');
+        });
+    }
+
 
     function getUserTablesList(userid)
     {
-        //$("#settings_table_usertables").load('/loading/')
-        $("#settings_table_content_container").css('display', 'block');
+        $("#settings_table_usertables").load('/loading/')
+        //pick all the elements with the class visible and css background the
+
         var serialized_data = [];
         serialized_data.push({ name: 'userid', value: userid });
         $.ajax({
@@ -86,10 +96,12 @@ function saveTableSettings(el) {
 
 function setFieldsOrder(fields_type) {
 
+
     var tableid = $('#table_settings_menu').attr('data-tableid');
     var userid = $('#user_username').attr('data-userid');
 
     $('#user_username').attr('data-fields_type', fields_type);
+
 
 
     $.ajax({
@@ -98,7 +110,13 @@ function setFieldsOrder(fields_type) {
         data: {tableid: tableid, userid: userid, fields_type: fields_type},
         success: function (response) {
             $("#settings_col4").css('display', 'block');
-            $("#results-column-container").html(response);
+
+            $("#results-column-container").load('/loading/')
+
+            setTimeout(function () {
+                $("#results-column-container").html(response);
+            }, 150);
+
         },
         error: function () {
         }
@@ -181,6 +199,7 @@ function setFieldsOrderSave() {
         var userid = $('#user_username').attr('data-userid');
         var tableid = $('#table_settings_menu').attr('data-tableid');
 
+
         $.ajax({
             type: "POST",
             data: {
@@ -189,10 +208,16 @@ function setFieldsOrderSave() {
             },
             url: "{% url 'table_column_linked' %}",
             success: function (response) {
-               $('#results-column-container').html(response)
+               $("#settings_col4").css('display', 'block');
+
+               $("#results-column-container").load('/loading/')
+
+            setTimeout(function () {
+                $("#results-column-container").html(response);
+            }, 150);
+
             },
             error: function (response) {
-                $('#results-column-container').html(response)
             }
         });
     }
@@ -226,7 +251,7 @@ function setFieldsOrderSave() {
     <div id="settings_col4" style="height: 100%; width: 20%;  float: left; display: none; margin-left: 10%">
 
     <button class="btn btn-primary" onclick="setFieldsOrderSave()">Salva</button>
-        <div id="results-column-container"style="height: 100%; overflow: scroll">
+        <div id="results-column-container"style="height: 100%">
 
         </div>
     </div>
