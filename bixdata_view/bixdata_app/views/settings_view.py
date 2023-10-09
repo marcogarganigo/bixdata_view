@@ -103,9 +103,13 @@ def settings_table_columnlinked(request):
 def settings_table_columnlinked_save(request):
     return HttpResponse({'success': True})
 
-def settings_table_fieldssettings(request):
+def settings_table_fields(request):
     tableid = request.POST.get('tableid')
     userid = request.POST.get('userid')
     hv = HelperView(request)
     hv.context['fields'] = list(SysField.objects.filter(tableid=tableid).values())
-    return hv.render_template('admin_settings/settings_table_fieldsettings.html')
+    return hv.render_template('admin_settings/settings_table_fields.html')
+
+def settings_table_fields_settings(request):
+    hv = HelperView(request)
+    return hv.render_template('admin_settings/settings_table_fields_settings.html')

@@ -200,7 +200,7 @@ function setFieldsOrderSave() {
 
         $.ajax({
             type: "POST",
-            url: "{% url 'settings_table_fieldssettings' %}",
+            url: "{% url 'settings_table_fields' %}",
             data: {
                 'tableid': tableid,
                 'userid': userid,},
@@ -209,6 +209,18 @@ function setFieldsOrderSave() {
                 $('#table_settings_menu_options').html(response)
             },
         })
+    }
+
+    function settingsFieldsSettings() {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'settings_table_fields_settings' %}",
+            success: function (response) {
+                $('#settings_table_fields_settings').html(response)
+            },
+            error: function () {
+            }
+        });
     }
 
 
@@ -287,6 +299,10 @@ function setFieldsOrderSave() {
     </div>
 
     <div id="table_settings_menu_options" style="height: 100%; float:left">
+
+    </div>
+
+    <div id="settings_table_fields_settings">
 
     </div>
 </div>

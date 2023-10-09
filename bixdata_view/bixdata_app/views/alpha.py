@@ -2158,5 +2158,9 @@ def admin_table_settings(request):
     return render(request, 'other/admin_table_settings.html', {'tables': tables, 'users': users})
 
 
+def settings_charts(request):
+    return render(request, 'admin_settings/settings_charts.html')
+
+
 
 

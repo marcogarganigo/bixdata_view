@@ -174,6 +174,21 @@
                 });
             }
 
+            function getViewSettingsCharts() {
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'settings_charts' %}",
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
+
 
             function getRenderChartsView() {
                 var serialized_data = [];
@@ -720,7 +735,7 @@
                                     </a>
                                     <div class="collapse" id="sidebarAdmin">
                                         <ul class="side-nav-second-level">
-                                            <li onclick="getContentRecordsAdmin($(this).find('a').text())">
+                                            <li onclick="getViewSettingsCharts()">
                                                 <a class="side-nav-txt" onclick="setColor(this)">Grafici</a>
                                             </li>
                                             <li onclick="getViewSettingsTable($(this).find('a').text())">

@@ -1,0 +1,10 @@
+<div id="settings_block_usertables_settings" class="drag-elements-container" style="height: 95%; overflow: scroll">
+    <div class="drag-item">
+        {% for field in fields %}
+            <div class="drag-item2">
+            <p class="settings_block_usertables_fieldid" data-fieldid="{{ field.id }}">{{field.description}}</p>
+            <button class="btn btn-secondary" onclick="settingsFieldsSettings()">Impostazioni</button>
+            </div>
+        {% endfor %}
+    </div>
+</div>
