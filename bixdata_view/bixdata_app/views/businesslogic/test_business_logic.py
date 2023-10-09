@@ -79,4 +79,5 @@ class TestBusinessLogic:
     def test_select_filters(self):
         tables=list(SysUserOrder.objects.select_related('tableid').filter(userid=1).filter(typepreference='keylabel_scheda').values('tableid__description'))
         return tables
-    
+
+

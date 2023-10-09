@@ -193,6 +193,23 @@ function setFieldsOrderSave() {
         });
     }
 
+    function fieldsSettingsSettings() {
+
+        var tableid = $('#table_settings_menu').attr('data-tableid');
+        var userid = $('#user_username').attr('data-userid');
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'settings_table_fieldssettings' %}",
+            data: {
+                'tableid': tableid,
+                'userid': userid,},
+            success: function (response) {
+                $('#table_settings_menu_options').html(response)
+            },
+        })
+    }
+
 
     function tableColumnLinked() {
 
@@ -254,6 +271,7 @@ function setFieldsOrderSave() {
         Campi
         <br>
         <button class="btn btn-secondary fields-button" onclick="tableSettingsSettings()">Impostazioni tabella</button><br/>
+        <button class="btn btn-secondary fields-button" onclick="fieldsSettingsSettings()">Impostazioni campi</button><br/>
         <button class="btn btn-secondary fields-button" onclick="tableColumnLinked()">Colonne in tabelle collegate</button><br/>
         <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('search_results_fields')">Campi risultati ricerca</button><br/>
         <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('insert_fields')">Campi inserimento</button><br/>
