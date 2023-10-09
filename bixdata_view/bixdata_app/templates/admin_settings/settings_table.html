@@ -222,6 +222,19 @@ function setFieldsOrderSave() {
         });
     }
 
+    function tableColumnLinkedSave()
+    {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'table_column_linked_save' %}",
+            success: function (response) {
+                alert('ok')
+            },
+            error: function () {
+            }
+        });
+    }
+
 </script>
 
 <div id="settings_table" style="height: 100%;">
@@ -249,8 +262,6 @@ function setFieldsOrderSave() {
         <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('badge_fields')">Campi badge</button>
     </div>
     <div id="settings_col4" style="height: 100%; width: 20%;  float: left; display: none; margin-left: 10%">
-
-    <button class="btn btn-primary" onclick="setFieldsOrderSave()">Salva</button>
         <div id="results-column-container"style="height: 100%">
 
         </div>
