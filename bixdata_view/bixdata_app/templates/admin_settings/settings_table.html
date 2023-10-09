@@ -106,7 +106,7 @@ function setFieldsOrder(fields_type) {
 
     $.ajax({
         type: "POST",
-        url: "{% url 'set_fields_order' %}",
+        url: "{% url 'settings_table_tablefields' %}",
         data: {tableid: tableid, userid: userid, fields_type: fields_type},
         success: function (response) {
             $("#settings_col4").css('display', 'block');
@@ -143,7 +143,7 @@ function setFieldsOrderSave() {
 
     $.ajax({
         type: "POST",
-        url: "{% url 'set_fields_order_save' %}",
+        url: "{% url 'settings_table_tablefields_save' %}",
         data: {
           'orderArray': orderArray,
           'userid': userid,
@@ -184,7 +184,7 @@ function setFieldsOrderSave() {
     function tableSettingsSettings() {
         $.ajax({
             type: "POST",
-            url: "{% url 'table_settings_settings' %}",
+            url: "{% url 'settings_table_tablesettings' %}",
             success: function (response) {
                 alert('ok')
             },
@@ -206,7 +206,7 @@ function setFieldsOrderSave() {
                 'userid': userid,
                 'tableid': tableid,
             },
-            url: "{% url 'table_column_linked' %}",
+            url: "{% url 'settings_table_columnlinked' %}",
             success: function (response) {
                $("#settings_col4").css('display', 'block');
 
@@ -226,7 +226,7 @@ function setFieldsOrderSave() {
     {
         $.ajax({
             type: "POST",
-            url: "{% url 'table_column_linked_save' %}",
+            url: "{% url 'settings_table_columnlinked_save' %}",
             success: function (response) {
                 alert('ok')
             },

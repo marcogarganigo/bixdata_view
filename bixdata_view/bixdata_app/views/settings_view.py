@@ -48,7 +48,7 @@ def settings_table_admin(request):
     return HttpResponse('test')
 
 
-def set_fields_order(request):
+def settings_table_tablefields(request):
     tableid = request.POST.get('tableid')
     userid = request.POST.get('userid')
     fields_type = request.POST.get('fields_type')
@@ -58,7 +58,7 @@ def set_fields_order(request):
     return hv.render_template('admin_settings/settings_table_column_search_results.html')
 
 
-def set_fields_order_save(request):
+def settings_table_tablefields_save(request):
     tableid= request.POST.get('tableid')
     userid = request.POST.get('userid')
     fields_type = request.POST.get('fields_type')
@@ -81,11 +81,11 @@ def settings_table_fieldsettings(request):
 
     return hv.render_template('admin_settings/settings_table_column_search_results_options.html')
 
-def table_settings_settings(request):
+def settings_table_tablesettings(request):
     return HttpResponse({'success': True})
 
 
-def table_column_linked(request):
+def settings_table_columnlinked(request):
     fields_type = 'linked_table_fields'
     userid = request.POST.get('userid')
     tableid = request.POST.get('tableid')
@@ -100,5 +100,5 @@ def table_column_linked(request):
     return hv.render_template('admin_settings/settings_table_columnlinked.html')
 
 
-def table_column_linked_save(request):
+def settings_table_columnlinked_save(request):
     return HttpResponse({'success': True})
