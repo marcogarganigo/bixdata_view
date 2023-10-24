@@ -12,7 +12,7 @@ def script_test(request):
 def script_call(request,function):
     if function in globals() and callable(globals()[function]):
         func = globals()[function]
-        func()
+        return func()
     
 def update_deals():
     bl=ScriptBusinessLogic()

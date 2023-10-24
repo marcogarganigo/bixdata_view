@@ -39,7 +39,7 @@ class ScriptBusinessLogic:
         DealRecordsH=RecordsHelper('deal')
         DeallineRecordsH=RecordsHelper('dealline')
         conditions=list()
-        conditions.append("status='Closed'")
+        conditions.append("syncstatus='Si'")
         deal_records= DealRecordsH.get_records(conditions)
         for deal_record in deal_records:
             deal_recordid=deal_record['recordid_']

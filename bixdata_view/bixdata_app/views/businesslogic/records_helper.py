@@ -34,7 +34,7 @@ class RecordsHelper:
     
     
     def get_records(self, conditions_list=list()):
-        LogicHelper=LogicHelper()
+        LogicH=LogicHelper()
         conditions="True"
         for condition in conditions_list:
             conditions=conditions+f" AND {condition}"   
@@ -42,13 +42,13 @@ class RecordsHelper:
         with connection.cursor() as cursor:
             sql=f"SELECT * from user_{self.tableid} where {conditions}"
             cursor.execute(sql)
-            records = LogicHelper.dictfetchall(cursor)
+            records = LogicH.dictfetchall(cursor)
         return records
    
     def get_records_by_linked(self,linked_tableid,linked_recordid):
-        LogicHelper=LogicHelper()
+        LogicH=LogicHelper()
         with connection.cursor() as cursor:
-            sql=f"SELECT * from user_{self.tableid} where recordid{linked_recordid}_='{linked_recordid}'"
+            sql=f"SELECT * from user_{self.tableid} where recordid{linked_tableid}_='{linked_recordid}'"
             cursor.execute(sql)
-            records = LogicHelper.dictfetchall(cursor)
+            records = LogicH.dictfetchall(cursor)
         return records
