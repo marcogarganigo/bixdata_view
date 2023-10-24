@@ -31,18 +31,31 @@ class RecordsHelper:
     
     def __init__(self,tableid):
         self.tableid=tableid
-    
-    
+
     def get_records(self, conditions_list):
-        LogicH=LogicHelper()
-        conditions="True"
+        """
+        Retrieve records from the database table associated with this instance, based on specified conditions.
+
+        This method constructs a SQL query using the provided conditions and retrieves records from a specific table.
+
+        :param conditions_list: A list of conditions in SQL format (e.g., "column_name = 'value'").
+        :type conditions_list: list of str
+
+        :return: A list of dictionaries, where each dictionary represents a record with column names as keys.
+        :rtype: list of dict
+        """
+        LogicH = LogicHelper()
+        conditions = "True"
+
         for condition in conditions_list:
-            conditions=conditions+f" AND {condition}"   
-            
+            conditions = conditions + f" AND {condition}"
+
         with connection.cursor() as cursor:
-            sql=f"SELECT * from user_{self.tableid} where {conditions}"
+            sql = f"SELECT * from user_{self.tableid} where {conditions}"
             cursor.execute(sql)
             records = LogicH.dictfetchall(cursor)
+
         return records
+
    
 
