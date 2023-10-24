@@ -36,13 +36,19 @@ class ScriptBusinessLogic:
     
     def update_deals(self):
         return_value=False
-        RecordsH=RecordsHelper('deal')
-        RecordH=RecordHelper('deal')
+        DealRecordsH=RecordsHelper('deal')
+        DeallineRecordsH=RecordsHelper('dealline')
         conditions=list()
         conditions.append("status='Closed'")
-        records= RecordsH.get_records(conditions)
-        for record in records:
-            return_value=True
+        deal_records= DealRecordsH.get_records(conditions)
+        for deal_record in deal_records:
+            deal_recordid=deal_record['recordid_']
+            dealline_records=DeallineRecordsH.get_records_by_linked('deal',deal_recordid)
+            total_expectedcost=0
+            for dealline_record in dealline_records:
+                total_expectedcost=total_expectedcost+dealline_record['expectedcost']
+                
+        return_value=True
         return return_value
    
 
