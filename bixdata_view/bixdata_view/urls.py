@@ -22,6 +22,7 @@ from bixdata_app.views import beta
 from bixdata_app.views import test_view
 from bixdata_app.views import settings_view
 from bixdata_app.views import bixdata_view
+from bixdata_app.views import script_view
 
 urlpatterns = [
     path('', bixdata_view.index, name='index'),
@@ -128,4 +129,6 @@ urlpatterns = [
     path('settings_table_fields/', settings_view.settings_table_fields, name='settings_table_fields'),
     path('settings_table_fields_settings/', settings_view.settings_table_fields_settings, name='settings_table_fields_settings'),
     path('settings_charts/', settings_view.settings_charts, name='settings_charts'),
+    path('script_test/', script_view.script_test, name='script_test'),
+    path('script_call/<str:function>/', script_view.script_call, name='script_call'),
 ]
