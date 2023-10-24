@@ -34,6 +34,17 @@ class RecordsHelper:
     
     
     def get_records(self, conditions_list=list()):
+        """
+            Retrieve records from the database table associated with this instance, based on specified conditions.
+
+            This method constructs a SQL query using the provided conditions and retrieves records from a specific table.
+
+            :param conditions_list: A list of conditions in SQL format (e.g., "column_name = 'value'").
+            :type conditions_list: list of str
+
+            :return: A list of dictionaries, where each dictionary represents a record with column names as keys.
+            :rtype: list of dict
+            """
         LogicH=LogicHelper()
         conditions="True"
         for condition in conditions_list:
