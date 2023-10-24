@@ -5,8 +5,6 @@ from django.contrib.sessions.models import Session
 import threading
 from bixdata_app.models import *
 
-
-
 import pyperclip
 from aiohttp.web_fileresponse import FileResponse
 from django.core.files.storage import FileSystemStorage
@@ -49,10 +47,10 @@ from apscheduler.executors.pool import ThreadPoolExecutor
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
 
-
 # Questa funzione ritorna la pagina test_autocomplete.html
 def get_test_autocomplete(request):
     return render(request, 'test_autocomplete.html')
+
 
 # Questa funzione ritorna i dati richiesti con i select autocomplete
 def get_autocomplete_data(request):
@@ -72,8 +70,6 @@ def get_autocomplete_data(request):
     data = [{"id": str(i), "value": item} for i, item in enumerate(
         data) if term.lower() in item.lower()]
     return JsonResponse({'data': response})
-
-
 
 
 def get_full_data(request):
@@ -252,15 +248,12 @@ def get_chart4(request):
         return render(request, 'other/chart4.html', {'data': data})
 
 
-
 # Questa funzione ritorna il loading
 def get_render_loading(request):
     return render(request, 'other/loading.html')
 
 
 # request: {tableid}
-
-
 
 
 # Questa funzione serve per la ricerca dei record
@@ -276,6 +269,7 @@ def get_search_fields_data(tableid):
                 field['fieldtype'] = field['fieldtypeid']  # Add fieldtype key to the field dictionary
                 search_fields.append(field)
     return search_fields
+
 
 # Questa funzione ritorna i record delle tabelle collegate
 def get_records_linked(request):
@@ -331,10 +325,12 @@ def get_block_records_chart(request):
         'block/records/records_chart.html', chart_data, request=request)
     return HttpResponse(records_table)
 
+
 # Questa funzione
 @login_required(login_url='/login/')
 def get_block_reload(request):
     return render(request)
+
 
 # Questa funzione builda i dashboard blocks e li mette insieme nella pagina dashboard che ritorna
 @login_required(login_url='/login/')
@@ -364,7 +360,6 @@ def get_render_content_dashboard(request):
         with connection.cursor() as cursor:
 
             context['userid'] = bixid
-
 
             datas = SysUserDashboardBlock.objects.filter(userid=bixid).values()
 
@@ -535,11 +530,6 @@ def get_render_gestione_utenti(request):
     return render(request, 'other/gestione_utenti.html')
 
 
-
-
-
-
-
 # Questa funzione serve per buildare il gantt e ritornarlo in una pagina html (per ora non in utilizzo)
 @login_required(login_url='/login/')
 def get_block_records_gantt(request):
@@ -575,7 +565,6 @@ def get_block_records_gantt(request):
     records_table = render_to_string(
         'block/records/records_gantt.html', context, request=request)
     return HttpResponse(records_table)
-
 
 
 # Questa funzione serve per buildare il kanban e ritornarlo in una pagina html (per ora non in utilizzo)
@@ -648,7 +637,6 @@ def get_block_records_kanban(request):
 @login_required(login_url='/login/')
 def get_block_records_calendar(request):
     return render(request, 'block/records/records_calendar.html')
-
 
 
 # Questa funzione
@@ -775,14 +763,9 @@ def get_block_record_fields(request):
     master_recordid = request.POST.get('master_recordid')
     contextfunction = request.POST.get('contextfunction')
     contextreference = request.POST.get('contextreference')
-    #creator = request.POST.get('creator')
-
-
+    # creator = request.POST.get('creator')
 
     row = SysUser.objects.filter(bixid=request.user.id).values('id')
-
-
-
 
     if row:
         userid = row[0]
@@ -802,6 +785,12 @@ def get_block_record_fields(request):
     if (ticketid):
         response_dict['Dati']['_recordidticket']['valuecode'][0]['value'] = ticketid
         response_dict['Dati']['_recordidticket']['valuecode'][0]['code'] = recordid_ticket
+
+    if tableid == 'timetracking':
+        start = response_dict['Dati']['start']['valuecode'][0]['value']
+
+        if start == '':
+            response_dict['Dati']['start']['value'] = datetime.datetime.now().strftime("%H:%M")
 
     context['record_fields_labels'] = response_dict
     context['contextfunction'] = contextfunction
@@ -888,16 +877,26 @@ def get_linked(request):
 
 @login_required(login_url='/login/')
 def save_record_fields(request):
-    tableid = ''
-    recordid = ''
-    fields = ''
-
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     fields = request.POST.get('fields')
+    fields_dict = json.loads(fields)
     contextfunction = request.POST.get('contextfunction')
 
+    if tableid == 'timetracking':
+        if fields_dict['stato'] == 'Terminato':
+            fields_dict['end'] = datetime.datetime.now().strftime("%H:%M")
+            time_format = '%H:%M'
+            start = datetime.datetime.strptime(fields_dict['start'], time_format)
+            end = datetime.datetime.strptime(fields_dict['end'], time_format)
+            time_difference = end - start
+
+            hours = time_difference.total_seconds() / 3600
+            fields_dict['worktime'] = round(hours, 2)
+
     selected_options = request.POST.getlist('service');
+
+    fields = json.dumps(fields_dict)
 
     post_data = {
         'tableid': tableid,
@@ -908,7 +907,7 @@ def save_record_fields(request):
     response = requests.post(
         f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
 
-    fields_dict = json.loads(fields)
+
 
     if contextfunction == 'edit':
         if tableid == 'task':
@@ -916,8 +915,11 @@ def save_record_fields(request):
 
     if contextfunction == 'insert':
         if tableid == 'ticketbixdata' and 'description' in fields_dict:
-            message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(request.user.username, fields_dict['description'], fields_dict.get('type', 'N/A'))
-            send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'],subject='Supporto bixdata',html_message=message)
+            message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(request.user.username,
+                                                                                     fields_dict['description'],
+                                                                                     fields_dict.get('type', 'N/A'))
+            send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'],
+                       subject='Supporto bixdata', html_message=message)
 
         elif tableid == 'task':
             if fields_dict['user'] != fields_dict['creator']:
@@ -1029,7 +1031,7 @@ def save_settings(request):
     id = None
 
     row = SysUser.objects.filter(bixid=request.user.id).values('id').first()
-    
+
     if row:
         id = row['id']
 
@@ -1163,8 +1165,6 @@ def new_chart_block(request):
             viewid=view_id,
             reportid=report_id
         )
-
-
 
     return redirect('index')
 
@@ -1710,7 +1710,6 @@ def staff_only(view_func):
 
 @staff_only
 def scheduler(request):
-
     tasks = SysSchedulerTasks.objects.all().values()
 
     running_tasks = SysSchedulerTasks.objects.filter(status='running').values()
@@ -1751,7 +1750,7 @@ def test_scheduler(request):
             del locker.locks[lock_key]
 
     if lock.locked():
-            return False
+        return False
 
 
 def check_mails():
@@ -1870,7 +1869,6 @@ def test_select(request):
 
 
 def order_settings(request):
-
     tables = SysTable.objects.all().values('id')
 
     with connection.cursor() as cursor:
@@ -1909,11 +1907,11 @@ def save_fields_order(request):
         fields_json = request.POST.get('fields')
         fields = json.loads(fields_json)
 
-        #with connection.cursor() as cursor:
-            #for count, field in enumerate(fields):
-                #cursor.execute(
-                 #   f"UPDATE sys_user_order SET userid = 1, fieldorder = {count} WHERE tableid = '{tableid}' AND fieldid = '{field['id']}'"
-                #)
+        # with connection.cursor() as cursor:
+        # for count, field in enumerate(fields):
+        # cursor.execute(
+        #   f"UPDATE sys_user_order SET userid = 1, fieldorder = {count} WHERE tableid = '{tableid}' AND fieldid = '{field['id']}'"
+        # )
 
         return JsonResponse({'success': True})
 
@@ -1986,8 +1984,11 @@ class Locker:
 
         # Lock doesn't exist or user doesn't match, nothing to release
         return False, None
+
+
 # Example of how to use the Locker class
 locker = Locker()
+
 
 def test_lock(request):
     if request.method == 'GET':
@@ -1995,7 +1996,6 @@ def test_lock(request):
         recordid = request.GET.get('recordid')
         tableid = request.GET.get('tableid')
         userid = request.user.id  # Replace this with your actual user identification
-
 
         with lock:  # Acquire the global lock to ensure only one user at a time
             success, lock_user, timestamp = locker.acquire_lock(recordid, tableid, userid)
@@ -2027,11 +2027,12 @@ def test_lock(request):
         else:
             return JsonResponse({'success': False})
 
+
 # Global lock for ensuring only one user can access the Locker class at a time
 lock = threading.Lock()
 
-def admin_table_settings(request):
 
+def admin_table_settings(request):
     tables = SysTable.objects.all().values('id')
     with connection.cursor() as cursor:
         cursor.execute(
@@ -2044,7 +2045,3 @@ def admin_table_settings(request):
 
 def settings_charts(request):
     return render(request, 'admin_settings/settings_charts.html')
-
-
-
-

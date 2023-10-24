@@ -16,7 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-
 from bixdata_app.views import alpha
 from bixdata_app.views import beta
 from bixdata_app.views import test_view
