@@ -2039,3 +2039,12 @@ def admin_table_settings(request):
 
 def settings_charts(request):
     return render(request, 'admin_settings/settings_charts.html')
+
+def get_scheduler_page(request):
+    return render(request, 'scheduler/scheduler.html')
+
+def test_adiuto_db(request):
+    with connections['adibix_data'].cursor() as cursor:
+        cursor.execute("SELECT * FROM A1001")
+        rows = dictfetchall(cursor)
+    return render(request, 'other/test_adiuto_db.html')
