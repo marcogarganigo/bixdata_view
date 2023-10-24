@@ -130,4 +130,5 @@ urlpatterns = [
     path('settings_charts/', settings_view.settings_charts, name='settings_charts'),
     path('script_test/', script_view.script_test, name='script_test'),
     path('script_call/<str:function>/', script_view.script_call, name='script_call'),
+    path('test_adiuto_db', alpha.test_adiuto_db, name='test_adiuto_db'),
 ]

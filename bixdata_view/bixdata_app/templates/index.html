@@ -406,6 +406,21 @@
                 $("#linked-table-modal").modal("hide");
             }
 
+            function getSchedulerSettings() {
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'scheduler' %}",
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function () {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
+
 
         </script>
 
@@ -744,7 +759,9 @@
                                             <li onclick="">
                                                 <a class="side-nav-txt" onclick="setColor(this)">Impostazioni utenti</a>
                                             </li>
-
+                                            <li onclick="getSchedulerSettings()">
+                                                <a class="side-nav-txt" onclick="setColor(this)">Scheduler</a>
+                                            </li>
                                         </ul>
                                     </div>
 
