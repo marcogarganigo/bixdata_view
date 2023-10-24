@@ -11,7 +11,6 @@ def script_test(request):
     
 def script_call(request,function):
     if function in globals() and callable(globals()[function]):
-        # Call the function using globals()
         func = globals()[function]
         func()
     
