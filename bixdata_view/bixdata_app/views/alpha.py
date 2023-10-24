@@ -886,8 +886,13 @@ def save_record_fields(request):
     if tableid == 'timetracking':
         if fields_dict['stato'] == 'Terminato':
             fields_dict['end'] = datetime.datetime.now().strftime("%H:%M")
-            fields_dict['worktime'] =
+            time_format = '%H:%M'
+            start = datetime.datetime.strptime(fields_dict['start'], time_format)
+            end = datetime.datetime.strptime(fields_dict['end'], time_format)
+            time_difference = end - start
 
+            hours = time_difference.total_seconds() / 3600
+            fields_dict['worktime'] = round(hours, 2)
 
     selected_options = request.POST.getlist('service');
 
