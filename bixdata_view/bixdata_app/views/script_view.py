@@ -10,9 +10,12 @@ def script_test(request):
     return HttpResponse('test')
     
 def script_call(request,function):
-    bl=ScriptBusinessLogic()
-    result=bl.update_deals()
+    if function in globals() and callable(globals()[function]):
+        # Call the function using globals()
+        func = globals()[function]
+        func()
     
 def update_deals():
     bl=ScriptBusinessLogic()
     result=bl.update_deals()
+    return HttpResponse(result)
