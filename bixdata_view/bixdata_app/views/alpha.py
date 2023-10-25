@@ -267,13 +267,7 @@ def get_search_fields_data(tableid):
     return search_fields
 
 
-# Questa funzione ritorna i record delle tabelle collegate
-def get_records_linked(request):
-    tableid = request.POST.get('tableid')
-    master_tableid = request.POST.get('master_tableid')
-    master_recordid = request.POST.get('master_recordid')
-    records_table = get_records_table(request, tableid, master_tableid, master_recordid)
-    return HttpResponse(records_table)
+
 
 
 # Questa funzione è un test per i grafici

@@ -39,7 +39,7 @@ class ScriptBusinessLogic:
         DealRecordsH=RecordsHelper('deal')
         DeallineRecordsH=RecordsHelper('dealline')
         conditions=list()
-        conditions.append("syncstatus='Si'")
+        conditions.append("recordid_='00000000000000000000000000001378'")
         deal_records= DealRecordsH.get_records(conditions)
         for deal_record in deal_records:
             deal_recordid=deal_record['recordid_']
@@ -48,7 +48,7 @@ class ScriptBusinessLogic:
             for dealline_record in dealline_records:
                 total_expectedcost=total_expectedcost+dealline_record['expectedcost']
                 
-        return_value=True
+        return_value=total_expectedcost
         return return_value
    
 
