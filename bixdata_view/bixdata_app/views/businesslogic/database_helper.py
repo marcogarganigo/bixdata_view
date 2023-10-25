@@ -26,37 +26,45 @@ from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
 from .logic_helper import *
 
-class RecordHelper:
-    tableid=None
-    recordid=None
-    fields=dict()
+
+class DatabaseHelper:
+    database=''
     
-    def __init__(self, tableid, recordid=None):
-        self.tableid=tableid
-        self.recordid=recordid
+    def __init__(self, database='default'):
+        self.database=database
     
     def get_recordid(self):
         return self.recordid
         
-    def save(self):
-        if self.recordid:
-            counter=0
-            sql=f"UPDATE user_{self.tableid} SET ("
-            for key,value in self.fields.items():
-                if counter>0:
-                    sql=sql+","
-                sql=sql+f" {key}={value} "
-                counter+=1
-            sql=sql+")"    
+    def insert(self):
+        return True
+    
+    def update(self):
+        return True
+    
+    def sql_query(self,sql):
+        with connections[self.database].cursor() as cursor:
+            cursor.execute(sql)
+            rows = self.dictfetchall(cursor)
+        return rows
+    
+    def sql_query_row(self,sql):
+        rows=self.sql_query(sql)
+        if rows:
+            return rows[0]
         else:
-            sql=""
+            return None
         
-            
-                
-        
-            
+    
+    def sql_execute(self,sql):
+        with connections[self.database].cursor() as cursor:
+            cursor.execute(sql)
         return True
    
-    def update(self):
-       return True
-
+    def dictfetchall(self,cursor):
+        "Return all rows from a cursor as a dict"
+        columns = [col[0] for col in cursor.description]
+        return [
+            dict(zip(columns, row))
+            for row in cursor.fetchall()
+        ]
