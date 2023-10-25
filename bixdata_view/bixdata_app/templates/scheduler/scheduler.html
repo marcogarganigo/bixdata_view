@@ -1,9 +1,9 @@
 <div class="container-fluid text-center">
 
     {% if button == 'run' %}
-    <button onclick="run_tasks(this)" type="button" class="btn btn-success" value="run" >Run</button>
+        <button onclick="run_tasks(this)" type="button" class="btn btn-success" value="run">Run</button>
     {% else %}
-    <button onclick="run_tasks(this)" type="button" class="btn btn-danger" value="stop" >Stop</button>
+        <button onclick="run_tasks(this)" type="button" class="btn btn-danger" value="stop">Stop</button>
     {% endif %}
 
 
@@ -13,9 +13,11 @@
 
         <div class="form-check form-switch switch-container">
             {% if task.active == 0 %}
-                <input class="form-check-input task" type="checkbox" id="{{ forloop.counter }}" name="task{{ forloop.counter }}" value="0">
+                <input class="form-check-input task" type="checkbox" id="{{ forloop.counter }}"
+                       name="task{{ forloop.counter }}" value="0">
             {% else %}
-                <input class="form-check-input task" type="checkbox" id="{{ forloop.counter }}" name="task{{ forloop.counter }}" value="1" checked>
+                <input class="form-check-input task" type="checkbox" id="{{ forloop.counter }}"
+                       name="task{{ forloop.counter }}" value="1" checked>
             {% endif %}
         </div>
 
@@ -26,61 +28,62 @@
 </div>
 
 <style>
-.switch-container {
-    display: flex;
-    justify-content: center;
-}
+    .switch-container {
+        display: flex;
+        justify-content: center;
+    }
 </style>
 
 
-    <script>
-        function save() {
-            var tasks = document.getElementsByClassName("task");
-            var task_names = document.getElementsByClassName("task-name");
-            var tasks_list = [];
-            for (var i = 0; i < tasks.length; i++) {
-                var taskName = task_names[i].innerHTML;
-                var taskStatus = tasks[i].value;
-                tasks_list.push({ name: taskName, value: taskStatus });
-            }
-            console.log(tasks_list);
-            $.ajax({
-                type: "POST",
-                url: "{% url 'save_scheduler_settings' %}",
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                    tasks: JSON.stringify(tasks_list),
-                },
-                success: function (response) {
-                     location.reload();
-                },
-                error: function (response) {
-                    location.reload();
-                },
-            });
+<script>
+    function save() {
+        var tasks = document.getElementsByClassName("task");
+        var task_names = document.getElementsByClassName("task-name");
+        var tasks_list = [];
+        for (var i = 0; i < tasks.length; i++) {
+            var taskName = task_names[i].innerHTML;
+            var taskStatus = tasks[i].value;
+            tasks_list.push({name: taskName, value: taskStatus});
         }
+        console.log(tasks_list);
+        $.ajax({
+            type: "POST",
+            url: "{% url 'save_scheduler_settings' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                tasks: JSON.stringify(tasks_list),
+            },
+            success: function (response) {
+                swal({
+                    title: "Impostazioni salvate",
+                    text: "impostazioni tasks scheduler salvate con successo",
+                    icon: "success",
+                    timer: 800,
+                    buttons: false,
+                });
+                getSchedulerSettings()
+            },
+        });
+    }
 
-        function run_tasks(el) {
-            $.ajax({
-                type: "POST",
-                url: "{% url 'run_tasks' %}",
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                    button: el.value,
-                },
-                success: function (response) {
-                    location.reload();
-                },
-                error: function (response) {
-                    location.reload();
-                },
-            });
-        }
+    function run_tasks(el) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'run_tasks' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                button: el.value,
+            },
+            success: function (response) {
+                getSchedulerSettings()
+            },
+        });
+    }
 
 
-         var checkboxes = document.getElementsByClassName('task');
+    var checkboxes = document.getElementsByClassName('task');
     for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].addEventListener('change', function() {
+        checkboxes[i].addEventListener('change', function () {
             if (this.checked) {
                 this.value = '1';
             } else {
@@ -88,4 +91,4 @@
             }
         });
     }
-    </script>
+</script>
