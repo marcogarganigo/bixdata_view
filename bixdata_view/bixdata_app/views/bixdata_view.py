@@ -223,7 +223,7 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
                         num = 0
                 else:
                     num = 0
-                record[record_index]['value'] = format(num, ".2f")
+                record[record_index]['value'] = "{:,}".format(num)
             if record[record_index]['value'] == 'Validazionetecnica':
                 record[record_index]['fieldtype'] = 'lookup'
                 record[record_index]['fieldbackground'] = 'green'

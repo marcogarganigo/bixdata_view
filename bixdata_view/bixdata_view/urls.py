@@ -27,6 +27,7 @@ from bixdata_app.views import scheduler
 urlpatterns = [
     path('', bixdata_view.index, name='index'),
     path('index/', bixdata_view.index, name='index'),
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('loading/', alpha.get_render_loading, name='loading'),
     path('test/', test_view.test, name='test'),
     path('test_content/', test_view.test_content, name='test_content'),

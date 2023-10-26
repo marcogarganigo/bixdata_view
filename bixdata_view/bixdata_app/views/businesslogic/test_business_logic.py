@@ -27,6 +27,7 @@ from django.db.models import OuterRef, Subquery
 
 
 class TestBusinessLogic:
+
     
     def __init__(self):
         self.test=None
@@ -42,7 +43,7 @@ class TestBusinessLogic:
         b = e.userid
         #return_value = b.__dict__
 
-        ## recuperare una query set di tutte le impostazioni 
+        ## recuperare una query set di tutte le impostazioni
         my_queryset = SysUserSettings.objects.all()
         #return_value = list(my_queryset.values())
         
