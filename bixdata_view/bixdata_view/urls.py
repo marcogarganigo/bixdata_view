@@ -28,6 +28,7 @@ urlpatterns = [
     path('', bixdata_view.index, name='index'),
     path('index/', bixdata_view.index, name='index'),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
+    path('admin/', admin.site.urls),
     path('loading/', alpha.get_render_loading, name='loading'),
     path('test/', test_view.test, name='test'),
     path('test_content/', test_view.test_content, name='test_content'),
@@ -61,7 +62,6 @@ urlpatterns = [
     path('get_full_data2/', alpha.get_full_data2, name='get_full_data2'),
     path('get_linked/', alpha.get_linked, name='get_linked'),
     path('get_record_fields/', alpha.get_block_record_fields, name='get_record_fields'),
-    path('admin/', admin.site.urls),
     path('save_record_fields/', alpha.save_record_fields, name='save_record_fields'),
     path('get_chart3/', alpha.get_chart3, name='get_chart3'),
     path('autocomplete/', alpha.get_autocomplete_data, name='get_autocomplete_data'),
@@ -133,4 +133,5 @@ urlpatterns = [
     path('script_test/', script_view.script_test, name='script_test'),
     path('script_call/<str:function>/', script_view.script_call, name='script_call'),
     path('test_adiuto_db', alpha.test_adiuto_db, name='test_adiuto_db'),
+    path('test_admin_doc/', alpha.test_admin_doc, name='test_admin_doc'),
 ]

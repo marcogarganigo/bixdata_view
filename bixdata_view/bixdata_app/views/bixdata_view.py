@@ -1,3 +1,4 @@
+import locale
 import tempfile
 import uuid
 import threading
@@ -215,15 +216,22 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
                 code = code.lower()
                 record[record_index]['code'] = code
             if record[record_index]['fieldtype'] == 'Numero':
-                string_num = record[record_index]['value']
-                if string_num:
-                    try:
-                        num = float(string_num)
-                    except ValueError:
-                        num = 0
+                num_str = record[record_index]['value']
+
+                # Split the number into the integer and decimal parts
+                if '.' in num_str:
+                    integer_part, decimal_part = num_str.split('.')
                 else:
-                    num = 0
-                record[record_index]['value'] = "{:,}".format(num)
+                    integer_part, decimal_part = num_str, ""
+
+                if decimal_part == '':
+                    decimal_part = '00'
+
+                # Add thousands separators (period) to the integer part
+                integer_part = format(int(integer_part), ',').replace(',', '.')
+                formatted_num = f"{integer_part},{decimal_part}"
+
+                record[record_index]['value'] = formatted_num
             if record[record_index]['value'] == 'Validazionetecnica':
                 record[record_index]['fieldtype'] = 'lookup'
                 record[record_index]['fieldbackground'] = 'green'
