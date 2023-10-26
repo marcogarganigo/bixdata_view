@@ -43,10 +43,11 @@ class ScriptLogic:
         bixdata_db_obj=DatabaseHelper('default')
         
         conditions=list()
-        conditions.append("recordid_='00000000000000000000000000001375'")
+        conditions.append("syncstatus='Si'")
         deal_records= deal_table_obj.get_records(conditions)
         for deal_record_dict in deal_records:
-            log+=f"Deal: {deal_record_dict['dealname']}"
+            log+=f"Deal: {deal_record_dict['dealname']} <br/><br/>"
+            print(f"Deal: {deal_record_dict['dealname']} <br/><br/>")
             recordid_deal=deal_record_dict['recordid_']
             hubspot_dealuser=deal_record_dict['dealuser']
             deal_record_obj=Record('deal',deal_record_dict['recordid_'])
@@ -69,19 +70,46 @@ class ScriptLogic:
             
             #Aggiornamento dettagli deal e calcolo totali    
             dealline_records=dealline_table_obj.get_records_by_linked('deal',recordid_deal)
+            total_actualcost=0
             total_expectedcost=0
-            for dealline_record in dealline_records:
-                dealline_recordid=dealline_record['recordid_']
-                adiuto_dealline = adiuto_db_obj.sql_query_row(f"SELECT * FROM A1029 WHERE F1062='{recordid_deal}'")
-                if adiuto_dealline:
-                    bix_dealline=Record('dealline',dealline_recordid)
-                    bix_dealline.fields['uniteffectivecost']=adiuto_dealline['F1043']
-                    bix_dealline.save()
+            total_price=0
+            for dealline_record_dict in dealline_records:
+                #quantity
+                #unitprice
+                #price
+                #unitexpectedcost
+                #expectedcost
+                #expectedmargin
+                #uniteffectivecost
+                #effectivecost
+                #quantity_actual
+                #quantity_difference
+                #price_actual
+                #price_difference
+                #margin_actual
+                dealline_record_obj=Record('dealline',dealline_record_dict['recordid_'])
+                adiuto_dealline_dict = adiuto_db_obj.sql_query_row(f"SELECT * FROM VA1029 WHERE FENA=-1 AND F1062='{dealline_record_obj.get_field('recordid_')}'")
+                if adiuto_dealline_dict:
+                    adiuto_uniteffectivecost=0
+                    if adiuto_dealline_dict['F1043']:
+                        adiuto_uniteffectivecost=float(adiuto_dealline_dict['F1043'])
+                    dealline_record_obj.set_field('uniteffectivecost',adiuto_uniteffectivecost)
+                dealline_record_obj.set_field('effectivecost',(dealline_record_obj.get_field('quantity') or 0)*(dealline_record_obj.get_field('uniteffectivecost') or 0))
+                dealline_record_obj.save()        
                         
-                        
-                total_expectedcost=total_expectedcost+dealline_record['expectedcost']
+                total_actualcost=total_actualcost+(dealline_record_obj.get_field('effectivecost') or 0)
+                total_expectedcost=total_expectedcost+(dealline_record_obj.get_field('expectedcost') or 0)
+                total_price=total_price+(dealline_record_obj.get_field('price') or 0)
             
-            
+            if deal_record_obj.get_field('amount')==None:
+                deal_record_obj.set_field('amount',0)
+            deal_record_obj.set_field('actualcost',total_actualcost)
+            deal_record_obj.set_field('expectedcost',total_expectedcost)
+            deal_record_obj.set_field('totalprice',total_price)
+            deal_record_obj.set_field('effectivemargin', deal_record_obj.get_field('totalprice')-total_actualcost)
+            deal_record_obj.set_field('margindifference',(deal_record_obj.get_field('expectedmargin') or 0) - (deal_record_obj.get_field('effectivemargin') or 0) )
+            if (deal_record_obj.get_field('expectedmargin') or 0)!=0:
+                deal_record_obj.set_field('margindifference',(deal_record_obj.get_field('margindifference') or 0) / (deal_record_obj.get_field('expectedmargin') or 0) * 100 )
             deal_record_obj.save()
                 
         return log
