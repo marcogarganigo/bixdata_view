@@ -16,15 +16,33 @@ def firefox_check(view_func):
     return wrapped_view
 
 class HelperView:
-    
+    """Metodi generali di supporto per le altre View
+    """
     def __init__(self,request):
         self.request=request
         self.context=dict()
     
+    
     def render_template(self,template_path):
+        """Generazione del template come pagina html
+
+        Args:
+            template_path (str): path del template da usare
+
+        Returns:
+            _type_: template generato come pagina html
+        """
         string_template = self.get_template(template_path)
         return HttpResponse(string_template)
     
     def get_template(self,template_path):
+        """Generazione del template come stringa
+
+        Args:
+            template_path (str): path del template da usare
+
+        Returns:
+            _type_: template generato come stringa
+        """
         return render_to_string(template_path, self.context)
     

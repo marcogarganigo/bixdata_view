@@ -27,7 +27,7 @@ from django.db.models import OuterRef, Subquery
 from .logic_helper import *
 
 
-class RecordsHelper:
+class Table:
     
     def __init__(self,tableid):
         self.tableid=tableid

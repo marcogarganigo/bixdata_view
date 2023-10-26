@@ -25,15 +25,15 @@ from django import template
 from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
 from .logic_helper import *
+from .database_helper import *
 
-class RecordHelper:
-    tableid=None
-    recordid=None
-    fields=dict()
+class Record:
     
     def __init__(self, tableid, recordid=None):
+        self.db_helper=DatabaseHelper('default')
         self.tableid=tableid
         self.recordid=recordid
+        self.fields=dict()
     
     def get_recordid(self):
         return self.recordid
@@ -41,22 +41,24 @@ class RecordHelper:
     def save(self):
         if self.recordid:
             counter=0
-            sql=f"UPDATE user_{self.tableid} SET ("
+            sql=f"UPDATE user_{self.tableid} SET "
             for key,value in self.fields.items():
                 if counter>0:
                     sql=sql+","
-                sql=sql+f" {key}={value} "
+                sql=sql+f" {key}='{value}' "
                 counter+=1
-            sql=sql+")"    
+            sql=sql+f" WHERE recordid_='{self.recordid}'"   
         else:
             sql=""
-        
-            
+        self.db_helper.sql_execute(sql)
+    
+    def set_field(self,field_key,field_value):    
+        self.fields[field_key]=field_value   
                 
-        
+    def get_field(self,field_key):
+        return self.fields[field_key]    
             
-        return True
+        
    
-    def update(self):
-       return True
+
 
