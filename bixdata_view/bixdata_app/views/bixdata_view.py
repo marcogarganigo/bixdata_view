@@ -218,20 +218,22 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
             if record[record_index]['fieldtype'] == 'Numero':
                 num_str = record[record_index]['value']
 
-                # Split the number into the integer and decimal parts
-                if '.' in num_str:
-                    integer_part, decimal_part = num_str.split('.')
-                else:
-                    integer_part, decimal_part = num_str, ""
+                if num_str:
+                    # Split the number into the integer and decimal parts
+                    if '.' in num_str:
+                        integer_part, decimal_part = num_str.split('.')
+                    else:
+                        integer_part, decimal_part = num_str, ""
 
-                if decimal_part == '':
-                    decimal_part = '00'
+                    if decimal_part == '':
+                        decimal_part = '00'
 
-                # Add thousands separators (period) to the integer part
-                integer_part = format(int(integer_part), ',').replace(',', '.')
-                formatted_num = f"{integer_part},{decimal_part}"
+                    # Add thousands separators (period) to the integer part
+                    integer_part = format(int(integer_part), ',').replace(',', '.')
+                    formatted_num = f"{integer_part},{decimal_part}"
 
-                record[record_index]['value'] = formatted_num
+                    record[record_index]['value'] = formatted_num
+
             if record[record_index]['value'] == 'Validazionetecnica':
                 record[record_index]['fieldtype'] = 'lookup'
                 record[record_index]['fieldbackground'] = 'green'
