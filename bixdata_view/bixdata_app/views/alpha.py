@@ -1936,3 +1936,16 @@ def test_adiuto_db(request):
         cursor.execute("SELECT * FROM A1001")
         rows = dictfetchall(cursor)
     return render(request, 'other/test_adiuto_db.html')
+
+
+def test_admin_doc(request):
+    """Esegue una funzione
+
+    Args:
+        request (_type_): richiesta d'origin
+        function (str): funzione da eseguire
+
+    Returns:
+        str: risultato della funzione chiamata, visualizzabile  nel browser
+    """
+    return HttpResponse('ok')
