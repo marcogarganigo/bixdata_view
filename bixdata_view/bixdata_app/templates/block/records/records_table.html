@@ -101,6 +101,13 @@
 </style>
 
 <script>
+
+    $(document).ready(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+
+
+
     $(function () {
         $('#my-pagination').jqPagination({
             current_page: {{currentpage}},
@@ -201,15 +208,15 @@
                         {% if column.desc != 'recordid_' and column.desc != 'recordstatus_' and column.desc != 'recordcss_' %}
                             {% if column.fieldtypeid == 'Numero' %}
                                 {% if column.desc == order_field %}
-                                    <th onclick="sort(this)" style="text-align: right">{{ column.desc }} <i class="{{ icon }}"></i></th>
+                                    <th onclick="sort(this)" style="text-align: right" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ column.desc }}">{{ column.desc }} <i class="{{ icon }}"></i></th>
                                 {% else %}
-                                    <th onclick="sort(this)" style="text-align: right">{{ column.desc }} <i class=""></i></th>
+                                    <th onclick="sort(this)" style="text-align: right" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ column.desc }}">{{ column.desc }} <i class=""></i></th>
                                 {% endif %}
                             {% else %}
                                 {% if column.desc == order_field %}
-                                    <th onclick="sort(this)">{{ column.desc }} <i class="{{ icon }}"></i></th>
+                                    <th onclick="sort(this)" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ column.desc }}">{{ column.desc }} <i class="{{ icon }}"></i></th>
                                 {% else %}
-                                    <th onclick="sort(this)">{{ column.desc }} <i class=""></i></th>
+                                    <th onclick="sort(this)" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ column.desc }}">{{ column.desc }} <i class=""></i></th>
                                 {% endif %}
                             {% endif %}
                         {% endif %}
