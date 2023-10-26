@@ -181,7 +181,7 @@
     }
 
     function sort(el) {
-        $('#block_records_table').attr('data-order-field', $(el).text().trim())
+        $(el).closest('#block_records_table').attr('data-order-field', $(el).text().trim())
 
         if ($(el).find('i').hasClass('mdi-arrow-down-thin')) {
             $(el).find('i').removeClass('mdi-arrow-down-thin')
@@ -190,7 +190,7 @@
         } else {
             $(el).find('i').removeClass('mdi-arrow-up-thin')
             $(el).find('i').removeClass('mdi')
-            $('#block_records_table').attr('data-order', 'asc')
+            $(el).closest('#block_records_table').attr('data-order', 'asc')
         }
         refresh()
     }
@@ -208,15 +208,15 @@
                         {% if column.desc != 'recordid_' and column.desc != 'recordstatus_' and column.desc != 'recordcss_' %}
                             {% if column.fieldtypeid == 'Numero' %}
                                 {% if column.desc == order_field %}
-                                    <th onclick="sort(this)" style="text-align: right" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ column.desc }}">{{ column.desc }} <i class="{{ icon }}"></i></th>
+                                    <th onclick="sort(this)" style="text-align: right" title="{{ column.desc }}">{{ column.desc }} <i class="{{ icon }}"></i></th>
                                 {% else %}
-                                    <th onclick="sort(this)" style="text-align: right" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ column.desc }}">{{ column.desc }} <i class=""></i></th>
+                                    <th onclick="sort(this)" style="text-align: right" title="{{ column.desc }}">{{ column.desc }} <i class=""></i></th>
                                 {% endif %}
                             {% else %}
                                 {% if column.desc == order_field %}
-                                    <th onclick="sort(this)" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ column.desc }}">{{ column.desc }} <i class="{{ icon }}"></i></th>
+                                    <th onclick="sort(this)"title="{{ column.desc }}">{{ column.desc }} <i class="{{ icon }}"></i></th>
                                 {% else %}
-                                    <th onclick="sort(this)" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{ column.desc }}">{{ column.desc }} <i class=""></i></th>
+                                    <th onclick="sort(this)" title="{{ column.desc }}">{{ column.desc }} <i class=""></i></th>
                                 {% endif %}
                             {% endif %}
                         {% endif %}
