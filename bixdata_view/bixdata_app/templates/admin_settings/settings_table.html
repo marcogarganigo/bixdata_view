@@ -205,8 +205,13 @@ function setFieldsOrderSave() {
                 'tableid': tableid,
                 'userid': userid,},
             success: function (response) {
-                console.info(response)
-                $('#table_settings_menu_options').html(response)
+                 $("#settings_col4").css('display', 'block');
+
+                 $("#results-column-container").load('/loading/')
+
+                 setTimeout(function () {
+                     $("#results-column-container").html(response);
+                 }, 150);
             },
         })
     }
@@ -296,10 +301,6 @@ function setFieldsOrderSave() {
         <div id="results-column-container"style="height: 100%">
 
         </div>
-    </div>
-
-    <div id="table_settings_menu_options" style="height: 100%; float:left">
-
     </div>
 
     <div id="settings_table_fields_settings">
