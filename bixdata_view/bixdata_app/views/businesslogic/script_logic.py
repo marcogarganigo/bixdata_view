@@ -106,7 +106,8 @@ class ScriptLogic:
             deal_record_obj.set_field('actualcost',total_actualcost)
             deal_record_obj.set_field('expectedcost',total_expectedcost)
             deal_record_obj.set_field('totalprice',total_price)
-            deal_record_obj.set_field('effectivemargin', deal_record_obj.get_field('totalprice')-total_actualcost)
+            deal_record_obj.set_field('expectedmargin', (deal_record_obj.get_field('totalprice') or 0) - total_expectedcost)
+            deal_record_obj.set_field('effectivemargin', (deal_record_obj.get_field('totalprice') or 0) - total_actualcost)
             deal_record_obj.set_field('margindifference',(deal_record_obj.get_field('expectedmargin') or 0) - (deal_record_obj.get_field('effectivemargin') or 0) )
             if (deal_record_obj.get_field('expectedmargin') or 0)!=0:
                 deal_record_obj.set_field('margindifference',(deal_record_obj.get_field('margindifference') or 0) / (deal_record_obj.get_field('expectedmargin') or 0) * 100 )
