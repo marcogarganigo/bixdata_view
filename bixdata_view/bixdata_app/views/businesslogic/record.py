@@ -33,7 +33,10 @@ class Record:
         self.db_helper=DatabaseHelper('default')
         self.tableid=tableid
         self.recordid=recordid
-        self.fields=dict()
+        if recordid:
+            self.fields=self.db_helper.sql_query_row(f"SELECT * FROM user_{self.tableid} WHERE recordid_='{self.recordid}'")
+        else:
+            self.fields=dict()
     
     def get_recordid(self):
         return self.recordid
@@ -45,14 +48,19 @@ class Record:
             for key,value in self.fields.items():
                 if counter>0:
                     sql=sql+","
-                sql=sql+f" {key}='{value}' "
+                if value:  
+                    if type(value)==str:
+                        value = value.replace("'", "''")  
+                    sql=sql+f" {key}='{value}' "
+                else:
+                    sql=sql+f" {key}=null "
                 counter+=1
             sql=sql+f" WHERE recordid_='{self.recordid}'"   
         else:
             sql=""
         self.db_helper.sql_execute(sql)
     
-    def set_field(self,field_key,field_value):    
+    def set_field(self,field_key,field_value): 
         self.fields[field_key]=field_value   
                 
     def get_field(self,field_key):
