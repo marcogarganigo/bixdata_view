@@ -10,7 +10,7 @@ from bixdata_app.models import *
 
 
 import pyperclip
-from aiohttp.web_fileresponse import FileResponse
+from aiohttp.web_fileresponse import FileResponses
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -139,7 +139,12 @@ def get_records_linked(request):
     tableid = request.POST.get('tableid')
     master_tableid = request.POST.get('master_tableid')
     master_recordid = request.POST.get('master_recordid')
-    records_table = get_records_table(request, tableid, master_tableid, master_recordid)
+    order = request.POST.get('order')
+    order_field = request.POST.get('order_field')
+    searchTerm = ''
+    viewid = ''
+    currentpage= 1
+    records_table = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid, currentpage, order_field, order)
     return HttpResponse(records_table)
 
 # Questa funzione prende tutti i record della tabella richiesta e li ritorna
@@ -172,7 +177,7 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
     reports = response_dict['reports']
     other_values = dict()
 
-    if order_field == '':
+    if order_field == '' or order_field == None:
         order_field = columns[3]['desc']
         order = 'asc'
 

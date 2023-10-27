@@ -183,6 +183,7 @@
     function sort(el) {
         $(el).closest('#block_records_table').attr('data-order-field', $(el).text().trim())
 
+
         if ($(el).find('i').hasClass('mdi-arrow-down-thin')) {
             $(el).find('i').removeClass('mdi-arrow-down-thin')
             $(el).find('i').removeClass('mdi')
@@ -192,7 +193,22 @@
             $(el).find('i').removeClass('mdi')
             $(el).closest('#block_records_table').attr('data-order', 'asc')
         }
-        refresh()
+        linkedtableid = $(el).closest('.div-collapse').attr('data-tableid')
+        tableid=$(el).closest('.div-collapse').attr('data-tableid')
+        masterrecordid=$(el).closest('.block_record_card').attr('data-recordid')
+        mastertableid= $(el).closest('.block_record_card').attr('data-tableid')
+
+
+        linkedtableid = linkedtableid + '-' + masterrecordid
+
+
+        if ($(el).closest('#block_records_table').attr('data-type') == 'linked') {
+            order = $(el).closest('#block_records_table').attr('data-order')
+            order_field = $(el).closest('#block_records_table').attr('data-order-field')
+            load_linked(linkedtableid, tableid, masterrecordid, mastertableid, order, order_field)
+        } else {
+            refresh()
+        }
     }
 
 </script>
