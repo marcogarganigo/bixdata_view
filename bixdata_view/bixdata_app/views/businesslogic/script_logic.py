@@ -113,7 +113,8 @@ class ScriptLogic:
                 total_price=total_price+(dealline_record_obj.get_field('price') or 0)
                 
             deal_record_obj.set_field('usedhours',project_record_obj.get_field('usedhours'))
-            total_actualcost=total_actualcost+((project_record_obj.get_field('usedhours') or 0)*60)
+            if deal_record_obj.get_field('fixedprice')=='Si':
+                total_actualcost=total_actualcost+((project_record_obj.get_field('usedhours') or 0)*60)
             if deal_record_obj.get_field('amount')==None:
                 deal_record_obj.set_field('amount',0)
             deal_record_obj.set_field('actualcost',total_actualcost)
