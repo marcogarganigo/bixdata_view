@@ -44,7 +44,7 @@ class ScriptLogic:
         
         conditions=list()
         conditions.append("syncstatus='Si'")
-        #conditions.append("recordid_='00000000000000000000000000001421'")
+        #conditions.append("recordid_='00000000000000000000000000001422'")
         deal_records= deal_table_obj.get_records(conditions)
         for deal_record_dict in deal_records:
             log+=f"Deal: {deal_record_dict['dealname']} <br/><br/>"
