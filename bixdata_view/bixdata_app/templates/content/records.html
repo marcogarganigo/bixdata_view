@@ -157,6 +157,7 @@
             name: 'tableid',
             value: '{{tableid}}'
         });
+
         serialized_data.push({
             name: 'searchTerm',
             value: $("#searchTerm").val()
@@ -194,14 +195,13 @@
 
                     $("#records_table_container").html(response);
                 },
-                error: function () {
+                error: function (response) {
 
                     $("#records_table_container").html(response);
                 }
             });
         });
     }
-
     function export_excel() {
         var serialized_data = [];
         serialized_data.push({

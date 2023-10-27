@@ -14,7 +14,14 @@
         $(el).next('.div-collapse').slideToggle(200);
     }
 
-    function load_linked(linkedtableid, tableid, masterrecordid, mastertableid) {
+    function load_linked(linkedtableid, tableid, masterrecordid, mastertableid, order, order_field) {
+        if (order == 'None') {
+            order = ''
+        }
+        if (order_field == 'None') {
+            order_field = ''
+        }
+
         var masterrecordid = masterrecordid
         var mastertableid = mastertableid
         $("#linked-container-" + linkedtableid).load('/loading/')
@@ -26,6 +33,8 @@
                 'tableid': tableid,
                 'master_tableid': mastertableid,
                 'master_recordid': masterrecordid,
+                'order': order,
+                'order_field': order_field,
             },
             success: function (response) {
                 //$(collapse).find('.linked_container').html(response);
@@ -112,7 +121,7 @@
             </span>
         </button>
 
-        <div class="div-collapse" id="collapse-{{ linked_table.tableid }}-{{ recordid }}" style="margin-top: 10px; display: none">
+        <div class="div-collapse" id="collapse-{{ linked_table.tableid }}-{{ recordid }}" style="margin-top: 10px; display: none" data-tableid="{{ linked_table.tableid }}" data-recordid="{{ linked_table.recordid }}">
             <div class="card card-body">
                 <button class="btn btn-secondary d-flex justify-content-center align-items-center"
                         onclick="linked_newRecord(this, '{{ linked_table.tableid }}')" style="width: 5%;"><span
