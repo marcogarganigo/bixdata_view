@@ -44,15 +44,20 @@ class ScriptLogic:
         
         conditions=list()
         conditions.append("syncstatus='Si'")
+        #conditions.append("recordid_='00000000000000000000000000001422'")
         deal_records= deal_table_obj.get_records(conditions)
         for deal_record_dict in deal_records:
             log+=f"Deal: {deal_record_dict['dealname']} <br/><br/>"
             print(f"Deal: {deal_record_dict['dealname']} <br/><br/>")
             recordid_deal=deal_record_dict['recordid_']
-            hubspot_dealuser=deal_record_dict['dealuser']
-            deal_record_obj=Record('deal',deal_record_dict['recordid_'])
+            deal_record_obj=Record('deal',recordid_deal)
+            project_dict= bixdata_db_obj.sql_query_row(f"SELECT * FROM user_project WHERE recordiddeal_='{recordid_deal}'")
+            if project_dict:
+                self.update_project(project_dict['recordid_'])
             
-            
+            project_record_obj=Record('project',project_dict['recordid_'])
+            hubspot_dealuser=deal_record_obj.get_field('dealuser')
+                       
             
             dealuser_dict= bixdata_db_obj.sql_query_row(f"SELECT * FROM sys_user WHERE hubspot_dealuser='{hubspot_dealuser}'")
             if dealuser_dict:
@@ -73,6 +78,7 @@ class ScriptLogic:
             total_actualcost=0
             total_expectedcost=0
             total_price=0
+            total_expectedhours=0
             for dealline_record_dict in dealline_records:
                 #quantity
                 #unitprice
@@ -96,11 +102,19 @@ class ScriptLogic:
                     dealline_record_obj.set_field('uniteffectivecost',adiuto_uniteffectivecost)
                 dealline_record_obj.set_field('effectivecost',(dealline_record_obj.get_field('quantity') or 0)*(dealline_record_obj.get_field('uniteffectivecost') or 0))
                 dealline_record_obj.save()        
-                        
-                total_actualcost=total_actualcost+(dealline_record_obj.get_field('effectivecost') or 0)
+                
+                if dealline_record_obj.get_field('effectivecost')>0:        
+                    total_actualcost=total_actualcost+dealline_record_obj.get_field('effectivecost')
+                else:
+                    if dealline_record_obj.get_field('expectedhours')==None or dealline_record_obj.get_field('expectedhours')==0:
+                        total_actualcost=total_actualcost+(dealline_record_obj.get_field('expectedcost') or 0)
+                        total_expectedhours=total_expectedhours+(deal_record_obj.get_field('expectedhours') or 0)
                 total_expectedcost=total_expectedcost+(dealline_record_obj.get_field('expectedcost') or 0)
                 total_price=total_price+(dealline_record_obj.get_field('price') or 0)
-            
+                
+            deal_record_obj.set_field('usedhours',project_record_obj.get_field('usedhours'))
+            if deal_record_obj.get_field('fixedprice')=='Si':
+                total_actualcost=total_actualcost+((project_record_obj.get_field('usedhours') or 0)*60)
             if deal_record_obj.get_field('amount')==None:
                 deal_record_obj.set_field('amount',0)
             deal_record_obj.set_field('actualcost',total_actualcost)
@@ -112,10 +126,14 @@ class ScriptLogic:
                 deal_record_obj.set_field('margindifference',(deal_record_obj.get_field('effectivemargin') or 0) - (deal_record_obj.get_field('expectedmargin') or 0) )
                 if (deal_record_obj.get_field('expectedmargin') or 0)!=0:
                     deal_record_obj.set_field('margindifference_perc',(deal_record_obj.get_field('margindifference') or 0) / (deal_record_obj.get_field('expectedmargin') or 0) * 100 )
+                else:
+                    deal_record_obj.set_field('margindifference',0)
+                    deal_record_obj.set_field('margindifference_perc',0)
             else:
-                deal_record_obj.set_field('effectivemargin',None)
-                deal_record_obj.set_field('margindifference',None)
-                deal_record_obj.set_field('margindifference_perc',None)
+                deal_record_obj.set_field('effectivemargin',0)
+                deal_record_obj.set_field('margindifference',0)
+                deal_record_obj.set_field('margindifference_perc',0)
+            deal_record_obj.set_field('expectedhours',total_expectedhours)
             
             
             deal_record_obj.save()
@@ -123,3 +141,17 @@ class ScriptLogic:
         return log
    
 
+    def update_project(self,project_recordid):
+        """Aggiorna le ore effettive in base ai timesheet registrati
+
+        Args:
+            project_recordid (str): identificativo del progetto da aggiornare
+        """
+        project_record_obj=Record('project',project_recordid)
+        timesheet_table_obj=Table('timesheet')
+        timesheets=timesheet_table_obj.get_records_by_linked('project',project_recordid)
+        usedhours=0
+        for timesheet_dict in timesheets:
+            usedhours=usedhours+(timesheet_dict['totaltime_decimal'] or 0)
+        project_record_obj.set_field('usedhours',usedhours)
+        project_record_obj.save()
