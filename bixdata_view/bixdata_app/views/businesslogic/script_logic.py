@@ -111,7 +111,8 @@ class ScriptLogic:
                         total_expectedhours=total_expectedhours+(deal_record_obj.get_field('expectedhours') or 0)
                 total_expectedcost=total_expectedcost+(dealline_record_obj.get_field('expectedcost') or 0)
                 total_price=total_price+(dealline_record_obj.get_field('price') or 0)
-                
+            
+            deal_record_obj.set_field('total_expectedhours',project_record_obj.get_field('total_expectedhours'))    
             deal_record_obj.set_field('usedhours',project_record_obj.get_field('usedhours'))
             if deal_record_obj.get_field('fixedprice')=='Si':
                 total_actualcost=total_actualcost+((project_record_obj.get_field('usedhours') or 0)*60)
