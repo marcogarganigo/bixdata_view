@@ -126,9 +126,9 @@ class ScriptLogic:
                 if (deal_record_obj.get_field('expectedmargin') or 0)!=0:
                     deal_record_obj.set_field('margindifference_perc',(deal_record_obj.get_field('margindifference') or 0) / (deal_record_obj.get_field('expectedmargin') or 0) * 100 )
             else:
-                deal_record_obj.set_field('effectivemargin',None)
-                deal_record_obj.set_field('margindifference',None)
-                deal_record_obj.set_field('margindifference_perc',None)
+                deal_record_obj.set_field('effectivemargin',0)
+                deal_record_obj.set_field('margindifference',0)
+                deal_record_obj.set_field('margindifference_perc',0)
             deal_record_obj.set_field('expectedhours',total_expectedhours)
             
             
