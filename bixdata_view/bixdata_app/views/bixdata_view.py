@@ -10,7 +10,7 @@ from bixdata_app.models import *
 
 
 import pyperclip
-from aiohttp.web_fileresponse import FileResponses
+#from aiohttp.web_fileresponse import FileResponses
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
