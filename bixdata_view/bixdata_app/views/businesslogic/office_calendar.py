@@ -24,7 +24,7 @@ class OfficeCalendar:
         if account.authenticate():
             print('Authenticated!')
 
-            schedule = account.schedule(resource='alessandrogalli@zechinitest.onmicrosoft.com')
+            schedule = account.schedule(resource=env('EMAIL'))
             calendar = schedule.get_default_calendar()
 
             if task['o365_idcalendar'] == '':
@@ -45,7 +45,7 @@ class OfficeCalendar:
                 event.location = "Test"
                 event.body = task['description']
 
-                #event.task_recordid = task['recordid']
+                event.recordid = task['recordid']
 
 
                 event.save()
@@ -66,7 +66,7 @@ class OfficeCalendar:
         if account.authenticate():
             print('Authenticated!')
 
-            schedule = account.schedule(resource='alessandrogalli@zechinitest.onmicrosoft.com')
+            schedule = account.schedule(resource=env('EMAIL'))
             calendar = schedule.get_default_calendar()
 
             events = calendar.get_events(include_recurring=False)
@@ -85,7 +85,7 @@ class OfficeCalendar:
         if account.authenticate():
             print('Authenticated!')
 
-            schedule = account.schedule(resource='alessandrogalli@zechinitest.onmicrosoft.com')
+            schedule = account.schedule(resource=env('EMAIL'))
             calendar = schedule.get_default_calendar()
 
             q = calendar.new_query('ical_uid').equals(
