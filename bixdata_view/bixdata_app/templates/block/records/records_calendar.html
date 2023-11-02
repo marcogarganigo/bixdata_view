@@ -7,19 +7,19 @@
                 "end": "2023-02-01T12:00:00",
                 "allDay": false
             },
-            {
-                "title": "Event 2",
-                "start": "2023-06-06",
-                "allDay": true
-            },
-            {
-                "title": "New Event",
-                "start": "2023-01-23",
-                "allDay": true
-            }
-        ]
-        $('#calendar').fullCalendar({
+            {% for event in events %}
+                {
+                    "title": "test",
+                    "start": "{{ event.start|date:'Y-m-d\TH:i:s' }}",
+                    "end": "{{ event.end|date:'Y-m-d\TH:i:s' }}",
+                    "recordid": "{{ event.recordid }}",
+                    "allDay": false,
+                    "calendarid": "{{ event.ical_uid }}"
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
 
+        var calendar = $('#calendar').fullCalendar({
             events: jsonEvents,
             header: {
                 left: 'prev,next today',
@@ -27,25 +27,82 @@
                 right: 'month,agendaWeek,agendaDay'
             },
             editable: true,
-            Boolean, default: true,
-            eventDrop: function (event, delta, revertFunc) {
-                // code to handle event drop
-            },
-            eventResize: function (event, delta, revertFunc) {
-                // code to handle event resize
-            },
             eventClick: function (event) {
-                // Open an alert when the event is clicked
-                alert("alert");
+                // Open a modal for editing when the event is clicked
+                $('#editEventModal').attr('data-calendarid', event.calendarid);
+                $('#eventTitle').val(event.title);
+
+
+                var eventStart = event.start;
+                var formattedDateStart = new Date(eventStart).toISOString().slice(0, 16);
+                document.getElementById("eventStart").value = formattedDateStart;
+
+                var eventEnd = event.end;
+                var formattedDateEnd = new Date(eventEnd).toISOString().slice(0, 16);
+                document.getElementById("eventEnd").value = formattedDateEnd;
+
+
+
+
+
+                $('#editEventModal').modal('show');
+                // Here, you can populate the modal with event details for editing
+                // For example, you can use event.title, event.start, and event.end to populate input fields in the modal.
             },
             eventRender: function (event, element) {
-                // code to customize event rendering
-            }
+                // Customize event rendering to display only the event title
+                element.find('.fc-title').html(event.title);
+            },
         });
     });
+
+    function editCalendarEvent(calendarid) {
+
+    }
 </script>
 
 
-<div id="#content_records_calendar" style="width: 65%;">
+<style>
+    .fc-title {
+        font-weight: bold;
+    }
+</style>
+
+<div id="content_records_calendar" style="width: 65%;">
     <div id="calendar"></div>
 </div>
+
+<!-- Modal for editing events -->
+<div class="modal fade" id="editEventModal" tabindex="-1" role="dialog" aria-labelledby="editEventModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editEventModalLabel">Edit Event</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Add input fields here to edit event details -->
+                <div class="form-group">
+                    <label for="eventTitle">Title</label>
+                    <input type="text" class="form-control" id="eventTitle">
+                </div>
+                <div class="form-group">
+                    <label for="eventStart">Start Date and Time</label>
+                    <input type="datetime-local" class="form-control" id="eventStart">
+                </div>
+                <div class="form-group">
+                    <label for="eventEnd">End Date and Time</label>
+                    <input type="datetime-local" class="form-control" id="eventEnd">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="editCalendarEvent($('#editEventModal').attr('data-calendarid'))">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
