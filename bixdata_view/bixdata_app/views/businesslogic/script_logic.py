@@ -112,7 +112,7 @@ class ScriptLogic:
                 total_expectedcost=total_expectedcost+(dealline_record_obj.get_field('expectedcost') or 0)
                 total_price=total_price+(dealline_record_obj.get_field('price') or 0)
             
-            deal_record_obj.set_field('total_expectedhours',project_record_obj.get_field('total_expectedhours'))    
+            deal_record_obj.set_field('expectedhours',total_expectedhours)    
             deal_record_obj.set_field('usedhours',project_record_obj.get_field('usedhours'))
             if deal_record_obj.get_field('fixedprice')=='Si':
                 total_actualcost=total_actualcost+((project_record_obj.get_field('usedhours') or 0)*60)
@@ -122,6 +122,9 @@ class ScriptLogic:
             deal_record_obj.set_field('expectedcost',total_expectedcost)
             deal_record_obj.set_field('totalprice',total_price)
             deal_record_obj.set_field('expectedmargin', (deal_record_obj.get_field('totalprice') or 0) - total_expectedcost)
+            effectivemargin=0
+            margindifference=0
+            margindifference_perc=0
             if total_actualcost>0:
                 deal_record_obj.set_field('effectivemargin', (deal_record_obj.get_field('totalprice') or 0) - total_actualcost)
                 deal_record_obj.set_field('margindifference',(deal_record_obj.get_field('effectivemargin') or 0) - (deal_record_obj.get_field('expectedmargin') or 0) )
@@ -130,10 +133,11 @@ class ScriptLogic:
                 else:
                     deal_record_obj.set_field('margindifference',0)
                     deal_record_obj.set_field('margindifference_perc',0)
-            else:
-                deal_record_obj.set_field('effectivemargin',0)
-                deal_record_obj.set_field('margindifference',0)
-                deal_record_obj.set_field('margindifference_perc',0)
+
+            deal_record_obj.set_field('projectcompleted',project_record_obj.get_field('completed'))
+            deal_record_obj.set_field('effectivemargin',effectivemargin)
+            deal_record_obj.set_field('margindifference',margindifference)
+            deal_record_obj.set_field('margindifference_perc',margindifference_perc)
             deal_record_obj.set_field('expectedhours',total_expectedhours)
             
             
