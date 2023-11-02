@@ -378,8 +378,10 @@
                     </button>
                 {% endif %}
 
-                {% if tableid == 'timesheet' and userid == 3 %}
+                {% if tableid == 'timesheet' %}
+                    {% if userid == 3 or userid == 9 %}
                     <button onclick="$('#field-validated').val('Si'); $('#save-button-{{ recordid }}').click()" type="button" id="validate-button" style="display: none" class="btn btn-outline-success">Valida</button>
+                    {% endif %}
                 {% endif %}
 
                 <div style="clear:both;"></div>
