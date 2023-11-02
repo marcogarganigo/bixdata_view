@@ -23,6 +23,7 @@ import time
 
 import pdfkit
 
+from .businesslogic.office_calendar import OfficeCalendar
 from ..forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
@@ -626,7 +627,12 @@ def get_block_records_kanban(request):
 
 @login_required(login_url='/login/')
 def get_block_records_calendar(request):
-    return render(request, 'block/records/records_calendar.html')
+
+    oc = OfficeCalendar()
+    events = oc.get_calendar_events()
+
+
+    return render(request, 'block/records/records_calendar.html', {'events': events})
 
 
 # Questa funzione
@@ -886,6 +892,10 @@ def save_record_fields(request):
 
     selected_options = request.POST.getlist('service');
 
+    if tableid == 'task':
+        oc = OfficeCalendar()
+        fields_dict['o365_idcalendar'] = oc.add_calendar_event(fields_dict)
+
     fields = json.dumps(fields_dict)
 
     post_data = {
@@ -912,6 +922,7 @@ def save_record_fields(request):
                        subject='Supporto bixdata', html_message=message)
 
         elif tableid == 'task':
+
             if fields_dict['user'] != fields_dict['creator']:
                 with connection.cursor() as cursor:
                     cursor.execute("SELECT email FROM v_users WHERE sys_user_id = %s", [fields_dict['user']])
