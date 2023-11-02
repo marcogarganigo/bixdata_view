@@ -23,6 +23,7 @@ import time
 
 import pdfkit
 
+from .bixdata_view import *
 from .businesslogic.office_calendar import OfficeCalendar
 from ..forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
@@ -393,8 +394,7 @@ def get_render_content_dashboard(request):
                     tableid = results['tableid']
                     tableid = 'user_' + tableid
 
-                    block['html'] = get_records_table(request, results['tableid'], None, None, '', results['viewid'], 1,
-                                                      '', '')
+                    block['html'] = get_records_table(request, results['tableid'], None, None, '', results['viewid'], 1,'', '')
 
 
                 else:
