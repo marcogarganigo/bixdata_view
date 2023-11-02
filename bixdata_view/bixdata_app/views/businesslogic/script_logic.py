@@ -103,14 +103,15 @@ class ScriptLogic:
                 dealline_record_obj.set_field('effectivecost',(dealline_record_obj.get_field('quantity') or 0)*(dealline_record_obj.get_field('uniteffectivecost') or 0))
                 dealline_record_obj.save()        
                 
+                
+                total_expectedhours=total_expectedhours+(deal_record_obj.get_field('expectedhours') or 0)        
+                total_expectedcost=total_expectedcost+(dealline_record_obj.get_field('expectedcost') or 0)
+                total_price=total_price+(dealline_record_obj.get_field('price') or 0)
                 if dealline_record_obj.get_field('effectivecost')>0:        
                     total_actualcost=total_actualcost+dealline_record_obj.get_field('effectivecost')
                 else:
                     if dealline_record_obj.get_field('expectedhours')==None or dealline_record_obj.get_field('expectedhours')==0:
                         total_actualcost=total_actualcost+(dealline_record_obj.get_field('expectedcost') or 0)
-                        total_expectedhours=total_expectedhours+(deal_record_obj.get_field('expectedhours') or 0)
-                total_expectedcost=total_expectedcost+(dealline_record_obj.get_field('expectedcost') or 0)
-                total_price=total_price+(dealline_record_obj.get_field('price') or 0)
             
             deal_record_obj.set_field('expectedhours',total_expectedhours)    
             deal_record_obj.set_field('usedhours',project_record_obj.get_field('usedhours'))
