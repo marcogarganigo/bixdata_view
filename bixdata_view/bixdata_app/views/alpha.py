@@ -883,7 +883,8 @@ def save_record_fields(request):
 
     if tableid == 'timetracking':
         if fields_dict['stato'] == 'Terminato':
-            fields_dict['end'] = datetime.datetime.now().strftime("%H:%M")
+            if fields_dict['end'] == '':
+                fields_dict['end'] = datetime.datetime.now().strftime("%H:%M")
             time_format = '%H:%M'
             start = datetime.datetime.strptime(fields_dict['start'], time_format)
             end = datetime.datetime.strptime(fields_dict['end'], time_format)
