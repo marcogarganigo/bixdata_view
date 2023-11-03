@@ -9,7 +9,7 @@ import pyperclip
 from aiohttp.web_fileresponse import FileResponse
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, request
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail, BadHeaderError
@@ -897,7 +897,11 @@ def save_record_fields(request):
 
     if tableid == 'task':
         oc = OfficeCalendar()
-        fields_dict['o365_idcalendar'] = oc.add_calendar_event(fields_dict)
+        if fields_dict['planneddate'] != '':
+            if fields_dict['o365_idcalendar'] == '':
+                fields_dict['o365_idcalendar'] = oc.add_calendar_event(fields_dict)
+            else:
+                oc.update_calendar_event(fields_dict)
 
     fields = json.dumps(fields_dict)
 
@@ -1963,3 +1967,20 @@ def test_admin_doc(request):
         str: risultato della funzione chiamata, visualizzabile  nel browser
     """
     return HttpResponse('ok')
+
+
+def get_events_recordid(request):
+    events_recordid = []
+
+    events = request.POST.getlist('events')  # Use getlist to get a list of values
+    #convert from json to list
+    events = json.loads(events[0])
+
+    for event in events:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM user_task WHERE o365_idcalendar = %s", [event])
+            event_data = cursor.fetchall()
+            events_recordid.append(event_data)
+
+    return JsonResponse({'complete_events': events_recordid})
+

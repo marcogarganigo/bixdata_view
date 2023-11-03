@@ -134,4 +134,5 @@ urlpatterns = [
     path('script_call/<str:function>/', script_view.script_call, name='script_call'),
     path('test_adiuto_db', alpha.test_adiuto_db, name='test_adiuto_db'),
     path('test_admin_doc/', alpha.test_admin_doc, name='test_admin_doc'),
+    path('get_events_recordid/', alpha.get_events_recordid, name='get_events_recordid'),
 ]

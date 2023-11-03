@@ -1,5 +1,14 @@
 <script>
     $(document).ready(function () {
+
+         var events = [];
+        {% for event in events %}
+            events.push("{{ event.ical_uid }}");
+        {% endfor %}
+
+        //console.log(events)
+
+
         var jsonEvents = [
             {
                 "title": "Event 1",
@@ -7,17 +16,33 @@
                 "end": "2023-02-01T12:00:00",
                 "allDay": false
             },
-            {% for event in events %}
-                {
-                    "title": "test",
-                    "start": "{{ event.start|date:'Y-m-d\TH:i:s' }}",
-                    "end": "{{ event.end|date:'Y-m-d\TH:i:s' }}",
-                    "recordid": "{{ event.recordid }}",
-                    "allDay": false,
-                    "calendarid": "{{ event.ical_uid }}"
-                }{% if not forloop.last %},{% endif %}
-            {% endfor %}
         ];
+
+        $.ajax({
+            url: '/get_events_recordid/',
+            type: 'POST',
+            data: {
+                'events': JSON.stringify(events),
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    jsonEvents.push({
+                        "title": item.title,
+                        "start": item.start,
+                        "end": item.end,
+                        "recordid": item.recordid,
+                        "allDay": false,
+                        "calendarid": item.o365_idcalendar
+                    });
+                }
+                // Now, you can use the updated jsonEvents array with the added server response data.
+                console.log(jsonEvents);
+            },
+        });
+
 
         var calendar = $('#calendar').fullCalendar({
             events: jsonEvents,
@@ -49,7 +74,13 @@
                 // Here, you can populate the modal with event details for editing
                 // For example, you can use event.title, event.start, and event.end to populate input fields in the modal.
             },
+            eventDrop: function (event, delta, revertFunc) {
+                alert('dropped')
+            },
+
+
             eventRender: function (event, element) {
+
                 // Customize event rendering to display only the event title
                 element.find('.fc-title').html(event.title);
             },
