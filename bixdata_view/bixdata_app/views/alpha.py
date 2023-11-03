@@ -773,6 +773,8 @@ def get_block_record_fields(request):
         'master_recordid': master_recordid,
         'userid': userid
     }
+
+
     response = requests.post(
         f"{bixdata_server}bixdata/index.php/rest_controller/get_record_fields", data=post)
 

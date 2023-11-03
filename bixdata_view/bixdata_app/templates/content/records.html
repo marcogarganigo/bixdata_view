@@ -436,7 +436,7 @@
                                                 {% endif %}
                                             {% endfor %}
                                         </select>
-                                        <input class="form-control me-2" type="search" placeholder="Ricerca"
+                                        <input class="form-control me-2" type="search" placeholder="Ricerca ( Ctrl + K )"
                                                aria-label="Search" style="width: 50%; float: left" id="searchTerm"
                                                autocomplete="off"
                                                onkeydown="if(event.keyCode === 13) { event.preventDefault(); refresh(); }">
@@ -448,7 +448,7 @@
                                 </div>
                                 <div class="col filter-column">
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
-                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="refresh()">Ricarica</button>
+                                        <button class="btn btn-outline-danger me-md-2 center-icon-button" type="button" onclick="refresh()"><span class="material-symbols-outlined">cached</span></button>
                                         <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()">Nuovo</button>
                                         <div class="dropdown">
                                             <button class="btn btn-outline-secondary me md-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Esporta</button>
@@ -529,14 +529,15 @@
                                             aria-controls="records_table_container" aria-selected="false">Tabella
                                     </button>
                                 </li>
-
-                                <li id="nav-calendar" class="nav-item" role="presentation">
-                                  <button class="nav-link"
-                                          id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane"
-                                          type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar"
-                                          aria-selected="false">Calendario
-                                  </button>
-                              </li>
+                                {% if tableid == 'task' %}
+                                    <li id="nav-calendar" class="nav-item" role="presentation">
+                                      <button class="nav-link"
+                                              id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane"
+                                              type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar"
+                                              aria-selected="false">Calendario
+                                      </button>
+                                    </li>
+                                {% endif %}
                                 <!--
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="group-tab" data-bs-toggle="tab"
