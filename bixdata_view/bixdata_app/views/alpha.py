@@ -874,7 +874,7 @@ def get_linked(request):
 
 
 @login_required(login_url='/login/')
-def save_record_fields(request):
+    def save_record_fields(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     fields = request.POST.get('fields')
@@ -889,6 +889,13 @@ def save_record_fields(request):
             start = datetime.datetime.strptime(fields_dict['start'], time_format)
             end = datetime.datetime.strptime(fields_dict['end'], time_format)
             time_difference = end - start
+
+
+            total_minutes = time_difference.total_seconds() / 60
+            hours, minutes = divmod(total_minutes, 60)
+            formatted_time = "{:02}:{:02}".format(int(hours), int(minutes))
+
+            fields_dict['worktime_string'] = str(formatted_time)
 
             hours = time_difference.total_seconds() / 3600
             fields_dict['worktime'] = round(hours, 2)
