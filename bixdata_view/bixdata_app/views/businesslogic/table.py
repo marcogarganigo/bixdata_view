@@ -13,6 +13,7 @@ import json
 import datetime
 from django.contrib.auth.decorators import login_required
 import time
+import os
 from ...forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
@@ -25,7 +26,8 @@ from django import template
 from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
 from .logic_helper import *
-
+from ..beta import *
+bixdata_server = os.environ.get('BIXDATA_SERVER')
 
 class Table:
     
@@ -62,4 +64,20 @@ class Table:
             sql=f"SELECT * from user_{self.tableid} where recordid{linked_tableid}_='{linked_recordid}'"
             cursor.execute(sql)
             records = LogicH.dictfetchall(cursor)
+        return records
+    
+    def get_records(self,viewid='',searchTerm='',conditions=dict()):
+        post = {
+            'tableid': self.tableid,
+            'searchTerm': searchTerm,
+            'viewid': 51,
+            'currentpage': 1,
+            'order_field': 'id',
+            'order': 'asc',
+            'userid': 1
+        }
+        response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
+        response_dict = json.loads(response.text)
+        columns = response_dict['columns']
+        records = response_dict['records']
         return records

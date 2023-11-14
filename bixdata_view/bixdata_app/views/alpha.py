@@ -41,6 +41,7 @@ from .helper_view import *
 from htmldocx import HtmlToDocx
 import csv
 from functools import wraps
+from .businesslogic.table import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -629,10 +630,10 @@ def get_block_records_kanban(request):
 def get_block_records_calendar(request):
 
     oc = OfficeCalendar()
-    events = oc.get_calendar_events()
-
-
-    return render(request, 'block/records/records_calendar.html', {'events': events})
+    events_office = oc.get_calendar_events()
+    table_obj=Table('task')
+    events_bixdata=table_obj.get_records()
+    return render(request, 'block/records/records_calendar.html', {'events': events_office})
 
 
 # Questa funzione
