@@ -67,7 +67,9 @@ class OfficeCalendar:
             schedule = account.schedule(resource=env('EMAIL'))
             calendar = schedule.get_default_calendar()
 
-            events = calendar.get_events(include_recurring=False)
+            q = calendar.new_query('ical_uid').equals('040000008200E00074C5B7101A82E00800000000848F74993816DA01000000000000000010000000C6404A701B76C844B318927831493923')
+
+            events = calendar.get_events(query=q, include_recurring=False)
 
             return events
 
