@@ -103,7 +103,7 @@ class OfficeCalendar:
             event_start = datetime(year, month, day, start_hour, start_minute)
             event_end = datetime(year, month, day, end_hour, end_minute)
 
-            event2.subject = "Test evento icaluid modificato"
+            event2.subject = task['description']
             event2.start = event_start
             event2.end = event_end
             event2.location = "Test"
