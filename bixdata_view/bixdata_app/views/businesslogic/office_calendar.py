@@ -26,21 +26,33 @@ class OfficeCalendar:
             schedule = account.schedule(resource=env('EMAIL'))
             calendar = schedule.get_default_calendar()
 
+            event = calendar.new_event()
+
             if task['o365_idcalendar'] == '':
                 # Assuming task['planneddate'] is in the format 'YYYY-MM-DD' and task['start'] and task['end'] are in the format 'HH:MM'
-                date_parts = task['planneddate'].split('-')
-                year, month, day = map(int, date_parts)
 
-                start_hour, start_minute = map(int, task['start'].split(':'))
-                end_hour, end_minute = map(int, task['end'].split(':'))
+                if task['planneddate'] != '':
+                    if task['start'] != '' and task['end'] != '':
 
-                event_start = datetime(year, month, day, start_hour, start_minute)
-                event_end = datetime(year, month, day, end_hour, end_minute)
+                        date_parts = task['planneddate'].split('-')
+                        year, month, day = map(int, date_parts)
 
-                event = calendar.new_event()
+                        start_hour, start_minute = map(int, task['start'].split(':'))
+                        end_hour, end_minute = map(int, task['end'].split(':'))
+
+                        event_start = datetime(year, month, day, start_hour, start_minute)
+                        event_end = datetime(year, month, day, end_hour, end_minute)
+
+                        event.start = event_start
+                        event.end = event_end
+
+                    else:
+                        event.is_all_day = True
+
+
+
+
                 event.subject = "Test evento icaluid"
-                event.start = event_start
-                event.end = event_end
                 event.location = "Test"
                 event.body = task['description']
 
@@ -94,18 +106,24 @@ class OfficeCalendar:
             # Get the first event with the specified ical_uid
             event2 = next(event2_generator, None)
 
-            date_parts = task['planneddate'].split('-')
-            year, month, day = map(int, date_parts)
+            if task['start'] != '' and task['end'] != '':
 
-            start_hour, start_minute = map(int, task['start'].split(':'))
-            end_hour, end_minute = map(int, task['end'].split(':'))
+                date_parts = task['planneddate'].split('-')
+                year, month, day = map(int, date_parts)
 
-            event_start = datetime(year, month, day, start_hour, start_minute)
-            event_end = datetime(year, month, day, end_hour, end_minute)
+                start_hour, start_minute = map(int, task['start'].split(':'))
+                end_hour, end_minute = map(int, task['end'].split(':'))
+
+                event_start = datetime(year, month, day, start_hour, start_minute)
+                event_end = datetime(year, month, day, end_hour, end_minute)
+
+                event2.start = event_start
+                event2.end = event_end
+
+            else:
+                event2.is_all_day = True
 
             event2.subject = task['description']
-            event2.start = event_start
-            event2.end = event_end
             event2.location = "Test"
             event2.body = task['description']
 
