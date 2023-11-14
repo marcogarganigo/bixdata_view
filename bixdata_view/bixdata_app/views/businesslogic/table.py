@@ -35,7 +35,7 @@ class Table:
         self.tableid=tableid
     
     
-    def get_records(self, conditions_list=list()):
+    def get_records(self,viewid='',searchTerm='', conditions_list=list()):
         """
             Retrieve records from the database table associated with this instance, based on specified conditions.
 
@@ -66,18 +66,4 @@ class Table:
             records = LogicH.dictfetchall(cursor)
         return records
     
-    def get_records(self,viewid='',searchTerm='',conditions=dict()):
-        post = {
-            'tableid': self.tableid,
-            'searchTerm': searchTerm,
-            'viewid': 51,
-            'currentpage': 1,
-            'order_field': 'id',
-            'order': 'asc',
-            'userid': 1
-        }
-        response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
-        response_dict = json.loads(response.text)
-        columns = response_dict['columns']
-        records = response_dict['records']
-        return records
+
