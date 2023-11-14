@@ -1,23 +1,22 @@
 <script>
-    $(document).ready(function () {
 
-         var events = [];
-        {% for event in events %}
-            events.push("{{ event.ical_uid }}");
-        {% endfor %}
+var jsonEvents = [
+    {
+        "title": "Event 1",
+        "start": "2023-01-01T10:00:00",
+        "end": "2023-02-01T12:00:00",
+        "allDay": false
+    },
+];
 
-        //console.log(events)
+async function executeCode() {
+    var events = [];
 
+    {% for event in events %}
+        events.push("{{ event.ical_uid }}");
+    {% endfor %}
 
-        var jsonEvents = [
-            {
-                "title": "Event 1",
-                "start": "2023-01-01T10:00:00",
-                "end": "2023-02-01T12:00:00",
-                "allDay": false
-            },
-        ];
-
+    return new Promise(function (resolve, reject) {
         $.ajax({
             url: '/get_events_recordid/',
             type: 'POST',
@@ -26,23 +25,59 @@
             },
             dataType: 'json',
             success: function (data) {
-                console.log(data)
+                data = data.complete_events;
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
+                    item = item[0];
+
+
+                    start = item['start']
+                end = item['end']
+                planneddate = item['planneddate']
+
+
+
+                // Splitting hours and minutes from start and end times
+                startTimeParts = start.split(":");
+                endTimeParts = end.split(":");
+
+                // Creating Date objects with the planned date and extracted time components
+                startDate = new Date(planneddate);
+                startDate.setHours(parseInt(startTimeParts[0], 10));
+                startDate.setMinutes(parseInt(startTimeParts[1], 10));
+
+                endDate = new Date(planneddate);
+                endDate.setHours(parseInt(endTimeParts[0], 10));
+                endDate.setMinutes(parseInt(endTimeParts[1], 10));
+
+                // Formatting the dates to the desired format
+                formattedStartDate = startDate.toISOString().slice(0, 19)
+                formattedEndDate = endDate.toISOString().slice(0, 19)
+
+                console.log("Formatted Start Date:", formattedStartDate);
+                console.log("Formatted End Date:", formattedEndDate);
+
+
                     jsonEvents.push({
-                        "title": item.title,
-                        "start": item.start,
-                        "end": item.end,
-                        "recordid": item.recordid,
+                        "title": item['description'],
+                        "start": formattedStartDate,
+                        "end": formattedEndDate,
+                        "recordid": item['recordid_'],
                         "allDay": false,
-                        "calendarid": item.o365_idcalendar
+                        "calendarid": item['o365_idcalendar']
                     });
                 }
-                // Now, you can use the updated jsonEvents array with the added server response data.
-                console.log(jsonEvents);
+                resolve(); // Resolve the promise once data is processed
+            },
+            error: function (error) {
+                reject(error); // Reject the promise if there is an error
             },
         });
+    });
+}
 
+
+executeCode().then(() => {
 
         var calendar = $('#calendar').fullCalendar({
             events: jsonEvents,
@@ -53,26 +88,8 @@
             },
             editable: true,
             eventClick: function (event) {
-                // Open a modal for editing when the event is clicked
-                $('#editEventModal').attr('data-calendarid', event.calendarid);
-                $('#eventTitle').val(event.title);
+                open_record_calendar(event.recordid);
 
-
-                var eventStart = event.start;
-                var formattedDateStart = new Date(eventStart).toISOString().slice(0, 16);
-                document.getElementById("eventStart").value = formattedDateStart;
-
-                var eventEnd = event.end;
-                var formattedDateEnd = new Date(eventEnd).toISOString().slice(0, 16);
-                document.getElementById("eventEnd").value = formattedDateEnd;
-
-
-
-
-
-                $('#editEventModal').modal('show');
-                // Here, you can populate the modal with event details for editing
-                // For example, you can use event.title, event.start, and event.end to populate input fields in the modal.
             },
             eventDrop: function (event, delta, revertFunc) {
                 alert('dropped')
@@ -85,11 +102,31 @@
                 element.find('.fc-title').html(event.title);
             },
         });
-    });
 
-    function editCalendarEvent(calendarid) {
 
-    }
+        function open_record_calendar(recordid) {
+            var serialized_data = [];
+            serialized_data.push({name: 'tableid', value: 'task'});
+            serialized_data.push({name: 'recordid', value: recordid});
+            serialized_data.push({name: 'contextfunction', value: 'edit'});
+
+            $.ajax({
+                    type: "POST",
+                    url: "{% url 'block_record_card' %}",
+                    data: serialized_data,
+                    success: function (response) {
+
+                        $('#block-record-card-container').html(response);
+                    },
+                    error: function (response) {
+                    }
+                });
+
+        }
+
+
+        });
+
 </script>
 
 

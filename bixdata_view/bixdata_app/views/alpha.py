@@ -874,7 +874,7 @@ def get_linked(request):
 
 
 @login_required(login_url='/login/')
-    def save_record_fields(request):
+def save_record_fields(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     fields = request.POST.get('fields')
@@ -1986,7 +1986,7 @@ def get_events_recordid(request):
     for event in events:
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM user_task WHERE o365_idcalendar = %s", [event])
-            event_data = cursor.fetchall()
+            event_data = dictfetchall(cursor)
             events_recordid.append(event_data)
 
     return JsonResponse({'complete_events': events_recordid})
