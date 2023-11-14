@@ -874,7 +874,7 @@ def get_linked(request):
 
 
 @login_required(login_url='/login/')
-    def save_record_fields(request):
+def save_record_fields(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     fields = request.POST.get('fields')
