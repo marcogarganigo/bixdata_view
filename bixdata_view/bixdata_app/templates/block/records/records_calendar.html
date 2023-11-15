@@ -1,132 +1,106 @@
 <script>
-
-var jsonEvents = [
-    {
-        "title": "Event 1",
-        "start": "2023-01-01T10:00:00",
-        "end": "2023-02-01T12:00:00",
-        "allDay": false
-    },
-    {% for event in events %}
-];
-
-async function executeCode() {
-    var events = [];
+    var jsonEvents = [];
 
     {% for event in events %}
-        events.push("{{ event.ical_uid }}");
+
+        {% if event.start is None and event.end is None %}
+            allDay = true;
+
+
+        {% else %}
+            allDay = false;
+
+            start = "{{ event.start }}"
+            end = "{{ event.end }}"
+            planneddate = "{{ event.planneddate }}"
+
+
+
+
+            startTimeParts = start.split(":");
+            endTimeParts = end.split(":");
+
+
+            startDate = new Date(planneddate);
+            startDate.setHours(parseInt(startTimeParts[0], 10));
+            startDate.setMinutes(parseInt(startTimeParts[1], 10));
+
+            endDate = new Date(planneddate);
+            endDate.setHours(parseInt(endTimeParts[0], 10));
+            endDate.setMinutes(parseInt(endTimeParts[1], 10));
+
+
+            formattedStartDate = startDate.toISOString().slice(0, 19)
+            formattedEndDate = endDate.toISOString().slice(0, 19)
+
+            start = formattedStartDate;
+            end = formattedEndDate;
+
+
+
+        {% endif %}
+
+
+        jsonEvents.push({
+            "title": "{{ event.description }}",
+            "start": start,
+            "end": end,
+            "allDay": allDay,
+            "recordid": "{{ event.recordid_ }}",
+            "calendarid": "{{ event.o365_idcalendar }}"
+        });
+
     {% endfor %}
 
-    return new Promise(function (resolve, reject) {
-        $.ajax({
-            url: '/get_events_recordid/',
-            type: 'POST',
-            data: {
-                'events': JSON.stringify(events),
-            },
-            dataType: 'json',
-            success: function (data) {
-                data = data.complete_events;
-                for (var i = 0; i < data.length; i++) {
-                    var item = data[i];
-                    item = item[0];
-
-
-                    start = item['start']
-                end = item['end']
-                planneddate = item['planneddate']
 
 
 
-                // Splitting hours and minutes from start and end times
-                startTimeParts = start.split(":");
-                endTimeParts = end.split(":");
+    var calendar = $('#calendar').fullCalendar({
+        events: jsonEvents,
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek,agendaDay'
+        },
+        editable: true,
+        aspectRatio: 2.1,
+        eventClick: function (event) {
+            open_record_calendar(event.recordid);
 
-                // Creating Date objects with the planned date and extracted time components
-                startDate = new Date(planneddate);
-                startDate.setHours(parseInt(startTimeParts[0], 10));
-                startDate.setMinutes(parseInt(startTimeParts[1], 10));
+        },
+        eventDrop: function (event, delta, revertFunc) {
 
-                endDate = new Date(planneddate);
-                endDate.setHours(parseInt(endTimeParts[0], 10));
-                endDate.setMinutes(parseInt(endTimeParts[1], 10));
-
-                // Formatting the dates to the desired format
-                formattedStartDate = startDate.toISOString().slice(0, 19)
-                formattedEndDate = endDate.toISOString().slice(0, 19)
-
-                console.log("Formatted Start Date:", formattedStartDate);
-                console.log("Formatted End Date:", formattedEndDate);
+        },
 
 
-                    jsonEvents.push({
-                        "title": item['description'],
-                        "start": formattedStartDate,
-                        "end": formattedEndDate,
-                        "recordid": item['recordid_'],
-                        "allDay": false,
-                        "calendarid": item['o365_idcalendar']
-                    });
-                }
-                resolve(); // Resolve the promise once data is processed
-            },
-            error: function (error) {
-                reject(error); // Reject the promise if there is an error
-            },
-        });
+        eventRender: function (event, element) {
+
+            // Customize event rendering to display only the event title
+            element.find('.fc-title').html(event.title);
+        },
     });
-}
 
 
-executeCode().then(() => {
+    function open_record_calendar(recordid) {
+        var serialized_data = [];
+        serialized_data.push({name: 'tableid', value: 'task'});
+        serialized_data.push({name: 'recordid', value: recordid});
+        serialized_data.push({name: 'contextfunction', value: 'edit'});
 
-        var calendar = $('#calendar').fullCalendar({
-            events: jsonEvents,
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_record_card' %}",
+            data: serialized_data,
+            success: function (response) {
+
+                $('#block-record-card-container').html(response);
             },
-            editable: true,
-            eventClick: function (event) {
-                open_record_calendar(event.recordid);
-
-            },
-            eventDrop: function (event, delta, revertFunc) {
-
-            },
-
-
-            eventRender: function (event, element) {
-
-                // Customize event rendering to display only the event title
-                element.find('.fc-title').html(event.title);
-            },
+            error: function (response) {
+            }
         });
 
+    }
 
-        function open_record_calendar(recordid) {
-            var serialized_data = [];
-            serialized_data.push({name: 'tableid', value: 'task'});
-            serialized_data.push({name: 'recordid', value: recordid});
-            serialized_data.push({name: 'contextfunction', value: 'edit'});
-
-            $.ajax({
-                    type: "POST",
-                    url: "{% url 'block_record_card' %}",
-                    data: serialized_data,
-                    success: function (response) {
-
-                        $('#block-record-card-container').html(response);
-                    },
-                    error: function (response) {
-                    }
-                });
-
-        }
-
-
-        });
 
 </script>
 
@@ -137,41 +111,15 @@ executeCode().then(() => {
     }
 </style>
 
-<div id="content_records_calendar" style="width: 65%;">
+<div id="content_records_calendar" style="width: 100%">
     <div id="calendar"></div>
 </div>
 
-<!-- Modal for editing events -->
-<div class="modal fade" id="editEventModal" tabindex="-1" role="dialog" aria-labelledby="editEventModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editEventModalLabel">Edit Event</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Add input fields here to edit event details -->
-                <div class="form-group">
-                    <label for="eventTitle">Title</label>
-                    <input type="text" class="form-control" id="eventTitle">
-                </div>
-                <div class="form-group">
-                    <label for="eventStart">Start Date and Time</label>
-                    <input type="datetime-local" class="form-control" id="eventStart">
-                </div>
-                <div class="form-group">
-                    <label for="eventEnd">End Date and Time</label>
-                    <input type="datetime-local" class="form-control" id="eventEnd">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="editCalendarEvent($('#editEventModal').attr('data-calendarid'))">Save Changes</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+
+
+
+
+
+
 

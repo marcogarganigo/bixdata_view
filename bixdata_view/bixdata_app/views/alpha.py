@@ -629,13 +629,13 @@ def get_block_records_kanban(request):
 @login_required(login_url='/login/')
 def get_block_records_calendar(request):
 
-    oc = OfficeCalendar()
-    events_office = oc.get_calendar_events()
+    #oc = OfficeCalendar()
+    #events_office = oc.get_calendar_events()
     table_obj=Table('task')
     conditions_list=list()
     conditions_list.append("planneddate='2023-11-14'")
     events_bixdata=table_obj.get_records(conditions_list=conditions_list)
-    return render(request, 'block/records/records_calendar.html', {'events': events_office})
+    return render(request, 'block/records/records_calendar.html', {'events': events_bixdata})
 
 
 # Questa funzione
