@@ -6,6 +6,9 @@
         {% if event.start is None and event.end is None %}
             allDay = true;
 
+            start = "{{ event.planneddate }}"
+            end = "{{ event.planneddate }}"
+
 
         {% else %}
             allDay = false;
