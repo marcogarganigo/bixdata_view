@@ -642,6 +642,34 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
   justify-content: center;
 }
 
+.records-button {
+    background-color: #ff5b5b;
+}
+
+.pagination a {
+    border: 1px solid #dc3545;
+    color: #dc3545;
+}
+
+.pagination a:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.pagination .current {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.dropdown-color {
+    background-color: #074048;
+    border-color: #074048
+}
+
+
+
+
+
 
 
 

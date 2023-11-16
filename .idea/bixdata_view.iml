@@ -35,6 +35,7 @@
     <orderEntry type="library" name="jquery-ui" level="application" />
     <orderEntry type="library" name="dragula" level="application" />
     <orderEntry type="library" name="zebra_datepicker" level="application" />
+    <orderEntry type="library" name="fullcalendar" level="application" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />

@@ -440,7 +440,7 @@
                                                aria-label="Search" style="width: 50%; float: left" id="searchTerm"
                                                autocomplete="off"
                                                onkeydown="if(event.keyCode === 13) { event.preventDefault(); refresh(); }">
-                                        <button class="btn btn-outline-danger" type="button" style=" float: left" onclick="refresh()">Cerca</button>
+                                        <button class="btn btn-outline-danger records-button" type="button" style=" float: left" onclick="refresh()">Cerca</button>
                                     </div>
 
                                     <button type="button" class="btn btn-outline-secondary" style=" margin-left: 1%; float: left" onclick="$('#filters').toggle(100);">Filtri</button>
@@ -448,8 +448,8 @@
                                 </div>
                                 <div class="col filter-column">
                                     <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
-                                        <button class="btn btn-outline-danger me-md-2 center-icon-button" type="button" onclick="refresh()"><span class="material-symbols-outlined">cached</span></button>
-                                        <button class="btn btn-outline-danger me-md-2" type="button" onclick="newRecord()">Nuovo</button>
+                                        <button class="btn btn-outline-danger me-md-2 center-icon-button records-button" type="button" onclick="refresh()"><span class="material-symbols-outlined">cached</span></button>
+                                        <button class="btn btn-outline-danger me-md-2 records-button" type="button" onclick="newRecord()">Nuovo</button>
                                         <div class="dropdown">
                                             <button class="btn btn-outline-secondary me md-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Esporta</button>
                                             <ul class="dropdown-menu">
@@ -538,6 +538,13 @@
                                       </button>
                                     </li>
                                 {% endif %}
+
+                                <li id="nav-kanban" class="nav-item" role="presentation">
+                                  <button class="nav-link" id="kanban-tab"
+                                          data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab"
+                                          aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban
+                                  </button>
+                              </li>
                                 <!--
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="group-tab" data-bs-toggle="tab"
@@ -571,12 +578,6 @@
                                   </button>
                               </li>
 
-                              <li id="nav-kanban" class="nav-item" role="presentation">
-                                  <button class="nav-link" id="kanban-tab"
-                                          data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab"
-                                          aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban
-                                  </button>
-                              </li>
                               <li id="nav-gantt" class="nav-item" role="presentation">
                                   <button onclick="underConstruction('#gantt-tab-pane')" class="nav-link" id="gantt-tab"
                                           data-bs-toggle="tab" data-bs-target="#gantt-tab-pane" type="button" role="tab"
