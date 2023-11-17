@@ -574,7 +574,7 @@ html[data-sidenav-size=condensed]:not(.authentication-bg) .logo span.logo-sm {
 }
 
 .side-nav-txt:hover {
-    color: #ff0000 !important;
+    color: navy !important;
 }
 
 html[data-sidenav-size=condensed] .side-nav-txt {
@@ -685,6 +685,12 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
     background-color: var(--graycc) !important;
     border-color: var(--graycc) !important;
 }
+
+.sidenavitem-active {
+    color: navy !important;
+}
+
+
 
 
 

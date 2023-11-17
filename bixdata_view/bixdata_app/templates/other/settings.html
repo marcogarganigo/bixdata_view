@@ -21,9 +21,15 @@
               {% if item.value == 'default' %}
                 <option value="default" selected>tema default</option>
                 <option value="theme1">tema1</option>
-              {% else %}
+                <option value="bixhub">bixhub</option>
+              {% elif item.value == 'theme1' %}
                 <option value="theme1" selected>tema1</option>
                 <option value="default">tema default</option>
+                <option value="bixhub">bixhub</option>
+              {% elif item.value == 'bixhub' %}
+                <option value="bixhub" selected>bixhub</option>
+                <option value="default">tema default</option>
+                <option value="theme1">tema1</option>
               {% endif %}
             </select>
           </div>
