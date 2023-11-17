@@ -923,7 +923,7 @@ def save_record_fields(request):
 
     response = requests.post(
         f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
-
+    response_dict = json.loads(response.text)
 
 
     if contextfunction == 'edit':
