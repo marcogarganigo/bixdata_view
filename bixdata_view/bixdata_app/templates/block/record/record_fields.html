@@ -136,7 +136,7 @@
 
     {% for label,record_fields  in record_fields_labels.items %}
         {% if label != 'Dati' %}
-            <button class="dropdown-toggle btn btn-secondary" style="width: 100%; background-color: #074048" type="button" onclick="toggleCollapse(this)">
+            <button class="dropdown-toggle btn btn-secondary dropdown-color" style="width: 100%" type="button" onclick="toggleCollapse(this)">
                 {{ label }}
             </button>
         {% endif %}
@@ -148,7 +148,7 @@
     {% for field_key,field in record_fields.items %}
         {% if field.settings.obbligatorio == 'true' %}
             {% define 'necessary' as mandatory %}
-            {% define 'badge bg-danger fs-5' as tooltip %}
+            {% define 'badge bg-danger fs-5 badge-color' as tooltip %}
         {% else %}
             {% define '' as mandatory %}
             {% define '' as tooltip %}

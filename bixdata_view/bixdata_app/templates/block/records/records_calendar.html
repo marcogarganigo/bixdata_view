@@ -1,3 +1,11 @@
+
+
+<select class="form-select" aria-label="Default select example">
+  {% for field in select_fields %}
+    <option value="{{ field.description }}">{{ field.description }}</option>
+{% endfor %}
+</select>
+
 <script>
     var jsonEvents = [];
 
@@ -66,7 +74,7 @@
             right: 'month,agendaWeek,agendaDay'
         },
         editable: true,
-        aspectRatio: 2.1,
+        aspectRatio: 2.1    ,
         eventClick: function (event) {
             open_record_calendar(event.recordid);
 
@@ -114,7 +122,7 @@
     }
 </style>
 
-<div id="content_records_calendar" style="width: 100%">
+<div id="content_records_calendar" style="width: 95%;">
     <div id="calendar"></div>
 </div>
 

@@ -629,13 +629,23 @@ def get_block_records_kanban(request):
 @login_required(login_url='/login/')
 def get_block_records_calendar(request):
 
+    tableid = request.POST.get('tableid')
+
     #oc = OfficeCalendar()
     #events_office = oc.get_calendar_events()
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM sys_field WHERE fieldtypeid = 'Data' and tableid = '{tableid}'"
+        )
+        result = dictfetchall(cursor)
+
+
     table_obj=Table('task')
     conditions_list=list()
     conditions_list.append("planneddate='2023-11-14'")
     events_bixdata=table_obj.get_records(conditions_list=conditions_list)
-    return render(request, 'block/records/records_calendar.html', {'events': events_bixdata})
+    return render(request, 'block/records/records_calendar.html', {'events': events_bixdata, 'select_fields': result})
 
 
 # Questa funzione
@@ -1979,18 +1989,8 @@ def test_admin_doc(request):
     return HttpResponse('ok')
 
 
-def get_events_recordid(request):
-    events_recordid = []
+def time_calc(request):
+    return render(request, 'other/time_calculator.html')
 
-    events = request.POST.getlist('events')  # Use getlist to get a list of values
-    #convert from json to list
-    events = json.loads(events[0])
 
-    for event in events:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM user_task WHERE o365_idcalendar = %s", [event])
-            event_data = dictfetchall(cursor)
-            events_recordid.append(event_data)
-
-    return JsonResponse({'complete_events': events_recordid})
 

@@ -24,7 +24,7 @@ class OfficeCalendar:
             print('Authenticated!')
 
             schedule = account.schedule(resource=env('EMAIL'))
-            calendar = schedule.get_default_calendar()
+            calendar = schedule.get_calendar(calendar_name='test_second_calendar')
 
             event = calendar.new_event()
 
@@ -64,6 +64,7 @@ class OfficeCalendar:
         else:
             print('Authentication failed!')
 
+    #Funzione da cancellare
     def get_calendar_events(request):
 
         env = environ.Env()
