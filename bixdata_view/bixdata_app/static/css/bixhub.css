@@ -702,26 +702,33 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
     --ct-gradient: none;
 }
 
-.save-button {
-    --ct-btn-color: #FF9900;
-    --ct-btn-border-color: #FF9900;;
-    --ct-btn-hover-color: #fff;
-    --ct-btn-hover-bg:#FF9900;;
-    --ct-btn-hover-border-color: #FF9900;;
-    --ct-btn-focus-shadow-rgb: 255, 91, 91;
-    --ct-btn-active-color: #fff;
-    --ct-btn-active-bg: #FF9900;;
-    --ct-btn-active-border-color: #FF9900;;
-    --ct-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    --ct-btn-disabled-color: #FF9900;;
-    --ct-btn-disabled-bg: transparent;
-    --ct-btn-disabled-border-color: #FF9900;;
-    --ct-gradient: none;
-}
-
 .sidenavitem-active {
     color: #FF9900 !important;
 }
+
+.save-button:hover {
+    background-color: #ff9900;
+}
+
+.save-button:active {
+    background-color: #ff9900;
+}
+
+.save-button {
+    background-color: #ff9900;
+    color: white;
+}
+
+.cool-loader:before {
+    border-top-color: #000000 !important;
+    border-bottom-color: #000000 !important;
+}
+
+.cool-loader:after {
+    border-left-color: #ff9900 !important;
+    border-right-color: #ff9900 !important;
+}
+
 
 
 

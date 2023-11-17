@@ -328,7 +328,7 @@
                             });
 
                             // Handle empty input
-                            $("#{{ fieldid }}-{{ recordid }}").on("input", function () {
+                            $("#{{ fieldid }}-{{ recordid }}-autocomplete").on("input", function () {
                                 var inputValue = $(this).val();
                                 if (inputValue === "") {
                                     $(this).val(""); // Imposta il valore predefinito
@@ -339,7 +339,7 @@
                         });
 
 
-                        function showOptions() {
+                        function showOption() {
                             $(this).autocomplete({
                                 source: function (request, response) {
                                     $.ajax({

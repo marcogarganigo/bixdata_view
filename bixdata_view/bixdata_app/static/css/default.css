@@ -667,6 +667,16 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
     color: red !important;
 }
 
+.cool-loader:before {
+    border-top-color: #074048 !important;
+    border-bottom-color: #074048 !important;
+}
+
+.cool-loader:after {
+    border-left-color: #dc3545 !important;
+    border-right-color: #dc3545 !important;
+}
+
 
 
 
