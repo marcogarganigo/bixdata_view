@@ -12,6 +12,7 @@
             <td style="margin: 0; padding: 0; width: 200px">
                 <b>{{ companyname }}</b>
                 <p style="margin: 0;">Da: {{ username }}</p>
+                <a href="http://bixcrm01:8000/get_record_path/task/{{ recordid }}" class="description" style="margin: 0;">{{ description|truncatechars:50 }}</a>
             </td>
             <td style="width: 100px">
                 <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20">
@@ -28,4 +29,28 @@
     </tbody>
 </table>
 
-<a href="http://bixcrm01:8000/get_record_path/task/{{ recordid_ }}" class="description" style="margin: 0;">{{ description|truncatechars:50 }}</a>
+
+
+<style>
+  table {
+    border-collapse: collapse;
+    width: 1000px;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  thead, th {
+      background-color: #eeae6b;
+      font-size: 15pt;
+  }
+
+  td {
+      padding: 15px;
+  }
+
+  .description:hover {
+    cursor: pointer;
+  }
+</style>

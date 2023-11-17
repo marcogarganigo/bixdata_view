@@ -984,6 +984,11 @@ def save_record_fields(request):
                     fields_dict['companyname'] = companyname
                     fields_dict['projectname'] = projectname
 
+
+
+                    fields_dict['recordid'] = response_dict['recordid']
+
+
                     message = render_to_string('other/new_task.html', fields_dict)
 
                     # return render(request, 'other/new_task.html', fields_dict)
