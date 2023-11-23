@@ -1378,7 +1378,7 @@ def stampa_servicecontract(request):
 
         filename_with_path = os.path.join('bixdata_view/bixdata_app/static/pdf', filename)
         filename_with_path = os.path.abspath(filename_with_path)
-
+        print(filename_with_path)
         pdfkit.from_string(content, filename_with_path, configuration=config)
 
         # Open the file and read its contents
