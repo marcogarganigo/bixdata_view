@@ -1369,7 +1369,7 @@ def stampa_servicecontract(request):
         context = row
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}'"
+                f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}' AND deleted_='N'"
             )
             timesheets = dictfetchall(cursor)
         context['timesheets'] = timesheets
@@ -1379,7 +1379,7 @@ def stampa_servicecontract(request):
 
         filename_with_path = os.path.join('bixdata_app/static/pdf', filename)
         filename_with_path = os.path.abspath(filename_with_path)
-
+        print(filename_with_path)
         pdfkit.from_string(content, filename_with_path, configuration=config)
 
         # Open the file and read its contents
