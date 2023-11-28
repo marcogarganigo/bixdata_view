@@ -249,7 +249,8 @@ def get_chart4(request):
 
 # Questa funzione ritorna il loading
 def get_render_loading(request):
-    return render(request, 'other/loading.html')
+    theme = get_user_setting(request, 'theme')
+    return render(request, 'other/loading.html', {'theme': theme})
 
 
 # request: {tableid}

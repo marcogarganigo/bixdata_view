@@ -677,6 +677,11 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
     border-right-color: #dc3545 !important;
 }
 
+.save-button {
+    background-color: #074048;
+    color: white;
+}
+
 
 
 
