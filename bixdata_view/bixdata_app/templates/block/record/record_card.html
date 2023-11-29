@@ -315,6 +315,28 @@
         var url = 'https://swissbix.freshdesk.com/a/tickets/' + '{{ freshdeskid }}';
         window.open(url, '_blank');
     }
+
+    function openModalFromCard() {
+
+        $('#block_record_card-{{ recordid }}').remove()
+
+
+        var serialized_data = [];
+        serialized_data.push({name: 'tableid', value: '{{ tableid }}' });
+        serialized_data.push({name: 'recordid', value: '{{ recordid }}' });
+        serialized_data.push({name: 'contextfunction', value: 'edit'});
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_record_card' %}",
+            data: serialized_data,
+            success: function (response) {
+                $('#recordModal').modal('show');
+                $("#record-modal-content").html(response);
+            }
+        });
+    }
+
 </script>
 
 <div id="block_record_card-{{ recordid }}" class="block_record_card" data-recordid="{{ recordid }}" data-tableid="{{ tableid }}" style="height: 100%;width: 100%;">
@@ -372,6 +394,21 @@
                         <!--<li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>-->
                     </ul>
                 </div>
+
+                <script>
+                    if( $('#block_record_card-{{ recordid }}').closest('.modal').length == 0) {
+                        $('.open-popup').css('display', 'block');
+                    } else {
+                        $('.open-popup').css('display', 'none');
+                    }
+                </script>
+
+                {% if layout_setting == 'rightcard' %}
+                    <button type="button" class="open-popup btn btn-secondary button-recordcard" onclick="openModalFromCard()">
+                            Apri PopUp
+                    </button>
+                {% endif %}
+
                 {% if tableid == 'task' %}
                     <button style="display: none" id="close-task-button-{{ recordid }}" class="btn btn-success" type="button" onclick="$('#input-{{ recordid }}').val('Si'); change_checkbox_view(); $('#save-button-{{ recordid }}').click()">
                         Chiudi task

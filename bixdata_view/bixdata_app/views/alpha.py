@@ -692,17 +692,18 @@ def request_block_record_card(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     userid = request.user.id
-    return HttpResponse(get_block_record_card(tableid, recordid, userid))
+    return HttpResponse(get_block_record_card(request, tableid, recordid, userid))
 
 
 # Questa funzione serve per creare la record card e ritorna la card come stringa
-def get_block_record_card(tableid, recordid, userid):
+def get_block_record_card(request, tableid, recordid, userid):
     context = dict()
     context['block_record_badge'] = get_block_record_badge(tableid, recordid)
     context['block_record_linked'] = get_block_record_linked(tableid, recordid)
     context['block_record_fields'] = ""
     context['recordid'] = recordid
     context['tableid'] = tableid
+    context['layout_setting'] = get_user_setting(request, 'record_open_layout')
     if tableid == 'ticket':
         with connection.cursor() as cursor:
             cursor.execute(f"SELECT freshdeskid FROM user_ticket WHERE recordid_={recordid}")
@@ -1233,7 +1234,7 @@ def insert_timesheet(request, ticketid, userid):
 
     table_block = get_records_table(request, 'company', None, None, email, '', 1, '', '')
 
-    ticket_block = get_block_record_card('ticket', recordid_ticket, userid)
+    ticket_block = get_block_record_card(request,'ticket', recordid_ticket, userid)
     # timesheet_block = get_block_record_fields(request, tableid, contextfunction, contextreference, recordid, userid, http_response, called_from)
 
     data = {
@@ -1254,7 +1255,7 @@ def insert_timesheet(request, ticketid, userid):
     return content
 
 
-def get_block_task(recordid_task, userid):
+def get_block_task(request, recordid_task, userid):
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT * FROM user_task WHERE recordid_='{recordid_task}'"
@@ -1263,15 +1264,15 @@ def get_block_task(recordid_task, userid):
     if (rows):
         context = dict()
         context['task'] = rows[0]
-        context['task_block'] = get_block_record_card('task', recordid_task, userid)
+        context['task_block'] = get_block_record_card(request,'task', recordid_task, userid)
         content = render_to_string('other/check_task.html', context)
         return content
     else:
         return ''
 
 
-def get_block_timesheetinvoice(recordid_timesheet, userid):
-    timesheet_block = get_block_record_card('timesheet', recordid_timesheet, userid)
+def get_block_timesheetinvoice(request, recordid_timesheet, userid):
+    timesheet_block = get_block_record_card(request, 'timesheet', recordid_timesheet, userid)
     company_block = ''
     project_block = ''
     with connection.cursor() as cursor:
@@ -1281,7 +1282,7 @@ def get_block_timesheetinvoice(recordid_timesheet, userid):
         rows = dictfetchall(cursor)
     if (rows):
         recordid_company = rows[0]['recordidcompany_'];
-        company_block = get_block_record_card('company', recordid_company, userid)
+        company_block = get_block_record_card(request,'company', recordid_company, userid)
 
     context = dict()
     context['timesheet_block'] = timesheet_block
@@ -1434,7 +1435,7 @@ def get_block_ticket_timesheet(request, ticket, userid):
         rows = dictfetchall(cursor)
         if rows:
             recordid = rows[0]['recordid_']
-            ticket_block = get_block_record_card('ticket', recordid, userid)
+            ticket_block = get_block_record_card(request,'ticket', recordid, userid)
 
             context = dict()
             context['ticket_block'] = ticket_block
