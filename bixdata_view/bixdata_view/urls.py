@@ -135,4 +135,5 @@ urlpatterns = [
     path('test_adiuto_db', alpha.test_adiuto_db, name='test_adiuto_db'),
     path('test_admin_doc/', alpha.test_admin_doc, name='test_admin_doc'),
     path('time/', alpha.time_calc, name='time'),
+    path('print_word/', alpha.print_word, name='print_word'),
 ]

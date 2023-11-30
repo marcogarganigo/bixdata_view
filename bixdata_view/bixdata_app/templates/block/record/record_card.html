@@ -233,7 +233,7 @@
         }).then((response) => {
             // Validate numeric input
             var contract_hours = parseFloat(response);
-            if (isNaN(contract_hours) ) {
+            if (isNaN(contract_hours)) {
                 swal({
                     text: "Inserisci un valore numerico per le ore contrattuali.",
                     icon: "error",
@@ -269,7 +269,8 @@
                         'recordid': '{{ recordid }}',
                     },
                     success: function (response) {
-                        $('#block_record_card-{{ recordid }}').slideToggle(200, function () {});
+                        $('#block_record_card-{{ recordid }}').slideToggle(200, function () {
+                        });
                         refresh();
                         swal({
                             text: "Contratto rinnovato",
@@ -322,8 +323,8 @@
 
 
         var serialized_data = [];
-        serialized_data.push({name: 'tableid', value: '{{ tableid }}' });
-        serialized_data.push({name: 'recordid', value: '{{ recordid }}' });
+        serialized_data.push({name: 'tableid', value: '{{ tableid }}'});
+        serialized_data.push({name: 'recordid', value: '{{ recordid }}'});
         serialized_data.push({name: 'contextfunction', value: 'edit'});
 
         $.ajax({
@@ -337,9 +338,58 @@
         });
     }
 
+    function stampaWord() {
+        serialized_form = serializeForm($('.save-button').closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
+        //set the value of creator in serialized_form
+        serialized_form['creator'] = '{{ userid}}';
+        serialized_json = convertFormToJSON(serialized_form);
+        var post_data = [];
+        post_data.push({name: 'tableid', value: '{{ tableid }}'});
+        post_data.push({name: 'recordid', value: '{{ recordid }}'});
+        post_data.push({name: 'fields', value: serialized_json});
+        contextfunction = '{{contextfunction}}'
+        post_data.push({name: 'contextfunction', value: contextfunction});
+
+$.ajax({
+    type: "POST",
+    url: "{% url 'print_word' %}",
+    data: post_data,
+    xhrFields: {
+        responseType: 'blob' // Set the expected response type to blob
+    },
+    success: function (response, status, xhr) {
+        const contentType = xhr.getResponseHeader('content-type');
+        const blob = new Blob([response], { type: contentType });
+
+        // Create a Blob URL
+        const blobUrl = window.URL.createObjectURL(blob);
+
+        // Get the filename from the content-disposition header
+        const contentDisposition = xhr.getResponseHeader('content-disposition');
+        const filename = contentDisposition.split(';')[1].trim().split('=')[1];
+
+        // Create a link element to initiate the download
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+
+        // Trigger the download
+        a.click();
+
+        // Clean up
+        window.URL.revokeObjectURL(blobUrl);
+        document.body.removeChild(a);
+    }
+});
+
+
+    }
+
 </script>
 
-<div id="block_record_card-{{ recordid }}" class="block_record_card" data-recordid="{{ recordid }}" data-tableid="{{ tableid }}" style="height: 100%;width: 100%;">
+<div id="block_record_card-{{ recordid }}" class="block_record_card" data-recordid="{{ recordid }}"
+     data-tableid="{{ tableid }}" style="height: 100%;width: 100%;">
     <div id="RecordCard" class="card RecordCard" style=" height: 100%; overflow: hidden">
         <div class="card-body" style="max-height: 100%">
             <p class="card-text">
@@ -365,27 +415,37 @@
                             aria-expanded="false">
                         Stampe
                     </button>
+
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Stampa scheda</a></li>
-                        <li><a class="dropdown-item"
-                               onclick="stampa('{{ tableid }}')">
-                            {% if tableid == 'timesheet' %}
-                                Stampa rapportino
-                            {% elif tableid == 'servicecontract' %}
-                                Stampa report monte ore
-                            {% endif %}
-                        </a></li>
+                        {% if tableid == 'timesheet' or tableid == 'servicecontract' %}
+                            <li><a class="dropdown-item"
+                                   onclick="stampa('{{ tableid }}')">
+                                {% if tableid == 'timesheet' %}
+                                    Stampa rapportino
+                                {% elif tableid == 'servicecontract' %}
+                                    Stampa report monte ore
+                                {% endif %}
+                            </a></li>
+                        {% endif %}
+                        {% if tableid == 'deal' %}
+                            <li><a class="dropdown-item" onclick="stampaWord()">
+                                Stampa in word
+                            </a></li>
+                        {% endif %}
                     </ul>
                 </div>
 
 
                 <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
                         Funzioni
                     </button>
                     <ul class="dropdown-menu">
                         {% if tableid == 'timesheet' %}
-                            <li><a class="dropdown-item" onclick="get_timesheet_serviceassets(this)">Servizi e risorse</a></li>
+                            <li><a class="dropdown-item" onclick="get_timesheet_serviceassets(this)">Servizi e
+                                risorse</a></li>
                         {% elif tableid == 'servicecontract' %}
                             <li><a class="dropdown-item" onclick="rinnova_contratto()">Rinnova</a></li>
                         {% elif tableid == 'ticket' %}
@@ -395,8 +455,9 @@
                     </ul>
                 </div>
 
+
                 <script>
-                    if( $('#block_record_card-{{ recordid }}').closest('.modal').length == 0) {
+                    if ($('#block_record_card-{{ recordid }}').closest('.modal').length == 0) {
                         $('.open-popup').css('display', 'block');
                     } else {
                         $('.open-popup').css('display', 'none');
@@ -404,20 +465,26 @@
                 </script>
 
                 {% if layout_setting == 'rightcard' %}
-                    <button type="button" class="open-popup btn btn-secondary button-recordcard" onclick="openModalFromCard()">
-                            Apri PopUp
+                    <button type="button" class="open-popup btn btn-secondary button-recordcard"
+                            onclick="openModalFromCard()">
+                        Apri PopUp
                     </button>
                 {% endif %}
 
                 {% if tableid == 'task' %}
-                    <button style="display: none" id="close-task-button-{{ recordid }}" class="btn btn-success" type="button" onclick="$('#input-{{ recordid }}').val('Si'); change_checkbox_view(); $('#save-button-{{ recordid }}').click()">
+                    <button style="display: none" id="close-task-button-{{ recordid }}" class="btn btn-success"
+                            type="button"
+                            onclick="$('#input-{{ recordid }}').val('Si'); change_checkbox_view(); $('#save-button-{{ recordid }}').click()">
                         Chiudi task
                     </button>
                 {% endif %}
 
                 {% if tableid == 'timesheet' %}
                     {% if userid == 3 or userid == 9 %}
-                    <button onclick="$('#field-validated').val('Si'); $('#save-button-{{ recordid }}').click()" type="button" id="validate-button" style="display: none" class="btn btn-outline-success">Valida</button>
+                        <button onclick="$('#field-validated').val('Si'); $('#save-button-{{ recordid }}').click()"
+                                type="button" id="validate-button" style="display: none"
+                                class="btn btn-outline-success">Valida
+                        </button>
                     {% endif %}
                 {% endif %}
 

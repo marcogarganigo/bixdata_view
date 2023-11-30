@@ -43,6 +43,10 @@ import csv
 from functools import wraps
 from .businesslogic.table import *
 
+from docx import Document
+from docx.shared import Inches, Pt
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
 
@@ -2000,4 +2004,35 @@ def time_calc(request):
     return render(request, 'other/time_calculator.html')
 
 
+def print_word(request):
 
+    fields = request.POST.get('fields')
+    fields = json.loads(fields)
+
+    dealname = fields['dealname']
+
+    id = uuid.uuid4().hex
+
+    filename = dealname + id + '.docx'
+
+    doc = Document()
+
+    p = doc.add_paragraph()
+
+    text = dealname
+    run = doc.add_paragraph(text).runs[0]
+    font = run.font
+    font.size = Pt(20)
+    font.name = 'Arial'
+
+    doc.paragraphs[-1].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+    doc.save(filename)
+
+    with open(filename, 'rb') as fh:
+        response = HttpResponse(fh.read(), content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        response['Content-Disposition'] = 'inline; filename=' + dealname + '.docx'
+        fh.close()
+        os.remove(filename)
+
+        return response

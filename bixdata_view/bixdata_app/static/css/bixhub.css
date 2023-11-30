@@ -660,8 +660,8 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
 }
 
 .dropdown-color {
-    background-color: #074048;
-    border-color: #074048
+    background-color: #000000;
+    border-color: #000000;
 }
 
 .records-button {
