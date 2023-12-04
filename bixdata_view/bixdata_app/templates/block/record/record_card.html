@@ -350,40 +350,33 @@
         contextfunction = '{{contextfunction}}'
         post_data.push({name: 'contextfunction', value: contextfunction});
 
-$.ajax({
-    type: "POST",
-    url: "{% url 'print_word' %}",
-    data: post_data,
-    xhrFields: {
-        responseType: 'blob' // Set the expected response type to blob
-    },
-    success: function (response, status, xhr) {
-        const contentType = xhr.getResponseHeader('content-type');
-        const blob = new Blob([response], { type: contentType });
+        $.ajax({
+            type: "POST",
+            url: "{% url 'print_word' %}",
+            data: post_data,
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (response, status, xhr) {
+                const contentType = xhr.getResponseHeader('content-type');
+                const blob = new Blob([response], { type: contentType });
 
-        // Create a Blob URL
-        const blobUrl = window.URL.createObjectURL(blob);
+                const blobUrl = window.URL.createObjectURL(blob);
 
-        // Get the filename from the content-disposition header
-        const contentDisposition = xhr.getResponseHeader('content-disposition');
-        const filename = contentDisposition.split(';')[1].trim().split('=')[1];
+                const contentDisposition = xhr.getResponseHeader('content-disposition');
+                const filename = contentDisposition.split(';')[1].trim().split('=')[1];
 
-        // Create a link element to initiate the download
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = filename;
-        document.body.appendChild(a);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = filename;
+                document.body.appendChild(a);
 
-        // Trigger the download
-        a.click();
+                a.click();
 
-        // Clean up
-        window.URL.revokeObjectURL(blobUrl);
-        document.body.removeChild(a);
-    }
-});
-
-
+                window.URL.revokeObjectURL(blobUrl);
+                document.body.removeChild(a);
+            }
+        });
     }
 
 </script>
@@ -408,7 +401,6 @@ $.ajax({
                         data-bs-placement="bottom" data-bs-title="copia collegamento"
                         onclick="copyFunc(this,'{{ tableid }}', '{{ recordid }}')"><i
                         class="mdi mdi-content-copy"></i></button>
-
 
                 <div class="dropdown" style="margin-top: -2.6%">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
@@ -572,7 +564,7 @@ $.ajax({
                 </div>
             </nav>
 
-            <div class="tab-content" id="myTabContent" style="height: 80%">
+            <div class="tab-content" id="tableTabContent" style="height: 80%">
                 <div class="tab-pane tab-pane-fields fade show active" id="fields-tab-pane-{{ recordid }}"
                      role="tabpanel"
                      aria-labelledby="fields-tab" tabindex="0" style="height: 100%">
@@ -606,3 +598,17 @@ $.ajax({
         </div>
     </div>
 </div>
+
+<style>
+    @media screen and (max-width: 1500px) {
+        #tableTabContent {
+            height: 60% !important;
+        }
+    }
+
+      @media screen and (min-width: 1500px) and (max-width: 2000px) {
+        #tableTabContent {
+            height: 70% !important;
+        }
+    }
+</style>

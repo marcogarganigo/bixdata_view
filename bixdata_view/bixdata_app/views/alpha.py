@@ -2017,6 +2017,7 @@ def print_word(request):
 
     doc = Document()
 
+
     p = doc.add_paragraph()
 
     text = dealname

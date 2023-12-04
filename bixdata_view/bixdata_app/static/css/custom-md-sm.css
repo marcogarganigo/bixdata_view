@@ -1,4 +1,4 @@
-@media screen and (max-width: 1920px) {
+@media screen and (max-width: 2000px) {
     #content-card {
         padding: 10px;
     }
@@ -76,6 +76,10 @@
 
     ul.ui-autocomplete {
         font-size: 10pt;
+    }
+
+    #Recordcard {
+        width: 100%;
     }
 
 }

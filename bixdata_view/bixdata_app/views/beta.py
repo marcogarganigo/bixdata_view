@@ -45,7 +45,6 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
     ]
 
-
 def get_user_setting_list(request):
     if request.user.is_authenticated:
         # Get settings for superuser
