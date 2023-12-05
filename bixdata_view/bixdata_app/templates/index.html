@@ -16,6 +16,7 @@
             const fhd_width = 1920;
 
 
+
             if (window.innerWidth <= min_width) {
                 $("html").attr("data-sidenav-size", "condensed");
                 $(".tabs-title").attr("display", "none");
@@ -302,9 +303,11 @@
 
                 //errore, aggiungere un attributo alla tabella per capire se è nella dashboard oppure no
 
+
                 {% if layout_setting == 'modal' %}
                     const min_width = 5000;
                 {% endif %}
+
 
 
 

@@ -6,7 +6,7 @@
         $('[data-bs-toggle="popover"]').popover();
 
         $('button[data-bs-toggle="tab"]').each(function (i) {
-            if ($(this).attr("id") == 'gantt-tab') {
+             if ($(this).attr("id") == 'gantt-tab') {
                 $(this)[0].addEventListener('shown.bs.tab', function (event) {
                     searchGantt()
                 })

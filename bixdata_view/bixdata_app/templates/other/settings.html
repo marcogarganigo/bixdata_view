@@ -20,24 +20,34 @@
             <select name="theme" id="theme" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
               {% if item.value == 'default' %}
                 <option value="default" selected>tema default</option>
-                <option value="theme1">tema1</option>
+                <option value="deepAzure">Deep Azure</option>
                 <option value="bixhub">bixhub</option>
                 <option value="scarletSlate">Scarlet Slate</option>
-              {% elif item.value == 'theme1' %}
-                <option value="theme1" selected>tema1</option>
+                <option value="goldenRadiance">Golden Radiance</option>
+              {% elif item.value == 'deepAzure' %}
+                <option value="deepAzure" selected>Deep Azure</option>
                 <option value="default">tema default</option>
                 <option value="bixhub">bixhub</option>
                 <option value="scarletSlate">Scarlet Slate</option>
+                <option value="goldenRadiance">Golden Radiance</option>
               {% elif item.value == 'bixhub' %}
                 <option value="bixhub" selected>bixhub</option>
                 <option value="default">tema default</option>
-                <option value="theme1">tema1</option>
+                <option value="deepAzure">Deep Azure</option>
                 <option value="scarletSlate">Scarlet Slate</option>
+                <option value="goldenRadiance">Golden Radiance</option>
               {% elif item.value == 'scarletSlate' %}
                 <option value="scarletSlate" selected>Scarlet Slate</option>
+                <option value="goldenRadiance">Golden Radiance</option>
                 <option value="bixhub">bixhub</option>
                 <option value="default">tema default</option>
-                <option value="theme1">tema1</option>
+                <option value="deepAzure">Deep Azure</option>
+              {% elif item.value == 'goldenRadiance' %}
+                <option value="goldenRadiance" selected>Golden Radiance</option>
+                <option value="scarletSlate">Scarlet Slate</option>
+                <option value="bixhub">bixhub</option>
+                <option value="default">tema default</option>
+                <option value="deepAzure">Deep Azure</option>
               {% endif %}
             </select>
           </div>

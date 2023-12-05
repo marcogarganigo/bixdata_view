@@ -94,7 +94,7 @@ def get_content_records(request):
     hv.context['tableid'] = tableid
     hv.context['user_table_settings'] = get_user_table_settings(request.user.id, tableid)    
     hv.context['views']=list(SysView.objects.filter(userid=1).filter(tableid=tableid).values())
-    hv.context['layout_setting'] = us.record_open_layout
+    hv.context['layout_setting'] = get_user_setting(request, 'record_open_layout')
     hv.context['active_panel_setting'] = us.active_panel
 
     #  search fields
