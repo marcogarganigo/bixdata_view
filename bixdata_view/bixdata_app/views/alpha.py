@@ -2006,10 +2006,10 @@ def time_calc(request):
 
 def print_word(request):
 
-    fields = request.POST.get('fields')
-    fields = json.loads(fields)
+    recordid = request.POST.get('recordid')
 
-    dealname = fields['dealname']
+
+    dealname = 'test'
 
     id = uuid.uuid4().hex
 

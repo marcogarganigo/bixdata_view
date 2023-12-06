@@ -353,7 +353,9 @@
         $.ajax({
             type: "POST",
             url: "{% url 'print_word' %}",
-            data: post_data,
+            data: {
+              recordid : '{{ recordid }}',
+            },
             xhrFields: {
                 responseType: 'blob'
             },
