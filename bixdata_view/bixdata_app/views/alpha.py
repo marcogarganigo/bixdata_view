@@ -46,6 +46,7 @@ from .businesslogic.table import *
 from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from .businesslogic.record import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -2005,11 +2006,12 @@ def time_calc(request):
 
 
 def print_word(request):
-
-    recordid = request.POST.get('recordid')
-
-
-    dealname = 'test'
+    
+    recordid_deal = request.POST.get('recordid')
+    deal_record=Record('deal',recordid_deal)
+    dealline_records=deal_record.get_linkedrecords('dealline')
+    
+    dealname = deal_record.fields['dealname']
 
     id = uuid.uuid4().hex
 

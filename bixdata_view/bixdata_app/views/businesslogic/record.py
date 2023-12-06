@@ -66,7 +66,12 @@ class Record:
     def get_field(self,field_key):
         return self.fields[field_key]    
             
-        
+    def get_linkedtables():
+        return dict()
+    
+    def get_linkedrecords(self,linkedtable):
+        records=self.db_helper.sql_query(f"SELECT * FROM user_{linkedtable} WHERE recordid{self.tableid}_='{self.recordid}'")
+        return records   
    
 
 
