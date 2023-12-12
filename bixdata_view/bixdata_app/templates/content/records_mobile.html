@@ -195,28 +195,7 @@
         }
     }
 
-    function newRecord() {
-        var tableid = '{{tableid}}'
-        $('#newRecordModal').modal('show');
-        var serialized_data = [];
-        serialized_data.push({name: 'tableid', value: tableid});
-        serialized_data.push({name: 'function', value: 'insert'});
-        serialized_data.push({name: 'http_response', value: true});
-        $.ajax({
-            type: "POST",
-            url: "{% url 'get_record_fields' %}",
-            data: serialized_data,
-            success: function (response) {
-                $("#fullwidth_modal_newrecord").html(response);
 
-            },
-            error: function () {
-                $("#bixdata_recordcard_container").html(response);
-            }
-        });
-
-
-    }
 
     function reloadFunc() {
         getContentRecords('{{ tableid }}')

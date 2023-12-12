@@ -44,8 +44,11 @@ from functools import wraps
 from .businesslogic.table import *
 
 from docx import Document
-from docx.shared import Inches, Pt
+from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.oxml import OxmlElement
+from docx.enum.section import WD_SECTION
+
 from .businesslogic.record import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
@@ -276,9 +279,6 @@ def get_search_fields_data(tableid):
     return search_fields
 
 
-
-
-
 # Questa funzione è un test per i grafici
 @login_required(login_url='/login/')
 def get_render_content_chart(request):
@@ -401,7 +401,8 @@ def get_render_content_dashboard(request):
                     tableid = results['tableid']
                     tableid = 'user_' + tableid
 
-                    block['html'] = get_records_table(request, results['tableid'], None, None, '', results['viewid'], 1,'', '')
+                    block['html'] = get_records_table(request, results['tableid'], None, None, '', results['viewid'], 1,
+                                                      '', '')
 
 
                 else:
@@ -634,11 +635,10 @@ def get_block_records_kanban(request):
 
 @login_required(login_url='/login/')
 def get_block_records_calendar(request):
-
     tableid = request.POST.get('tableid')
 
-    #oc = OfficeCalendar()
-    #events_office = oc.get_calendar_events()
+    # oc = OfficeCalendar()
+    # events_office = oc.get_calendar_events()
 
     with connection.cursor() as cursor:
         cursor.execute(
@@ -646,11 +646,10 @@ def get_block_records_calendar(request):
         )
         result = dictfetchall(cursor)
 
-
-    table_obj=Table('task')
-    conditions_list=list()
+    table_obj = Table('task')
+    conditions_list = list()
     conditions_list.append("planneddate='2023-11-14'")
-    events_bixdata=table_obj.get_records(conditions_list=conditions_list)
+    events_bixdata = table_obj.get_records(conditions_list=conditions_list)
     return render(request, 'block/records/records_calendar.html', {'events': events_bixdata, 'select_fields': result})
 
 
@@ -794,7 +793,6 @@ def get_block_record_fields(request):
         'userid': userid
     }
 
-
     response = requests.post(
         f"{bixdata_server}bixdata/index.php/rest_controller/get_record_fields", data=post)
 
@@ -910,7 +908,6 @@ def save_record_fields(request):
             end = datetime.datetime.strptime(fields_dict['end'], time_format)
             time_difference = end - start
 
-
             total_minutes = time_difference.total_seconds() / 60
             hours, minutes = divmod(total_minutes, 60)
             formatted_time = "{:02}:{:02}".format(int(hours), int(minutes))
@@ -941,7 +938,6 @@ def save_record_fields(request):
     response = requests.post(
         f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
     response_dict = json.loads(response.text)
-
 
     if contextfunction == 'edit':
         if tableid == 'task':
@@ -991,10 +987,7 @@ def save_record_fields(request):
                     fields_dict['companyname'] = companyname
                     fields_dict['projectname'] = projectname
 
-
-
                     fields_dict['recordid'] = response_dict['recordid']
-
 
                     message = render_to_string('other/new_task.html', fields_dict)
 
@@ -1239,7 +1232,7 @@ def insert_timesheet(request, ticketid, userid):
 
     table_block = get_records_table(request, 'company', None, None, email, '', 1, '', '')
 
-    ticket_block = get_block_record_card(request,'ticket', recordid_ticket, userid)
+    ticket_block = get_block_record_card(request, 'ticket', recordid_ticket, userid)
     # timesheet_block = get_block_record_fields(request, tableid, contextfunction, contextreference, recordid, userid, http_response, called_from)
 
     data = {
@@ -1269,7 +1262,7 @@ def get_block_task(request, recordid_task, userid):
     if (rows):
         context = dict()
         context['task'] = rows[0]
-        context['task_block'] = get_block_record_card(request,'task', recordid_task, userid)
+        context['task_block'] = get_block_record_card(request, 'task', recordid_task, userid)
         content = render_to_string('other/check_task.html', context)
         return content
     else:
@@ -1287,7 +1280,7 @@ def get_block_timesheetinvoice(request, recordid_timesheet, userid):
         rows = dictfetchall(cursor)
     if (rows):
         recordid_company = rows[0]['recordidcompany_'];
-        company_block = get_block_record_card(request,'company', recordid_company, userid)
+        company_block = get_block_record_card(request, 'company', recordid_company, userid)
 
     context = dict()
     context['timesheet_block'] = timesheet_block
@@ -1440,7 +1433,7 @@ def get_block_ticket_timesheet(request, ticket, userid):
         rows = dictfetchall(cursor)
         if rows:
             recordid = rows[0]['recordid_']
-            ticket_block = get_block_record_card(request,'ticket', recordid, userid)
+            ticket_block = get_block_record_card(request, 'ticket', recordid, userid)
 
             context = dict()
             context['ticket_block'] = ticket_block
@@ -1747,6 +1740,7 @@ def staff_only(view_func):
 
     return wrapper
 
+
 def check_mails():
     with connection.cursor() as cursor:
         cursor.execute(
@@ -1755,6 +1749,7 @@ def check_mails():
         tasks = dictfetchall(cursor)
 
     return True
+
 
 def test_gridstack(request):
     return render(request, 'other/test_gridstack.html')
@@ -1981,6 +1976,7 @@ def admin_table_settings(request):
 def settings_charts(request):
     return render(request, 'admin_settings/settings_charts.html')
 
+
 def test_adiuto_db(request):
     with connections['adiuto'].cursor() as cursor:
         cursor.execute("SELECT * FROM A1001")
@@ -2006,34 +2002,339 @@ def time_calc(request):
 
 
 def print_word(request):
-    
     recordid_deal = request.POST.get('recordid')
-    deal_record=Record('deal',recordid_deal)
-    dealline_records=deal_record.get_linkedrecords('dealline')
-    
+    deal_record = Record('deal', recordid_deal)
+    dealline_records = deal_record.get_linkedrecords('dealline')
+
     dealname = deal_record.fields['dealname']
+    amount = deal_record.fields['amount']
+    company_record = Record('company', deal_record.fields['recordidcompany_'])
+
+    deal_description = deal_record.fields['description']
+
+    companyname = company_record.fields['companyname']
+    address = company_record.fields['address']
+    city = company_record.fields['city']
 
     id = uuid.uuid4().hex
 
     filename = dealname + id + '.docx'
 
+    #instead of creating a word i want to open one
+
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(script_dir, "test.docx")
+
+    #doc = Document(file_path)
+
     doc = Document()
 
+    for section in doc.sections:
+        header = section.header
+        paragraph = header.paragraphs[0] if header.paragraphs else header.add_paragraph()
+        run = paragraph.add_run("Intestazione del documento")
+        run.font.size = Pt(12)
+        paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+    target_document = doc
+    target_document.sections[0].left_margin = Inches(0.3)
+
+    # First paragraph
+    p1 = doc.add_paragraph()
+    text1 = 'Spett.le \n \n' + companyname + '\n' + address + ', ' + city
+    run1 = p1.add_run(text1)
+    font1 = run1.font
+    font1.size = Pt(10)
+    font1.name = 'Arial'
+    font1.bold = False
+    p1.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    # Second paragraph
+    p2 = doc.add_paragraph()
+    text2 = address + ', ' + city
+    run2 = p2.add_run(text2)
+    font2 = run2.font
+    font2.size = Pt(10)
+    font2.name = 'Arial'
+    font2.bold = True
+    p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    # Third paragraph
+    p3 = doc.add_paragraph()
+    text3 = dealname
+    run3 = p3.add_run(text3)
+    font3 = run3.font
+    font3.size = Pt(15)
+    font3.name = 'Calibri'
+    font3.color.rgb = RGBColor(0xFF, 0x00, 0x00)
+    font3.bold = True
+    p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    image_path = os.path.join(script_dir, "background.jpg")
 
     p = doc.add_paragraph()
+    p.add_run().add_picture(image_path, width=Inches(12), height=Inches(12))
 
-    text = dealname
-    run = doc.add_paragraph(text).runs[0]
-    font = run.font
-    font.size = Pt(20)
-    font.name = 'Arial'
+    new_section = target_document.add_section()
+    new_section.left_margin = Inches(1.0)
 
-    doc.paragraphs[-1].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    """
+    section = doc.sections[0]
+    header = section.header
+    watermark_path = 'background.jpg'  # Replace with your image path
+    watermark = header.paragraphs[0].add_run().add_picture(watermark_path)
+    watermark.alignment = WD_SECTION.DISTRIBUTE
+    """
+
+    """
+    img_path = 'background.jpg'
+    doc.add_picture(img_path, width=Inches(4))
+    """
+    doc.add_section(WD_SECTION.NEW_PAGE)
+
+    p3 = doc.add_paragraph()
+    text3 = 'Definizione Economica Monte Ore'
+    run3 = p3.add_run(text3)
+    font3 = run3.font
+    font3.size = Pt(15)
+    font3.name = 'Calibri'
+    font3.color.rgb = RGBColor(0xFF, 0x00, 0x00)
+    font3.bold = False
+    p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    table = doc.add_table(rows=2, cols=4)
+
+    table.style = 'Table Grid'
+
+    # Add the table header
+    row = table.rows[0]
+    # row.cells[0].shading.background_pattern_color = RGBColor(0xFF, 0x00, 0x00)
+    row.cells[0].text = 'Monte ore assistenza tecnica'
+    row.cells[1].text = 'Qt.'
+    row.cells[2].text = 'Prezzo unitario'
+    row.cells[3].text = 'Prezzo totale'
+
+    amount = str(amount) + ' CHF'
+    # Add the table data
+    row = table.rows[1]
+    row.cells[0].text = dealname
+    row.cells[1].text = '30'
+    row.cells[2].text = 'CHF'
+    row.cells[3].text = amount
+
+    p4 = doc.add_paragraph()
+    text4 = 'Gli interventi saranno calcolati on line con frazioni di ½ ora e on site con intervento minimo fatturabile di un’ora.'
+    run4 = p4.add_run(text4)
+    font4 = run4.font
+    font4.size = Pt(10)
+    font4.name = 'Calibri'
+    font4.bold = False
+    font4.italic = True
+    p4.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    table2 = doc.add_table(rows=1, cols=1)
+    row = table.rows[1]
+    row.cells[0].text = 'Condizioni contrattuali di vendita'
+
+    table2.style = 'Table Grid'
+
+    p5 = doc.add_paragraph()
+    text5 = 'Informazioni di contatto:'
+    run5 = p5.add_run(text5)
+    font5 = run5.font
+    font5.size = Pt(10)
+    font5.name = 'Calibri'
+    font5.bold = True
+    font5.italic = False
+    font5.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p5.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+
+    p6 = doc.add_paragraph(style='ListBullet2')  # Stile per elenco puntato con due punti
+    text6 = 'Per tutte le richieste di assistenza: helpdesk@swissbix.ch'
+    run6 = p6.add_run(text6)
+    font6 = run6.font
+    font6.size = Pt(10)
+    font6.name = 'Calibri'
+    font6.bold = False
+    font6.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p6.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p7 = doc.add_paragraph(style='ListBullet2')
+    text7 = 'In caso di urgenze è possibile chiamare il numero 091 960 22 09.'
+    run7 = p7.add_run(text7)
+    font7 = run7.font
+    font7.size = Pt(10)
+    font7.name = 'Calibri'
+    font7.bold = False
+    font7.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p7.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p8 = doc.add_paragraph()
+    text8 = 'Metodo di pagamento e fatturazione:'
+    run8 = p8.add_run(text8)
+    font8 = run8.font
+    font8.size = Pt(10)
+    font8.name = 'Calibri'
+    font8.bold = True
+    font8.italic = False
+    font8.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p8.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p9 = doc.add_paragraph(style='ListBullet2')
+    text9 = 'Monte Ore: Anticipato all’ordine'
+    run9 = p9.add_run(text9)
+    font9 = run9.font
+    font9.size = Pt(10)
+    font9.name = 'Calibri'
+    font9.bold = False
+    font9.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p9.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p10 = doc.add_paragraph()
+    text10 = 'Condizioni generali di vendita:'
+    run10 = p10.add_run(text10)
+    font10 = run10.font
+    font10.size = Pt(10)
+    font10.name = 'Calibri'
+    font10.bold = True
+    font10.italic = False
+    font10.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p10.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p11 = doc.add_paragraph(style='ListBullet2')
+    text11 = 'Durata minima del contratto: 12 mesi.'
+    run11 = p11.add_run(text11)
+    font11 = run11.font
+    font11.size = Pt(10)
+    font11.name = 'Calibri'
+    font11.bold = False
+    font11.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p11.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p12 = doc.add_paragraph(style='ListBullet2')
+    text12 = 'Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
+    run12 = p12.add_run(text12)
+    font12 = run12.font
+    font12.size = Pt(10)
+    font12.name = 'Calibri'
+    font12.bold = False
+    font12.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p12.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p13 = doc.add_paragraph(style='ListBullet2')
+    text13 = 'Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
+    run13 = p13.add_run(text13)
+    font13 = run13.font
+    font13.size = Pt(10)
+    font13.name = 'Calibri'
+    font13.bold = False
+    font13.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p13.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p14 = doc.add_paragraph(style='ListBullet2')
+    text14 = 'I servizi vengono rinnovati tacitamente salvo disdetta scritta 60 giorni prima della scadenza.'
+    run14 = p14.add_run(text14)
+    font14 = run14.font
+    font14.size = Pt(10)
+    font14.name = 'Calibri'
+    font14.bold = False
+    font14.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p14.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p15 = doc.add_paragraph(style='ListBullet2')
+    text15 = 'Orari di ufficio per supporto tecnico; dalle 9:00 alle 12:00 e dalle 14:00 alle 17:00'
+    run15 = p15.add_run(text15)
+    font15 = run15.font
+    font15.size = Pt(10)
+    font15.name = 'Calibri'
+    font15.bold = False
+    font15.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p16 = doc.add_paragraph(style='ListBullet2')
+    text16 = 'Prezzi Iva Esclusa'
+    run16 = p16.add_run(text16)
+    font16 = run16.font
+    font16.size = Pt(10)
+    font16.name = 'Calibri'
+    font16.bold = False
+    font16.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p17 = doc.add_paragraph(style='ListBullet2')
+    text17 = 'Sono esclusi lavori di cablaggio, lavori a muro ed elettrici e di tutta la cavetteria aggiuntiva.'
+    run17 = p17.add_run(text17)
+    font17 = run17.font
+    font17.size = Pt(10)
+    font17.name = 'Calibri'
+    font17.bold = False
+    font17.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    # get today date python
+    today = datetime.date.today()
+    d1 = today.strftime("%d/%m/%Y")
+
+    p18 = doc.add_paragraph()
+    text18 = 'Massagno' + ', ' + d1
+    run18 = p18.add_run(text18)
+    font18 = run18.font
+    font18.size = Pt(10)
+    font18.name = 'Calibri'
+    font18.bold = True
+    font18.italic = False
+    font18.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p18.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p19 = doc.add_paragraph()
+    text19 = 'Nome Cognome'
+    run19 = p19.add_run(text19)
+    font19 = run19.font
+    font19.size = Pt(10)
+    font19.name = 'Calibri'
+    font19.bold = True
+    font19.italic = False
+    font19.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p19.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p20 = doc.add_paragraph()
+    text20 = 'Per Accettazione'
+    run20 = p20.add_run(text20)
+    font20 = run20.font
+    font20.size = Pt(10)
+    font20.name = 'Calibri'
+    font20.bold = True
+    font20.italic = False
+    font20.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    p20.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+    p21 = doc.add_paragraph()
+    text21 = '____________________________________'
+    run21 = p21.add_run(text21)
+    font21 = run21.font
+    font21.size = Pt(10)
+    font21.name = 'Calibri'
+    font21.bold = True
+    font21.italic = False
+    p21.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+    p22 = doc.add_paragraph()
+    text22 = 'Swissbix SA Via Baroffio 6, 6900 Lugano E-Mail: finance@swissbix.ch Telefono: +41 91 960 22 00 Banca: UBS Switzerland AG \n Titolare del conto: Swissbix SA BIC: UBSWCHZH80A IBAN: CH62 0024 7247 2096 9101 U N. IVA UE: CHE-136.887.933 '
+    run22 = p22.add_run(text22)
+    font22 = run22.font
+    font22.size = Pt(8)
+    font22.name = 'Calibri'
+    font22.bold = False
+    font22.italic = False
+    p22.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
     doc.save(filename)
 
     with open(filename, 'rb') as fh:
-        response = HttpResponse(fh.read(), content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        response = HttpResponse(fh.read(),
+                                content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
         response['Content-Disposition'] = 'inline; filename=' + dealname + '.docx'
         fh.close()
         os.remove(filename)

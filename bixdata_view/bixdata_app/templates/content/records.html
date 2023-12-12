@@ -293,8 +293,10 @@
         }
     }
 
-    function newRecord() {
-        var tableid = '{{tableid}}'
+    function newRecord(tableid) {
+        if (tableid == null) {
+            tableid = '{{tableid}}'
+        }
         $('#newRecordModal').modal('show');
         var serialized_data = [];
         serialized_data.push({name: 'tableid', value: tableid});

@@ -444,6 +444,8 @@
                             <li><a class="dropdown-item" onclick="rinnova_contratto()">Rinnova</a></li>
                         {% elif tableid == 'ticket' %}
                             <li><a class="dropdown-item" onclick="open_freshdesk()">Apri in freshdesk</a></li>
+                        {% elif tableid == 'timetracking' %}
+                            <li><a class="dropdown-item" onclick="newRecord('timesheet')">Nuovo Timesheet</a></li>
                         {% endif %}
                         <!--<li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>-->
                     </ul>
