@@ -24,9 +24,9 @@
     }
 
     //appena la card carica aprire collegati di default
-    var recordtab_{{recordid}} = '{{user_table_settings.default_recordtab}}';
+    var recordtab_{{recordid}} = '{{recordtab}}';
     $('#block_record_card-{{recordid}}').ready(function () {
-        if (recordtab_{{recordid}} === 'Linked') {
+        if (recordtab_{{recordid}} === 'linked') {
             $('#linked-tab-{{ recordid }}').click();
         } else {
             $('#fields-tab-{{ recordid }}').click();

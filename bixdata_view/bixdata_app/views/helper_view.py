@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.http import HttpResponse
+from bixdata_app.models import *
 
 # Questa funzione blocca l'accesso a bixdata da firefox
 def firefox_check(view_func):
@@ -45,4 +46,13 @@ class HelperView:
             _type_: template generato come stringa
         """
         return render_to_string(template_path, self.context)
+    
+    def get_userid(self,request):
+        rows = SysUser.objects.filter(bixid=request.user.id).values('id')
+        if rows:
+            row = row[0]
+            userid = row['id']
+            return userid
+        else:
+            return None
     

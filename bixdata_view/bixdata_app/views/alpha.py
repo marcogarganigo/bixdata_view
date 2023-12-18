@@ -576,19 +576,19 @@ def get_block_records_kanban(request):
         'searchTerm': '',
     }
 
-    # response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
-    # response_dict = json.loads(response.text)
-    # groups=response_dict['groups']
-    # records = response_dict['records']
+    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
+    response_dict = json.loads(response.text)
+    groups=response_dict['groups']
+    records = response_dict['records']
     groups = []
-    # for record in records:
-    #   new_record = dict()
-    #  new_record['id'] = record[1]
-    # new_record['name'] = record[2]
-    # new_record['start'] = record[3]
-    # new_record['end'] = record[4]
-    # new_record['progress'] = 100
-    #    records_kanban.append(new_record)
+    for record in records:
+        new_record = dict()
+        new_record['id'] = record[1]
+        new_record['name'] = record[2]
+        new_record['start'] = record[3]
+        new_record['end'] = record[4]
+        new_record['progress'] = 100
+        records_kanban.append(new_record)
 
     group = dict()
     group['description'] = 'TODO test'
@@ -715,6 +715,10 @@ def get_block_record_card(request, tableid, recordid, userid):
             context['freshdeskid'] = freshdeskid
     context['userid'] = userid
     context['user_table_settings'] = get_user_table_settings(userid, tableid)
+    # TODO: recuperare i dati dal table settings generico
+    context['recordtab']='fields'
+    if tableid == 'deal':
+        context['recordtab']='linked'
     # returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
     return render_to_string('block/record/record_card.html', context)
 
@@ -761,9 +765,8 @@ def get_block_record_badge(tableid, recordid):
     #    records_table = render_to_string('block/record/custom/record_badge_project.html', context)
 
     # else:
-    # render_to_string('block/record/record_badge.html', context)
+    return render_to_string('block/record/record_badge.html', context)
 
-    return records_table
 
 
 @login_required(login_url='/login/s')
@@ -785,6 +788,12 @@ def get_block_record_fields(request):
     if row:
         userid = row[0]
         userid = userid['id']
+        
+    
+    record=Record(tableid=tableid,recordid=recordid,userid=userid)    
+    fields=record.get_fields_by_context(contextfunction)
+    if fields==[]:
+        fields=record.get_fields_by_context('insert_fields')
     post = {
         'tableid': tableid,
         'recordid': recordid,
@@ -819,8 +828,7 @@ def get_block_record_fields(request):
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()
         context['block_record_fields'] = render_to_string('block/record/record_fields.html', context, request=request)
-        block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context,
-                                               request=request)
+        block_record_fields = render_to_string('block/record/custom/record_fields_timesheet.html', context,request=request)
     else:
         context['block_record_fields'] = render_to_string('block/record/record_fields.html', context, request=request)
         block_record_fields = render_to_string('block/record/record_fields_container.html', context, request=request)
@@ -995,8 +1003,8 @@ def save_record_fields(request):
 
                     send_email(emails=[email], subject='Nuovo task assegnato', html_message=message)
 
-    return render(request, 'block/record/record_fields.html')
-
+    #return render(request, 'block/record/record_fields.html')
+    return HttpResponse(response_dict['recordid'])
 
 @login_required(login_url='/login/')
 def pagination(request):

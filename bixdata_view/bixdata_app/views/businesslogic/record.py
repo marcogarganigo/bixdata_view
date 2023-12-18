@@ -26,13 +26,15 @@ from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
 from .logic_helper import *
 from .database_helper import *
+from .table import *
 
 class Record:
     
-    def __init__(self, tableid, recordid=None):
+    def __init__(self, tableid, recordid=None, userid=1):
         self.db_helper=DatabaseHelper('default')
         self.tableid=tableid
         self.recordid=recordid
+        self.userid=userid
         if recordid:
             self.fields=self.db_helper.sql_query_row(f"SELECT * FROM user_{self.tableid} WHERE recordid_='{self.recordid}'")
         else:
@@ -72,6 +74,16 @@ class Record:
     def get_linkedrecords(self,linkedtable):
         records=self.db_helper.sql_query(f"SELECT * FROM user_{linkedtable} WHERE recordid{self.tableid}_='{self.recordid}'")
         return records   
+    
+    def get_fields_by_context(self,context):
+        t=Table(self.tableid)
+        fields=t.get_fields(context)
+        fields_values=self.fields
+        return list()
+        
+        
+    
+ 
    
 
 

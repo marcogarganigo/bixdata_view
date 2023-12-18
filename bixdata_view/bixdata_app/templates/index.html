@@ -287,7 +287,7 @@
 
 
 
-            function open_record(el, tableid, recordid, contextfunction = 'edit') {
+            function open_record(el, tableid, recordid, contextfunction = 'edit', target = '') {
 
                 window.content = el;
 
@@ -303,31 +303,35 @@
 
                 //errore, aggiungere un attributo alla tabella per capire se è nella dashboard oppure no
 
-
+                min_width_var=min_width
                 {% if layout_setting == 'modal' %}
-                    const min_width = 5000;
+                    min_width_var = 5000;
                 {% endif %}
 
+                if(tableid=="deal")
+                {
+                    min_width_var = 5000;
+                    target="popup"
+                }
+                
 
 
 
 
 
 
-                if (window.innerWidth <= min_width) {
+                
+                if (window.innerWidth <= min_width_var) {
 
                     if ($(el).attr('data-fieldtype') === 'linked') {
                         $('#linked-table-modal').modal('show');
                         $(".modal-backdrop:last").css("z-index", 11200);
-                        $("#linked-table-modal-content").load('/loading/');
                     } else {
-                        if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
+                        if (($(el).closest('#block_records_table')).attr('data-type') === 'linked') {
                             $('#linked-table-modal').modal('show');
                             $(".modal-backdrop:last").css("z-index", 11200);
-                            $("#linked-table-modal-content").load('/loading/');
                         } else {
                             $('#recordModal').modal('show');
-                            $("#record-modal-content").load('/loading/');
                         }
                     }
 
@@ -336,20 +340,52 @@
                     if ($(el).attr('data-fieldtype') === 'linked') {
                         $('#linked-table-modal').modal('show');
                         $(".modal-backdrop:last").css("z-index", 11200);
+                    } else {
+                        if (($(el).closest('#block_records_table')).attr('data-type') === 'linked') {
+                            $('#linked-table-modal').modal('show');
+                        } else {
+                            if (window.innerWidth > min_width_var) {
+                            }
+                        }
+                    }
+                }
+
+
+                /*
+                if (window.innerWidth <= min_width_var) {
+
+                    if ($(el).attr('data-fieldtype') === 'linked') {
                         $("#linked-table-modal-content").load('/loading/');
                     } else {
-                        if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
-                            $('#linked-table-modal').modal('show');
+                        if (($(el).closest('#block_records_table')).attr('data-type') === 'linked') {
                             $("#linked-table-modal-content").load('/loading/');
                         } else {
-                            if (window.innerWidth > min_width) {
+                            $("#record-modal-content").load('/loading/');
+                        }
+                    }
+
+
+                    } else {
+                    if ($(el).attr('data-fieldtype') === 'linked') {
+                        $("#linked-table-modal-content").load('/loading/');
+                    } else {
+                        if (($(el).closest('#block_records_table')).attr('data-type') === 'linked') {
+                            $("#linked-table-modal-content").load('/loading/');
+                        } else {
+                            if (window.innerWidth > min_width_var) {
                                 $("#block-record-card-container").load('/loading/');
                             }
                         }
                     }
                 }
-                //$("#block-record-card-container").html('caricamento');
+                */    
 
+                
+                
+
+
+                //$("#block-record-card-container").html('caricamento');
+                
                 $.ajax({
                     type: "POST",
                     url: "{% url 'block_record_card' %}",
@@ -358,18 +394,33 @@
 
                         //if ($(el.closest('table')).attr('data-type') === 'linked') {
                         //if ($(el.closest('#block_records_table')).attr('data-type') === 'linked') {
-                        if ($(el.closest('#block_records_table')).attr('data-type') === 'linked' || $(el).attr('data-fieldtype') === 'linked') {
+                        if (($(el).closest('#block_records_table')).attr('data-type') === 'linked' || $(el).attr('data-fieldtype') === 'linked') {
                             //$("#linked-table-modal").html(response);
                             //$("#linked-table-modal").modal("show");
                             //$('.modal-backdrop').hide()
                             //$(".modal-backdrop").css("z-index", 11200);
                             $("#linked-table-modal-content").html(response);
                         } else {
-                            if (window.innerWidth > min_width) {
-                                $("#block-record-card-container").html(response);
-                            } else {
-                                $("#record-modal-content").html(response);
+                            if(target=="")
+                            {
+                                if (window.innerWidth > min_width_var) {
+                                    $("#block-record-card-container").html(response);
+                                } else {
+                                    $("#record-modal-content").html(response);
+                                }
                             }
+                            else
+                            {
+                                if(target=="card")
+                                {
+                                    $("#block-record-card-container").html(response);
+                                }
+                                if(target=="popup")
+                                {
+                                    $("#record-modal-content").html(response);
+                                }
+                            }
+                            
                         }
                     },
                     error: function (response) {
@@ -377,6 +428,89 @@
                     }
                 });
 
+            }
+
+            function save_record(el) {
+                console.info('FUN:record_fields_container.html-save_record')
+                var record_fields_container=$(el).closest('.record_fields_container')
+                var tableid=$(record_fields_container).data('tableid')
+                console.info(tableid)
+                var contextfunction=$(record_fields_container).data('contextfunction')
+                var recordid=$(record_fields_container).data('recordid')
+                var master_tableid=$(record_fields_container).data('master_tableid')
+                var master_recordid=$(record_fields_container).data('master_recordid')
+
+                let necessaryFields = $(record_fields_container).find('.necessary');
+                let hasNecessaryFields = false;
+
+                $(necessaryFields).each(function (field) {
+                    if ($(this).val() === null || $(this).val() === "" || $(this).val() === "None") {
+                        hasNecessaryFields = true;
+                    }
+                });
+
+                if (hasNecessaryFields === true) {
+                    swal({
+                        title: "Attenzione",
+                        text: "Compilare tutti i campi obbligatori",
+                        icon: "error",
+                        button: "Ok",
+                        dangerMode: true
+                    });
+
+                } else {
+                    
+                    //var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
+                    //var serialized_json = convertFormToJSON(serialized_array);
+                    serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
+                    //set the value of creator in serialized_form
+                    serialized_form['creator'] = '{{ userid}}';
+                    serialized_json = convertFormToJSON(serialized_form);
+                    var post_data = [];
+                    post_data.push({name: 'tableid', value: tableid});
+                    post_data.push({name: 'recordid', value: recordid});
+                    post_data.push({name: 'fields', value: serialized_json});
+                    post_data.push({name: 'contextfunction', value: contextfunction});
+                    
+                    closeNewRecordModal()
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'save_record_fields' %}",
+                        data: post_data,
+                        success: function (response) {
+                            saved_recordid=response
+                            if ((contextfunction == 'insert') && (master_tableid == 'None')) {
+                                refresh();
+                            } else {
+                                load_linked(tableid+'-'+master_recordid, tableid, master_recordid, master_tableid)
+                            }
+                            setTimeout(function () {
+                                if (tableid == 'ticketbixdata') {
+                                    alert('Grazie per la segnalazione. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
+                                }
+                                var recordid = $(el).attr('data-recordid');
+
+                                //$('#fields_container_' + tableid + '_' + recordid).load('/loading/');
+                                open_record(window.content, tableid, saved_recordid, contextfunction, 'card')
+                                swal({
+                                    title: "Salvato!",
+                                    text: "Il record è stato salvato",
+                                    icon: "success",
+                                    timer: 800,
+                                    buttons: false,
+                                })
+                                //getContentRecords('{{ tableid }}')
+                                //$("#linked-container-{{ tableid }}").load('/loading/')
+
+                                //alert('test')
+                            });
+
+                        },
+                        error: function () {
+                            alert('ko')
+                        }
+                    });
+                }
             }
 
 

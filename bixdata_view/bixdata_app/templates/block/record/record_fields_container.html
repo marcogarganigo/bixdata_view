@@ -1,4 +1,4 @@
-<div id="universal-container-timesheet" style="height: 100%">
+<div id="universal-container-timesheet" class="record_fields_container" data-tableid="{{ tableid }}" data-recordid="{{ recordid }}" data-contextfunction="{{contextfunction}}" data-master_tableid="{{ master_tableid }}" data-master_recordid="{{master_recordid}}" style="height: 100%">
     <div id="omni-container-timesheet" style="height: 90%;  margin-bottom:20px;">
         <div id="fields-scroll-container" style="height: 100%; overflow-y: scroll; overflow-x: hidden">
             {{ block_record_fields|safe }}
@@ -19,12 +19,13 @@
             {% endif %}
         </div>
     </div>
-      <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class=" save-button" onclick="save_record(this)">Salva</button>
+    <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class=" save-button" onclick="save_record(this)">Salva</button>
 </div>
 
 
 <script>
-    function save_record(el) {
+    function save_recordOLD(el) {
+        console.info('FUN:record_fields_container.html-save_record')
         let necessaryFields = document.querySelectorAll('.necessary');
         let hasNecessaryFields = false;
 
@@ -75,7 +76,7 @@
                         }
                         var recordid = $(el).attr('data-recordid');
 
-                        $('#fields_container_' + '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
+                        //$('#fields_container_' + '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
                         open_record(window.content, '{{ tableid }}', '{{ recordid }}')
                         swal({
                             title: "Salvato!",
