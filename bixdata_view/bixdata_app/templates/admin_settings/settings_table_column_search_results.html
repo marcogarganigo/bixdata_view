@@ -3,16 +3,23 @@
     <div class="drag-item">
         {% for field in fields %}
             <div class="drag-item2">
-             {% if field.order != null %}
-                 <input class="form-check-input mt-0 checkbox" type="checkbox" checked value="" aria-label="Checkbox for following text input">
-             {% else %}
-                 <input class="form-check-input mt-0 checkbox" type="checkbox" value="" aria-label="Checkbox for following text input">
-             {% endif %}
-            <p class="settings_block_usertables_fieldid" data-fieldid="{{ field.id }}">{{field.description}}</p>
-            <button class="btn btn-secondary" onclick="settingsTableColumnSearchResultsOptions('{{ field.id }}')">Impostazioni</button>
-            </div>
+                {% if field.fieldorder != null %}
+                    <input class="form-check-input mt-0 checkbox" type="checkbox" checked value="" aria-label="Checkbox for following text input">
+                {% else %}
+                    <input class="form-check-input mt-0 checkbox" type="checkbox" value="" aria-label="Checkbox for following text input" >
+                {% endif %}
+                <div>
+                    <span>{{field.label}}</span>
+                </div>
+                <div >
+                    <span class="settings_block_usertables_fieldid" data-fieldid="{{ field.id }}"> {{field.description}}  </span>
+                </div>
+                
+                
+                <button  n class="btn btn-secondary" onclick="settingsTableColumnSearchResultsOptions('{{ field.id }}')">Impostazioni</button>
+            </div> 
         {% endfor %}
-    </div>
+    </inputclass="form-check-input>
 </div>
 
 <script>

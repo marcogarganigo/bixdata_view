@@ -136,4 +136,5 @@ urlpatterns = [
     path('test_admin_doc/', alpha.test_admin_doc, name='test_admin_doc'),
     path('time/', alpha.time_calc, name='time'),
     path('print_word/', alpha.print_word, name='print_word'),
+    path('get_record/', alpha.get_record, name='get_record'),
 ]

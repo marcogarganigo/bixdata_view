@@ -24,6 +24,7 @@ from django_user_agents.utils import get_user_agent
 from django import template
 from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
+from .database_helper import *
 
 
 class SettingsBusinessLogic:
@@ -49,8 +50,29 @@ class SettingsBusinessLogic:
 
 
     def get_search_column_results(self,userid,tableid, fields_type):
+        dbh=DatabaseHelper()
         subquery = SysUserFieldOrder.objects.filter(fieldid=OuterRef('id')).filter(typepreference=fields_type).values('fieldorder')[:1]
         fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('order').values('id','fieldid','tableid','order','description')
+        
+        sql1=f"SELECT sys_field.id,sys_field.fieldid,sys_field.tableid,sys_user_field_order.fieldorder,description,sys_field.label FROM sys_field LEFT JOIN sys_user_field_order ON sys_field.id=sys_user_field_order.fieldid WHERE sys_field.tableid='{tableid}' AND  sys_user_field_order.userid={userid} AND sys_user_field_order.typepreference='{fields_type}' ORDER BY sys_field.label, sys_user_field_order.fieldorder"
+        fields1=dbh.sql_query(sql1)
+        
+        sql2=f"""
+        SELECT sys_field.id,sys_field.fieldid,sys_field.tableid,NULL AS fieldorder,sys_field.description,sys_field.label
+        FROM sys_field
+        WHERE tableid='{tableid}' AND sys_field.id
+        NOT IN
+        (
+        SELECT sys_user_field_order.fieldid
+        FROM sys_user_field_order
+        WHERE
+        tableid='{tableid}' AND userid={userid} AND typepreference='{fields_type}'
+        )
+        ORDER BY sys_field.label, sys_field.fieldid
+        """
+        fields2=dbh.sql_query(sql2)
+        
+        fields=fields1+fields2
         return fields
     
     def get_usersettings(self,bixid):

@@ -122,10 +122,76 @@
         }
     }
 
-    //non funziona
     $(document).ready(function () {
-        $('input.datepicker').Zebra_DatePicker();
-    });
+        tableid="{{tableid}}"
+        //$('input.datepicker').Zebra_DatePicker();
+        $('.field').change(function(){
+            if(tableid=="dealline")
+            {
+                update_dealline(this)
+            }
+        })
+
+        $('.calcolato').prop("readonly", true);
+        $('.calcolato').css({"background-color":"#f5f5f5"})
+        
+    }); 
+
+
+    function update_dealline(el)
+    {
+        container=$(el).closest('.container ');
+        field_type=$(el).data('type');
+
+        quantity=$(container).find('#field-quantity').val();
+        if(quantity=="")
+        {
+            quantity=1
+            $(container).find('#field-quantity').val(1); 
+        }
+
+        if(field_type=="linkedmaster")
+        {
+            
+            recordid=$(el).closest('.field').find('.hidden-input').val()
+            
+            var serialized_data = [];
+            serialized_data.push({name: 'tableid', value: 'product'});
+            serialized_data.push({name: 'recordid', value: recordid});
+            $.ajax({
+                type: "POST",
+                url: "{% url 'get_record' %}",
+                data: serialized_data,
+                success: function (response) {
+                    console.info(response)
+                    var product_fields = response
+                    $(container).find('#field-unitprice').val(product_fields.unitprice);
+                    $(container).find('#field-unitexpectedcost').val(product_fields.unitcost);
+                    $(container).find('#field-name').val(product_fields.name);
+                    unitprice=$(container).find('#field-unitprice').val();
+                    unitexpectedcost=$(container).find('#field-unitexpectedcost').val();
+                    lineprice=unitprice*quantity
+                    lineexpectedcost=unitexpectedcost*quantity
+                    $(container).find('#field-price').val(lineprice);
+                    $(container).find('#field-expectedcost').val(lineexpectedcost);
+                    $(container).find('#field-expectedmargin').val(lineprice-lineexpectedcost);
+                },
+                error: function (response) {
+                    console.info(response)
+                }
+            });
+                
+        }
+        
+        unitprice=$(container).find('#field-unitprice').val();
+        unitexpectedcost=$(container).find('#field-unitexpectedcost').val();
+        lineprice=unitprice*quantity
+        lineexpectedcost=unitexpectedcost*quantity
+        $(container).find('#field-price').val(lineprice);
+        $(container).find('#field-expectedcost').val(lineexpectedcost);
+        $(container).find('#field-expectedmargin').val(lineprice-lineexpectedcost);
+        
+    }
 
 
 </script>
@@ -136,7 +202,7 @@
 
     {% for label,record_fields  in record_fields_labels.items %}
         {% if label != 'Dati' %}
-            <button class="dropdown-toggle btn btn-secondary dropdown-color" style="width: 100%" type="button" onclick="toggleCollapse(this)">
+            <button class="dropdown-toggle btn btn-secondary dropdown-color" style="width: 100%; text-align: left;" type="button" onclick="toggleCollapse(this)">
                 {{ label }}
             </button>
         {% endif %}
@@ -152,6 +218,11 @@
         {% else %}
             {% define '' as mandatory %}
             {% define '' as tooltip %}
+        {% endif %}
+        {% if field.settings.calcolato == 'true' %}
+            {% define 'calcolato' as calcolato %}
+        {% else %}
+            {% define '' as calcolato %}
         {% endif %}
 
         {% with fieldname=field.fieldid %}
@@ -189,11 +260,11 @@
                                         <div class="input-group mb-2">
                                             {% if field.fieldtypewebid == 'multiselect' %}
                                                 <select id="{{ fieldid }}" name="{{ fieldname }}"
-                                                        class="js-example-basic-single {{ mandatory }}"
+                                                        class="js-example-basic-single {{ mandatory }} {{calcolato}}"
                                                         multiple="multiple">
                                             {% else %}
                                                 <select id="{{ fieldid }}" name="{{ fieldname }}"
-                                                        class="js-example-basic-single {{ mandatory }}">
+                                                        class="js-example-basic-single {{ mandatory }} {{calcolato}}">
                                             {% endif %}
                                                     {% if field.lookupitems %}
                                                         <option value=""></option>
@@ -209,51 +280,43 @@
                                         </div>
                                     {% endfor %}
                                 {% else %}
-                                    <label>
                                         <input id="{{ fieldid }}" name="{{ fieldname }}"
-                                               class="form-control mb-2 {{ mandatory }}" type="text"
+                                               class="form-control mb-2 {{ mandatory }} {{calcolato}}" type="text"
                                                value="{{ field.value }}">
-                                    </label>
                                 {% endif %}
                             {% endif %}
                         {% endif %}
                         {% if field.fieldtypeid == 'Data' %}
-                            <label>
                                 <input id="{{ fieldid }}" name="{{ fieldname }}"
-                                       class="form-control mb-2 datepicker {{ mandatory }}" type="date"
+                                       class="form-control mb-2 datepicker {{ mandatory }} {{calcolato}}" type="date"
                                        value="{{ field.valuecode.0.code }}">
-                            </label>
                         {% endif %}
                         {% if field.fieldtypeid == 'Seriale' %}
                             <p>{{ field.value }}</p>
                         {% endif %}
                         {% if field.fieldtypeid == 'Numero' %}
-                            <label>
                                 <input id="{{ fieldid }}" name="{{ fieldname }}"
-                                       class="form-control mb-2 {{ mandatory }}" type="number"
+                                       class="form-control mb-2 {{ mandatory }} {{calcolato}}" type="number"
                                        value="{{ field.value }}">
-                            </label>
                         {% endif %}
                         {% if field.fieldtypeid == 'Memo' %}
                             {% if fieldname == 'description' %}
-                                <textarea style="min-height: 250px" class="form-control mb-2 {{ mandatory }}"
+                                <textarea style="min-height: 250px" class="form-control mb-2 {{ mandatory }} {{calcolato}}"
                                           id="{{ fieldid }}" name="{{ fieldname }}"
                                           rows="3">{{ field.value }}</textarea>
                             {% else %}
-                                <textarea class="form-control mb-2 {{ mandatory }}" id="{{ fieldid }}"
+                                <textarea class="form-control mb-2 {{ mandatory }} {{calcolato}}" id="{{ fieldid }}"
                                           name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
                             {% endif %}
                         {% endif %}
                         {% if field.fieldtypeid == 'Ora' %}
-                            <label>
                                 <input id="{{ fieldid }}" name="{{ fieldname }}"
-                                       class="form-control mb-2 {{ mandatory }}" type="time"
+                                       class="form-control mb-2 {{ mandatory }} {{calcolato}}" type="time"
                                        value="{{ field.value }}">
-                            </label>
-                        {% endif %}
+                                       {% endif %}
                         {% if field.fieldtypeid == 'Utente' %}
                             <div class="input-group mb-2">
-                                <select id="{{ fieldid }}" name="{{ fieldname }}" class="js-example-basic-single {{ mandatory }}">
+                                <select id="{{ fieldid }}" name="{{ fieldname }}" class="js-example-basic-single {{ mandatory }} {{calcolato}}">
                                     <option id="" value=""></option>
                                     {% for items in field.lookupitems %}
                                         {% if items.id and items.firstname and items.lastname %}
@@ -269,13 +332,10 @@
                         {% endif %}
                         {% if field.fieldtypeid == 'linkedmaster' %}
                             <div>
-                                <input class="form-select mb-2 {{ mandatory }}"
-                                       id="{{ fieldid }}-{{ recordid }}-autocomplete" style="width: 80%"
-                                       value="{{ field.valuecode.0.value }}"
-                                       onfocus="selectAllText(this); showOptions(this)">
+                                <input class="form-select mb-2 {{ mandatory }} {{calcolato}}" id="{{ fieldid }}-{{ recordid }}-autocomplete" style="width: 80%" value="{{ field.valuecode.0.value }}" onfocus="selectAllText(this); " data-type="linkedmaster">
                             </div>
 
-                            <input type="hidden" class="hidden-input {{ mandatory }}" name="{{ field.fieldid }}" value="{{ field.recordid }}">
+                            <input type="hidden" class="hidden-input {{ mandatory }} {{calcolato}}" name="{{ field.fieldid }}" value="{{ field.recordid }}">
                         {% endif %}
                     </div>
                 </div>
@@ -309,7 +369,11 @@
                                 minLength: 0, // Set minLength to 0 to show autocomplete on focus
                                 select: function (event, ui) {
                                     // console.log( "Selected: " + ui.item.id );
+ 
                                     $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+                                    update_dealline(this)
+                                    
+                                    /*
                                     $.ajax({
                                         url: "{% url 'get_badge' %}",
                                         data: {
@@ -321,6 +385,7 @@
                                             response(data.data);
                                         }
                                     });
+                                    */
                                 }
                             }).focus(function () {
                                 // Trigger autocomplete on focus

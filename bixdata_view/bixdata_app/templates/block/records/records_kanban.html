@@ -4,16 +4,16 @@
 <!--Demo
 <script src="assets/js/ui/component.dragula.js"></script>
 -->
-
+{% load static %}
 
 <div id="#content_records_kanban" style="height: 100%;width: 100%">
 
-    <div class="container-fluid kanban-container">
+    <div class="container-fluid kanban-container" style="height: 100%;width: 100%;">
 
 
-        <div class="row">
-            <div class="col-12">
-                <div class="board">
+        <div class="row" style="height: 100%;width: 100%;">
+            <div class="col-12" style="height: 100%;width: 100%;">
+                <div class="board" style="height: 100%;width: 100%;">
                     {% for group in groups %}
                         <div class="tasks" data-plugin="dragula"
                              data-containers='["task-list-one", "task-list-two", "task-list-three", "task-list-four"]'
@@ -24,21 +24,22 @@
                                 {% for record in group.records %}
                                     <div class="card mb-0 kanban-record" data-recordid="{{ record.recordid }}">
                                         <div class="card-body p-3">
-                                            <small class="float-end text-muted">{{ record.date }}</small>
-                                            <h5 class="mt-2 mb-2">
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#task-detail-modal"
-                                                   class="text-body">{{ record.title }}</a>
+                                            <p class="mb-0">
+                                                <small class="float-end text-muted">{{ record.date }}</small>
+                                            </p>
+                                            
+                                            <h5 class="mt-2 mb-2" >
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#task-detail-modal" class="text-body" style="color: black !important;">{{ record.title }}</a>
                                             </h5>
                                             <p class="mb-0">
-                         <span class="pe-2 text-nowrap mb-2 d-inline-block">
-                             <i class="mdi mdi-briefcase-outline text-muted"></i>
-                                {{ record.tag }}
-                         </span>
+                                            <b>Importo:</b>   {{record.field1}}
                                             </p>
                                             <p class="mb-0">
-                                                <img src="assets/images/users/avatar-2.jpg" alt="user-img"
-                                                     class="avatar-xs rounded-circle me-1"/>
-                                                <span class="align-middle">{{ record.user }}</span>
+                                                <br/>
+                                            </p>
+                                            <p class="mb-0">
+                                                <img src="{% static 'images/users/' %}{{record.user}}.png" alt="user-img"class="avatar-xs rounded-circle me-1"/>
+                                                
                                             </p>
                                         </div>
                                     </div>

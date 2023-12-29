@@ -579,53 +579,29 @@ def get_block_records_kanban(request):
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
     response_dict = json.loads(response.text)
     groups=response_dict['groups']
-    records = response_dict['records']
-    groups = []
-    for record in records:
-        new_record = dict()
-        new_record['id'] = record[1]
-        new_record['name'] = record[2]
-        new_record['start'] = record[3]
-        new_record['end'] = record[4]
-        new_record['progress'] = 100
-        records_kanban.append(new_record)
-
-    group = dict()
-    group['description'] = 'TODO test'
-    group_records = []
-    record = dict()
-    record['recordid'] = '123456789'
-    record['title'] = 'title'
-    record['tag'] = 'tag'
-    record['date'] = 'date'
-    record['user'] = 'user'
-    record['field1'] = 'field1'
-    record['field2'] = 'field2'
-    record['field3'] = 'field3'
-    record['field4'] = 'field4'
-    group_records.append(record)
-    group['records'] = group_records
-    groups.append(group)
-
-    group = dict()
-    group['description'] = 'IN PROGRESS'
-    group_records = []
-    record = dict()
-    record['recordid'] = '2222344453'
-    record['title'] = 'title2'
-    record['tag'] = 'tag2'
-    record['date'] = 'date2'
-    record['user'] = 'user2'
-    record['field1'] = 'field12'
-    record['field2'] = 'field22'
-    record['field3'] = 'field32'
-    record['field4'] = 'field42'
-    group_records.append(record)
-    group['records'] = group_records
-    groups.append(group)
+    return_groups= []
+    for key, group in groups.items():
+        return_group = dict()
+        return_group['description']=group['description']
+        return_group_records = []
+        return_record=dict()
+        return_record['recordid'] = '123456789'
+        return_record['title'] = 'title'
+        return_record['tag'] = 'tag'
+        return_record['date'] = 'date'
+        return_record['user'] = 'user'
+        return_record['field1'] = 'field1'
+        return_record['field2'] = 'field2'
+        return_record['field3'] = 'field3'
+        return_record['field4'] = 'field4'
+        return_group_records.append(return_record)
+        return_group['records'] = group['records']
+        return_groups.append(return_group)
+    
+   
 
     context = {
-        'groups': groups,
+        'groups': return_groups,
         'tableid': tableid,
     }
     records_table = render_to_string(
@@ -2348,3 +2324,15 @@ def print_word(request):
         os.remove(filename)
 
         return response
+
+
+def get_record(request):
+    tableid = request.POST.get('tableid')
+    recordid = request.POST.get('recordid')
+    r=Record(tableid,recordid)
+    return_value=dict()
+    return_value['unitprice']=r.fields['price']
+    return_value['unitcost']=r.fields['cost']
+    return_value['name']=r.fields['name']
+    
+    return JsonResponse(return_value)
