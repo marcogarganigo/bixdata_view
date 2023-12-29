@@ -2331,8 +2331,9 @@ def get_record(request):
     recordid = request.POST.get('recordid')
     r=Record(tableid,recordid)
     return_value=dict()
-    return_value['unitprice']=r.fields['price']
-    return_value['unitcost']=r.fields['cost']
-    return_value['name']=r.fields['name']
+    if tableid=='product':
+        return_value['unitprice']=r.fields['price']
+        return_value['unitcost']=r.fields['cost']
+        return_value['name']=r.fields['name']
     
     return JsonResponse(return_value)

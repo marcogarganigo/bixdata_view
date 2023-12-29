@@ -371,7 +371,9 @@
                                     // console.log( "Selected: " + ui.item.id );
  
                                     $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+                                    {% if tableid == 'dealline' %}
                                     update_dealline(this)
+                                    {% endif %}
                                     
                                     /*
                                     $.ajax({
