@@ -9,10 +9,10 @@ function load_fields(el, tableid, recordid) {
             'contextfunction': 'edit',
         },
         success: function (response) {
-            $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
+            $(el).closest('.block_record_card').find('.tab-pane-fields').append(response)
         },
         error: function (response) {
-            $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
+            $(el).closest('.block_record_card').find('.tab-pane-fields').append(response)
         }
     });
 }
