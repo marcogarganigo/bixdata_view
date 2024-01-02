@@ -151,71 +151,49 @@
     }
 </script>
 
-<div id="universal-container-timesheet" class="record_fields_container" data-tableid="{{ tableid }}" data-recordid="{{ recordid }}" data-contextfunction="{{contextfunction}}" data-master_tableid="{{ master_tableid }}" data-master_recordid="{{master_recordid}}" style="height: 100%">
-    <div id="omni-container-timesheet" style="height: 90%;  margin-bottom:20px;">
-        <div id="fields-scroll-container" style="height: 100%; overflow-y: scroll; overflow-x: hidden">
 
-            {% if contextfunction == 'view' %}
-                <style>
-                    #save-button-{{ recordid }} {
-                        display: none;
-                    }
-                </style>
-
-                <script>
-                    $("#fields-scroll-container input").attr("disabled", true);
-                    $("#fields-scroll-container select").attr("disabled", true);
-                    $("#fields-scroll-container textarea").attr("disabled", true);
-                    $("save-button-{{ recordid }}").remove();
-                </script>
-            {% endif %}
-
-
-            <div class="container">
-                <div class="row">
-                    <div>
-                        {{ block_record_fields }}
-                    </div>
-                    <!-- Icon for adding a new row -->
-                    <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary mdi mdi-plus" style="width: auto" onclick="addNewRow(this)"></button>
-                    <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary " style="width: auto" onclick="getprojectid()">recupera materiale progetto</button>
-                    <!-- Bootstrap table -->
-                    <table id="myTable-{{ timesheet }}" class="table">
-                        <thead>
-                            <tr>
-                                <th>Descrizione</th>
-                                <th>Quantità prevista</th>
-                                <th>Quantità installata</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Existing table rows -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            {% if contextfunction == 'view' %}
-                <style>
-                    #save-button-{{ recordid }} {
-                        display: none;
-                    }
-                </style>
-
-                <script>
-                    $("#fields-scroll-container input").attr("disabled", true);
-                    $("#fields-scroll-container select").attr("disabled", true);
-                    $("#fields-scroll-container textarea").attr("disabled", true);
-                    $("save-button-{{ recordid }}").remove();
-                </script>
-
-            {% endif %}
+<div class="container">
+    <div class="row">
+        <div>
+            {{ block_record_fields_timesheet }}
         </div>
+        <!-- Icon for adding a new row -->
+        <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary mdi mdi-plus"
+                style="width: auto" onclick="addNewRow(this)"></button>
+        <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary " style="width: auto"
+                onclick="getprojectid()">recupera materiale progetto
+        </button>
+        <!-- Bootstrap table -->
+        <table id="myTable-{{ timesheet }}" class="table">
+            <thead>
+            <tr>
+                <th>Descrizione</th>
+                <th>Quantità prevista</th>
+                <th>Quantità installata</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Existing table rows -->
+            </tbody>
+        </table>
     </div>
-
-    <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class="btn btn-primary save-button" onclick="save_record(this)">Salva</button>
-
 </div>
+
+{% if contextfunction == 'view' %}
+    <style>
+        #save-button-{{ recordid }} {
+            display: none;
+        }
+    </style>
+
+    <script>
+        $("#fields-scroll-container input").attr("disabled", true);
+        $("#fields-scroll-container select").attr("disabled", true);
+        $("#fields-scroll-container textarea").attr("disabled", true);
+        $("save-button-{{ recordid }}").remove();
+    </script>
+
+{% endif %}
 
 
 <style>
