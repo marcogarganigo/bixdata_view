@@ -572,6 +572,7 @@
                 <div class="tab-pane tab-pane-fields fade show active" id="fields-tab-pane-{{ recordid }}"
                      role="tabpanel"
                      aria-labelledby="fields-tab" tabindex="0" style="height: 100%">
+                      <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class="" onclick="save_record(this)">Salva</button>
                     {{ block_record_fields }}
                 </div>
 

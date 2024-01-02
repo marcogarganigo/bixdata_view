@@ -704,7 +704,8 @@ def get_block_record_card(request, tableid, recordid, userid):
 def request_block_record_badge(request, http_response=False):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
-    return get_block_record_badge(tableid, recordid)
+    return HttpResponse({'success': True})
+    #return get_block_record_badge(tableid, recordid)
 
 
 # Questa funzione serve per creare il badge
