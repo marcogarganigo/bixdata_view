@@ -978,9 +978,23 @@ def save_record_fields(request):
                     # return render(request, 'other/new_task.html', fields_dict)
 
                     send_email(emails=[email], subject='Nuovo task assegnato', html_message=message)
+    
+    
 
     #return render(request, 'block/record/record_fields.html')
+    custom_save_record(request,tableid,response_dict['recordid'])
     return HttpResponse(response_dict['recordid'])
+
+@login_required(login_url='/login/')
+def custom_save_record(request,tableid,recordid):
+    if tableid=='deal':
+        record_deal=Record('deal',recordid)
+        record_company=Record('company',record_deal.fields['recordidcompany_'])
+        reference=str(record_deal.fields['id'])+' - '+record_deal.fields['dealname']+' - '+record_company.fields['companyname']
+        record_deal.fields['reference']=reference
+        record_deal.save()
+    return True
+    
 
 @login_required(login_url='/login/')
 def pagination(request):
