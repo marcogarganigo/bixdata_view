@@ -83,6 +83,7 @@
         //pick inpaut value by name
         var projectid = document.getElementsByName("recordidproject_")[0].value;
 
+        if (projectid != 'None') {
         $.ajax({
             type: "POST",
             url: "{% url 'get_project_id' %}",
@@ -147,7 +148,9 @@
             }
 
         })
-
+        } else {
+            alert('Nessun progetto associato')
+        }
     }
 </script>
 
