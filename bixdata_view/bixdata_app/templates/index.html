@@ -462,19 +462,28 @@
                         data: post_data,
                         success: function (response) {
                             saved_recordid = response
-                            if ((contextfunction == 'insert') && (master_tableid == 'None')) {
-                                refresh();
-                            } else {
-                                load_linked(tableid + '-' + master_recordid, tableid, master_recordid, master_tableid)
-                            }
-                            setTimeout(function () {
-                                if (tableid == 'ticketbixdata') {
-                                    alert('Grazie per la segnalazione. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
+                            if((contextfunction == 'insert'))
+                            {
+                                if ((master_tableid == 'None')) {
+                                    refresh();
+                                } else {
+                                    load_linked(tableid + '-' + master_recordid, tableid, master_recordid, master_tableid)
                                 }
-                                var recordid = $(el).attr('data-recordid');
+                            }
+                            
+                            setTimeout(function () {
 
                                 //$('#fields_container_' + tableid + '_' + recordid).load('/loading/');
-                                open_record(window.content, tableid, saved_recordid, contextfunction, 'card')
+                                  // DA SISTEMARE caso deal
+                                if ((master_tableid == 'None') && tableid!='deal' ) {
+                                    open_record(window.content, tableid, saved_recordid, contextfunction, 'card')
+                                }
+                                // DA SISTEMARE casao deal
+                                if((contextfunction == 'insert') && tableid=='deal')
+                                {
+                                    open_record(window.content, tableid, saved_recordid, contextfunction, 'popup')
+                                }
+                                
                                 swal({
                                     title: "Salvato!",
                                     text: "Il record è stato salvato",
