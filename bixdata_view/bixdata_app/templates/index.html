@@ -16,7 +16,6 @@
             const fhd_width = 1920;
 
 
-
             if (window.innerWidth <= min_width) {
                 $("html").attr("data-sidenav-size", "condensed");
                 $(".tabs-title").attr("display", "none");
@@ -29,6 +28,8 @@
                 {% if content == '' %}
                     getDashboard();
                 {% endif %}
+
+
 
                 $("#toggle-menu").click(function () {
                     //$("#content_container").load('/loading/');
@@ -121,7 +122,7 @@
             }
 
             function getAdminTableSettings(page) {
-                
+
                 $.ajax({
                     type: "POST",
                     crossDomain: true,
@@ -286,7 +287,6 @@
             }
 
 
-
             function open_record(el, tableid, recordid, contextfunction = 'edit', target = '') {
 
                 window.content = el;
@@ -298,29 +298,19 @@
                 serialized_data.push({name: 'contextfunction', value: contextfunction});
 
 
-
-
-
                 //errore, aggiungere un attributo alla tabella per capire se è nella dashboard oppure no
 
-                min_width_var=min_width
+                min_width_var = min_width
                 {% if layout_setting == 'modal' %}
                     min_width_var = 5000;
                 {% endif %}
 
-                if(tableid=="deal")
-                {
+                if (tableid == "deal") {
                     min_width_var = 5000;
-                    target="popup"
+                    target = "popup"
                 }
-                
 
 
-
-
-
-
-                
                 if (window.innerWidth <= min_width_var) {
 
                     if ($(el).attr('data-fieldtype') === 'linked') {
@@ -378,14 +368,11 @@
                         }
                     }
                 }
-                */    
-
-                
-                
+                */
 
 
                 //$("#block-record-card-container").html('caricamento');
-                
+
                 $.ajax({
                     type: "POST",
                     url: "{% url 'block_record_card' %}",
@@ -401,26 +388,21 @@
                             //$(".modal-backdrop").css("z-index", 11200);
                             $("#linked-table-modal-content").html(response);
                         } else {
-                            if(target=="")
-                            {
+                            if (target == "") {
                                 if (window.innerWidth > min_width_var) {
                                     $("#block-record-card-container").html(response);
                                 } else {
                                     $("#record-modal-content").html(response);
                                 }
-                            }
-                            else
-                            {
-                                if(target=="card")
-                                {
+                            } else {
+                                if (target == "card") {
                                     $("#block-record-card-container").html(response);
                                 }
-                                if(target=="popup")
-                                {
+                                if (target == "popup") {
                                     $("#record-modal-content").html(response);
                                 }
                             }
-                            
+
                         }
                     },
                     error: function (response) {
@@ -432,13 +414,13 @@
 
             function save_record(el) {
                 console.info('FUN:index.html-save_record')
-                var record_fields_container=$(el).closest('.record_fields_container')
-                var tableid=$(record_fields_container).data('tableid')
+                var record_fields_container = $(el).closest('.record_fields_container')
+                var tableid = $(record_fields_container).data('tableid')
                 console.info(tableid)
-                var contextfunction=$(record_fields_container).data('contextfunction')
-                var recordid=$(record_fields_container).data('recordid')
-                var master_tableid=$(record_fields_container).data('master_tableid')
-                var master_recordid=$(record_fields_container).data('master_recordid')
+                var contextfunction = $(record_fields_container).data('contextfunction')
+                var recordid = $(record_fields_container).data('recordid')
+                var master_tableid = $(record_fields_container).data('master_tableid')
+                var master_recordid = $(record_fields_container).data('master_recordid')
 
                 let necessaryFields = $(record_fields_container).find('.necessary');
                 let hasNecessaryFields = false;
@@ -459,7 +441,7 @@
                     });
 
                 } else {
-                    
+
                     //var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
                     //var serialized_json = convertFormToJSON(serialized_array);
                     serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
@@ -471,18 +453,18 @@
                     post_data.push({name: 'recordid', value: recordid});
                     post_data.push({name: 'fields', value: serialized_json});
                     post_data.push({name: 'contextfunction', value: contextfunction});
-                    
+
                     closeNewRecordModal()
                     $.ajax({
                         type: "POST",
                         url: "{% url 'save_record_fields' %}",
                         data: post_data,
                         success: function (response) {
-                            saved_recordid=response
+                            saved_recordid = response
                             if ((contextfunction == 'insert') && (master_tableid == 'None')) {
                                 refresh();
                             } else {
-                                load_linked(tableid+'-'+master_recordid, tableid, master_recordid, master_tableid)
+                                load_linked(tableid + '-' + master_recordid, tableid, master_recordid, master_tableid)
                             }
                             setTimeout(function () {
                                 if (tableid == 'ticketbixdata') {
@@ -563,7 +545,7 @@
         </script>
 
         <div id="bixdata2" style="height: 100%">
-        <input type="hidden" id="saved_layout">
+            <input type="hidden" id="saved_layout">
             <!-- ========== Topbar Start ========== -->
             <div class="navbar-custom topnav-navbar">
                 <div class="container-fluid detached-nav">
@@ -830,7 +812,7 @@
 
                             <script>
                                 function setColor(el) {
-                                        var els = document.querySelectorAll('.side-nav-txt');
+                                    var els = document.querySelectorAll('.side-nav-txt');
                                     els.forEach(function (el) {
                                         el.classList.remove('sidenavitem-active');
                                     });
@@ -849,13 +831,14 @@
                             <li class="side-nav-title side-nav-item">Tables</li>
                             {% for workspace_key, workspace_value in menu_tables.items %}
                                 <li class="side-nav-item">
-                                    <a data-bs-toggle="collapse" href="#sidebar{{workspace_value.workspaceid}}" aria-expanded="false"
-                                       aria-controls="sidebar{{workspace_value.workspaceid}}" class="side-nav-link">
+                                    <a data-bs-toggle="collapse" href="#sidebar{{ workspace_value.workspaceid }}"
+                                       aria-expanded="false"
+                                       aria-controls="sidebar{{ workspace_value.workspaceid }}" class="side-nav-link">
                                         <i class="{{ workspace_value.icon }}"></i>
-                                        <span>{{workspace_value.name}}</span>
+                                        <span>{{ workspace_value.name }}</span>
                                         <span class="menu-arrow"></span>
                                     </a>
-                                    <div class="collapse" id="sidebar{{workspace_value.workspaceid}}">
+                                    <div class="collapse" id="sidebar{{ workspace_value.workspaceid }}">
                                         <ul class="side-nav-second-level">
                                             {% for table in workspace_value.tables %}
                                                 <li onclick="getContentRecords('{{ table.id }}')">
@@ -886,7 +869,8 @@
                                                 <a class="side-nav-txt" onclick="setColor(this)">Grafici</a>
                                             </li>
                                             <li onclick="getViewSettingsTable($(this).find('a').text())">
-                                                <a class="side-nav-txt" onclick="setColor(this)">Impostazioni tabelle</a>
+                                                <a class="side-nav-txt" onclick="setColor(this)">Impostazioni
+                                                    tabelle</a>
                                             </li>
                                             <li onclick="">
                                                 <a class="side-nav-txt" onclick="setColor(this)">Impostazioni utenti</a>
@@ -921,9 +905,10 @@
                                 </li>
                             {% endif %}
 
-                            {% if username|lower == 'marco.garganigo' or username|lower == 'alessandro.galli'  %}
+                            {% if username|lower == 'marco.garganigo' or username|lower == 'alessandro.galli' %}
                                 <li class="side-nav-item">
-                                    <a data-bs-toggle="collapse" href="#sidebarTest" aria-expanded="false" aria-controls="sidebarAdmin" class="side-nav-link">
+                                    <a data-bs-toggle="collapse" href="#sidebarTest" aria-expanded="false"
+                                       aria-controls="sidebarAdmin" class="side-nav-link">
                                         <i class="uil-briefcase"></i>
                                         <span>Test</span>
                                         <span class="menu-arrow"></span>
@@ -1018,7 +1003,7 @@
                 </div>
             </div>
 
-            <div class="modal fade" id="linked-table-modal" aria-labelledby="exampleModalLabel" aria-hidden="true"
+            <div class="modal fade" id="linked-table-modal" aria-hidden="true"
                  style="width: 100%; z-index: 12000">
                 <div class="modal-dialog modal-fullscreen" style="width: 50%; margin: 2% auto auto;height: 85%">
                     <div class="modal-content" style="width: 100%">
@@ -1030,6 +1015,50 @@
                     </div>
                 </div>
             </div>
+    
+
+
+         <div id="modalSmall" class="modal fade" style="width: 100%">
+                <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            Small
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modalMedium" class="modal fade" style="width: 75%">
+                <div class="modal-dialog modal-dialog-centered modal-md">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            Medium
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modalLarge" class="modal fade" style="width: 50%">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            Large
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modalExtraLarge" class="modal fade" style="width: 25%">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            Extra Large
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <!--record modal end-->
 
             <!--
@@ -1074,46 +1103,6 @@
     -->
 
 
-            <!--record modal big start-->
-            <div id="modalBig" class="modal fade">
-                <div class="modal-dialog modal-fullscreen"
-                     style="width: 80%; height: 90%; margin: auto; margin-top: 1%">
-                    <div class="modal-content" style="width: 100%">
-                        <div id="modalBig-body" class="modal-body" style="width: 100%;background-color: blue;">
-                            big
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--record modal big end-->
-
-            <!--record modal medium start-->
-            <div id="modalMedium" class="modal fade">
-                <div class="modal-dialog modal-fullscreen"
-                     style="width: 50%; height: 90%; margin: auto; margin-top: 1%">
-                    <div class="modal-content" style="width: 100%">
-                        <div id="modalMedium-body" class="modal-body" style="width: 100%;">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--record modal medium end-->
-
-            <!--record modal small start-->
-            <div id="modalSmall" class="modal fade">
-                <div class="modal-dialog modal-fullscreen"
-                     style="width: 20%; height: 90%; margin: auto; margin-top: 1%">
-                    <div class="modal-content" style="width: 100%">
-                        <div id="modalSmall-body" class="modal-body" style="width: 100%;background-color:yellow">
-                            small
-                            <textarea></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--record modal small end-->
-            -->
             <script>
                 /*
                 var imageDropArea = document.getElementById('image-drop-area');
