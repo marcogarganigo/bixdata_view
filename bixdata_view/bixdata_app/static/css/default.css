@@ -689,7 +689,6 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
     height: 40px;
     font-size: 16px;
     border: none;
-    right: 20px;
     border-radius: 8px;
 }
 
