@@ -125,8 +125,8 @@
                                         url: "{% url 'get_autocomplete_data' %}",
                                         data: {
                                             'term': request.term,
-                                            'tableid': '{{tableid}}',
-                                            'mastertableid': '{{ field.tablelink }}'
+                                            'tableid': 'timesheet',
+                                            'mastertableid': 'product'
                                         },
                                         success: function (data) {
                                             console.info(data)
