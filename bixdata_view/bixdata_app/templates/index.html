@@ -304,7 +304,10 @@
                 {% if layout_setting == 'modal' %}
                     min_width_var = 5000;
                 {% endif %}
-
+                if(target=='modal')
+                {
+                    min_width_var = 5000;
+                }
             /*
                 if (tableid == "deal") {
                     min_width_var = 5000;
@@ -408,7 +411,7 @@
                                 if (target == "card") {
                                     $("#block-record-card-container").html(response);
                                 }
-                                if (target == "popup") {
+                                if (target == "modal") {
                                     $("#record-modal-content").html(response);
                                 }
                             }
@@ -477,6 +480,7 @@
                                     refresh();
                                 } else {
                                     load_linked(tableid + '-' + master_recordid, tableid, master_recordid, master_tableid)
+                                    load_badge(master_tableid,master_recordid)
                                 }
                             }
                             
@@ -486,7 +490,7 @@
 
                                 $('#fields_container_' + tableid + '_' + recordid).load('/loading/');
 
-                                  // DA SISTEMARE caso deal
+                                  //TODO DA SISTEMARE caso deal
                                 if ((master_tableid == 'None') && tableid!='deal' ) {
                                     {% if layout_setting == 'rightcard'%}
                                     if (window.innerWidth > min_width) {
@@ -494,10 +498,10 @@
                                     }
                                     {% endif %}
                                 }
-                                // DA SISTEMARE casao deal
+                                //TODO  DA SISTEMARE casao deal
                                 if((contextfunction == 'insert') && tableid=='deal')
                                 {
-                                    open_record(window.content, tableid, saved_recordid, contextfunction, 'popup')
+                                    open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
                                 }
                                 
                                 swal({
@@ -521,6 +525,27 @@
                 }
             }
 
+
+        function load_badge(tableid,recordid) {
+
+            badge_id=tableid + '-' + recordid
+            $("#badge-container-" + badge_id).load('/loading/')
+            
+            $.ajax({
+                url: "{% url 'get_block_record_badge' %}",
+                type: 'POST',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'tableid': tableid,
+                    'recordid': recordid,
+                },
+                success: function (response) {
+                    $("#badge-container-" + badge_id).html('test')
+                },
+                error: function (response) {
+                }
+            });
+        }
 
             function closeCard(vrbl) {
                 $(vrbl).closest('.modal').modal('hide');
