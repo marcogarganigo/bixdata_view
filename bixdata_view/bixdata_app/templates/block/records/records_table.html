@@ -169,6 +169,7 @@
                 responseblock = 'error';
             }
         });
+        console.info(responseblock)
         return responseblock;
     }
 
@@ -264,12 +265,15 @@
                                       data-linkedtableid="{{ column_value.link_tableid }}"
                                       data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe|truncatechars:50 }}</span>
                                 <script>
+                                    /*
                                     $('.popover-linked').popover({
                                         content: popoverContent,
                                         html: true,
                                         placement: 'right',
                                         trigger: 'hover focus'
                                     });
+
+                                     */
                                 </script>
 
                                 <style>
