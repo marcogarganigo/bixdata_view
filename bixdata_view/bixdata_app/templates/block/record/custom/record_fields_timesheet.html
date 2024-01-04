@@ -36,14 +36,112 @@
         column3Input.setAttribute('placeholder', 'Quantità installata');
         column3.appendChild(column3Input);
 
+        var column4 = document.createElement('td');
+        var column4Input = document.createElement('input');
+        column4Input.setAttribute('type', 'text');
+        column4Input.setAttribute('class', 'form-control');
+        column4Input.setAttribute('placeholder', 'Prodotto');
+        column4Input.setAttribute('id', '{{ recordid }}-autocomplete');
+        column4.appendChild(column4Input);
+
         // Append the columns to the new row
         newRow.appendChild(column1);
         newRow.appendChild(column2);
-        newRow.appendChild(column3);
+        //newRow.appendChild(column3);
+        newRow.appendChild(column4);
 
         // Append the new row to the table body
         tableBody.appendChild(newRow);
     }
+
+    $(function () {
+                            function log(message) {
+                                $("<div>").text(message).prependTo("#log");
+                                $("#log").scrollTop(0);
+                            }
+
+                            $("#{{ recordid }}-autocomplete").autocomplete({
+                                source: function (request, response) {
+                                    $.ajax({
+                                        url: "{% url 'get_autocomplete_data' %}",
+                                        data: {
+                                            'term': request.term,
+                                            'tableid': 'timesheet',
+                                            'mastertableid': 'product'
+                                        },
+                                        success: function (data) {
+                                            console.info(data)
+                                            response(data.data);
+                                        },
+                                        error: function(data) {
+                                            console.info(data)
+                                        }
+                                    });
+                                },
+                                minLength: 0, // Set minLength to 0 to show autocomplete on focus
+                                select: function (event, ui) {
+                                    // console.log( "Selected: " + ui.item.id );
+
+                                    $(this).siblings('.hidden-input').val(ui.item.id);
+                                    {% if tableid == 'dealline' %}
+                                    update_dealline(this)
+                                    {% endif %}
+
+                                    /*
+                                    $.ajax({
+                                        url: "{% url 'get_badge' %}",
+                                        data: {
+                                            'recordid': ui.item.id,
+                                            'tableid': '{{tableid}}',
+                                        },
+                                        success: function (data) {
+                                            console.info(data)
+                                            response(data.data);
+                                        }
+                                    });
+                                    */
+                                }
+                            }).focus(function () {
+                                // Trigger autocomplete on focus
+                                $(this).autocomplete("search", "");
+                            });
+
+                            // Handle empty input
+                            $("#{{ recordid }}-autocomplete").on("input", function () {
+                                var inputValue = $(this).val();
+                                if (inputValue === "") {
+                                    $(this).val(""); // Imposta il valore predefinito
+                                    $(this).siblings('.hidden-input').val("");
+
+                                }
+                            });
+                        });
+
+
+                        function showOption() {
+                            $(this).autocomplete({
+                                source: function (request, response) {
+                                    $.ajax({
+                                        url: "{% url 'get_autocomplete_data' %}",
+                                        data: {
+                                            'term': request.term,
+                                            'tableid': '{{tableid}}',
+                                            'mastertableid': '{{ field.tablelink }}'
+                                        },
+                                        success: function (data) {
+                                            console.info(data)
+                                            response(data.data);
+                                        }
+                                    });
+                                },
+                                minLength: 0,
+                                select: function (event, ui) {
+                                    //console.log( "Selected: " + ui.item.id );
+                                    $(this).siblings('.hidden-input').val(ui.item.id);
+
+                                }
+                            });
+                        }
 
     function removeRow(button) {
         // Get reference to the table body
@@ -130,10 +228,18 @@
                         column3Input.setAttribute('placeholder', 'Quantità installata');
                         column3.appendChild(column3Input);
 
+                        var column4 = document.createElement('td');
+                        var column4Input = document.createElement('input');
+                        column4Input.setAttribute('type', 'text');
+                        column4Input.setAttribute('class', 'form-control');
+                        column4Input.setAttribute('placeholder', 'Prodotto');
+                        column4.appendChild(column4Input);
+
                         // Append the columns to the new row
                         newRow.appendChild(column1);
                         newRow.appendChild(column2);
                         newRow.appendChild(column3);
+                        newRow.appendChild(column4);
 
                         // Append the new row to the table body
                         tableBody.appendChild(newRow);
@@ -173,9 +279,12 @@
                 <th>Descrizione</th>
                 <th>Quantità prevista</th>
                 <th>Quantità installata</th>
+                <th>Prodotto</th>
             </tr>
             </thead>
             <tbody>
+            <input class="form-select mb-2" id="{{ recordid }}-autocomplete" style="width: 80%" onfocus="selectAllText(this); " data-type="linkedmaster">
+            <input type="hidden" class="hidden-input" value="{{ recordid }}">
             <!-- Existing table rows -->
             </tbody>
         </table>

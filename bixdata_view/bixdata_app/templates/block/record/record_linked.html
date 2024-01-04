@@ -121,7 +121,11 @@
             </span>
         </button>
 
-        <div class="div-collapse" id="collapse-{{ linked_table.tableid }}-{{ recordid }}" style="margin-top: 10px; display: none" data-tableid="{{ linked_table.tableid }}" data-recordid="{{ linked_table.recordid }}">
+
+
+
+
+         <div class="div-collapse" id="collapse-{{ linked_table.tableid }}-{{ recordid }}" style="margin-top: 10px; display: none" data-tableid="{{ linked_table.tableid }}" data-recordid="{{ linked_table.recordid }}">
             <div class="card card-body">
                 <button class="btn btn-secondary d-flex justify-content-center align-items-center"
                         onclick="linked_newRecord(this, '{{ linked_table.tableid }}')" style="width: 5%;"><span
@@ -129,5 +133,12 @@
                 <div id="linked-container-{{ linked_table.tableid }}-{{ recordid }}" class="linked_container"></div>
             </div>
         </div>
+        {% if tableid == 'deal' and forloop.first %}
+            <script>
+            $(document).ready(function(){
+                $('#label-{{ linked_table.tableid }}-{{ recordid }}').click()
+            });
+            </script>
+        {% endif %}
     {% endfor %}
 </div>
