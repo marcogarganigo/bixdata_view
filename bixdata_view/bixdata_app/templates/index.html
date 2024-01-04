@@ -312,6 +312,15 @@
                 }
             */
 
+            $('#linked-table-modal').on('show.bs.modal', function () {
+              $('.modal-backdrop').css('z-index', '1055'); // Change the z-index of the backdrop
+            });
+
+            $('#linked-table-modal').on('hide.bs.modal', function () {
+              $('.modal-backdrop').css('z-index', ''); // Change the z-index of the backdrop
+            });
+
+
                 if (window.innerWidth <= min_width_var) {
 
                     if ($(el).attr('data-fieldtype') === 'linked') {
@@ -473,10 +482,17 @@
                             
                             setTimeout(function () {
 
-                                //$('#fields_container_' + tableid + '_' + recordid).load('/loading/');
+
+
+                                $('#fields_container_' + tableid + '_' + recordid).load('/loading/');
+
                                   // DA SISTEMARE caso deal
                                 if ((master_tableid == 'None') && tableid!='deal' ) {
-                                    open_record(window.content, tableid, saved_recordid, contextfunction, 'card')
+                                    {% if layout_setting == 'rightcard'%}
+                                    if (window.innerWidth > min_width) {
+                                        open_record(window.content, tableid, saved_recordid, contextfunction, 'card')
+                                    }
+                                    {% endif %}
                                 }
                                 // DA SISTEMARE casao deal
                                 if((contextfunction == 'insert') && tableid=='deal')
@@ -983,6 +999,8 @@
                 $('#newRecordModal').on('hide.bs.modal', function (e) {
                     $('.modal-backdrop').css('z-index', 1000)
                 });
+
+
             </script>
 
             <!-- new record modal-->
