@@ -60,7 +60,12 @@
                                 $("#log").scrollTop(0);
                             }
 
-                            $("#{{ recordid }}-autocomplete").autocomplete({
+                            var autocompleteElement = $('#{{ recordid }}-autocomplete2')
+
+
+
+
+                           autocompleteElement.autocomplete({
                                 source: function (request, response) {
                                     $.ajax({
                                         url: "{% url 'get_autocomplete_data' %}",
@@ -73,8 +78,8 @@
                                             console.info(data)
                                             response(data.data);
                                         },
-                                        error: function(data) {
-                                            console.info(data)
+                                        error: function (xhr, status, error) {
+                                            console.error(xhr.responseText);
                                         }
                                     });
                                 },
@@ -107,7 +112,7 @@
                             });
 
                             // Handle empty input
-                            $("#{{ recordid }}-autocomplete").on("input", function () {
+                            autocompleteElement.on("input", function () {
                                 var inputValue = $(this).val();
                                 if (inputValue === "") {
                                     $(this).val(""); // Imposta il valore predefinito
@@ -283,13 +288,20 @@
             </tr>
             </thead>
             <tbody>
-            <input class="form-select mb-2" id="{{ recordid }}-autocomplete" style="width: 80%" onfocus="selectAllText(this); " data-type="linkedmaster">
-            <input type="hidden" class="hidden-input" value="{{ recordid }}">
+            <div>
+                <input class="form-select mb-2" id="{{ recordid }}-autocomplete2" style="width: 80%" onfocus="selectAllText(this); " data-type="linkedmaster">
+            </div>
+            <input type="hidden" class="hidden-input" name="recordidproduct_" value="{{ recordid }}">
             <!-- Existing table rows -->
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+
+
+</script>
 
 {% if contextfunction == 'view' %}
     <style>
