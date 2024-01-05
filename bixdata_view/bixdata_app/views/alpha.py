@@ -732,18 +732,17 @@ def get_block_record_badge(tableid, recordid):
     context['fields'] = context_fields
 
     records_table = ""
-
+    block_record_badge=''
+    
     if tableid == 'company':
         sql = f"SELECT DISTINCT type FROM user_servicecontract WHERE recordidcompany_='{recordid}' AND STATUS='In Progress'"
         context_fields['services'] = db_query_sql(sql)
         context['fields'] = context_fields
-        records_table = render_to_string('block/record/custom/record_badge_company.html', context)
-
-    # elif tableid == 'project':
-    #    records_table = render_to_string('block/record/custom/record_badge_project.html', context)
-
-    # else:
-    return render_to_string('block/record/record_badge.html', context)
+        block_record_badge = render_to_string('block/record/custom/record_badge_company.html', context)
+    else:
+        block_record_badge= render_to_string('block/record/record_badge.html', context)
+    return block_record_badge
+    
 
 
 
