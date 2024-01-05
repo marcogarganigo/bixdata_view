@@ -71,7 +71,7 @@
                                         url: "{% url 'get_autocomplete_data' %}",
                                         data: {
                                             'term': request.term,
-                                            'tableid': 'timesheet',
+                                            'tableid': 'timesheetline',
                                             'mastertableid': 'product'
                                         },
                                         success: function (data) {
@@ -130,8 +130,8 @@
                                         url: "{% url 'get_autocomplete_data' %}",
                                         data: {
                                             'term': request.term,
-                                            'tableid': 'timesheet',
-                                            'mastertableid': 'product'
+                                            'tableid': 'product',
+                                            'mastertableid': 'timesheetline'
                                         },
                                         success: function (data) {
                                             console.info(data)
