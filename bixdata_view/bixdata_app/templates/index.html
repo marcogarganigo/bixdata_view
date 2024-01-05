@@ -483,7 +483,7 @@
                                     load_badge(master_tableid,master_recordid)
                                 }
                             }
-
+                            
                             setTimeout(function () {
 
 
@@ -503,7 +503,7 @@
                                 {
                                     open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
                                 }
-
+                                
                                 swal({
                                     title: "Salvato!",
                                     text: "Il record è stato salvato",
@@ -529,8 +529,8 @@
         function load_badge(tableid,recordid) {
 
             badge_id=tableid + '-' + recordid
-            $("#badge-container-" + badge_id).load('/loading/')
-
+            //$("#badge-container-" + badge_id).load('/loading/')
+            $("#badge-container-" + badge_id).html('test1')
             $.ajax({
                 url: "{% url 'get_block_record_badge' %}",
                 type: 'POST',
@@ -540,7 +540,7 @@
                     'recordid': recordid,
                 },
                 success: function (response) {
-                    $("#badge-container-" + badge_id).html('test')
+                    $("#badge-container-" + badge_id).html(response)
                 },
                 error: function (response) {
                 }

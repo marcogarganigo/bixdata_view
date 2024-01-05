@@ -705,11 +705,12 @@ def request_block_record_badge(request, http_response=False):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     #return HttpResponse({'success': True})
-    return get_block_record_badge(tableid, recordid)
+    return HttpResponse(get_block_record_badge(tableid, recordid))
 
 
 # Questa funzione serve per creare il badge
 def get_block_record_badge(tableid, recordid):
+    print(f'get_block_record_badge {tableid} {recordid}')
     context = dict()
 
     post = {
