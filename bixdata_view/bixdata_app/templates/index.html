@@ -297,6 +297,10 @@
                 serialized_data.push({name: 'recordid', value: recordid});
                 serialized_data.push({name: 'contextfunction', value: contextfunction});
 
+                if (tableid == 'deal') {
+                    target = 'modal'
+                }
+
 
                 //errore, aggiungere un attributo alla tabella per capire se è nella dashboard oppure no
 
@@ -304,6 +308,9 @@
                 {% if layout_setting == 'modal' %}
                     min_width_var = 5000;
                 {% endif %}
+
+
+
                 if(target=='modal')
                 {
                     min_width_var = 5000;
