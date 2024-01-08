@@ -311,24 +311,23 @@
 
 
 
-                if(target=='modal')
-                {
+                if (target == 'modal') {
                     min_width_var = 5000;
                 }
-            /*
-                if (tableid == "deal") {
-                    min_width_var = 5000;
-                    target = "popup"
-                }
-            */
+                /*
+                    if (tableid == "deal") {
+                        min_width_var = 5000;
+                        target = "popup"
+                    }
+                */
 
-            $('#linked-table-modal').on('show.bs.modal', function () {
-              $('.modal-backdrop').css('z-index', '1055'); // Change the z-index of the backdrop
-            });
+                $('#linked-table-modal').on('show.bs.modal', function () {
+                    $('.modal-backdrop').css('z-index', '1055'); // Change the z-index of the backdrop
+                });
 
-            $('#linked-table-modal').on('hide.bs.modal', function () {
-              $('.modal-backdrop').css('z-index', ''); // Change the z-index of the backdrop
-            });
+                $('#linked-table-modal').on('hide.bs.modal', function () {
+                    $('.modal-backdrop').css('z-index', ''); // Change the z-index of the backdrop
+                });
 
 
                 if (window.innerWidth <= min_width_var) {
@@ -481,36 +480,41 @@
                         data: post_data,
                         success: function (response) {
                             saved_recordid = response
-                            if((contextfunction == 'insert'))
-                            {
+                            if ((contextfunction == 'insert')) {
                                 if ((master_tableid == 'None')) {
                                     refresh();
                                 } else {
                                     load_linked(tableid + '-' + master_recordid, tableid, master_recordid, master_tableid)
-                                    load_badge(master_tableid,master_recordid)
+                                    load_badge(master_tableid, master_recordid)
                                 }
                             }
-                            
+
                             setTimeout(function () {
 
+                                alert('test')
 
 
                                 $('#fields_container_' + tableid + '_' + recordid).load('/loading/');
 
-                                  //TODO DA SISTEMARE caso deal
-                                if ((master_tableid == 'None') && tableid!='deal' ) {
+                                //TODO DA SISTEMARE caso deal
+                                if ((master_tableid == 'None') && tableid != 'deal') {
                                     {% if layout_setting == 'rightcard'%}
-                                    if (window.innerWidth > min_width) {
-                                        open_record(window.content, tableid, saved_recordid, contextfunction, 'card')
-                                    }
+                                        if (window.innerWidth > min_width) {
+                                            open_record(window.content, tableid, saved_recordid, contextfunction, 'card')
+                                        }
+                                    {% elif layout_setting == 'modal' %}
+                                         if (window.innerWidth < min_width) {
+                                            open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
+                                        }
                                     {% endif %}
+
                                 }
                                 //TODO  DA SISTEMARE casao deal
-                                if((contextfunction == 'insert') && tableid=='deal')
-                                {
+                                if ((contextfunction == 'insert') && tableid == 'deal') {
                                     open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
                                 }
-                                
+
+
                                 swal({
                                     title: "Salvato!",
                                     text: "Il record è stato salvato",
@@ -533,26 +537,26 @@
             }
 
 
-        function load_badge(tableid,recordid) {
+            function load_badge(tableid, recordid) {
 
-            badge_id=tableid + '-' + recordid
-            //$("#badge-container-" + badge_id).load('/loading/')
-            $("#badge-container-" + badge_id).html('test1')
-            $.ajax({
-                url: "{% url 'get_block_record_badge' %}",
-                type: 'POST',
-                data: {
-                    'csrfmiddlewaretoken': '{{ csrf_token }}',
-                    'tableid': tableid,
-                    'recordid': recordid,
-                },
-                success: function (response) {
-                    $("#badge-container-" + badge_id).html(response)
-                },
-                error: function (response) {
-                }
-            });
-        }
+                badge_id = tableid + '-' + recordid
+                //$("#badge-container-" + badge_id).load('/loading/')
+                $("#badge-container-" + badge_id).html('test1')
+                $.ajax({
+                    url: "{% url 'get_block_record_badge' %}",
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'tableid': tableid,
+                        'recordid': recordid,
+                    },
+                    success: function (response) {
+                        $("#badge-container-" + badge_id).html(response)
+                    },
+                    error: function (response) {
+                    }
+                });
+            }
 
             function closeCard(vrbl) {
                 $(vrbl).closest('.modal').modal('hide');
@@ -1081,7 +1085,7 @@
                 <div class="modal-dialog modal-fullscreen" style="width: 40%; margin: 2% auto auto;height: 75%">
                     <div class="modal-content" style="width: 100%">
                         <div class="modal-body" style="width: 100%; overflow: hidden">
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                     onclick=""></button>
                             <div id="newLinkdeRecordModalContent" class="col-xl-4 col-md-4 mb-4"
                                  style="height: 100%; width: 100%;">
@@ -1092,8 +1096,7 @@
             </div>
 
 
-
-         <div id="modalSmall" class="modal fade" style="width: 100%">
+            <div id="modalSmall" class="modal fade" style="width: 100%">
                 <div class="modal-dialog modal-dialog-centered modal-fullscreen">
                     <div class="modal-content">
                         <div class="modal-body">

@@ -338,6 +338,32 @@
         });
     }
 
+            function serializeForm(formElements) {
+        var formData = [];
+        //var formElements = document.getElementById("myForm").elements;
+        for (var i = 0; i < formElements.length; i++) {
+            var element = formElements[i];
+            if (element.name) {
+                if (element.type === "select-multiple") {
+                    var selectedOptions = [];
+                    for (var j = 0; j < element.options.length; j++) {
+                        if (element.options[j].selected) {
+                            selectedOptions.push(element.options[j].value);
+                        }
+                    }
+                    formData.push({name: element.name, value: selectedOptions});
+                } else if (element.type === "checkbox") {
+                    if (element.checked) {
+                        formData.push({name: element.name, value: element.value});
+                    }
+                } else {
+                    formData.push({name: element.name, value: element.value});
+                }
+            }
+        }
+        return formData;
+    }
+
     function stampaWord() {
         serialized_form = serializeForm($('.save-button').closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
         //set the value of creator in serialized_form

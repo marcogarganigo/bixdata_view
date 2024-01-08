@@ -2028,12 +2028,14 @@ def print_word(request):
 
     #instead of creating a word i want to open one
 
-    script_dir = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(script_dir, "test.docx")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Navigate to the 'views' directory and locate 'template.docx'
+    file_path = os.path.join(script_dir, 'template.docx')
 
     #doc = Document(file_path)
 
-    doc = Document()
+    doc = Document(file_path)
 
     for section in doc.sections:
         header = section.header
@@ -2111,7 +2113,7 @@ def print_word(request):
 
     table = doc.add_table(rows=2, cols=4)
 
-    table.style = 'Table Grid'
+    table.style = 'bixstyle'
 
     # Add the table header
     row = table.rows[0]
@@ -2143,7 +2145,7 @@ def print_word(request):
     row = table.rows[1]
     row.cells[0].text = 'Condizioni contrattuali di vendita'
 
-    table2.style = 'Table Grid'
+    table2.style = 'bixstyle'
 
     p5 = doc.add_paragraph()
     text5 = 'Informazioni di contatto:'
@@ -2157,7 +2159,7 @@ def print_word(request):
     p5.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
 
-    p6 = doc.add_paragraph(style='ListBullet2')  # Stile per elenco puntato con due punti
+    p6 = doc.add_paragraph()  # Stile per elenco puntato con due punti
     text6 = 'Per tutte le richieste di assistenza: helpdesk@swissbix.ch'
     run6 = p6.add_run(text6)
     font6 = run6.font
@@ -2167,7 +2169,7 @@ def print_word(request):
     font6.color.rgb = RGBColor(0x99, 0x99, 0x99)
     p6.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    p7 = doc.add_paragraph(style='ListBullet2')
+    p7 = doc.add_paragraph()
     text7 = 'In caso di urgenze è possibile chiamare il numero 091 960 22 09.'
     run7 = p7.add_run(text7)
     font7 = run7.font
@@ -2188,7 +2190,7 @@ def print_word(request):
     font8.color.rgb = RGBColor(0x99, 0x99, 0x99)
     p8.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    p9 = doc.add_paragraph(style='ListBullet2')
+    p9 = doc.add_paragraph()
     text9 = 'Monte Ore: Anticipato all’ordine'
     run9 = p9.add_run(text9)
     font9 = run9.font
@@ -2209,7 +2211,7 @@ def print_word(request):
     font10.color.rgb = RGBColor(0x99, 0x99, 0x99)
     p10.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    p11 = doc.add_paragraph(style='ListBullet2')
+    p11 = doc.add_paragraph()
     text11 = 'Durata minima del contratto: 12 mesi.'
     run11 = p11.add_run(text11)
     font11 = run11.font
@@ -2219,7 +2221,7 @@ def print_word(request):
     font11.color.rgb = RGBColor(0x99, 0x99, 0x99)
     p11.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    p12 = doc.add_paragraph(style='ListBullet2')
+    p12 = doc.add_paragraph()
     text12 = 'Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
     run12 = p12.add_run(text12)
     font12 = run12.font
@@ -2229,7 +2231,7 @@ def print_word(request):
     font12.color.rgb = RGBColor(0x99, 0x99, 0x99)
     p12.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    p13 = doc.add_paragraph(style='ListBullet2')
+    p13 = doc.add_paragraph()
     text13 = 'Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
     run13 = p13.add_run(text13)
     font13 = run13.font
@@ -2239,7 +2241,7 @@ def print_word(request):
     font13.color.rgb = RGBColor(0x99, 0x99, 0x99)
     p13.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    p14 = doc.add_paragraph(style='ListBullet2')
+    p14 = doc.add_paragraph()
     text14 = 'I servizi vengono rinnovati tacitamente salvo disdetta scritta 60 giorni prima della scadenza.'
     run14 = p14.add_run(text14)
     font14 = run14.font
@@ -2249,7 +2251,7 @@ def print_word(request):
     font14.color.rgb = RGBColor(0x99, 0x99, 0x99)
     p14.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    p15 = doc.add_paragraph(style='ListBullet2')
+    p15 = doc.add_paragraph()
     text15 = 'Orari di ufficio per supporto tecnico; dalle 9:00 alle 12:00 e dalle 14:00 alle 17:00'
     run15 = p15.add_run(text15)
     font15 = run15.font
@@ -2259,7 +2261,7 @@ def print_word(request):
     font15.color.rgb = RGBColor(0x99, 0x99, 0x99)
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    p16 = doc.add_paragraph(style='ListBullet2')
+    p16 = doc.add_paragraph()
     text16 = 'Prezzi Iva Esclusa'
     run16 = p16.add_run(text16)
     font16 = run16.font
@@ -2269,7 +2271,7 @@ def print_word(request):
     font16.color.rgb = RGBColor(0x99, 0x99, 0x99)
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    p17 = doc.add_paragraph(style='ListBullet2')
+    p17 = doc.add_paragraph()
     text17 = 'Sono esclusi lavori di cablaggio, lavori a muro ed elettrici e di tutta la cavetteria aggiuntiva.'
     run17 = p17.add_run(text17)
     font17 = run17.font
