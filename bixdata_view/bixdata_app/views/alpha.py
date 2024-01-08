@@ -414,7 +414,11 @@ def get_render_content_dashboard(request):
                             field = 'SUM(' + field + ')'
                             selected += field + ','
                         groupby = results['groupby']
-                        selected += groupby
+                        if results['custom']=='group_by_day':
+                            groupby=f"DATE_FORMAT({groupby}, '%Y-%m-%d')"
+                        if results['custom']=='group_by_month':
+                            groupby=f"DATE_FORMAT({groupby}, '%Y-%m')"
+                        
 
                     query_conditions = results['query_conditions']
                     userid = get_userid(request.user.id)
@@ -423,7 +427,16 @@ def get_render_content_dashboard(request):
                     tableid = results['tableid']
                     name = results['name']
                     layout = results['layout']
-                    sql = "SELECT " + selected + " FROM " + 'user_' + tableid + \
+                    fromtable= 'user_' + tableid
+                    db=DatabaseHelper()
+                    groupby_field_record=db.sql_query_row(f"select * from sys_field where tableid='{tableid}' and fieldid='{results['groupby']}'")
+                    if groupby_field_record['fieldtypeid']=='Utente':
+                        fromtable=fromtable+f" LEFT JOIN sys_user ON {fromtable}.{results['groupby']}=sys_user.id "
+                        selected += f"sys_user.firstname as {groupby}"
+                    else:
+                        selected += groupby
+                        
+                    sql = "SELECT " + selected + " FROM " + fromtable + \
                           " WHERE " + query_conditions + " GROUP BY " + groupby
                     block['sql'] = sql
                     block['html'] = get_chart(request, sql, id, name, layout, fields)
