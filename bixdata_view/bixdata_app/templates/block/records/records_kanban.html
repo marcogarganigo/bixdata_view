@@ -195,7 +195,8 @@
     console.log(tsi_id);
 
     dragula(tsi_id).on('drop', function (el, target) {
-        update_db(this, '{{ tableid }}', $('.kanban-record').data('recordid'), $(target).closest('.tasks').data('status'))
+        //update_db(this, '{{ tableid }}', $('.kanban-record').data('recordid'), $(target).closest('.tasks').data('status'))
+        alert('Funzione di aggiornamento stato tramite kanban non ancora attiva')
     });
 
     var cards = document.querySelectorAll('.kanban-record');
