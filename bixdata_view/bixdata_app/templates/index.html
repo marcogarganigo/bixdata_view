@@ -1051,7 +1051,7 @@
 
             <!--record modal start-->
             <div class="modal fade" id="recordModal" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true" style="width: 100%;">
+                 aria-hidden="true" style="width: 100%; z-index: 2000">
                 <div class="modal-dialog  modal-fullscreen" style="width: 80%; height: 90%; margin: 1% auto auto;">
                     <div class="modal-content" style="width: 100%">
                         <div class="modal-body" style="width: 100%; overflow: hidden">
@@ -1069,6 +1069,21 @@
                     <div class="modal-content" style="width: 100%">
                         <div class="modal-body" style="width: 100%; overflow: hidden">
                             <div id="linked-table-modal-content" class="col-xl-4 col-md-4 mb-4"
+                                 style="height: 100%; width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="newLinkedRecordModal" aria-hidden="true"
+                 style="width: 100%; z-index: 13000">
+                <div class="modal-dialog modal-fullscreen" style="width: 40%; margin: 2% auto auto;height: 75%">
+                    <div class="modal-content" style="width: 100%">
+                        <div class="modal-body" style="width: 100%; overflow: hidden">
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                    onclick=""></button>
+                            <div id="newLinkdeRecordModalContent" class="col-xl-4 col-md-4 mb-4"
                                  style="height: 100%; width: 100%;">
                             </div>
                         </div>

@@ -159,7 +159,7 @@ side-nav-link {
 }
 
 .input-group-text:hover {
-    background-color: #DC143C;
+    background-color: #9e3520;
     border: #DC143C;
 }
 
@@ -728,19 +728,3 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
     border-left-color: #DC143C !important;
     border-right-color: #DC143C !important;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

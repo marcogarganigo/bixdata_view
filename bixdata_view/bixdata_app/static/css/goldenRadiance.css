@@ -720,13 +720,6 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
 .save-button {
     background-color: #FF851B;
     color: white;
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 10px;
-    width: 50%;
-    height: 40px;
-    font-size: 16px;
-    border: none;
 }
 
 .cool-loader:before {

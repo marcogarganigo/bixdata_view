@@ -293,11 +293,11 @@
         }
     }
 
-    function newRecord(tableid) {
+    function newRecord(tableid, new_linked='') {
         if (tableid == null) {
             tableid = '{{tableid}}'
         }
-        $('#newRecordModal').modal('show');
+
         var serialized_data = [];
         serialized_data.push({name: 'tableid', value: tableid});
         serialized_data.push({name: 'contextfunction', value: 'insert'});
@@ -308,7 +308,13 @@
             url: "{% url 'get_record_fields' %}",
             data: serialized_data,
             success: function (response) {
-                $("#fullwidth_modal_newrecord").html(response);
+                if (new_linked == 'yes') {
+                    $('#newLinkedRecordModal').modal('show');
+                    $("#newLinkdeRecordModalContent").html(response);
+                } else {
+                    $('#newRecordModal').modal('show');
+                    $("#fullwidth_modal_newrecord").html(response);
+                }
             },
             error: function () {
                 $("#bixdata_recordcard_container").html(response);

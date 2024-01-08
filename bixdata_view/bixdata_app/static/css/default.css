@@ -682,14 +682,6 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
 .save-button {
     background-color: #074048;
     color: white;
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 10px;
-    width: 50%;
-    height: 40px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
 }
 
 

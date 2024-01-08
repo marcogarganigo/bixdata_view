@@ -335,29 +335,30 @@
                             </div>
                         {% endif %}
                         {% if field.fieldtypeid == 'linkedmaster' %}
-                            <div style="display: flex; align-items: center;">
-                                <div style="position: relative; width: 100%;">
-                                    <input class="form-select mb-2 {{ mandatory }} {{ calcolato }}"
-                                           id="{{ fieldid }}-{{ recordid }}-autocomplete"
-                                           style="width: calc(80% - 30px);"
-                                           value="{{ field.valuecode.0.value }}" onfocus="selectAllText(this); "
-                                           data-type="linkedmaster">
+<div style="display: flex; align-items: center;">
+  <div style="position: relative; width: 100%;">
+    <input class="form-select mb-2 {{ mandatory }} {{ calcolato }}"
+      id="{{ fieldid }}-{{ recordid }}-autocomplete"
+      style="width: calc(90% - 15px);"
+      value="{{ field.valuecode.0.value }}" onfocus="selectAllText(this); "
+      data-type="linkedmaster">
 
-                                    <button class="btn btn-secondary"
-                                            onclick="clearInput('{{ fieldid }}-{{ recordid }}-autocomplete')"
-                                            style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%);">
-                                        <span class="material-symbols-outlined">clear</span>
-                                    </button>
-                                </div>
+    <button class="btn"
+      onclick="clearInput('{{ fieldid }}-{{ recordid }}-autocomplete')"
+      style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">
+      <span class="material-symbols-outlined">clear</span>
+    </button>
+  </div>
 
-                                <input type="hidden" class="hidden-input {{ mandatory }} {{ calcolato }}"
-                                       name="{{ field.fieldid }}" value="{{ field.recordid }}">
+  <input type="hidden" class="hidden-input {{ mandatory }} {{ calcolato }}"
+    name="{{ field.fieldid }}" value="{{ field.recordid }}">
 
-                                <button class="btn btn-secondary" onclick="newRecord('{{ field.tablelink }}')"
-                                        style="width: auto;">
-                                    <span class="material-symbols-outlined">add</span>
-                                </button>
-                            </div>
+  <button class="btn btn-light" onclick="newRecord('{{ field.tablelink }}', 'yes')" name="add"
+    style="width: auto">
+    <span class="material-symbols-outlined">add</span>
+  </button>
+</div>
+
                             <script>
                                 function clearInput(inputId) {
                                     document.getElementById(inputId).value = '';
