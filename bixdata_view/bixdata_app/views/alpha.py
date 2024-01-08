@@ -739,6 +739,12 @@ def get_block_record_badge(tableid, recordid):
         context_fields['services'] = db_query_sql(sql)
         context['fields'] = context_fields
         block_record_badge = render_to_string('block/record/custom/record_badge_company.html', context)
+    elif tableid == 'deal':
+        deal_record=Record('deal',recordid)
+        company_record=Record(tableid='company',recordid=deal_record.fields['recordidcompany_'])
+        deal_record.fields['companyname']=company_record.fields['companyname']
+        context['fields']=deal_record.fields
+        block_record_badge= render_to_string('block/record/custom/record_badge_deal.html', context)
     else:
         block_record_badge= render_to_string('block/record/record_badge.html', context)
     return block_record_badge
