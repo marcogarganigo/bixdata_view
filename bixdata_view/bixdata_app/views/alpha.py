@@ -464,7 +464,12 @@ def get_chart(request, sql, id, name, layout, fields):
     with connection.cursor() as cursor2:
         cursor2.execute(query)
         rows = cursor2.fetchall()
-
+        formatted_rows = []
+        for row in rows:
+            formatted_row = [str(value) if not isinstance(value, (int, float)) else value for value in row]
+            formatted_rows.append(formatted_row)
+        
+        rows=formatted_rows
         value = []
         for num in range(0, len(fields_chart)):
             value.append([row[num] for row in rows])
@@ -1766,12 +1771,12 @@ def test_gridstack(request):
 def new_block(request):
     blockid = request.POST.get('blockid')
     userid = request.POST.get('userid')
-
-    SysUserDashboardBlock.objects.create(
-        userid=userid,
-        dashboard_block_id=blockid
-    )
-
+    dashboardid = request.POST.get('dashboardid')
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO sys_user_dashboard_block (userid, dashboard_block_id, dashboardid) VALUES (%s, %s, %s)",
+            [userid, blockid, dashboardid]
+        )
     return JsonResponse({'success': True})
 
 
