@@ -998,7 +998,9 @@ def custom_save_record(request,tableid,recordid):
     if tableid=='deal':
         record_deal=Record('deal',recordid)
         record_company=Record('company',record_deal.fields['recordidcompany_'])
-        reference=str(record_deal.fields['id'])+' - '+record_deal.fields['dealname']+' - '+record_company.fields['companyname']
+        reference=str(record_deal.fields['id'])+' - '+record_company.fields['companyname']+' - '+record_deal.fields['dealname']
+        if record_deal.fields['advancepayment']==None :
+            record_deal.fields['advancepayment']=0
         record_deal.fields['reference']=reference
         record_deal.save()
     return True

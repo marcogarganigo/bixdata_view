@@ -50,7 +50,7 @@ class Record:
             for key,value in self.fields.items():
                 if counter>0:
                     sql=sql+","
-                if value:  
+                if value!=None:  
                     if type(value)==str:
                         value = value.replace("'", "''")  
                     sql=sql+f" {key}='{value}' "
