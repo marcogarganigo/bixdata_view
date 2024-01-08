@@ -96,8 +96,8 @@ body {
 
 
 .simplebar-mask {
-    background-color: #36454F;
-    background-image: linear-gradient(180deg, #36454F 90%, #ede4e4 200%);
+    background-color: #9e3520;
+    background-image: linear-gradient(180deg, #9e3520 90%, #9e3520 200%);
     background-size: cover;
 }
 
@@ -124,7 +124,7 @@ html[data-sidenav-color=light] .side-nav .side-nav-link:hover {
 html[data-sidenav-color=light] {
     --ct-bg-leftbar: rgb(255, 255, 255);
     --ct-menu-item: #d3cfcf;
-    --ct-menu-item-hover: #9e3520;
+    --ct-menu-item-hover: #f9c851;
     --ct-menu-item-active: white;
 }
 
@@ -133,7 +133,7 @@ html[data-sidenav-color=light] .side-nav .side-nav-link:focus,
 html[data-sidenav-color=light] .side-nav .side-nav-link:hover {
     --ct-bg-leftbar: rgb(255, 255, 255);
     --ct-menu-item: #cfd3cf;
-    color: #9e3520;
+    color: #f9c851;
     --ct-menu-item-active: white;
 }
 
@@ -164,7 +164,7 @@ side-nav-link {
 }
 
 #logo-leftside {
-    background-color: #36454F !important;
+    background-color: #f9c851 !important;
 
 }
 
@@ -175,7 +175,7 @@ side-nav-link {
 
 html[data-topbar-color=dark] .navbar-custom .app-search .form-control {
 
-    background-image: linear-gradient(90deg, #36454F 100%, #ede4e4 200%);
+    background-image: linear-gradient(90deg, #f9c851 100%, #ede4e4 200%);
     background-size: cover;
 }
 
@@ -536,7 +536,7 @@ html[data-sidenav-size=condensed]:not(.authentication-bg) .logo span.logo-sm {
 
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-link.active {
-    color: #9e3520;
+    color: #f9c851;
     background-color: var(--ct-nav-tabs-link-active-bg);
     border-color: var(--ct-nav-tabs-link-active-border-color);
 }
@@ -574,7 +574,7 @@ html[data-sidenav-size=condensed]:not(.authentication-bg) .logo span.logo-sm {
 }
 
 .side-nav-txt:hover {
-    color: #9e3520; !important;
+    color: #f9c851; !important;
 }
 
 html[data-sidenav-size=condensed] .side-nav-txt {
@@ -703,7 +703,7 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
 }
 
 .sidenavitem-active {
-    color: #9e3520 !important;
+    color: #f9c851 !important;
 }
 
 .save-button:hover {
@@ -720,11 +720,29 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
 }
 
 .cool-loader:before {
-    border-top-color: #36454F !important;
-    border-bottom-color: #36454F !important;
+    border-top-color: #f9c851 !important;
+    border-bottom-color: #f9c851 !important;
 }
 
 .cool-loader:after {
     border-left-color: #9e3520 !important;
     border-right-color: #9e3520 !important;
 }
+
+#bixdata2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("beans-background.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+
+
+
+
+

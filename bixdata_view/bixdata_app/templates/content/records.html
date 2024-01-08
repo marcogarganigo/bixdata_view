@@ -6,7 +6,7 @@
         $('[data-bs-toggle="popover"]').popover();
 
         $('button[data-bs-toggle="tab"]').each(function (i) {
-             if ($(this).attr("id") == 'gantt-tab') {
+            if ($(this).attr("id") == 'gantt-tab') {
                 $(this)[0].addEventListener('shown.bs.tab', function (event) {
                     searchGantt()
                 })
@@ -202,6 +202,7 @@
             });
         });
     }
+
     function export_excel() {
         var serialized_data = [];
         serialized_data.push({
@@ -293,7 +294,7 @@
         }
     }
 
-    function newRecord(tableid, new_linked='') {
+    function newRecord(tableid, new_linked = '') {
         if (tableid == null) {
             tableid = '{{tableid}}'
         }
@@ -321,8 +322,6 @@
             }
         });
     }
-
-
 
 
     function reloadFunc() {
@@ -421,12 +420,11 @@
     {% endif %}
 
     {% if tableid == 'deal' %}
-    #block-records-search-container {
-        width: 100%  !important
-    }
+        #block-records-search-container {
+            width: 100% !important
+        }
     {% endif %}
 </style>
-
 
 
 <div id="content-records" style="height: 98%">
@@ -443,7 +441,8 @@
                             <div class="row">
                                 <div class="col filter-column">
                                     <div>
-                                        <select id="viewid" class="form-select" aria-label="Default select example" style="width: 20%; float: left" onchange="refresh()">
+                                        <select id="viewid" class="form-select" aria-label="Default select example"
+                                                style="width: 20%; float: left" onchange="refresh()">
                                             {% for view in views %}
                                                 {% if view.id == user_table_settings.default_viewid %}
                                                     <option selected value="{{ view.id }}">{{ view.name }}</option>
@@ -452,24 +451,39 @@
                                                 {% endif %}
                                             {% endfor %}
                                         </select>
-                                        <input class="form-control me-2" type="search" placeholder="Ricerca ( Ctrl + K )"
+                                        <input class="form-control me-2" type="search"
+                                               placeholder="Ricerca ( Ctrl + K )"
                                                aria-label="Search" style="width: 50%; float: left" id="searchTerm"
                                                autocomplete="off"
                                                onkeydown="if(event.keyCode === 13) { event.preventDefault(); refresh(); }">
-                                        <button class="btn btn-outline-danger records-button" type="button" style=" float: left" onclick="refresh()">Cerca</button>
+                                        <button class="btn btn-outline-danger records-button" type="button"
+                                                style=" float: left" onclick="refresh()">Cerca
+                                        </button>
                                     </div>
 
-                                    <button type="button" class="btn btn-outline-secondary records-button-secondary" style=" margin-left: 1%; float: left" onclick="$('#filters').toggle(100);">Filtri</button>
+                                    <button type="button" class="btn btn-outline-secondary records-button-secondary"
+                                            style=" margin-left: 1%; float: left" onclick="$('#filters').toggle(100);">
+                                        Filtri
+                                    </button>
 
                                 </div>
                                 <div class="col filter-column">
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin-top: 3px; margin-right: 3px">
-                                        <button class="btn btn-outline-danger me-md-2 center-icon-button records-button" type="button" onclick="refresh()"><span class="material-symbols-outlined">cached</span></button>
-                                        <button class="btn btn-outline-danger me-md-2 records-button" type="button" onclick="newRecord()">Nuovo</button>
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end"
+                                         style="margin-top: 3px; margin-right: 3px">
+                                        <button class="btn btn-outline-danger me-md-2 center-icon-button records-button"
+                                                type="button" onclick="refresh()"><span
+                                                class="material-symbols-outlined">cached</span></button>
+                                        <button class="btn btn-outline-danger me-md-2 records-button" type="button"
+                                                onclick="newRecord()">Nuovo
+                                        </button>
                                         <div class="dropdown">
-                                            <button class="btn btn-outline-secondary me md-2 dropdown-toggle records-button-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">Esporta</button>
+                                            <button class="btn btn-outline-secondary me md-2 dropdown-toggle records-button-secondary"
+                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Esporta
+                                            </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#" onclick="export_excel()">Esporta dati excel</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="export_excel()">Esporta
+                                                    dati excel</a></li>
                                                 <li><a class="dropdown-item" href="#">Esporta elenco</a></li>
                                                 <li><a class="dropdown-item" href="#">Esporta migrazione</a></li>
                                             </ul>
@@ -479,7 +493,8 @@
                             </div>
                         </div>
                         <div id="filters" style="display: none;">
-                            <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="margin-left: 30px;margin-right: 30px;">
+                            <div class="card shadow-sm p-3 mb-5 bg-body rounded"
+                                 style="margin-left: 30px;margin-right: 30px;">
                                 <p class="card-text">
                                 <div class="container text-center">
                                     <div class="row">
@@ -487,7 +502,9 @@
                                             {{ search_field.component }}
                                         {% endfor %}
                                         <div class="col">
-                                            <button type="button" class="btn btn-outline-secondary" onclick="$('#hiddenCardAF').toggle(100);">Filtri Avanzati</button>
+                                            <button type="button" class="btn btn-outline-secondary"
+                                                    onclick="$('#hiddenCardAF').toggle(100);">Filtri Avanzati
+                                            </button>
                                             </br>
                                         </div>
                                     </div>
@@ -496,7 +513,8 @@
                             </div>
 
                             <div id="hiddenCardAF" style="display: none; margin-top: -40px">
-                                <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="margin-left: 30px;margin-right: 30px;">
+                                <div class="card shadow-sm p-3 mb-5 bg-body rounded"
+                                     style="margin-left: 30px;margin-right: 30px;">
                                     <div class="card-body">
                                         <div class="container text-center">
                                             <div class="row">
@@ -506,7 +524,8 @@
                                                 </div>
                                                 <div class="col">
                                                     <div class="input-group mb-3">
-                                                        <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                                                        <label class="input-group-text"
+                                                               for="inputGroupSelect01">Options</label>
                                                         <select class="form-select" id="inputGroupSelect01">
                                                             <option selected>Choose...</option>
                                                             <option value="1">One</option>
@@ -547,20 +566,27 @@
                                 </li>
                                 {% if tableid == 'task' %}
                                     <li id="nav-calendar" class="nav-item" role="presentation">
-                                      <button class="nav-link"
-                                              id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar-tab-pane"
-                                              type="button" role="tab" aria-controls="calendar-tab-pane" href="#calendar"
-                                              aria-selected="false">Calendario
-                                      </button>
+                                        <button class="nav-link"
+                                                id="calendar-tab" data-bs-toggle="tab"
+                                                data-bs-target="#calendar-tab-pane"
+                                                type="button" role="tab" aria-controls="calendar-tab-pane"
+                                                href="#calendar"
+                                                aria-selected="false">Calendario
+                                        </button>
                                     </li>
                                 {% endif %}
 
-                                <li id="nav-kanban" class="nav-item" role="presentation">
-                                  <button class="nav-link" id="kanban-tab"
-                                          data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button" role="tab"
-                                          aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">Kanban
-                                  </button>
-                              </li>
+                                {% if tableid == 'deal' %}
+
+                                    <li id="nav-kanban" class="nav-item" role="presentation">
+                                        <button class="nav-link" id="kanban-tab"
+                                                data-bs-toggle="tab" data-bs-target="#kanban-tab-pane" type="button"
+                                                role="tab"
+                                                aria-controls="kanban-tab-pane" href="#kanban" aria-selected="false">
+                                            Kanban
+                                        </button>
+                                    </li>
+                                {% endif %}
                                 <!--
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="group-tab" data-bs-toggle="tab"
@@ -632,7 +658,8 @@
                             <div class="tab-pane fade " id="calendar-tab-pane" role="tabpanel"
                                  aria-labelledby="calendar-tab" tabindex="0" style="overflow: hidden">
                             </div>
-                            <div class="tab-pane fade" id="kanban-tab-pane" role="tabpanel" aria-labelledby="kanban-tab" tabindex="0" style="height: 100%;width: 100%">
+                            <div class="tab-pane fade" id="kanban-tab-pane" role="tabpanel" aria-labelledby="kanban-tab"
+                                 tabindex="0" style="height: 100%;width: 100%">
                             </div>
                             <div class="tab-pane fade" id="gantt-tab-pane" role="tabpanel" aria-labelledby="tutti-tab"
                                  tabindex="0" style="height: 100%;overflow-x: scroll; overflow-y: scroll">
