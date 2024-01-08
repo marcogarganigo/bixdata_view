@@ -414,7 +414,11 @@ def get_render_content_dashboard(request):
                             field = 'SUM(' + field + ')'
                             selected += field + ','
                         groupby = results['groupby']
-                        selected += groupby
+                        if results['custom']=='group_by_day':
+                            groupby=f"DATE_FORMAT({groupby}, '%Y-%m-%d')"
+                        if results['custom']=='group_by_month':
+                            groupby=f"DATE_FORMAT({groupby}, '%Y-%m')"
+                        
 
                     query_conditions = results['query_conditions']
                     userid = get_userid(request.user.id)
@@ -423,7 +427,16 @@ def get_render_content_dashboard(request):
                     tableid = results['tableid']
                     name = results['name']
                     layout = results['layout']
-                    sql = "SELECT " + selected + " FROM " + 'user_' + tableid + \
+                    fromtable= 'user_' + tableid
+                    db=DatabaseHelper()
+                    groupby_field_record=db.sql_query_row(f"select * from sys_field where tableid='{tableid}' and fieldid='{results['groupby']}'")
+                    if groupby_field_record['fieldtypeid']=='Utente':
+                        fromtable=fromtable+f" LEFT JOIN sys_user ON {fromtable}.{results['groupby']}=sys_user.id "
+                        selected += f"sys_user.firstname as {groupby}"
+                    else:
+                        selected += groupby
+                        
+                    sql = "SELECT " + selected + " FROM " + fromtable + \
                           " WHERE " + query_conditions + " GROUP BY " + groupby
                     block['sql'] = sql
                     block['html'] = get_chart(request, sql, id, name, layout, fields)
@@ -464,7 +477,12 @@ def get_chart(request, sql, id, name, layout, fields):
     with connection.cursor() as cursor2:
         cursor2.execute(query)
         rows = cursor2.fetchall()
-
+        formatted_rows = []
+        for row in rows:
+            formatted_row = [str(value) if not isinstance(value, (int, float)) else value for value in row]
+            formatted_rows.append(formatted_row)
+        
+        rows=formatted_rows
         value = []
         for num in range(0, len(fields_chart)):
             value.append([row[num] for row in rows])
@@ -998,7 +1016,9 @@ def custom_save_record(request,tableid,recordid):
     if tableid=='deal':
         record_deal=Record('deal',recordid)
         record_company=Record('company',record_deal.fields['recordidcompany_'])
-        reference=str(record_deal.fields['id'])+' - '+record_deal.fields['dealname']+' - '+record_company.fields['companyname']
+        reference=str(record_deal.fields['id'])+' - '+record_company.fields['companyname']+' - '+record_deal.fields['dealname']
+        if record_deal.fields['advancepayment']==None :
+            record_deal.fields['advancepayment']=0
         record_deal.fields['reference']=reference
         record_deal.save()
     return True
@@ -1764,12 +1784,12 @@ def test_gridstack(request):
 def new_block(request):
     blockid = request.POST.get('blockid')
     userid = request.POST.get('userid')
-
-    SysUserDashboardBlock.objects.create(
-        userid=userid,
-        dashboard_block_id=blockid
-    )
-
+    dashboardid = request.POST.get('dashboardid')
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO sys_user_dashboard_block (userid, dashboard_block_id, dashboardid) VALUES (%s, %s, %s)",
+            [userid, blockid, dashboardid]
+        )
     return JsonResponse({'success': True})
 
 

@@ -198,10 +198,12 @@
 
     {% for label,record_fields  in record_fields_labels.items %}
         {% if label != 'Dati' %}
-            <button class="dropdown-toggle btn btn-secondary dropdown-color" style="width: 100%; text-align: left;"
-                    type="button" onclick="toggleCollapse(this)">
-                {{ label }}
-            </button>
+            {% if label != 'Sistema' or true %}
+                <button class="dropdown-toggle btn btn-secondary dropdown-color" style="width: 100%; text-align: left;"
+                        type="button" onclick="toggleCollapse(this)">
+                    Campi {{ label }}
+                </button>
+            {% endif %}
         {% endif %}
         {% if label != 'Dati' %}
             <div class="div-collapse" style="display: none" id="collapse-{{ label }}">
