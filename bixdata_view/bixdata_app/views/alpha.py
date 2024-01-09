@@ -436,6 +436,7 @@ def get_render_content_dashboard(request):
                     else:
                         selected += groupby
                         
+                    selected="SUM(amount),SUM(expectedmargin),sys_user.firstname as dealuser1"
                     sql = "SELECT " + selected + " FROM " + fromtable + \
                           " WHERE " + query_conditions + " GROUP BY " + groupby
                     block['sql'] = sql
@@ -789,7 +790,7 @@ def get_block_record_fields(request):
     if row:
         userid = row[0]
         userid = userid['id']
-        
+        context['userid']=userid
     
     record=Record(tableid=tableid,recordid=recordid,userid=userid)    
     fields=record.get_fields_by_context(contextfunction)

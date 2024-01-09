@@ -198,10 +198,10 @@
 
     {% for label,record_fields  in record_fields_labels.items %}
         {% if label != 'Dati' %}
-            {% if label != 'Sistema' or true %}
+            {% if label != 'Sistema' and label != 'Campi di sistema' or userid == 2 %}
                 <button class="dropdown-toggle btn btn-secondary dropdown-color" style="width: 100%; text-align: left;"
                         type="button" onclick="toggleCollapse(this)">
-                    Campi {{ label }}
+                    Campi {{ label }} {{userid}}
                 </button>
             {% endif %}
         {% endif %}
