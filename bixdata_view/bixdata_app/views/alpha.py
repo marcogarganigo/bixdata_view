@@ -2402,22 +2402,24 @@ def get_record(request):
 
     return JsonResponse(return_value)
 
-
-def deal_link_file(request):
+def link_file(request):
     if request.method == 'POST' and 'file' in request.FILES:
         file = request.FILES['file']
-        tableid = request.POST.get('tableid')
         recordid = request.POST.get('recordid')
+        tableid = request.POST.get('tableid')
 
+        # Constructing the filename as tableid_recordid
+        filename = f"{tableid}_{recordid}.{file.name.split('.')[-1]}"  # Retaining the original file extension
 
-        fs = FileSystemStorage()
-        filename = fs.save(file.name, file)
+        # Save the file in the media root without any subdirectory
+        fs = FileSystemStorage(location=settings.MEDIA_ROOT)
+        filename = fs.save(filename, file)
         uploaded_file_url = fs.url(filename)
 
-
-        uploaded_file_path = os.path.join(settings.MEDIA_ROOT, filename)
+        uploaded_file_path = os.path.join('bixdata_view', filename)
 
         return JsonResponse({'uploaded_file_url': uploaded_file_url, 'uploaded_file_path': uploaded_file_path})
     else:
         return JsonResponse({'error': 'No file found in the request'}, status=400)
+
 

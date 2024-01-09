@@ -338,7 +338,7 @@
         });
     }
 
-            function serializeForm(formElements) {
+    function serializeForm(formElements) {
         var formData = [];
         //var formElements = document.getElementById("myForm").elements;
         for (var i = 0; i < formElements.length; i++) {
@@ -380,14 +380,14 @@
             type: "POST",
             url: "{% url 'print_word' %}",
             data: {
-              recordid : '{{ recordid }}',
+                recordid: '{{ recordid }}',
             },
             xhrFields: {
                 responseType: 'blob'
             },
             success: function (response, status, xhr) {
                 const contentType = xhr.getResponseHeader('content-type');
-                const blob = new Blob([response], { type: contentType });
+                const blob = new Blob([response], {type: contentType});
 
                 const blobUrl = window.URL.createObjectURL(blob);
 
@@ -477,14 +477,20 @@
                     </ul>
                 </div>
 
-                <button type="button" class="btn btn-light button-recordcard" data-bs-title="stampa" onclick="">Chiusovinto</button>
-                <button type="button" class="btn btn-light button-recordcard" data-bs-title="stampa" onclick="">Chiusovinto</button>
-                <input type="file" id="fileInput" style="display: none;" />
-                <button type="button" class="btn btn-light button-recordcard" data-bs-title="stampa" onclick="selectFile()">Allega</button>
+                {% if tableid == 'deal' %}
+                    <button type="button" class="btn btn-success button-recordcard" data-bs-title="stampa" onclick="">
+                        Chiuso vinto
+                    </button>
+                    <button type="button" class="btn btn-danger button-recordcard" data-bs-title="stampa" onclick="">
+                        Chiuso perso
+                    </button>
+                    <input type="file" id="fileInput" style="display: none;"/>
+                    <button type="button" class="btn btn-light button-recordcard" data-bs-title="stampa"
+                            onclick="selectFile()">Allega
+                    </button>
 
-                <script>
-
-                    function selectFile() {
+                    <script>
+                       function selectFile() {
                 // Trigger click on the file input element
                 $("#fileInput").trigger('click');
             }
@@ -496,16 +502,14 @@
                 if (file) {
                     var formData = new FormData(); // Create a FormData object
                     formData.append("file", file); // Append the file to the FormData object with the key "file"
+                    formData.append("tableid", '{{ tableid }}'); // Add tableid and recordid to the FormData
+                    formData.append("recordid", '{{ recordid }}');
 
                     // AJAX request to send the file to the backend
                     $.ajax({
-                        url: "{% url 'deal_link_file' %}", // Replace with your backend endpoint
+                        url: "{% url 'link_file' %}", // Replace with your backend endpoint
                         type: "POST",
-                        data: {
-                            'formData': formData,
-                            'tableid': '{{ tableid }}',
-                            'recordid': '{{ recordid }}',
-                        },
+                        data: formData,
                         processData: false,
                         contentType: false,
                         success: function (response) {
@@ -519,6 +523,11 @@
                     });
                 }
             });
+
+                    </script>
+                {% endif %}
+
+                <script>
 
 
                     if ($('#block_record_card-{{ recordid }}').closest('.modal').length == 0) {
@@ -556,7 +565,8 @@
             </div>
 
 
-            <div id="badge-container-{{ tableid }}-{{ recordid }}" class="container" style="height:10%;overflow: hidden;">
+            <div id="badge-container-{{ tableid }}-{{ recordid }}" class="container"
+                 style="height:10%;overflow: hidden;">
                 {{ block_record_badge }}
             </div>
 
@@ -678,7 +688,7 @@
         }
     }
 
-      @media screen and (min-width: 1500px) and (max-width: 2000px) {
+    @media screen and (min-width: 1500px) and (max-width: 2000px) {
         #tableTabContent {
             height: 70% !important;
         }

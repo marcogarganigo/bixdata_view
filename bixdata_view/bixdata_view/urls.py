@@ -137,5 +137,5 @@ urlpatterns = [
     path('time/', alpha.time_calc, name='time'),
     path('print_word/', alpha.print_word, name='print_word'),
     path('get_record/', alpha.get_record, name='get_record'),
-    path('deal_link_file/', alpha.deal_link_file, name='deal_link_file'),
+    path('link_file/', alpha.link_file, name='link_file'),
 ]
