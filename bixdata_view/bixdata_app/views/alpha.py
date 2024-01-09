@@ -49,6 +49,8 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.enum.section import WD_SECTION
 
+import qrcode
+
 from .businesslogic.record import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
@@ -418,7 +420,7 @@ def get_render_content_dashboard(request):
                             groupby=f"DATE_FORMAT({groupby}, '%Y-%m-%d')"
                         if results['custom']=='group_by_month':
                             groupby=f"DATE_FORMAT({groupby}, '%Y-%m')"
-                        
+
 
                     query_conditions = results['query_conditions']
                     userid = get_userid(request.user.id)
@@ -435,7 +437,7 @@ def get_render_content_dashboard(request):
                         selected += f"sys_user.firstname as {groupby}"
                     else:
                         selected += groupby
-                        
+
                     sql = "SELECT " + selected + " FROM " + fromtable + \
                           " WHERE " + query_conditions + " GROUP BY " + groupby
                     block['sql'] = sql
@@ -481,7 +483,7 @@ def get_chart(request, sql, id, name, layout, fields):
         for row in rows:
             formatted_row = [str(value) if not isinstance(value, (int, float)) else value for value in row]
             formatted_rows.append(formatted_row)
-        
+
         rows=formatted_rows
         value = []
         for num in range(0, len(fields_chart)):
@@ -615,8 +617,8 @@ def get_block_records_kanban(request):
         return_group_records.append(return_record)
         return_group['records'] = group['records']
         return_groups.append(return_group)
-    
-   
+
+
 
     context = {
         'groups': return_groups,
@@ -751,7 +753,7 @@ def get_block_record_badge(tableid, recordid):
 
     records_table = ""
     block_record_badge=''
-    
+
     if tableid == 'company':
         sql = f"SELECT DISTINCT type FROM user_servicecontract WHERE recordidcompany_='{recordid}' AND STATUS='In Progress'"
         context_fields['services'] = db_query_sql(sql)
@@ -766,7 +768,7 @@ def get_block_record_badge(tableid, recordid):
     else:
         block_record_badge= render_to_string('block/record/record_badge.html', context)
     return block_record_badge
-    
+
 
 
 
@@ -789,9 +791,9 @@ def get_block_record_fields(request):
     if row:
         userid = row[0]
         userid = userid['id']
-        
-    
-    record=Record(tableid=tableid,recordid=recordid,userid=userid)    
+
+
+    record=Record(tableid=tableid,recordid=recordid,userid=userid)
     fields=record.get_fields_by_context(contextfunction)
     if fields==[]:
         fields=record.get_fields_by_context('insert_fields')
@@ -1004,8 +1006,8 @@ def save_record_fields(request):
                     # return render(request, 'other/new_task.html', fields_dict)
 
                     send_email(emails=[email], subject='Nuovo task assegnato', html_message=message)
-    
-    
+
+
 
     #return render(request, 'block/record/record_fields.html')
     custom_save_record(request,tableid,response_dict['recordid'])
@@ -1022,7 +1024,7 @@ def custom_save_record(request,tableid,recordid):
         record_deal.fields['reference']=reference
         record_deal.save()
     return True
-    
+
 
 @login_required(login_url='/login/')
 def pagination(request):
@@ -2028,6 +2030,24 @@ def time_calc(request):
 
 
 def print_word(request):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=10,
+        border=0,
+    )
+
+    data = '123456'
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    qr_name = 'qrcode' + uuid.uuid4().hex + '.png'
+
+    img.save(qr_name)
+
+
     recordid_deal = request.POST.get('recordid')
     deal_record = Record('deal', recordid_deal)
     dealline_records = deal_record.get_linkedrecords('dealline')
@@ -2057,19 +2077,26 @@ def print_word(request):
 
     doc = Document(file_path)
 
-    for section in doc.sections:
-        header = section.header
-        paragraph = header.paragraphs[0] if header.paragraphs else header.add_paragraph()
-        run = paragraph.add_run("Intestazione del documento")
-        run.font.size = Pt(12)
-        paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    paragraph = doc.add_paragraph()
+    run = paragraph.add_run()
+    picture = run.add_picture(qr_name, width=Inches(1))
 
-    target_document = doc
-    target_document.sections[0].left_margin = Inches(0.3)
+    # Set the paragraph alignment to right
+    paragraph.alignment = 2  # 2 corresponds to the right alignment
 
-    # First paragraph
+    # Set spacing to minimize any additional space
+    paragraph.paragraph_format.space_before = Inches(0)
+    paragraph.paragraph_format.space_after = Inches(0)
+
+    os.remove(qr_name)
+
+    section = doc.sections[0]
+    section.left_margin = Inches(1)
+    section.top_margin = Inches(1)
+
+
     p1 = doc.add_paragraph()
-    text1 = 'Spett.le \n \n' + companyname + '\n' + address + ', ' + city
+    text1 = f"Spett.le\n\n{companyname}\n{address}, {city}"
     run1 = p1.add_run(text1)
     font1 = run1.font
     font1.size = Pt(10)
@@ -2077,9 +2104,9 @@ def print_word(request):
     font1.bold = False
     p1.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    # Second paragraph
+
     p2 = doc.add_paragraph()
-    text2 = address + ', ' + city
+    text2 = f"{address}, {city}"
     run2 = p2.add_run(text2)
     font2 = run2.font
     font2.size = Pt(10)
@@ -2087,7 +2114,7 @@ def print_word(request):
     font2.bold = True
     p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    # Third paragraph
+
     p3 = doc.add_paragraph()
     text3 = dealname
     run3 = p3.add_run(text3)
@@ -2098,14 +2125,6 @@ def print_word(request):
     font3.bold = True
     p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    script_dir = os.path.dirname(os.path.realpath(__file__))
-    image_path = os.path.join(script_dir, "background.jpg")
-
-    p = doc.add_paragraph()
-    p.add_run().add_picture(image_path, width=Inches(12), height=Inches(12))
-
-    new_section = target_document.add_section()
-    new_section.left_margin = Inches(1.0)
 
     """
     section = doc.sections[0]
@@ -2358,6 +2377,7 @@ def print_word(request):
     font22.italic = False
     p22.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
+
     doc.save(filename)
 
     with open(filename, 'rb') as fh:
@@ -2379,5 +2399,5 @@ def get_record(request):
         return_value['unitprice']=r.fields['price']
         return_value['unitcost']=r.fields['cost']
         return_value['name']=r.fields['name']
-    
+
     return JsonResponse(return_value)
