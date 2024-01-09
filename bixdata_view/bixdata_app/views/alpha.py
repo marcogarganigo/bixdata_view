@@ -791,9 +791,9 @@ def get_block_record_fields(request):
     if row:
         userid = row[0]
         userid = userid['id']
-
-
-    record=Record(tableid=tableid,recordid=recordid,userid=userid)
+        context['userid']=userid
+    
+    record=Record(tableid=tableid,recordid=recordid,userid=userid)    
     fields=record.get_fields_by_context(contextfunction)
     if fields==[]:
         fields=record.get_fields_by_context('insert_fields')
