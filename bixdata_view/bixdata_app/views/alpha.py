@@ -2401,3 +2401,23 @@ def get_record(request):
         return_value['name']=r.fields['name']
 
     return JsonResponse(return_value)
+
+
+def deal_link_file(request):
+    if request.method == 'POST' and 'file' in request.FILES:
+        file = request.FILES['file']
+        tableid = request.POST.get('tableid')
+        recordid = request.POST.get('recordid')
+
+
+        fs = FileSystemStorage()
+        filename = fs.save(file.name, file)
+        uploaded_file_url = fs.url(filename)
+
+
+        uploaded_file_path = os.path.join(settings.MEDIA_ROOT, filename)
+
+        return JsonResponse({'uploaded_file_url': uploaded_file_url, 'uploaded_file_path': uploaded_file_path})
+    else:
+        return JsonResponse({'error': 'No file found in the request'}, status=400)
+

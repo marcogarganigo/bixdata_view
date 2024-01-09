@@ -477,8 +477,50 @@
                     </ul>
                 </div>
 
+                <button type="button" class="btn btn-light button-recordcard" data-bs-title="stampa" onclick="">Chiusovinto</button>
+                <button type="button" class="btn btn-light button-recordcard" data-bs-title="stampa" onclick="">Chiusovinto</button>
+                <input type="file" id="fileInput" style="display: none;" />
+                <button type="button" class="btn btn-light button-recordcard" data-bs-title="stampa" onclick="selectFile()">Allega</button>
 
                 <script>
+
+                    function selectFile() {
+                // Trigger click on the file input element
+                $("#fileInput").trigger('click');
+            }
+
+            // Event listener for file input change
+            $("#fileInput").on("change", function () {
+                var file = this.files[0]; // Get the selected file
+
+                if (file) {
+                    var formData = new FormData(); // Create a FormData object
+                    formData.append("file", file); // Append the file to the FormData object with the key "file"
+
+                    // AJAX request to send the file to the backend
+                    $.ajax({
+                        url: "{% url 'deal_link_file' %}", // Replace with your backend endpoint
+                        type: "POST",
+                        data: {
+                            'formData': formData,
+                            'tableid': '{{ tableid }}',
+                            'recordid': '{{ recordid }}',
+                        },
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            // Handle success response from the backend
+                            console.log("File uploaded successfully", response);
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle error response
+                            console.error("Error uploading file", error);
+                        }
+                    });
+                }
+            });
+
+
                     if ($('#block_record_card-{{ recordid }}').closest('.modal').length == 0) {
                         $('.open-popup').css('display', 'block');
                     } else {

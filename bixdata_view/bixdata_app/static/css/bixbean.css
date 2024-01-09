@@ -730,7 +730,6 @@ html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
 }
 
 #bixdata2 {
-  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
