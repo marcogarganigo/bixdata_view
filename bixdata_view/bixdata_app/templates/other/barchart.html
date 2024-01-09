@@ -22,7 +22,7 @@
         series: [
             {% for val in value %}
                 {
-                    name: '{{ fields|join:'' }}',
+                    name: '{{ fields.0 }}',
                     data: {{ val|safe }},
                 },
             {% endfor %}

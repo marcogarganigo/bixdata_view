@@ -205,7 +205,7 @@ def db_get_value(table, column, condition, order=''):
 
 
 def db_get_count(table, condition, order=''):
-    sql = f"SELECT count(*) as counter FROM {table} WHERE {condition}"
+    sql = f"SELECT count(*) as counter FROM {table} WHERE {condition} AND deleted_='N'"
     rows = db_query_sql(sql)
     if rows:
         return rows[0]['counter']
