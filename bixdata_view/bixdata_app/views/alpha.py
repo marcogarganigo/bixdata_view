@@ -2412,7 +2412,7 @@ def link_file(request):
         filename = f"{tableid}_{recordid}.{file.name.split('.')[-1]}"  # Retaining the original file extension
 
         # Save the file in the media root without any subdirectory
-        fs = FileSystemStorage(location=settings.MEDIA_ROOT)
+        fs = FileSystemStorage(location='deal_documents')
         filename = fs.save(filename, file)
         uploaded_file_url = fs.url(filename)
 
