@@ -436,7 +436,6 @@ def get_render_content_dashboard(request):
                     else:
                         selected += groupby
                         
-                    selected="SUM(amount),SUM(expectedmargin),sys_user.firstname as dealuser1"
                     sql = "SELECT " + selected + " FROM " + fromtable + \
                           " WHERE " + query_conditions + " GROUP BY " + groupby
                     block['sql'] = sql
