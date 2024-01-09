@@ -337,7 +337,7 @@
                             </div>
                         {% endif %}
                         {% if field.fieldtypeid == 'linkedmaster' %}
-<div style="display: flex; align-items: center;">
+<div class="autocomplete-input-container" style="display: flex; align-items: center;">
   <div style="position: relative; width: 100%;">
     <input class="form-select mb-2 {{ mandatory }} {{ calcolato }}"
       id="{{ fieldid }}-{{ recordid }}-autocomplete"
@@ -346,7 +346,7 @@
       data-type="linkedmaster">
 
     <button class="btn"
-      onclick="clearInput('{{ fieldid }}-{{ recordid }}-autocomplete')"
+      onclick="clearInput(this,'{{ fieldid }}-{{ recordid }}-autocomplete')"
       style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">
       <span class="material-symbols-outlined">clear</span>
     </button>
@@ -364,8 +364,9 @@
 </div>
 
                             <script>
-                                function clearInput(inputId) {
+                                function clearInput(el, inputId) {
                                     document.getElementById(inputId).value = '';
+                                    $(el).closest('.field').find('.hidden-input').val("");
                                 }
 
                             </script>
@@ -439,7 +440,6 @@
                                 if (inputValue === "") {
                                     $(this).val(""); // Imposta il valore predefinito
                                     $(this).closest('.field').find('.hidden-input').val("");
-
                                 }
                             });
                         });
@@ -465,7 +465,6 @@
                                 select: function (event, ui) {
                                     //console.log( "Selected: " + ui.item.id );
                                     $(this).closest('.field').find('.hidden-input').val(ui.item.id);
-
                                 }
                             });
                         }
