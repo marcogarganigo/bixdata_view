@@ -138,4 +138,6 @@ urlpatterns = [
     path('print_word/', alpha.print_word, name='print_word'),
     path('get_record/', alpha.get_record, name='get_record'),
     path('link_file/', alpha.link_file, name='link_file'),
+    path('deal_close_won/', alpha.deal_close_won, name='deal_close_won'),
+    path('deal_close_lost/', alpha.deal_close_lost, name='deal_close_lost'),
 ]

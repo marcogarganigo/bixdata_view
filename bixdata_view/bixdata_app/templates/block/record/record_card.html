@@ -421,11 +421,11 @@
                         onclick="closeCard(this)"></button>
                 {{ tableid }}
 
-                <button type="button" class="btn btn-outline-light button-recordcard" data-bs-toggle="tooltip"
+                <button type="button" class="btn btn button-recordcard" data-bs-toggle="tooltip"
                         data-bs-placement="bottom" data-bs-title="elimina" style="color: red" onclick="deleteFunc()"><i
                         class=" mdi mdi-delete-outline"></i></button>
 
-                <button type="button" class="btn btn-outline-light button-recordcard" data-bs-toggle="tooltip"
+                <button type="button" class="btn btn button-recordcard" data-bs-toggle="tooltip"
                         data-bs-placement="bottom" data-bs-title="copia collegamento"
                         onclick="copyFunc(this,'{{ tableid }}', '{{ recordid }}')"><i
                         class="mdi mdi-content-copy"></i></button>
@@ -484,15 +484,44 @@
 
                     <input type="file" id="fileInput" style="display: none;"/>
 
-                    <button type="button" class="btn btn-success button-recordcard" data-bs-title="stampa" onclick="">
+                    <button type="button" class="btn btn-success button-recordcard" data-bs-title="stampa" onclick="dealCloseWon()">
                         Chiuso vinto
                     </button>
 
-                    <button type="button" class="btn btn-danger button-recordcard" data-bs-title="stampa" onclick="">
+                    <button type="button" class="btn btn-danger button-recordcard" data-bs-title="stampa" onclick="dealCloseLost()">
                         Chiuso perso
                     </button>
 
                     <script>
+
+                    function dealCloseWon() {
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'deal_close_won' %}",
+                            success: function (response) {
+                                alert('dealclosewon')
+                            },
+                            error: function (response) {
+
+                            }
+
+                        })
+                    }
+
+                    function dealCloseLost() {
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'deal_close_lost' %}",
+                            success: function (response) {
+                                alert('dealcloselost')
+                            },
+                            error: function (response) {
+
+                            }
+
+                        })
+                    }
+
                         function selectFile() {
                             // Trigger click on the file input element
                             $("#fileInput").trigger('click');

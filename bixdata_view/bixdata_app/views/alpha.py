@@ -48,6 +48,7 @@ from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.enum.section import WD_SECTION
+from docx.enum.style import WD_STYLE_TYPE
 
 import qrcode
 
@@ -2042,7 +2043,7 @@ def print_word(request):
     today = datetime.date.today()
     d1 = today.strftime("%d/%m/%Y")
 
-    data = '123456'
+    data = 'background.jpg'
     qr.add_data(data)
     qr.make(fit=True)
 
@@ -2129,7 +2130,7 @@ def print_word(request):
     p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p_date = doc.add_paragraph()
-    text_date = f"{d1}"
+    text_date = f"Massagno {d1}"
     run_date = p_date.add_run(text_date)
     font_date = run_date.font
     font_date.size = Pt(11)
@@ -2173,27 +2174,25 @@ def print_word(request):
     font3.bold = False
     p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    table = doc.add_table(rows=2, cols=4)
+    dealline_records_length = len(dealline_records)
 
+    table = doc.add_table(rows=dealline_records_length + 1, cols=4)  # +1 for header
 
     table.style = 'bixstyle'
 
     # Add the table header
-    row = table.rows[0]
-    # row.cells[0].shading.background_pattern_color = RGBColor(0xFF, 0x00, 0x00)
-    row.cells[0].text = 'Monte ore assistenza tecnica'
-    row.cells[1].text = 'Qt.'
-    row.cells[2].text = 'Prezzo unitario'
-    row.cells[3].text = 'Prezzo totale'
+    header_cells = ['Monte ore assistenza tecnica', 'Qt.', 'Prezzo unitario', 'Prezzo totale']
+    for i, header_text in enumerate(header_cells):
+        table.cell(0, i).text = header_text
 
-    amount = str(amount) + ' CHF'
-    # Add the table data
-    row = table.rows[1]
-    row.cells[0].text = dealname
-    row.cells[0].paragraphs[0].runs[0].font.bold = True
-    row.cells[1].text = '30'
-    row.cells[2].text = 'CHF'
-    row.cells[3].text = amount
+    # Add data for each dealline
+    for i, dealline in enumerate(dealline_records, start=1):
+        row = table.rows[i]
+        row.cells[0].text = str(dealline['name'])
+        row.cells[0].paragraphs[0].runs[0].font.bold = True
+        row.cells[1].text = str(dealline['quantity'])
+        row.cells[2].text = str(dealline['unitprice'])
+        row.cells[3].text = str(dealline['price']) + ' CHF'
 
     p4 = doc.add_paragraph()
     text4 = 'Gli interventi saranno calcolati on line con frazioni di ½ ora e on site con intervento minimo fatturabile di un’ora.'
@@ -2227,7 +2226,7 @@ def print_word(request):
 
 
     p6 = doc.add_paragraph()  # Stile per elenco puntato con due punti
-    text6 = 'Per tutte le richieste di assistenza: helpdesk@swissbix.ch'
+    text6 = '-      Per tutte le richieste di assistenza: helpdesk@swissbix.ch'
     run6 = p6.add_run(text6)
     font6 = run6.font
     font6.size = Pt(10)
@@ -2237,7 +2236,7 @@ def print_word(request):
     p6.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p7 = doc.add_paragraph()
-    text7 = 'In caso di urgenze è possibile chiamare il numero 091 960 22 09.'
+    text7 = '-      In caso di urgenze è possibile chiamare il numero 091 960 22 09.'
     run7 = p7.add_run(text7)
     font7 = run7.font
     font7.size = Pt(10)
@@ -2258,7 +2257,7 @@ def print_word(request):
     p8.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p9 = doc.add_paragraph()
-    text9 = 'Monte Ore: Anticipato all’ordine'
+    text9 = '-      Monte Ore: Anticipato all’ordine'
     run9 = p9.add_run(text9)
     font9 = run9.font
     font9.size = Pt(10)
@@ -2279,7 +2278,7 @@ def print_word(request):
     p10.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p11 = doc.add_paragraph()
-    text11 = 'Durata minima del contratto: 12 mesi.'
+    text11 = '-     Durata minima del contratto: 12 mesi.'
     run11 = p11.add_run(text11)
     font11 = run11.font
     font11.size = Pt(10)
@@ -2289,7 +2288,7 @@ def print_word(request):
     p11.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p12 = doc.add_paragraph()
-    text12 = 'Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
+    text12 = '-     Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
     run12 = p12.add_run(text12)
     font12 = run12.font
     font12.size = Pt(10)
@@ -2299,7 +2298,7 @@ def print_word(request):
     p12.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p13 = doc.add_paragraph()
-    text13 = 'Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
+    text13 = '-     Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
     run13 = p13.add_run(text13)
     font13 = run13.font
     font13.size = Pt(10)
@@ -2309,7 +2308,7 @@ def print_word(request):
     p13.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p14 = doc.add_paragraph()
-    text14 = 'I servizi vengono rinnovati tacitamente salvo disdetta scritta 60 giorni prima della scadenza.'
+    text14 = '-     I servizi vengono rinnovati tacitamente salvo disdetta scritta 60 giorni prima della scadenza.'
     run14 = p14.add_run(text14)
     font14 = run14.font
     font14.size = Pt(10)
@@ -2319,7 +2318,7 @@ def print_word(request):
     p14.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p15 = doc.add_paragraph()
-    text15 = 'Orari di ufficio per supporto tecnico; dalle 9:00 alle 12:00 e dalle 14:00 alle 17:00'
+    text15 = '-     Orari di ufficio per supporto tecnico; dalle 9:00 alle 12:00 e dalle 14:00 alle 17:00'
     run15 = p15.add_run(text15)
     font15 = run15.font
     font15.size = Pt(10)
@@ -2329,7 +2328,7 @@ def print_word(request):
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p16 = doc.add_paragraph()
-    text16 = 'Prezzi Iva Esclusa'
+    text16 = '-     Prezzi Iva Esclusa'
     run16 = p16.add_run(text16)
     font16 = run16.font
     font16.size = Pt(10)
@@ -2339,7 +2338,7 @@ def print_word(request):
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p17 = doc.add_paragraph()
-    text17 = 'Sono esclusi lavori di cablaggio, lavori a muro ed elettrici e di tutta la cavetteria aggiuntiva.'
+    text17 = '-     Sono esclusi lavori di cablaggio, lavori a muro ed elettrici e di tutta la cavetteria aggiuntiva.'
     run17 = p17.add_run(text17)
     font17 = run17.font
     font17.size = Pt(10)
@@ -2448,4 +2447,10 @@ def link_file(request):
     else:
         return JsonResponse({'error': 'No file found in the request'}, status=400)
 
+
+def deal_close_won(request):
+    return JsonResponse({'success': True})
+
+def deal_close_lost(request):
+    return JsonResponse({'success': True})
 
