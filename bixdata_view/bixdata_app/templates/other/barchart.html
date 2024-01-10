@@ -1,3 +1,5 @@
+{% load my_tags %}
+
 <div id="chart{{ id }}"></div>
 
 <script>
@@ -22,7 +24,7 @@
         series: [
             {% for val in value %}
                 {
-                    name: '{{ fields.1 }}',
+                    name: '{{fields|get:forloop.counter0}}',
                     data: {{ val|safe }},
                 },
             {% endfor %}
