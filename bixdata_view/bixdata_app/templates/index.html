@@ -330,6 +330,15 @@
                 });
 
 
+                 $('#newLinkedRecordModal').on('show.bs.modal', function () {
+                    $('.modal-backdrop').css('z-index', '20000'); // Change the z-index of the backdrop
+                });
+
+                $('#newLinkedRecordModal').on('hide.bs.modal', function () {
+                    $('.modal-backdrop').css('z-index', ''); // Change the z-index of the backdrop
+                });
+
+
                 if (window.innerWidth <= min_width_var) {
 
                     if ($(el).attr('data-fieldtype') === 'linked') {

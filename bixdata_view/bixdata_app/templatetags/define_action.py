@@ -7,3 +7,6 @@ register = template.Library()
 def define(val=None):
     return val
 
+
+
+

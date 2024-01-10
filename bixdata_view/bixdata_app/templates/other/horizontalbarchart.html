@@ -21,9 +21,8 @@
         },
         series: [
             {% for val in value %}
-
                 {
-                    name: '{{ fields.[forloop.counter0] }}',
+                    name: '{{ fields|join:'' }}',
                     data: {{ val|safe }},
                 },
             {% endfor %}
@@ -45,7 +44,14 @@
                     labels: {
                         rotate: -90,
                     },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 4,
+                            horizontal: true,
+                        }
+                    },
                 },
+
             }],
         },
         dataLabels: {

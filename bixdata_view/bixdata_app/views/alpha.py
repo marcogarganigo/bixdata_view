@@ -513,6 +513,8 @@ def get_chart(request, sql, id, name, layout, fields):
             return render_to_string('other/piechart.html', context, request=request)
         elif layout_chart == 'linechart':
             return render_to_string('other/linechart.html', context, request=request)
+        elif layout_chart == 'horizontalbarchart':
+            return render_to_string('other/horizontalbarchart.html', context, request=request)
 
 
 @login_required(login_url='/login/')
@@ -2037,6 +2039,9 @@ def print_word(request):
         border=0,
     )
 
+    today = datetime.date.today()
+    d1 = today.strftime("%d/%m/%Y")
+
     data = '123456'
     qr.add_data(data)
     qr.make(fit=True)
@@ -2096,13 +2101,22 @@ def print_word(request):
 
 
     p1 = doc.add_paragraph()
-    text1 = f"Spett.le\n\n{companyname}\n{address}, {city}"
+    text1 = f"Spett.le"
     run1 = p1.add_run(text1)
     font1 = run1.font
-    font1.size = Pt(10)
-    font1.name = 'Arial'
+    font1.size = Pt(10.5)
+    font1.name = 'Calibri'
     font1.bold = False
     p1.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p_companyname = doc.add_paragraph()
+    text_companyname = f"{companyname}"
+    run_companyname = p_companyname.add_run(text_companyname)
+    font_companyname = run_companyname.font
+    font_companyname.size = Pt(12)
+    font_companyname.name = 'Calibri'
+    font_companyname.bold = True
+    p_companyname.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
 
     p2 = doc.add_paragraph()
@@ -2114,14 +2128,23 @@ def print_word(request):
     font2.bold = True
     p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
+    p_date = doc.add_paragraph()
+    text_date = f"{d1}"
+    run_date = p_date.add_run(text_date)
+    font_date = run_date.font
+    font_date.size = Pt(11)
+    font_date.name = 'Calibri'
+    font_date.bold = True
+    p_date.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
 
     p3 = doc.add_paragraph()
     text3 = dealname
     run3 = p3.add_run(text3)
     font3 = run3.font
-    font3.size = Pt(15)
+    font3.size = Pt(16)
     font3.name = 'Calibri'
-    font3.color.rgb = RGBColor(0xFF, 0x00, 0x00)
+    font3.color.rgb = RGBColor(0xC0, 0x00, 0x00)
     font3.bold = True
     p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
@@ -2146,11 +2169,12 @@ def print_word(request):
     font3 = run3.font
     font3.size = Pt(15)
     font3.name = 'Calibri'
-    font3.color.rgb = RGBColor(0xFF, 0x00, 0x00)
+    font3.color.rgb = RGBColor(0xC0, 0x00, 0x00)
     font3.bold = False
     p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     table = doc.add_table(rows=2, cols=4)
+
 
     table.style = 'bixstyle'
 
@@ -2166,6 +2190,7 @@ def print_word(request):
     # Add the table data
     row = table.rows[1]
     row.cells[0].text = dealname
+    row.cells[0].paragraphs[0].runs[0].font.bold = True
     row.cells[1].text = '30'
     row.cells[2].text = 'CHF'
     row.cells[3].text = amount
@@ -2181,10 +2206,13 @@ def print_word(request):
     p4.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     table2 = doc.add_table(rows=1, cols=1)
-    row = table.rows[1]
-    row.cells[0].text = 'Condizioni contrattuali di vendita'
 
     table2.style = 'bixstyle'
+
+    row_table2 = table2.rows[0]
+    cell_table2 = row_table2.cells[0]
+    cell_table2.text = 'Condizioni contrattuali di vendita'
+
 
     p5 = doc.add_paragraph()
     text5 = 'Informazioni di contatto:'
@@ -2321,8 +2349,6 @@ def print_word(request):
     p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     # get today date python
-    today = datetime.date.today()
-    d1 = today.strftime("%d/%m/%Y")
 
     p18 = doc.add_paragraph()
     text18 = 'Massagno' + ', ' + d1

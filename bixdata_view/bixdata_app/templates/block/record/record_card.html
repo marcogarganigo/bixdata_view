@@ -421,11 +421,11 @@
                         onclick="closeCard(this)"></button>
                 {{ tableid }}
 
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip"
+                <button type="button" class="btn btn-outline-light button-recordcard" data-bs-toggle="tooltip"
                         data-bs-placement="bottom" data-bs-title="elimina" style="color: red" onclick="deleteFunc()"><i
                         class=" mdi mdi-delete-outline"></i></button>
 
-                <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip"
+                <button type="button" class="btn btn-outline-light button-recordcard" data-bs-toggle="tooltip"
                         data-bs-placement="bottom" data-bs-title="copia collegamento"
                         onclick="copyFunc(this,'{{ tableid }}', '{{ recordid }}')"><i
                         class="mdi mdi-content-copy"></i></button>
@@ -478,15 +478,18 @@
                 </div>
 
                 {% if tableid == 'deal' %}
+                    <button type="button" class="btn btn-outline-secondary button-recordcard" data-bs-title="stampa"
+                            onclick="selectFile()">Allega
+                    </button>
+
+                    <input type="file" id="fileInput" style="display: none;"/>
+
                     <button type="button" class="btn btn-success button-recordcard" data-bs-title="stampa" onclick="">
                         Chiuso vinto
                     </button>
+
                     <button type="button" class="btn btn-danger button-recordcard" data-bs-title="stampa" onclick="">
                         Chiuso perso
-                    </button>
-                    <input type="file" id="fileInput" style="display: none;"/>
-                    <button type="button" class="btn btn-light button-recordcard" data-bs-title="stampa"
-                            onclick="selectFile()">Allega
                     </button>
 
                     <script>
