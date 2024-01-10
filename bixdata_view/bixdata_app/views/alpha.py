@@ -23,6 +23,10 @@ import time
 
 import pdfkit
 
+import tempfile
+from docx2pdf import convert as docx2pdf_convert
+
+
 from .bixdata_view import *
 from .businesslogic.office_calendar import OfficeCalendar
 from ..forms import LoginForm
@@ -2036,6 +2040,7 @@ def print_word(request):
 
     recordid = request.POST.get('recordid')
     tableid = request.POST.get('tableid')
+    format = request.POST.get('format')
 
     qr = qrcode.QRCode(
         version=1,
@@ -2448,17 +2453,31 @@ def print_word(request):
     font22.color.rgb = grey
     p22.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
-
     doc.save(filename)
 
-    with open(filename, 'rb') as fh:
-        response = HttpResponse(fh.read(),
-                                content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-        response['Content-Disposition'] = 'inline; filename=' + dealname + '.docx'
-        fh.close()
-        os.remove(filename)
+    try:
+        if format == 'pdf':
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                pdf_filename = f"{tmp_dir}/{dealname}.pdf"
+                docx2pdf_convert(filename, pdf_filename)
 
-        return response
+
+                with open(pdf_filename, 'rb') as fh:
+                    response = HttpResponse(fh.read(), content_type="application/pdf")
+                    response['Content-Disposition'] = f'inline; filename={dealname}.pdf'
+
+                return response
+
+        else:
+            with open(filename, 'rb') as fh:
+                response = HttpResponse(fh.read(),
+                                        content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                response['Content-Disposition'] = f'inline; filename={dealname}.docx'
+
+            return response
+
+    finally:
+        os.remove(filename)
 
 
 def get_record(request):

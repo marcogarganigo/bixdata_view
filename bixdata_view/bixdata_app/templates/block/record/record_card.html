@@ -364,7 +364,7 @@
         return formData;
     }
 
-    function stampaWord() {
+    function stampaWord(format) {
         serialized_form = serializeForm($('.save-button').closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
         //set the value of creator in serialized_form
         serialized_form['creator'] = '{{ userid}}';
@@ -382,6 +382,7 @@
             data: {
                 recordid: '{{ recordid }}',
                 tableid: '{{ tableid }}',
+                format: format,
             },
             xhrFields: {
                 responseType: 'blob'
@@ -452,6 +453,9 @@
                         {% if tableid == 'deal' %}
                             <li><a class="dropdown-item" onclick="stampaWord()">
                                 Stampa in word
+                            </a></li>
+                            <li><a class="dropdown-item" onclick="stampaWord('pdf')">
+                                Stampa in pdf
                             </a></li>
                         {% endif %}
                     </ul>
