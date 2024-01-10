@@ -21,9 +21,8 @@
         },
         series: [
             {% for val in value %}
-                {% with array_item=some_array.index %}
                 {
-                    name: '{{ fields.{{forloop.counter0}} }}',
+                    name: '{{ fields.1 }}',
                     data: {{ val|safe }},
                 },
             {% endfor %}
