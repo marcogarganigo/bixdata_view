@@ -2033,6 +2033,10 @@ def time_calc(request):
 
 
 def print_word(request):
+
+    recordid = request.POST.get('recordid')
+    tableid = request.POST.get('tableid')
+
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -2043,7 +2047,9 @@ def print_word(request):
     today = datetime.date.today()
     d1 = today.strftime("%d/%m/%Y")
 
-    data = 'background.jpg'
+    qrcontent = str(tableid) + '_' + str(recordid)
+
+    data = qrcontent
     qr.add_data(data)
     qr.make(fit=True)
 
@@ -2100,6 +2106,8 @@ def print_word(request):
     section.left_margin = Inches(1)
     section.top_margin = Inches(1)
 
+    grey = RGBColor(0x89, 0x89, 0x89)
+
 
     p1 = doc.add_paragraph()
     text1 = f"Spett.le"
@@ -2108,6 +2116,7 @@ def print_word(request):
     font1.size = Pt(10.5)
     font1.name = 'Calibri'
     font1.bold = False
+    font1.color.rgb = grey
     p1.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p_companyname = doc.add_paragraph()
@@ -2117,6 +2126,7 @@ def print_word(request):
     font_companyname.size = Pt(12)
     font_companyname.name = 'Calibri'
     font_companyname.bold = True
+    font_companyname.color.rgb = grey
     p_companyname.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
 
@@ -2125,8 +2135,9 @@ def print_word(request):
     run2 = p2.add_run(text2)
     font2 = run2.font
     font2.size = Pt(10)
-    font2.name = 'Arial'
-    font2.bold = True
+    font2.name = 'Calibri'
+    font2.bold = False
+    font2.color.rgb = grey
     p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p_date = doc.add_paragraph()
@@ -2136,6 +2147,7 @@ def print_word(request):
     font_date.size = Pt(11)
     font_date.name = 'Calibri'
     font_date.bold = True
+    font_date.color.rgb = grey
     p_date.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
 
@@ -2193,6 +2205,23 @@ def print_word(request):
         row.cells[1].text = str(dealline['quantity'])
         row.cells[2].text = str(dealline['unitprice'])
         row.cells[3].text = str(dealline['price']) + ' CHF'
+        row.cells[3].paragraphs[0].runs[0].font.bold = True
+
+
+    #add a space between the table and the paragraph that is coming
+    p_space = doc.add_paragraph()
+    text_space = ''
+    run_space = p_space.add_run(text_space)
+    font_space = run_space.font
+    font_space.size = Pt(10)
+    font_space.name = 'Calibri'
+    font_space.bold = False
+    font_space.italic = True
+    p_space.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p_space = doc.add_paragraph()
+    text_space = ''
+    run_space = p_space.add_run(text_space)
 
     p4 = doc.add_paragraph()
     text4 = 'Gli interventi saranno calcolati on line con frazioni di ½ ora e on site con intervento minimo fatturabile di un’ora.'
@@ -2202,7 +2231,19 @@ def print_word(request):
     font4.name = 'Calibri'
     font4.bold = False
     font4.italic = True
+    font4.color.rgb = grey
     p4.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+
+
+    p_space = doc.add_paragraph()
+    text_space = ''
+    run_space = p_space.add_run(text_space)
+
+    p_space = doc.add_paragraph()
+    text_space = ''
+    run_space = p_space.add_run(text_space)
+
 
     table2 = doc.add_table(rows=1, cols=1)
 
@@ -2211,6 +2252,10 @@ def print_word(request):
     row_table2 = table2.rows[0]
     cell_table2 = row_table2.cells[0]
     cell_table2.text = 'Condizioni contrattuali di vendita'
+
+    p_space = doc.add_paragraph()
+    text_space = ''
+    run_space = p_space.add_run(text_space)
 
 
     p5 = doc.add_paragraph()
@@ -2221,7 +2266,7 @@ def print_word(request):
     font5.name = 'Calibri'
     font5.bold = True
     font5.italic = False
-    font5.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font5.color.rgb = grey
     p5.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
 
@@ -2232,7 +2277,7 @@ def print_word(request):
     font6.size = Pt(10)
     font6.name = 'Calibri'
     font6.bold = False
-    font6.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font6.color.rgb = grey
     p6.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p7 = doc.add_paragraph()
@@ -2242,7 +2287,7 @@ def print_word(request):
     font7.size = Pt(10)
     font7.name = 'Calibri'
     font7.bold = False
-    font7.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font7.color.rgb = grey
     p7.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p8 = doc.add_paragraph()
@@ -2253,7 +2298,7 @@ def print_word(request):
     font8.name = 'Calibri'
     font8.bold = True
     font8.italic = False
-    font8.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font8.color.rgb = grey
     p8.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p9 = doc.add_paragraph()
@@ -2263,7 +2308,7 @@ def print_word(request):
     font9.size = Pt(10)
     font9.name = 'Calibri'
     font9.bold = False
-    font9.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font9.color.rgb = grey
     p9.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p10 = doc.add_paragraph()
@@ -2274,7 +2319,7 @@ def print_word(request):
     font10.name = 'Calibri'
     font10.bold = True
     font10.italic = False
-    font10.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font10.color.rgb = grey
     p10.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p11 = doc.add_paragraph()
@@ -2284,7 +2329,7 @@ def print_word(request):
     font11.size = Pt(10)
     font11.name = 'Calibri'
     font11.bold = False
-    font11.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font11.color.rgb = grey
     p11.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p12 = doc.add_paragraph()
@@ -2294,7 +2339,7 @@ def print_word(request):
     font12.size = Pt(10)
     font12.name = 'Calibri'
     font12.bold = False
-    font12.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font12.color.rgb = grey
     p12.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p13 = doc.add_paragraph()
@@ -2304,7 +2349,7 @@ def print_word(request):
     font13.size = Pt(10)
     font13.name = 'Calibri'
     font13.bold = False
-    font13.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font13.color.rgb = grey
     p13.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p14 = doc.add_paragraph()
@@ -2314,7 +2359,7 @@ def print_word(request):
     font14.size = Pt(10)
     font14.name = 'Calibri'
     font14.bold = False
-    font14.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font14.color.rgb = grey
     p14.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p15 = doc.add_paragraph()
@@ -2324,7 +2369,7 @@ def print_word(request):
     font15.size = Pt(10)
     font15.name = 'Calibri'
     font15.bold = False
-    font15.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font15.color.rgb = grey
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p16 = doc.add_paragraph()
@@ -2334,7 +2379,7 @@ def print_word(request):
     font16.size = Pt(10)
     font16.name = 'Calibri'
     font16.bold = False
-    font16.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font16.color.rgb = grey
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p17 = doc.add_paragraph()
@@ -2344,7 +2389,7 @@ def print_word(request):
     font17.size = Pt(10)
     font17.name = 'Calibri'
     font17.bold = False
-    font17.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font17.color.rgb = grey
     p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     # get today date python
@@ -2357,7 +2402,7 @@ def print_word(request):
     font18.name = 'Calibri'
     font18.bold = True
     font18.italic = False
-    font18.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font18.color.rgb = grey
     p18.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p19 = doc.add_paragraph()
@@ -2368,7 +2413,7 @@ def print_word(request):
     font19.name = 'Calibri'
     font19.bold = True
     font19.italic = False
-    font19.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font19.color.rgb = grey
     p19.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p20 = doc.add_paragraph()
@@ -2379,7 +2424,7 @@ def print_word(request):
     font20.name = 'Calibri'
     font20.bold = True
     font20.italic = False
-    font20.color.rgb = RGBColor(0x99, 0x99, 0x99)
+    font20.color.rgb = grey
     p20.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 
     p21 = doc.add_paragraph()
@@ -2400,6 +2445,7 @@ def print_word(request):
     font22.name = 'Calibri'
     font22.bold = False
     font22.italic = False
+    font22.color.rgb = grey
     p22.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
 

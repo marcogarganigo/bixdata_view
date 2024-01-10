@@ -381,6 +381,7 @@
             url: "{% url 'print_word' %}",
             data: {
                 recordid: '{{ recordid }}',
+                tableid: '{{ tableid }}',
             },
             xhrFields: {
                 responseType: 'blob'
