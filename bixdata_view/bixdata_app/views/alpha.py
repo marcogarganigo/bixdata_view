@@ -2239,15 +2239,7 @@ def print_word(request):
     font4.color.rgb = grey
     p4.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-
-
-    p_space = doc.add_paragraph()
-    text_space = ''
-    run_space = p_space.add_run(text_space)
-
-    p_space = doc.add_paragraph()
-    text_space = ''
-    run_space = p_space.add_run(text_space)
+    doc.add_page_break()
 
 
     table2 = doc.add_table(rows=1, cols=1)
