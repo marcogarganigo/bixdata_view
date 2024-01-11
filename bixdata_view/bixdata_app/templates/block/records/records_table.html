@@ -306,10 +306,12 @@
                                 data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
                             {{ column_value.value }}
                         {% endif %}
-                        {% elif column_value.fieldtype == 'lookup' %}
+                        {% elif column_value.fieldtypeweb == 'lookup' %}
                             <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                                 data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                                <div class="badge" style="background-color: {{ column_value.fieldbackground }}; font-size: 10.5pt">{{ column_value.value }}</div>
+                           
+                         <img src="{% static 'images/lookup/' %}{{ column_value.code|striptags }}.png?v={{ date }}" width="32px" height="32px" class="rounded-circle">
+                            {{ column_value.value }}
                             </td>
 
                         {% else %}

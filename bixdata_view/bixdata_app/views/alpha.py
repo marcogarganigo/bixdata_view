@@ -2241,6 +2241,10 @@ def print_word(request):
 
     doc.add_page_break()
 
+    p_space = doc.add_paragraph()
+    text_space = ''
+    run_space = p_space.add_run(text_space)
+
 
     table2 = doc.add_table(rows=1, cols=1)
 
@@ -2389,7 +2393,9 @@ def print_word(request):
     font17.color.rgb = grey
     p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    # get today date python
+    p_space = doc.add_paragraph()
+    text_space = ''
+    run_space = p_space.add_run(text_space)
 
     p18 = doc.add_paragraph()
     text18 = 'Massagno' + ', ' + d1
@@ -2424,6 +2430,10 @@ def print_word(request):
     font20.color.rgb = grey
     p20.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 
+    p_space = doc.add_paragraph()
+    text_space = ''
+    run_space = p_space.add_run(text_space)
+
     p21 = doc.add_paragraph()
     text21 = '____________________________________'
     run21 = p21.add_run(text21)
@@ -2434,15 +2444,28 @@ def print_word(request):
     font21.italic = False
     p21.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 
-    p22 = doc.add_paragraph()
+    # Access the section of the document (assuming there's only one section)
+    section = doc.sections[0]
+
+    # Create a footer
+    footer = section.footer
+
+    # Add a paragraph to the footer
+    p22 = footer.paragraphs[0]
     text22 = 'Swissbix SA Via Baroffio 6, 6900 Lugano E-Mail: finance@swissbix.ch Telefono: +41 91 960 22 00 Banca: UBS Switzerland AG \n Titolare del conto: Swissbix SA BIC: UBSWCHZH80A IBAN: CH62 0024 7247 2096 9101 U N. IVA UE: CHE-136.887.933 '
     run22 = p22.add_run(text22)
+
+    # Set font properties
     font22 = run22.font
     font22.size = Pt(8)
     font22.name = 'Calibri'
     font22.bold = False
     font22.italic = False
+
+    # Set text color to grey
     font22.color.rgb = grey
+
+    # Set paragraph alignment to center
     p22.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
     doc.save(filename)
