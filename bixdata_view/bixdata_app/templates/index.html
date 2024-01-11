@@ -322,33 +322,16 @@
                     }
                 */
 
-                $('#linked-table-modal').on('show.bs.modal', function () {
-                    $('.modal-backdrop').css('z-index', '10000'); // Change the z-index of the backdrop
-                });
-
-                $('#linked-table-modal').on('hide.bs.modal', function () {
-                    $('.modal-backdrop').css('z-index', ''); // Change the z-index of the backdrop
-                });
-
-
-                 $('#newLinkedRecordModal').on('show.bs.modal', function () {
-                    $('.modal-backdrop').css('z-index', '20000'); // Change the z-index of the backdrop
-                });
-
-                $('#newLinkedRecordModal').on('hide.bs.modal', function () {
-                    $('.modal-backdrop').css('z-index', ''); // Change the z-index of the backdrop
-                });
-
 
                 if (window.innerWidth <= min_width_var) {
 
                     if ($(el).attr('data-fieldtype') === 'linked') {
                         $('#linked-table-modal').modal('show');
-                        $(".modal-backdrop:last").css("z-index", 11200);
+
                     } else {
                         if (($(el).closest('#block_records_table')).attr('data-type') === 'linked') {
                             $('#linked-table-modal').modal('show');
-                            $(".modal-backdrop:last").css("z-index", 11200);
+
                         } else {
                             $('#recordModal').modal('show');
                         }
@@ -358,7 +341,7 @@
                 } else {
                     if ($(el).attr('data-fieldtype') === 'linked') {
                         $('#linked-table-modal').modal('show');
-                        $(".modal-backdrop:last").css("z-index", 11200);
+
                     } else {
                         if (($(el).closest('#block_records_table')).attr('data-type') === 'linked') {
                             $('#linked-table-modal').modal('show');
@@ -1038,29 +1021,38 @@
             </div>
 
 
-            <style>
-                #newRecordModal {
-                    z-index: 12001;
-                }
-            </style>
-
             <script>
 
-                $('#newRecordModal').on('hide.bs.modal', function (e) {
-                    $('.modal-backdrop').css('z-index', 1000)
+                var modalCounter = 0;
+
+                $(document).ready(function () {
+                    $(document).on('show.bs.modal', '.modal', function (event) {
+                        var zIndex = 1040 + modalCounter;
+                        $(this).css('z-index', zIndex);
+                        setTimeout(function () {
+                            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+                        }, 0);
+
+                        modalCounter++;
+                    });
+
+                    $(document).on('hide.bs.modal', '.modal', function (event) {
+                        $('.modal-backdrop.modal-stack').removeClass('modal-stack');
+                    });
                 });
 
 
             </script>
 
             <!-- new record modal-->
-            <div class="modal fade" id="newRecordModal" aria-hidden="true" style="width: 100%;">
+            <div class="modal fade" id="newRecordModal" style="width: 100%;">
                 <div class="modal-dialog modal-fullscreen" style="width: 50%; margin: 2% auto auto;height: 85%">
                     <div class="modal-content" style="width: 100%">
                         <div class="modal-body" style="width: 100%; overflow: hidden">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                     onclick="closeNewRecordModal()"></button>
-                            <div id="fullwidth_modal_newrecord" style="height: 100%; width: 100%;">
+                            <div id="fullwidth_modal_newrecord" style="height: 100%; width: 100%;"
+                                 class="col-xl-4 col-md-4 mb-4">
                             </div>
                         </div>
                     </div>
@@ -1068,8 +1060,8 @@
             </div>
 
             <!--record modal start-->
-            <div class="modal fade" id="recordModal" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true" style="width: 100%; z-index: 2000">
+            <div class="modal fade" id="recordModal"
+                 aria-hidden="true" style="width: 100%">
                 <div class="modal-dialog  modal-fullscreen" style="width: 80%; height: 90%; margin: 1% auto auto;">
                     <div class="modal-content" style="width: 100%">
                         <div class="modal-body" style="width: 100%; overflow: hidden; padding: 0">
@@ -1081,8 +1073,8 @@
                 </div>
             </div>
 
-            <div class="modal fade" id="linked-table-modal" aria-hidden="true"
-                 style="width: 100%; z-index: 12000">
+            <div class="modal fade" id="linked-table-modal"
+                 style="width: 100%">
                 <div class="modal-dialog modal-fullscreen" style="width: 50%; margin: 2% auto auto;height: 85%">
                     <div class="modal-content" style="width: 100%">
                         <div class="modal-body" style="width: 100%; overflow: hidden; padding: 0">
@@ -1094,8 +1086,8 @@
                 </div>
             </div>
 
-            <div class="modal fade" id="newLinkedRecordModal" aria-hidden="true"
-                 style="width: 100%; z-index: 13000">
+            <div class="modal fade" id="newLinkedRecordModal"
+                 style="width: 100%;">
                 <div class="modal-dialog modal-fullscreen" style="width: 40%; margin: 2% auto auto;height: 75%">
                     <div class="modal-content" style="width: 100%">
                         <div class="modal-body" style="width: 100%; overflow: hidden">

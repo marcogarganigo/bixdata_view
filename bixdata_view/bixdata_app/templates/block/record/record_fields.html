@@ -201,7 +201,7 @@
             {% if label != 'Sistema' and label != 'Campi di sistema' or userid == 2 %}
                 <button class="dropdown-toggle btn btn-secondary dropdown-color" style="width: 100%; text-align: left;"
                         type="button" onclick="toggleCollapse(this)">
-                    Campi {{ label }} 
+                    Campi {{ label }}
                 </button>
             {% endif %}
         {% endif %}
@@ -291,7 +291,18 @@
                         {% if field.fieldtypeid == 'Data' %}
                             <input id="{{ fieldid }}" name="{{ fieldname }}"
                                    class="form-control mb-2 datepicker {{ mandatory }} {{ calcolato }}" type="date"
-                                   value="{{ field.valuecode.0.code }}">
+                                   value="{{ field.valuecode.0.code }}" oninput="validateInput(this)">
+                            <script>
+                                function validateInput(el) {
+                                    var inputValue = el.value;
+                                    var year = inputValue.split('-')[0];
+                                    if (year.length > 4) {
+                                        alert('Anno non valido');
+                                        el.value = inputValue.slice(0, -1);
+
+                                    }
+                                }
+                            </script>
                         {% endif %}
                         {% if field.fieldtypeid == 'Seriale' %}
                             <p>{{ field.value }}</p>
@@ -337,30 +348,31 @@
                             </div>
                         {% endif %}
                         {% if field.fieldtypeid == 'linkedmaster' %}
-<div class="autocomplete-input-container" style="display: flex; align-items: center;">
-  <div style="position: relative; width: 100%;">
-    <input class="form-select mb-2 {{ mandatory }} {{ calcolato }}"
-      id="{{ fieldid }}-{{ recordid }}-autocomplete"
-      style="width: calc(90% - 15px);"
-      value="{{ field.valuecode.0.value }}" onfocus="selectAllText(this); "
-      data-type="linkedmaster">
+                            <div class="autocomplete-input-container" style="display: flex; align-items: center;">
+                                <div style="position: relative; width: 100%;">
+                                    <input class="form-select mb-2 {{ mandatory }} {{ calcolato }}"
+                                           id="{{ fieldid }}-{{ recordid }}-autocomplete"
+                                           style="width: calc(90% - 15px);"
+                                           value="{{ field.valuecode.0.value }}" onfocus="selectAllText(this); "
+                                           data-type="linkedmaster">
 
-    <button class="btn"
-      onclick="clearInput(this,'{{ fieldid }}-{{ recordid }}-autocomplete')"
-      style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">
-      <span class="material-symbols-outlined">clear</span>
-    </button>
-  </div>
+                                    <button class="btn"
+                                            onclick="clearInput(this,'{{ fieldid }}-{{ recordid }}-autocomplete')"
+                                            style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">
+                                        <span class="material-symbols-outlined">clear</span>
+                                    </button>
+                                </div>
 
-  <input type="hidden" class="hidden-input {{ mandatory }} {{ calcolato }}"
-    name="{{ field.fieldid }}" value="{{ field.recordid }}">
+                                <input type="hidden" class="hidden-input {{ mandatory }} {{ calcolato }}"
+                                       name="{{ field.fieldid }}" value="{{ field.recordid }}">
 
-  <button class="btn btn-light" onclick="newRecord('{{ field.tablelink }}', 'yes')" name="add"
-    style="width: auto">
-    <span class="material-symbols-outlined">add</span>
-  </button>
+                                <button class="btn btn-light" onclick="newRecord('{{ field.tablelink }}', 'yes')"
+                                        name="add"
+                                        style="width: auto">
+                                    <span class="material-symbols-outlined">add</span>
+                                </button>
 
-</div>
+                            </div>
 
                             <script>
                                 function clearInput(el, inputId) {
@@ -413,10 +425,22 @@
                                         url: "
 
 
+
+
+
+
+
+
                                     {% url 'get_badge' %}",
                                         data: {
                                             'recordid': ui.item.id,
                                             'tableid': '
+
+
+
+
+
+
 
 
                                     {{tableid}}',
