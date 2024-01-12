@@ -801,33 +801,14 @@ def get_block_record_fields(request):
         context['userid']=userid
     
     record=Record(tableid=tableid,recordid=recordid,userid=userid)    
-    fields=record.get_fields_by_context(contextfunction)
-    if fields==[]:
-        fields=record.get_fields_by_context('insert_fields')
-    post = {
-        'tableid': tableid,
-        'recordid': recordid,
-        'master_tableid': master_tableid,
-        'master_recordid': master_recordid,
-        'userid': userid
-    }
+    record.master_tableid=master_tableid
+    record.master_recordid=master_recordid
+    record.context=contextfunction
+    fields=record.get_fields()
+    
+    
 
-    response = requests.post(
-        f"{bixdata_server}bixdata/index.php/rest_controller/get_record_fields", data=post)
-
-    response_dict = json.loads(response.text)
-
-    if (ticketid):
-        response_dict['Dati']['_recordidticket']['valuecode'][0]['value'] = ticketid
-        response_dict['Dati']['_recordidticket']['valuecode'][0]['code'] = recordid_ticket
-
-    if tableid == 'timetracking':
-        start = response_dict['Dati']['start']['valuecode'][0]['value']
-
-        if start == '':
-            response_dict['Dati']['start']['value'] = datetime.datetime.now().strftime("%H:%M")
-
-    context['record_fields_labels'] = response_dict
+    context['record_fields_labels'] = fields
     context['contextfunction'] = contextfunction
     context['contextreference'] = contextreference
     context['tableid'] = tableid

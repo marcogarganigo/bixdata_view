@@ -37,6 +37,7 @@ class Table:
         self.db_helper=DatabaseHelper('default')
         self.tableid=tableid
         self.userid=userid
+        self.context=''
         self.helper=LogicHelper()
     
     def get_records(self,viewid='',searchTerm='', conditions_list=list(),fields=None,offset=0,limit=None):
@@ -91,8 +92,31 @@ class Table:
                 groups[groupby_field_value]['records'].append(groupby_field_value)
         return records
     
-    def get_fields(self,context):
-        fields=self.db_helper.sql_query(f"SELECT * FROM sys_user_field_order WHERE userid={self.userid} AND tableid='{self.tableid}' AND typepreference='{context}'")
-        return fields
+    
+    def get_fields(self):
+        #t=Table(self.tableid)
+        #fields=t.get_fields(context)
+        #fields_values=self.fields
+        #return list()
+        post = {
+            'tableid': self.tableid,
+            'userid': self.userid,
+            'context': self.context
+        }
+
+        response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_record_fields", data=post)
+
+        response_dict = json.loads(response.text)
+
+       # if (ticketid):
+        #    response_dict['Dati']['_recordidticket']['valuecode'][0]['value'] = ticketid
+         #   response_dict['Dati']['_recordidticket']['valuecode'][0]['code'] = recordid_ticket
+
+        #if tableid == 'timetracking':
+         #   start = response_dict['Dati']['start']['valuecode'][0]['value']
+
+          #  if start == '':
+           #     response_dict['Dati']['start']['value'] = datetime.datetime.now().strftime("%H:%M")
+        return response_dict
     
 

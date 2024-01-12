@@ -49,6 +49,7 @@ from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor
 from .businesslogic.bixdata_business_logic import *
 from .businesslogic.settings_business_logic import *
+from .businesslogic.record import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -97,15 +98,11 @@ def get_content_records(request):
     hv.context['layout_setting'] = get_user_setting(request, 'record_open_layout')
     hv.context['active_panel_setting'] = us.active_panel
 
-    #  search fields
-    search_fields = dict()
-    with connection.cursor() as cursor:
-        cursor.execute(
-            f"SELECT f.* FROM sys_user_table_search_field AS s join sys_field as f on s.tableid=f.tableid and s.fieldid=f.fieldid  WHERE s.tableid='{tableid}'"
-        )
-        filter_fields = dictfetchall(cursor)
+    t=Table(tableid=tableid,userid=1)
+    t.context='search_fields'
+    filter_fields=t.get_fields()
     context_records_filters=dict()
-    context_records_filters['filter_fields']=filter_fields
+    context_records_filters['filter_fields']=filter_fields['Dati']
     hv.context['block_search_fields'] = render_to_string('block/records/records_filters.html',context_records_filters, request)
     return hv.render_template('content/records.html')
 
