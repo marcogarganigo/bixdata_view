@@ -705,7 +705,8 @@ def request_block_record_card(request):
 # Questa funzione serve per creare la record card e ritorna la card come stringa
 def get_block_record_card(request, tableid, recordid, userid):
     context = dict()
-    context['block_record_badge'] = get_block_record_badge(tableid, recordid)
+    #context['block_record_badge'] = get_block_record_badge(tableid, recordid)
+    context['block_record_badge'] =''
     context['block_record_linked'] = get_block_record_linked(tableid, recordid)
     context['block_record_fields'] = ""
     context['recordid'] = recordid
