@@ -3,7 +3,7 @@
 
 
 
-    {% for filter_field in filter_fields %}
+    {% for filter_field_key,filter_field in filter_fields.items %}
         {{ filter_field.description }} <br/>
         {{ filter_field.fieldtypeid }}<br/>
 
