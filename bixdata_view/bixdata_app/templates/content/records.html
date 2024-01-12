@@ -150,7 +150,9 @@
 
     function refresh() {
         var serialized_data = [];
-
+        console.info('referesh:');
+        console.info($('#records_filters_form').serializeArray())
+        console.info('refresh2')
         serialized_data.push({
             name: 'tableid',
             value: '{{tableid}}'
@@ -166,7 +168,7 @@
         });
         serialized_data.push({
             name: 'filters',
-            value: $('#records_filters').serializeArray()
+            value: $('#records_filters_form').serializeArray()
         });
         serialized_data.push({
             name: 'currentpage',
