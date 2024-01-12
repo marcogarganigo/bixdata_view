@@ -1,5 +1,203 @@
-<div id="#records_filters" style="height: 100%;width: 100%;">
+{% load define_action %}
+
+<!--JQuery UI-->
+<script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
+
+
+<style>
+    .select2-container--default .select2-selection--single {
+        line-height: 28px;
+        font-size: 15px;
+        border: 1px solid #dee2e6 !important;
+    }
+
+
+    .select2-selection__rendered {
+        color: #6c757d !important;
+    }
+
+    .select2-container {
+        width: 50% !important;
+    }
+
+    .select2-selection__rendered {
+        line-height: 37px !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 41px !important;
+    }
+
+    .select2-selection__arrow {
+        height: 39px !important;
+    }
+
+
+    .select2-selection__choice {
+        background-color: whitesmoke !important;
+        color: black !important;
+    }
+
+
+    .select2-container--open {
+        z-index: 9999999;
+    }
+
+    #saved-alert-{{ recordid }} {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 20%;
+        min-width: 200px;
+        max-width: 400px;
+        height: auto;
+        z-index: 9999;
+    }
+
+
+    ul.ui-autocomplete {
+        z-index: 99999;
+    }
+</style>
+
+
+<script>
+    function toggleCollapse(el) {
+        $(el).next('.div-collapse').slideToggle(200);
+    }
+
+    function serializeForm(formElements) {
+        var formData = [];
+        //var formElements = document.getElementById("myForm").elements;
+        for (var i = 0; i < formElements.length; i++) {
+            var element = formElements[i];
+            if (element.name) {
+                if (element.type === "select-multiple") {
+                    var selectedOptions = [];
+                    for (var j = 0; j < element.options.length; j++) {
+                        if (element.options[j].selected) {
+                            selectedOptions.push(element.options[j].value);
+                        }
+                    }
+                    formData.push({name: element.name, value: selectedOptions});
+                } else if (element.type === "checkbox") {
+                    if (element.checked) {
+                        formData.push({name: element.name, value: element.value});
+                    }
+                } else {
+                    formData.push({name: element.name, value: element.value});
+                }
+            }
+        }
+        return formData;
+    }
+
+
+    function selectAllText(input) {
+        input.setSelectionRange(0, input.value.length);
+    }
+
+
+    $('#fields_container_{{ tableid }}_{{ recordid }}').find('.js-example-basic-single').each(function () {
+        $(this).select2({
+            dropdownParent: $(this).parent()
+        }).addClass('select2-initialized');
+    });
+
+
+    $(document).on('select2:open', function (e) {
+        window.setTimeout(function () {
+            document.querySelector('input.select2-search__field').focus();
+        }, 0);
+    })
+
+
+    function set_checkbox_value(el) {
+        if (el.checked) {
+            $(el).next('input').val('Si');
+        } else {
+            $(el).next('input').val('No');
+        }
+    }
+
+    $(document).ready(function () {
+        tableid = "{{tableid}}"
+        //$('input.datepicker').Zebra_DatePicker();
+        $('.field').change(function () {
+            if (tableid == "dealline") {
+                update_dealline(this)
+            }
+        })
+
+        $('.calcolato').prop("readonly", true);
+        $('.calcolato').css({"background-color": "#f5f5f5"})
+
+    });
+
+
+    function update_dealline(el) {
+        container = $(el).closest('.container ');
+        field_type = $(el).data('type');
+
+        quantity = $(container).find('#field-quantity').val();
+        if (quantity == "") {
+            quantity = 1
+            $(container).find('#field-quantity').val(1);
+        }
+
+        if (field_type == "linkedmaster") {
+
+            recordid = $(el).closest('.field').find('.hidden-input').val()
+
+            var serialized_data = [];
+            serialized_data.push({name: 'tableid', value: 'product'});
+            serialized_data.push({name: 'recordid', value: recordid});
+            $.ajax({
+                type: "POST",
+                url: "{% url 'get_record' %}",
+                data: serialized_data,
+                success: function (response) {
+                    console.info(response)
+                    var product_fields = response
+                    $(container).find('#field-unitprice').val(product_fields.unitprice);
+                    $(container).find('#field-unitexpectedcost').val(product_fields.unitcost);
+                    $(container).find('#field-name').val(product_fields.name);
+                    unitprice = $(container).find('#field-unitprice').val();
+                    unitexpectedcost = $(container).find('#field-unitexpectedcost').val();
+                    lineprice = unitprice * quantity
+                    lineexpectedcost = unitexpectedcost * quantity
+                    $(container).find('#field-price').val(lineprice);
+                    $(container).find('#field-expectedcost').val(lineexpectedcost);
+                    $(container).find('#field-expectedmargin').val(lineprice - lineexpectedcost);
+                },
+                error: function (response) {
+                    console.info(response)
+                }
+            });
+
+        }
+
+        unitprice = $(container).find('#field-unitprice').val();
+        unitexpectedcost = $(container).find('#field-unitexpectedcost').val();
+        lineprice = unitprice * quantity
+        lineexpectedcost = unitexpectedcost * quantity
+        lineexpectedmargin = lineprice - lineexpectedcost
+        $(container).find('#field-price').val(lineprice);
+        $(container).find('#field-expectedcost').val(lineexpectedcost);
+        $(container).find('#field-expectedmargin').val(lineexpectedmargin);
+
+    }
+
+
+</script>
+
+
+
+
+<div class="container fields_container" style="height: 100%" id="fields_container_{{ tableid }}_{{ recordid }}">
     Records filters <br/>
+
 
 
 
