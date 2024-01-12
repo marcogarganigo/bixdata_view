@@ -310,7 +310,7 @@
                             <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                                 data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
                            
-                         <img src="{% static 'images/lookup/' %}{{ column_value.code}}.png?v={{ date }}" width="32px" height="32px" class="rounded-circle" onerror="handleImageError(this)">
+                         <img src="{% static 'images/lookup/' %}{{ column_value.code}}.png?v={{ date }}" width="40px" height="40px" class="" onerror="handleImageError(this)">
                             {{ column_value.value }}
                             </td>
 
