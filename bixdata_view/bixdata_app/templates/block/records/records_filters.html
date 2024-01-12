@@ -193,8 +193,9 @@
 </script>
 
 
-<div class="container filters_container" style="height: 100%"
-     id="filters_container_{{ tableid }}_{{ recordid }}">        {{ filter_field.description }} <br/>
+<div class="container filters_container" style="height: 100%" id="filters_container_{{ tableid }}_{{ recordid }}"> 
+    <form id="records_filters_form">  
+       {{ filter_field.description }} <br/>
     <div class="row">
         {% for filter_field_key,filter_field in filter_fields.items %}
             <div class="col field">
