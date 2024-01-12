@@ -1034,17 +1034,21 @@
                     $(document).on('show.bs.modal', '.modal', function (event) {
                         var modal = $(this);
                         var zIndex = 1040 + modalCounter;
-                        $(this).css('z-index', zIndex);
+                        modal.css('z-index', zIndex);
                         setTimeout(function () {
+                            var modalId = modal.attr('id');
+                            $('.modal-backdrop:last').attr('id', modalId + 'modal-backdrop');
                             $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-                            modal.attr('id', $(this).attr('id') + 'modal-backdrop');
+
                         }, 0);
 
                         modalCounter++;
                     });
 
                     $(document).on('hide.bs.modal', '.modal', function (event) {
-                        $('.modal-backdrop.modal-stack').removeClass('modal-stack');
+                        $('.modal-backdrop.modal-stack:last').removeClass('modal-stack');
+                        var modalId = $(this).attr('id');
+                        $('#' + modalId + 'modal-backdrop').remove();
                     });
                 });
 
