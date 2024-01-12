@@ -2188,9 +2188,9 @@ def print_word(request):
         row = table.rows[i]
         row.cells[0].text = str(dealline['name'])
         row.cells[0].paragraphs[0].runs[0].font.bold = True
-        row.cells[1].text = str(dealline['quantity'])
-        row.cells[2].text = str(dealline['unitprice'])
-        row.cells[3].text = str(dealline['price']) + ' CHF'
+        row.cells[1].text = "{:.2f}".format(dealline['quantity'])
+        row.cells[2].text = "{:.2f} CHF".format(dealline['unitprice'])
+        row.cells[3].text = "{:.2f} CHF".format(dealline['price'])
         row.cells[3].paragraphs[0].runs[0].font.bold = True
 
 
