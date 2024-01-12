@@ -35,6 +35,9 @@ class Record:
         self.tableid=tableid
         self.recordid=recordid
         self.userid=userid
+        self.master_tableid=''
+        self.master_recordid=''
+        self.context='insert_fields'
         if recordid:
             self.fields=self.db_helper.sql_query_row(f"SELECT * FROM user_{self.tableid} WHERE recordid_='{self.recordid}'")
         else:
@@ -75,11 +78,35 @@ class Record:
         records=self.db_helper.sql_query(f"SELECT * FROM user_{linkedtable} WHERE recordid{self.tableid}_='{self.recordid}'")
         return records   
     
-    def get_fields_by_context(self,context):
-        t=Table(self.tableid)
-        fields=t.get_fields(context)
-        fields_values=self.fields
-        return list()
+    def get_fields(self):
+        #t=Table(self.tableid)
+        #fields=t.get_fields(context)
+        #fields_values=self.fields
+        #return list()
+        post = {
+            'tableid': self.tableid,
+            'recordid': self.recordid,
+            'userid': self.userid,
+            'master_tableid': self.master_tableid,
+            'master_recordid': self.master_recordid,
+            'context': self.context
+        }
+
+        response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_record_fields", data=post)
+
+        response_dict = json.loads(response.text)
+
+       # if (ticketid):
+        #    response_dict['Dati']['_recordidticket']['valuecode'][0]['value'] = ticketid
+         #   response_dict['Dati']['_recordidticket']['valuecode'][0]['code'] = recordid_ticket
+
+        #if tableid == 'timetracking':
+         #   start = response_dict['Dati']['start']['valuecode'][0]['value']
+
+          #  if start == '':
+           #     response_dict['Dati']['start']['value'] = datetime.datetime.now().strftime("%H:%M")
+        return response_dict
+    
         
         
     
