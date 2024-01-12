@@ -103,16 +103,10 @@ def get_content_records(request):
         cursor.execute(
             f"SELECT f.* FROM sys_user_table_search_field AS s join sys_field as f on s.tableid=f.tableid and s.fieldid=f.fieldid  WHERE s.tableid='{tableid}'"
         )
-        result = dictfetchall(cursor)
-        if result:
-            search_fields = result
-    for search_field_key, search_field in enumerate(search_fields):
-        context_search_field = dict()
-        context_search_field['search_field'] = search_field
-        search_fields[search_field_key]['component'] = render_to_string('components/search_field.html',
-                                                                        context_search_field, request)
-
-    hv.context['search_fields'] = search_fields
+        filter_fields = dictfetchall(cursor)
+    context_records_filters=dict()
+    context_records_filters['filter_fields']=filter_fields
+    hv.context['block_search_fields'] = render_to_string('block/records/records_filters.html',context_records_filters, request)
     return hv.render_template('content/records.html')
 
 

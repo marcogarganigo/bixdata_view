@@ -497,9 +497,7 @@
                                 <p class="card-text">
                                 <div class="container text-center">
                                     <div class="row">
-                                        {% for search_field in  search_fields %}
-                                            {{ search_field.component }}
-                                        {% endfor %}
+                                        {{block_search_fields}}
                                         <div class="col">
                                             <button type="button" class="btn btn-outline-secondary"
                                                     onclick="$('#hiddenCardAF').toggle(100);">Filtri Avanzati
