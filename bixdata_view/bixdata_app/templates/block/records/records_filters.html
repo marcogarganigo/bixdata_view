@@ -193,7 +193,8 @@
 </script>
 
 
-<div class="container filters_container" style="height: 100%" id="filters_container_{{ tableid }}_{{ recordid }}">        {{ filter_field.description }} <br/>
+<div class="container filters_container" style="height: 100%"
+     id="filters_container_{{ tableid }}_{{ recordid }}">        {{ filter_field.description }} <br/>
     <div class="row">
         {% for filter_field_key,filter_field in filter_fields.items %}
             <div class="col field">
@@ -256,6 +257,15 @@
                                            value="{{ filter_field.value }}">
                                 {% endif %}
                             {% endif %}
+                            <i class="mdi mdi-dots-vertical btn" id="parolaDropdown" data-bs-toggle="dropdown"
+                               aria-expanded="false"></i>
+                            <div class="dropdown">
+                                <ul class="dropdown-menu" aria-labelledby="parolaDropdown">
+                                    <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
+                                    <li><a class="dropdown-item" href="#">Nessun valore</a></li>
+                                    <li><a class="dropdown-item" href="#">Diverso da</a></li>
+                                </ul>
+                            </div>
                         {% endif %}
 
                         {% if filter_field.fieldtypeid == 'Data' %}
@@ -266,6 +276,20 @@
                             <input id="{{ fieldid }}-2" name="{{ fieldname }}-2"
                                    class="form-control mb-2 datepicker {{ mandatory }} {{ calcolato }}" type="date"
                                    value="{{ filter_field.valuecode.0.code }}" oninput="validateInput(this)">
+
+                            <i class="mdi mdi-dots-vertical btn" id="dataDropdown" data-bs-toggle="dropdown"
+                               aria-expanded="false"></i>
+                            <div class="dropdown">
+                                <ul class="dropdown-menu" aria-labelledby="dataDropdown">
+                                    <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
+                                    <li><a class="dropdown-item" href="#">Nessun valore</a></li>
+                                    <li><a class="dropdown-item" href="#">Diverso da</a></li>
+                                    <li><a class="dropdown-item" href="#">Passato</a></li>
+                                    <li><a class="dropdown-item" href="#">Futuro</a></li>
+                                    <li><a class="dropdown-item" href="#">Questa settimana</a></li>
+                                    <li><a class="dropdown-item" href="#">Questo mese</a></li>
+                                </ul>
+                            </div>
                             <script>
                                 function validateInput(el) {
                                     var inputValue = el.value;
@@ -286,6 +310,15 @@
                             <input id="{{ fieldid }}" name="{{ fieldname }}"
                                    class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="number"
                                    value="{{ filter_field.value }}">
+                            <i class="mdi mdi-dots-vertical btn" id="numeroDropdown" data-bs-toggle="dropdown"
+                               aria-expanded="false"></i>
+                            <div class="dropdown">
+                                <ul class="dropdown-menu" aria-labelledby="numeroDropdown">
+                                    <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
+                                    <li><a class="dropdown-item" href="#">Nessun valore</a></li>
+                                    <li><a class="dropdown-item" href="#">Diverso da</a></li>
+                                </ul>
+                            </div>
                         {% endif %}
                         {% if filter_field.fieldtypeid == 'Memo' %}
                             {% if fieldname == 'description' %}
@@ -304,24 +337,41 @@
                                    value="{{ filter_field.value }}">
                         {% endif %}
                         {% if filter_field.fieldtypeid == 'Utente' %}
-                            <div class="input-group mb-2">
-                                <select id="{{ fieldid }}" name="{{ fieldname }}"
-                                        class="js-example-basic-single {{ mandatory }} {{ calcolato }}">
-                                    <option id="" value=""></option>
-                                    {% for items in filter_field.lookupitems %}
-                                        {% if items.id and items.firstname and items.lastname %}
-                                            {% if items.id == filter_field.valuecode.0.code %}
-                                                <option selected id="{{ items.id }}"
-                                                        value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
-                                            {% else %}
-                                                <option id="{{ items.id }}"
-                                                        value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="input-group mb-2">
+                                        <select id="{{ fieldid }}" name="{{ fieldname }}"
+                                                class="js-example-basic-single {{ mandatory }} {{ calcolato }}">
+                                            <option id="" value=""></option>
+                                            {% for items in filter_field.lookupitems %}
+                                                {% if items.id and items.firstname and items.lastname %}
+                                                    {% if items.id == filter_field.valuecode.0.code %}
+                                                        <option selected id="{{ items.id }}"
+                                                                value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                                                    {% else %}
+                                                        <option id="{{ items.id }}"
+                                                                value="{{ items.id }}">{{ items.firstname }} {{ items.lastname }}</option>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <i class="mdi mdi-dots-vertical btn" id="utenteDropdown" data-bs-toggle="dropdown"
+                                       aria-expanded="false"></i>
+                                    <div class="dropdown">
+                                        <ul class="dropdown-menu" aria-labelledby="utenteDropdown">
+                                            <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
+                                            <li><a class="dropdown-item" href="#">Nessun valore</a></li>
+                                            <li><a class="dropdown-item" href="#">Diverso da</a></li>
+                                            <li><a class="dropdown-item" href="#">Utente corrente</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         {% endif %}
+
 
                         {% if filter_field.fieldtypeid == 'linkedmaster' %}
                             <div class="autocomplete-input-container" style="display: flex; align-items: center;">
@@ -408,10 +458,22 @@
 
 
 
+
+
+
+
+
+
                                             {% url 'get_badge' %}",
                                         data: {
                                             'recordid': ui.item.id,
                                             'tableid': '
+
+
+
+
+
+
 
 
 
