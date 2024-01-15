@@ -117,6 +117,7 @@ def get_records_table_render(request):
     searchTerm = request.POST.get('searchTerm')
     viewid = request.POST.get('viewid')
     filters=request.POST.get('filters')
+    filters_dict=json.loads(filters)
     order_field = request.POST.get('order_field')
     order = request.POST.get('order')
     currentpage = request.POST.get('currentpage')
