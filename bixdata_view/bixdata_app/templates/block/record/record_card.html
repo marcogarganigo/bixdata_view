@@ -432,6 +432,15 @@
                         onclick="copyFunc(this,'{{ tableid }}', '{{ recordid }}')"><i
                         class="mdi mdi-content-copy"></i></button>
 
+            {% if layout_setting == 'rightcard' %}
+                    <button type="button" class="open-popup btn btn  button-recordcard"
+                            onclick="openModalFromCard()">
+                        <span class="material-symbols-outlined">
+                            open_in_full
+                        </span>
+                    </button>
+                {% endif %}
+
                 <div class="dropdown" style="margin-top: -2.6%">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -500,33 +509,33 @@
 
                     <script>
 
-                    function dealCloseWon() {
-                        $.ajax({
-                            type: "POST",
-                            url: "{% url 'deal_close_won' %}",
-                            success: function (response) {
-                                alert('dealclosewon')
-                            },
-                            error: function (response) {
+                        function dealCloseWon() {
+                            $.ajax({
+                                type: "POST",
+                                url: "{% url 'deal_close_won' %}",
+                                success: function (response) {
+                                    alert('dealclosewon')
+                                },
+                                error: function (response) {
 
-                            }
+                                }
 
-                        })
-                    }
+                            })
+                        }
 
-                    function dealCloseLost() {
-                        $.ajax({
-                            type: "POST",
-                            url: "{% url 'deal_close_lost' %}",
-                            success: function (response) {
-                                alert('dealcloselost')
-                            },
-                            error: function (response) {
+                        function dealCloseLost() {
+                            $.ajax({
+                                type: "POST",
+                                url: "{% url 'deal_close_lost' %}",
+                                success: function (response) {
+                                    alert('dealcloselost')
+                                },
+                                error: function (response) {
 
-                            }
+                                }
 
-                        })
-                    }
+                            })
+                        }
 
                         function selectFile() {
                             // Trigger click on the file input element
@@ -579,13 +588,6 @@
                         $('.open-popup').css('display', 'none');
                     }
                 </script>
-
-                {% if layout_setting == 'rightcard' %}
-                    <button type="button" class="open-popup btn btn-secondary button-recordcard"
-                            onclick="openModalFromCard()">
-                        Apri PopUp
-                    </button>
-                {% endif %}
 
                 {% if tableid == 'task' %}
                     <button style="display: none" id="close-task-button-{{ recordid }}" class="btn btn-success"
