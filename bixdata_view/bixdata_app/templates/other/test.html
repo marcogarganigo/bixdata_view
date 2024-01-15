@@ -1,35 +1,47 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-        <!--JQuery-->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!--JQuery-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap select -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-</head>
-<body>
-<select class="js-example-basic-single" name="state">
-  <option value="AL">Alabama</option>
-  <option value="WY">Wyoming</option>
-</select>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
 
-    <script>
-$('.js-example-basic-single').select2({});
+<script>
+    function initSelect1() {
+        $('#select1').find('.js-example-basic-single').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            }).addClass('select2-initialized');
+        });
 
-$(document).on('select2:open', function(e) {
-    window.setTimeout(function () {
-        document.querySelector('input.select2-search__field').focus();
-    }, 0);
-});</script>
+        $(document).on('select2:open', function (e) {
+            window.setTimeout(function () {
+                document.querySelector('input.select2-search__field').focus();
+            }, 0);
+        });
+    }
 
-</body>
-</html>
+    function initSelect2() {
+        $('#select2').find('.js-example-basic-single').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            }).addClass('select2-initialized');
+        });
 
+        $(document).on('select2:open', function (e) {
+            window.setTimeout(function () {
+                document.querySelector('input.select2-search__field').focus();
+            }, 0);
+        });
+    }
+</script>
 
+<div id="select1" style="width: 50%">
+    <select class="js-example-basic-single" multiple="multiple"></select>
+</div>
 
+<div id="select2" style="width: 50%">
+    <select class="js-example-basic-single" multiple="multiple"></select>
+</div>
 
-
+<button id="btn" onclick="initSelect1()">Click</button>
+<button id="btn2" onclick="initSelect2()">Click2</button>
