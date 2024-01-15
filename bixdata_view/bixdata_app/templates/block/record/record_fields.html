@@ -2,7 +2,8 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-u    filters_dict=json.loads(filters)i.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-u    filters_dict=json.loads(filters)i.min.css"
+      rel="stylesheet">
 
 <style>
     .select2-container--default .select2-selection--single {
@@ -228,19 +229,14 @@
             {% with fieldid='field-'|add:field.fieldid %}
                 <div class="row">
                     <div class="col-lg-3" style="text-align: left" title="{{ field.fieldid }}">
-                        <p class="{{ tooltip }}">{{ field.description }}</p>
+                        <p class="{{ tooltip }}">{{ field.description }} {{ field.fieldtypeid  }} {{ field.fieldtypewebid  }}</p>
                     </div>
                     <div class="col field">
                         {% if field.fieldtypeid == 'Parola' %}
                             {% if field.fieldtypewebid == 'checkbox' %}
-                                <input class="form-check-input mt-0" type="checkbox" value=""
-                                       id="checkbox-{{ recordid }}"
-                                       aria-label="Checkbox for following text input"
-                                       onchange="set_checkbox_value(this)">
-                                <input id="input-{{ recordid }}" type="hidden" name="{{ fieldname }}"
-                                       value="{{ field.value }}">
+                                <input class="form-check-input mt-0" type="checkbox" value="" id="checkbox-{{ recordid }}" aria-label="Checkbox for following text input" onchange="set_checkbox_value(this)">
+                                <input id="input-{{ recordid }}" type="hidden" name="{{ fieldname }}" value="{{ field.value }}">
                                 <script>
-
                                     change_checkbox_view()
 
                                     function change_checkbox_view() {
@@ -250,42 +246,36 @@
                                             $('#close-task-button-{{ recordid }}').css('display', 'block')
                                         }
                                     }
-
                                 </script>
 
-                            {% else %}
-                                {% if field.lookuptableid %}
-                                    {% for valuecode in field.valuecode %}
-                                        <div class="input-group mb-2">
-                                            {% if field.fieldtypewebid == 'multiselect' %}
-                                                <select id="{{ fieldid }}" name="{{ fieldname }}"
-                                                        class="js-example-basic-single {{ mandatory }} {{ calcolato }}"
-                                                        multiple="multiple">
-                                            {% else %}
-                                                <select id="{{ fieldid }}" name="{{ fieldname }}"
-                                                        class="js-example-basic-single {{ mandatory }} {{ calcolato }}">
-                                            {% endif %}
-                                            {% if field.lookupitems %}
-                                                <option value=""></option>
-                                                {% for item in field.lookupitems %}
-                                                    {% if item.itemcode == field.valuecode.0.code %}
-                                                        <option selected
-                                                                value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                                                    {% else %}
-                                                        <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% endif %}
+                            {% elif field.fieldtypewebid == 'file' %}
+                                <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="file" value="{{ field.valuecode.0.code }}">
+                            {% elif field.lookuptableid %}
+                                {% for valuecode in field.valuecode %}
+                                    <div class="input-group mb-2">
+                                        {% if field.fieldtypewebid == 'multiselect' %}
+                                            <select id="{{ fieldid }}" name="{{ fieldname }}" class="js-example-basic-single {{ mandatory }} {{ calcolato }}" multiple="multiple">
+                                        {% else %}
+                                            <select id="{{ fieldid }}" name="{{ fieldname }}" class="js-example-basic-single {{ mandatory }} {{ calcolato }}">
+                                        {% endif %}
+                                        {% if field.lookupitems %}
+                                            <option value=""></option>
+                                            {% for item in field.lookupitems %}
+                                                {% if item.itemcode == field.valuecode.0.code %}
+                                                    <option selected value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                                                {% else %}
+                                                    <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
                                             </select>
-                                        </div>
-                                    {% endfor %}
-                                {% else %}
-                                    <input id="{{ fieldid }}" name="{{ fieldname }}"
-                                           class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="text"
-                                           value="{{ field.value }}">
-                                {% endif %}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <input id="{{ fieldid }}" name="{{ fieldname }}" class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="text" value="{{ field.value }}">
                             {% endif %}
                         {% endif %}
+
                         {% if field.fieldtypeid == 'Data' %}
                             <input id="{{ fieldid }}" name="{{ fieldname }}"
                                    class="form-control mb-2 datepicker {{ mandatory }} {{ calcolato }}" type="date"
@@ -302,14 +292,17 @@
                                 }
                             </script>
                         {% endif %}
+
                         {% if field.fieldtypeid == 'Seriale' %}
                             <p>{{ field.value }}</p>
                         {% endif %}
+
                         {% if field.fieldtypeid == 'Numero' %}
                             <input id="{{ fieldid }}" name="{{ fieldname }}"
                                    class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="number"
                                    value="{{ field.value }}">
                         {% endif %}
+
                         {% if field.fieldtypeid == 'Memo' %}
                             {% if fieldname == 'description' %}
                                 <textarea style="min-height: 250px"
@@ -430,10 +423,16 @@
 
 
 
+
+
+
                                     {% url 'get_badge' %}",
                                         data: {
                                             'recordid': ui.item.id,
                                             'tableid': '
+
+
+
 
 
 
