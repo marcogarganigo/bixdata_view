@@ -2,8 +2,63 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-u    filters_dict=json.loads(filters)i.min.css" rel="stylesheet">
 
+<style>
+    .select2-container--default .select2-selection--single {
+        line-height: 28px;
+        font-size: 15px;
+        border: 1px solid #dee2e6 !important;
+    }
+
+
+    .select2-selection__rendered {
+        color: #6c757d !important;
+    }
+
+    .select2-container {
+        width: 50% !important;
+    }
+
+    .select2-selection__rendered {
+        line-height: 37px !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 41px !important;
+    }
+
+    .select2-selection__arrow {
+        height: 39px !important;
+    }
+
+
+    .select2-selection__choice {
+        background-color: whitesmoke !important;
+        color: black !important;
+    }
+
+
+    .select2-container--open {
+        z-index: 9999999;
+    }
+
+    #saved-alert-{{ recordid }} {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 20%;
+        min-width: 200px;
+        max-width: 400px;
+        height: auto;
+        z-index: 9999;
+    }
+
+
+    ul.ui-autocomplete {
+        z-index: 99999;
+    }
+</style>
 
 <script>
     function toggleCollapse(el) {
