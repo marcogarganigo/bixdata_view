@@ -168,7 +168,7 @@
         });
         serialized_data.push({
             name: 'filters',
-            value: $('#records_filters_form').serializeArray()
+            value: convertFormToJSON(serializeForm($('#records_filters_form').find("select,textarea,input")))
         });
         serialized_data.push({
             name: 'currentpage',
