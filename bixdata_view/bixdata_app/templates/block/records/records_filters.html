@@ -182,7 +182,7 @@
                                     {% if filter_field.lookuptableid %}
                                         {% for valuecode in filter_field.valuecode %}
                                             <div class="input-group mb-2">
-                                                <select id="{{ fieldid }}" name="{{ fieldname }}"
+                                                <select id="{{ fieldid }}-filters" name="{{ fieldname }}"
                                                         class="select2-input {{ mandatory }} {{ calcolato }}"
                                                         multiple="multiple">
                                                     {% if filter_field.lookupitems %}
@@ -346,7 +346,7 @@
                                 <div class="row">
                                     <div class="col-md-10">
                                         <div class="input-group mb-2">
-                                            <select id="{{ fieldid }}" name="{{ fieldname }}"
+                                            <select id="{{ fieldid }}-filters" name="{{ fieldname }}"
                                                     class="select2-input {{ mandatory }} {{ calcolato }}">
                                                 <option id="" value=""></option>
                                                 {% for items in filter_field.lookupitems %}
