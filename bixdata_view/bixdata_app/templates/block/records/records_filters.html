@@ -64,7 +64,7 @@
 
     });
 
-    $('#filters_container_{{ tableid }}_{{ recordid }}').find('.js-example-basic-single').each(function () {
+    $('#filters_container_{{ tableid }}_{{ recordid }}').find('.select2-input').each(function () {
         $(this).select2({
             dropdownParent: $(this).parent()
         }).addClass('select2-initialized');
@@ -183,7 +183,7 @@
                                         {% for valuecode in filter_field.valuecode %}
                                             <div class="input-group mb-2">
                                                 <select id="{{ fieldid }}" name="{{ fieldname }}"
-                                                        class="js-example-basic-single {{ mandatory }} {{ calcolato }}"
+                                                        class="select2-input {{ mandatory }} {{ calcolato }}"
                                                         multiple="multiple">
                                                     {% if filter_field.lookupitems %}
                                                         <option value=""></option>
@@ -347,7 +347,7 @@
                                     <div class="col-md-10">
                                         <div class="input-group mb-2">
                                             <select id="{{ fieldid }}" name="{{ fieldname }}"
-                                                    class="js-example-basic-single {{ mandatory }} {{ calcolato }}">
+                                                    class="select2-input {{ mandatory }} {{ calcolato }}">
                                                 <option id="" value=""></option>
                                                 {% for items in filter_field.lookupitems %}
                                                     {% if items.id and items.firstname and items.lastname %}

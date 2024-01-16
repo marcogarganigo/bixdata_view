@@ -7,7 +7,7 @@
 
 <script>
     function initSelect1() {
-        $('#select1').find('.js-example-basic-single').each(function () {
+        $('#select1').find('.select2-input').each(function () {
             $(this).select2({
                 dropdownParent: $(this).parent()
             }).addClass('select2-initialized');
@@ -21,7 +21,7 @@
     }
 
     function initSelect2() {
-        $('#select2').find('.js-example-basic-single').each(function () {
+        $('#select2').find('.select2-input').each(function () {
             $(this).select2({
                 dropdownParent: $(this).parent()
             }).addClass('select2-initialized');
@@ -36,11 +36,11 @@
 </script>
 
 <div id="select1" style="width: 50%">
-    <select class="js-example-basic-single" multiple="multiple"></select>
+    <select class="select2-input" multiple="multiple"></select>
 </div>
 
 <div id="select2" style="width: 50%">
-    <select class="js-example-basic-single" multiple="multiple"></select>
+    <select class="select2-input" multiple="multiple"></select>
 </div>
 
 <button id="btn" onclick="initSelect1()">Click</button>
