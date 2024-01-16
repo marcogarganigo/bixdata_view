@@ -49,7 +49,6 @@ urlpatterns = [
     path('block_records_calendar/', alpha.get_block_records_calendar, name='block_records_calendar'),
     path('block_records_chart/', alpha.get_block_records_chart, name='block_records_chart'),
     path('block_record/', alpha.get_block_record, name='block_record'),
-    path('block_reload/', alpha.get_block_reload, name='block_reload'),
     path('block_record_card/', alpha.request_block_record_card, name='block_record_card'),
     path('temp/', alpha.get_temp, name='temp'),
     path('dashboard/', alpha.get_render_content_dashboard, name='dashboard'),

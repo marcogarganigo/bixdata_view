@@ -32,7 +32,7 @@ from .businesslogic.office_calendar import OfficeCalendar
 from ..forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
-from django.db import connection
+from django.db import connection,transaction
 from django.http import JsonResponse
 from django.contrib.auth.models import Group, Permission, User, Group
 from django_user_agents.utils import get_user_agent
@@ -332,10 +332,7 @@ def get_block_records_chart(request):
     return HttpResponse(records_table)
 
 
-# Questa funzione
-@login_required(login_url='/login/')
-def get_block_reload(request):
-    return render(request)
+
 
 
 # Questa funzione builda i dashboard blocks e li mette insieme nella pagina dashboard che ritorna
@@ -548,6 +545,15 @@ def get_record_card_delete(request):
             cursor.execute(
                 query
             )
+        deleted_record=Record(tableid=tableid,recordid=recordid)
+        if tableid == 'dealline':
+            recordid_deal=deleted_record.fields['recordiddeal_'];
+            post_data = {
+                'tableid': 'deal',
+                'recordid': recordid_deal,
+                'fields': dict()
+            }
+            requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
     return JsonResponse({'success': True})
 
 
@@ -935,8 +941,7 @@ def save_record_fields(request):
         'fields': fields
     }
 
-    response = requests.post(
-        f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
+    response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
     response_dict = json.loads(response.text)
 
     if contextfunction == 'edit':

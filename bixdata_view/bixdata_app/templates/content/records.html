@@ -324,23 +324,7 @@
     }
 
 
-    function reloadFunc() {
-        getContentRecords('{{ tableid }}')
-        var serialized_data = [];
-        serialized_data.push({
-            name: 'table',
-            value: ''
-        });
-        $.ajax({
-            type: "POST",
-            url: "{% url 'block_reload' %}",
-            data: serialized_data,
-            success: function (response) {
-            },
-            error: function () {
-            }
-        })
-    }
+
 
 
     function closeCard(vrbl) {
