@@ -410,8 +410,7 @@
 
 </script>
 
-<div id="block_record_card-{{ recordid }}" class="block_record_card" data-recordid="{{ recordid }}"
-     data-tableid="{{ tableid }}" style="height: 100%;width: 100%;">
+<div id="block_record_card-{{ recordid }}" class="block_record_card" data-recordid="{{ recordid }}" data-tableid="{{ tableid }}" data-master_tableid="{{ master_tableid }}" data-master_recordid="{{ master_recordid}}" style="height: 100%;width: 100%;">
     <div id="RecordCard" class="card RecordCard" style=" height: 100%; overflow: hidden">
         <div class="card-body" style="max-height: 100%">
             <p class="card-text">
@@ -621,7 +620,7 @@
                     <button class="nav-link active" id="fields-tab-{{ recordid }}" data-bs-toggle="tab"
                             data-bs-target="#fields-tab-pane-{{ recordid }}" type="button" role="tab"
                             aria-controls="fields-tab-pane-{{ recordid }}"
-                            aria-selected="true" onclick="load_fields(this, '{{ tableid }}', '{{ recordid }}')">
+                            aria-selected="true" onclick="load_fields(this, '{{ tableid }}', '{{ recordid }}', '{{ master_tableid }}', '{{ master_recordid }}')">
 
                         <p class="tabs-title">Campi</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"

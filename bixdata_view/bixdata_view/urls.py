@@ -25,7 +25,7 @@ from bixdata_app.views import script_view
 from bixdata_app.views import scheduler
 
 urlpatterns = [
-    path('', bixdata_view.index, name='index'),
+    path('', bixdata_view.index, name='base'),
     path('index/', bixdata_view.index, name='index'),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),

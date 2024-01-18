@@ -704,18 +704,22 @@ def get_block_record(request):
 def request_block_record_card(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
+    master_tableid = request.POST.get('master_tableid')
+    master_recordid = request.POST.get('master_recordid')
     userid = request.user.id
-    return HttpResponse(get_block_record_card(request, tableid, recordid, userid))
+    return HttpResponse(get_block_record_card(request, tableid, recordid, userid, master_tableid, master_recordid))
 
 
 # Questa funzione serve per creare la record card e ritorna la card come stringa
-def get_block_record_card(request, tableid, recordid, userid):
+def get_block_record_card(request, tableid, recordid, userid, master_tableid='', master_recordid=''):
     context = dict()
     context['block_record_badge'] = get_block_record_badge(tableid, recordid)
     context['block_record_linked'] = get_block_record_linked(tableid, recordid)
     context['block_record_fields'] = ""
     context['recordid'] = recordid
     context['tableid'] = tableid
+    context['master_tableid']=master_tableid
+    context['master_recordid']=master_recordid
     context['layout_setting'] = get_user_setting(request, 'record_open_layout')
     if tableid == 'ticket':
         with connection.cursor() as cursor:

@@ -14,44 +14,15 @@
         $(el).next('.div-collapse').slideToggle(200);
     }
 
-    function load_linked(linkedtableid, tableid, masterrecordid, mastertableid, order, order_field) {
-        if (order == 'None') {
-            order = ''
-        }
-        if (order_field == 'None') {
-            order_field = ''
-        }
-
-        var masterrecordid = masterrecordid
-        var mastertableid = mastertableid
-        $("#linked-container-" + linkedtableid).load('/loading/')
-        $.ajax({
-            url: "{% url 'get_records_linked' %}",
-            type: 'POST',
-            data: {
-                'csrfmiddlewaretoken': '{{ csrf_token }}',
-                'tableid': tableid,
-                'master_tableid': mastertableid,
-                'master_recordid': masterrecordid,
-                'order': order,
-                'order_field': order_field,
-            },
-            success: function (response) {
-                //$(collapse).find('.linked_container').html(response);
-                 $("#linked-container-" + linkedtableid).html(response)
-            },
-            error: function (response) {
-            }
-        });
-    }
+    
 
     $('#newRecordModal').on('hide.bs.modal', function (e) {
         $('.modal-backdrop').css('z-index', 1000)
     });
 
     function linked_newRecord(el, linkedtableid) {
-        var master_tableid = '{{tableid}}'
-        var master_recordid = '{{recordid}}'
+        var master_tableid = $(el).closest('.block_record_card').data('tableid');
+        var master_recordid = $(el).closest('.block_record_card').data('recordid');
         $("#fullwidth_modal_newrecord").html("");
         $('#newRecordModal').modal('show');
         var serialized_data = [];
