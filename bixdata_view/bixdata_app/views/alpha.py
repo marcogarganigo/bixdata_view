@@ -2546,6 +2546,6 @@ def get_table_view(request, viewid):
         tableid = cursor.fetchone()[0]
 
 
-        content = get_records_table(request, tableid, '', '', '', '')
+        content = get_records_table(request, tableid, '', '', '', viewid, 1, '', '')
 
     return index(request, content)
