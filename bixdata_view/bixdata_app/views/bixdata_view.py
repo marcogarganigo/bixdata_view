@@ -147,6 +147,12 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
     table_type = 'standard'
     table_height = '100%'
 
+    if master_tableid == '':
+        master_tableid = None
+
+    if master_recordid == '':
+        master_recordid = None
+
     if master_tableid:
         table_height = '500px'
         table_type = 'linked'
