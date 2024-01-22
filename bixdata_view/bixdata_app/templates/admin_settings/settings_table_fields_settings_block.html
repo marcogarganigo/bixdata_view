@@ -1,0 +1,49 @@
+<label for="test_setting">setting:</label>
+<select id="test_setting" name="test_setting" class="form-select setting-value">
+    <option value="value1">1</option>
+    <option value="value2">2</option>
+</select>
+
+
+<button type="button" onclick="saveTableSettingsSettingsFields()" class="btn btn-primary">Save Settings</button>
+<style>
+    #test_setting {
+        width: 200px;
+        height: 50px;
+    }
+</style>
+
+
+<script>
+       function saveTableSettingsSettingsFields() {
+
+        var serialized_data = []
+
+           var field = $('#selected-field-block').val()
+
+        $('#settings_table_fields_settings').find('.setting-value').each(function () {
+            var value = $(this).val();
+            var name = $(this).attr('name');
+            serialized_data.push({name: name, value: value});
+        });
+        settings = JSON.stringify(serialized_data);
+
+        console.info(serialized_data)
+        $.ajax({
+            type: "POST",
+            data: {
+                'settings': settings,
+                'userid': $('#user_username').attr('data-userid'),
+                'tableid': $('#table_settings_menu').attr('data-tableid'),
+                'field': field
+
+            },
+            url: "{% url 'settings_table_fields_settings_fields_save' %}",
+            success: function (response) {
+
+            },
+            error: function () {
+            }
+        })
+    }
+</script>

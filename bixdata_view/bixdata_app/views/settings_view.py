@@ -81,7 +81,39 @@ def settings_table_fieldsettings(request):
 
     return hv.render_template('admin_settings/settings_table_column_search_results_options.html')
 
-def settings_table_tablesettings(request):
+def load_table_settings_menu(request):
+    hv = HelperView(request)
+    return hv.render_template('admin_settings/settings_table_menu.html')
+
+def settings_table_settings(request):
+    hv = HelperView(request)
+    return hv.render_template('admin_settings/settings_table_settings.html')
+
+def settings_table_fields_settings_save(request):
+    settings = request.POST.get('settings')
+    userid = request.POST.get('userid')
+    tableid = request.POST.get('tableid')
+
+    settings_list = json.loads(settings)
+
+    with connection.cursor() as cursor:
+        for setting in settings_list:
+            cursor.execute(
+                "SELECT * FROM sys_user_table_settings WHERE userid = %s AND settingid = %s and tableid = %s",
+                [userid, setting['name'], tableid]
+            )
+            existing_setting = cursor.fetchone()
+
+            if existing_setting:
+                cursor.execute(
+                    "UPDATE sys_user_table_settings SET value = %s WHERE userid = %s AND settingid = %s and tableid = %s",
+                    [setting['value'], userid, setting['name'], tableid]
+                )
+            else:
+                cursor.execute(
+                    "INSERT INTO sys_user_table_settings (userid, tableid, settingid, value) VALUES (%s, %s, %s, %s)",
+                    [userid, tableid, setting['name'], setting['value']]
+                )
     return HttpResponse({'success': True})
 
 
@@ -110,6 +142,36 @@ def settings_table_fields(request):
     hv.context['fields'] = list(SysField.objects.filter(tableid=tableid).values())
     return hv.render_template('admin_settings/settings_table_fields.html')
 
-def settings_table_fields_settings(request):
+
+def settings_table_fields_settings_block(request):
     hv = HelperView(request)
-    return hv.render_template('admin_settings/settings_table_fields_settings.html')
+    return hv.render_template('admin_settings/settings_table_fields_settings_block.html')
+
+def settings_table_fields_settings_fields_save(request):
+
+    settings = request.POST.get('settings')
+    userid = request.POST.get('userid')
+    tableid = request.POST.get('tableid')
+    field = request.POST.get('field')
+
+    settings_list = json.loads(settings)
+
+    with connection.cursor() as cursor:
+        for setting in settings_list:
+            cursor.execute(
+                "SELECT * FROM sys_user_field_settings WHERE userid = %s AND fieldid = %s and settingid = %s and tableid = %s",
+                [userid, field, setting['name'], tableid]
+            )
+            existing_setting = cursor.fetchone()
+
+            if existing_setting:
+                cursor.execute(
+                    "UPDATE sys_user_field_settings SET value  = %s where tableid = %s AND userid = %s AND fieldid = %s and settingid = %s",
+                    [setting['value'], tableid, userid, field, setting['name']]
+                )
+            else:
+                cursor.execute(
+                    "INSERT INTO sys_user_field_settings (userid, tableid, fieldid, settingid, value) VALUES (%s, %s, %s, %s, %s)",
+                    [userid, tableid, field, setting['name'], setting['value']]
+                )
+    return HttpResponse({'success': True})

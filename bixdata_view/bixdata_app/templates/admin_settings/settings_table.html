@@ -23,36 +23,36 @@
     }
 
 
-    function getUserTablesList(userid)
-    {
-        $("#settings_table_usertables").load('/loading/')
-        //pick all the elements with the class visible and css background the
+    function getUserTablesList(userid) {
+
+        $('.secondary-level').html('')
+
 
         var serialized_data = [];
-        serialized_data.push({ name: 'userid', value: userid });
+        serialized_data.push({name: 'userid', value: userid});
         $.ajax({
             type: "POST",
             crossDomain: true,
             url: "{% url 'settings_table_usertables' %}",
             data: serialized_data,
             success: function (response) {
-                $("#settings_table_usertables").html(response);
-            },
-            error: function () {
-                $("#settings_table_usertables").html(response);
+                $("#settings_table_usertables").load('/loading/')
+                setTimeout(function () {
+                    $("#settings_table_usertables").html(response);
+                }, 150);
             }
         });
     }
 
-function saveTableSettings(el) {
+    function saveTableSettings(el) {
 
-    updateOrder();
+        updateOrder();
 
-    var serialized_data = []
-    var userid = $('#user_username').attr('data-userid');
-    var orderArray = [];
+        var serialized_data = []
+        var userid = $('#user_username').attr('data-userid');
+        var orderArray = [];
 
-    $('.drag-item').each(function () {
+        $('.drag-item').each(function () {
 
             var workspace = $(this).attr('data-workspace');
 
@@ -66,106 +66,105 @@ function saveTableSettings(el) {
                     tables.push(tableid);
                 }
             });
-        orderArray.push({workspace: workspace, tables: tables});
-    });
+            orderArray.push({workspace: workspace, tables: tables});
+        });
 
-    orderArray = JSON.stringify(orderArray);
-    console.info(orderArray)
-    serialized_data.push({ name: 'tables', value: orderArray });
-    $.ajax({
-        type: "POST",
-        url: "{% url 'settings_table_usertables_save' %}",
-        data: {
-            'tables': orderArray,
-            'userid': userid
-        },
-        success: function (response) {
-            swal({
-                title: "Impostazioni salvate",
-                text: "Le impostazioni sono state salvate correttamente",
-                icon: "success",
-                timer: 800,
-                buttons: false,
-            })
-            $("#table_options").html(response);
-        },
-        error: function () {
-        }
-    });
-}
+        orderArray = JSON.stringify(orderArray);
+        console.info(orderArray)
+        serialized_data.push({name: 'tables', value: orderArray});
+        $.ajax({
+            type: "POST",
+            url: "{% url 'settings_table_usertables_save' %}",
+            data: {
+                'tables': orderArray,
+                'userid': userid
+            },
+            success: function (response) {
+                swal({
+                    title: "Impostazioni salvate",
+                    text: "Le impostazioni sono state salvate correttamente",
+                    icon: "success",
+                    timer: 800,
+                    buttons: false,
+                })
+                $("#table_options").html(response);
+            },
+            error: function () {
+            }
+        });
+    }
 
-function setFieldsOrder(fields_type) {
-
-
-    var tableid = $('#table_settings_menu').attr('data-tableid');
-    var userid = $('#user_username').attr('data-userid');
-
-    $('#user_username').attr('data-fields_type', fields_type);
+    function setFieldsOrder(fields_type) {
 
 
+        var tableid = $('#table_settings_menu').attr('data-tableid');
+        var userid = $('#user_username').attr('data-userid');
 
-    $.ajax({
-        type: "POST",
-        url: "{% url 'settings_table_tablefields' %}",
-        data: {tableid: tableid, userid: userid, fields_type: fields_type},
-        success: function (response) {
-            $("#settings_col4").css('display', 'block');
+        $('#user_username').attr('data-fields_type', fields_type);
 
-            $("#results-column-container").load('/loading/')
 
-            setTimeout(function () {
-                $("#results-column-container").html(response);
-            }, 150);
+        $.ajax({
+            type: "POST",
+            url: "{% url 'settings_table_tablefields' %}",
+            data: {tableid: tableid, userid: userid, fields_type: fields_type},
+            success: function (response) {
+                $("#settings_col4").css('display', 'block');
 
-        },
-        error: function () {
-        }
-    });
-}
+                $("#results-column-container").load('/loading/')
 
-function setFieldsOrderSave() {
-    updateOrder()
-    var orderArray = []
+                setTimeout(function () {
+                    $("#results-column-container").html(response);
+                }, 150);
 
-    var userid = $('#user_username').attr('data-userid');
-    var tableid = $('#table_settings_menu').attr('data-tableid');
-    var fields_type = $('#user_username').attr('data-fields_type');
+            },
+            error: function () {
+            }
+        });
+    }
 
-    $('#settings_block_usertables_settings').find('.drag-item2').each(function () {
-        if ($(this).find('.checkbox').is(':checked')) {
-            var fieldid = $(this).find('.settings_block_usertables_fieldid').attr('data-fieldid');
-            orderArray.push(fieldid);
-        }
-    });
+    function setFieldsOrderSave() {
+        updateOrder()
+        var orderArray = []
 
-    orderArray = JSON.stringify(orderArray);
-    console.info(orderArray)
+        var userid = $('#user_username').attr('data-userid');
+        var tableid = $('#table_settings_menu').attr('data-tableid');
+        var fields_type = $('#user_username').attr('data-fields_type');
 
-    $.ajax({
-        type: "POST",
-        url: "{% url 'settings_table_tablefields_save' %}",
-        data: {
-          'orderArray': orderArray,
-          'userid': userid,
-          'tableid': tableid,
-          'fields_type': fields_type,
-        },
-        success: function (response) {
-            swal({
-                title: "Impostazioni salvate",
-                text: "Le impostazioni sono state salvate correttamente",
-                icon: "success",
-                timer: 800,
-                buttons: false,
-            })
-        },
-        error: function () {
-        }
-    });
-}
+        $('#settings_block_usertables_settings').find('.drag-item2').each(function () {
+            if ($(this).find('.checkbox').is(':checked')) {
+                var fieldid = $(this).find('.settings_block_usertables_fieldid').attr('data-fieldid');
+                orderArray.push(fieldid);
+            }
+        });
+
+        orderArray = JSON.stringify(orderArray);
+        console.info(orderArray)
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'settings_table_tablefields_save' %}",
+            data: {
+                'orderArray': orderArray,
+                'userid': userid,
+                'tableid': tableid,
+                'fields_type': fields_type,
+            },
+            success: function (response) {
+                swal({
+                    title: "Impostazioni salvate",
+                    text: "Le impostazioni sono state salvate correttamente",
+                    icon: "success",
+                    timer: 800,
+                    buttons: false,
+                })
+            },
+            error: function () {
+            }
+        });
+    }
 
     function setColorTableButton(el) {
-            var els = document.querySelectorAll('.table-button');
+        var els = document.querySelectorAll('.table-button');
         els.forEach(function (el) {
             el.style.backgroundColor = '#6c757d';
         });
@@ -184,13 +183,42 @@ function setFieldsOrderSave() {
     function tableSettingsSettings() {
         $.ajax({
             type: "POST",
-            url: "{% url 'settings_table_tablesettings' %}",
+            url: "{% url 'settings_table_settings' %}",
             success: function (response) {
-                alert('ok')
+                $('#settings_table_fields_settings').load('/loading/')
+                setTimeout(function () {
+                    $('#settings_table_fields_settings').html(response)
+                }, 100);
+            },
+        });
+    }
+
+    function saveTableSettingsSettings() {
+
+        var serialized_data = []
+
+        $('#settings_table_fields_settings').find('.setting-value').each(function () {
+            var value = $(this).val();
+            var name = $(this).attr('name');
+            serialized_data.push({name: name, value: value});
+        });
+        settings = JSON.stringify(serialized_data);
+
+        console.info(serialized_data)
+        $.ajax({
+            type: "POST",
+            data: {
+                'settings': settings,
+                'userid': $('#user_username').attr('data-userid'),
+                'tableid': $('#table_settings_menu').attr('data-tableid'),
+            },
+            url: "{% url 'settings_table_fields_settings_save' %}",
+            success: function (response) {
+
             },
             error: function () {
             }
-        });
+        })
     }
 
     function fieldsSettingsSettings() {
@@ -203,30 +231,19 @@ function setFieldsOrderSave() {
             url: "{% url 'settings_table_fields' %}",
             data: {
                 'tableid': tableid,
-                'userid': userid,},
+                'userid': userid,
+            },
             success: function (response) {
-                 $("#settings_col4").css('display', 'block');
 
-                 $("#results-column-container").load('/loading/')
+                $("#settings_table_fields_settings").load('/loading/')
 
-                 setTimeout(function () {
-                     $("#results-column-container").html(response);
-                 }, 150);
+                setTimeout(function () {
+                    $("#settings_table_fields_settings").html(response);
+                }, 150);
             },
         })
     }
 
-    function settingsFieldsSettings() {
-        $.ajax({
-            type: "POST",
-            url: "{% url 'settings_table_fields_settings' %}",
-            success: function (response) {
-                $('#settings_table_fields_settings').html(response)
-            },
-            error: function () {
-            }
-        });
-    }
 
 
     function tableColumnLinked() {
@@ -243,13 +260,13 @@ function setFieldsOrderSave() {
             },
             url: "{% url 'settings_table_columnlinked' %}",
             success: function (response) {
-               $("#settings_col4").css('display', 'block');
+                $("#settings_col4").css('display', 'block');
 
-               $("#results-column-container").load('/loading/')
+                $("#results-column-container").load('/loading/')
 
-            setTimeout(function () {
-                $("#results-column-container").html(response);
-            }, 150);
+                setTimeout(function () {
+                    $("#results-column-container").html(response);
+                }, 150);
 
             },
             error: function (response) {
@@ -257,8 +274,7 @@ function setFieldsOrderSave() {
         });
     }
 
-    function tableColumnLinkedSave()
-    {
+    function tableColumnLinkedSave() {
         $.ajax({
             type: "POST",
             url: "{% url 'settings_table_columnlinked_save' %}",
@@ -276,7 +292,8 @@ function setFieldsOrderSave() {
     <div id="settings_table_users" style="width: 20%;float: left;">
         Utenti <br/>
         {% for user in users %}
-            <button class="btn btn-secondary table-button "onclick="getUserTablesList('{{ user.id }}'); $('#user_username').attr('data-userid', '{{ user.id }}')">{{ user.username }}</button>
+            <button class="btn btn-secondary table-button "
+                    onclick="getUserTablesList('{{ user.id }}'); $('#user_username').attr('data-userid', '{{ user.id }}')">{{ user.username }}</button>
             <br>
         {% endfor %}
         <input type="text" hidden="true" disabled id="user_username" value="">
@@ -285,25 +302,14 @@ function setFieldsOrderSave() {
 
     </div>
 
-    <div id="table_settings_menu" style="height: 20%; float: left; display: none; margin-left: 5%; ">
-        Campi
-        <br>
-        <button class="btn btn-secondary fields-button" onclick="tableSettingsSettings()">Impostazioni tabella</button><br/>
-        <button class="btn btn-secondary fields-button" onclick="fieldsSettingsSettings()">Impostazioni campi</button><br/>
-        <button class="btn btn-secondary fields-button" onclick="tableColumnLinked()">Colonne in tabelle collegate</button><br/>
-        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('search_results_fields')">Campi risultati ricerca</button><br/>
-        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('insert_fields')">Campi inserimento</button><br/>
-        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('search_fields')">Campi ricerca</button>
-        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('view_fields')">Campi visualizzazione</button>
-        <button class="btn btn-secondary fields-button" onclick="setFieldsOrder('badge_fields')">Campi badge</button>
-    </div>
-    <div id="settings_col4" style="height: 100%; width: 20%;  float: left; display: none; margin-left: 10%">
-        <div id="results-column-container"style="height: 100%">
+    <div id="table_settings_menu" class="secondary-level" style="height: 20%; float: left; margin-left: 5%; ">
 
-        </div>
     </div>
 
-    <div id="settings_table_fields_settings">
+        <input type="hidden" id="selected-field-block">
+
+    <div id="settings_table_fields_settings" class="secondary-level third-level">
+
 
     </div>
 </div>

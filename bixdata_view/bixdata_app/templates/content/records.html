@@ -304,6 +304,8 @@
         serialized_data.push({name: 'contextfunction', value: 'insert'});
         serialized_data.push({name: 'contextreference', value: tableid});
         serialized_data.push({name: 'http_response', value: true});
+        serialized_data.push({name: 'master_tableid', value: '{{ tableid }}'});
+        serialized_data.push({name: 'master_recordid', value: '{{ recordid }}'});
         $.ajax({
             type: "POST",
             url: "{% url 'get_record_fields' %}",

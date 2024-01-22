@@ -2,9 +2,28 @@
     <div class="drag-item">
         {% for field in fields %}
             <div class="drag-item2">
-            <p class="settings_block_usertables_fieldid" data-fieldid="{{ field.id }}">{{field.description}}</p>
-            <button class="btn btn-secondary" onclick="settingsFieldsSettings()">Impostazioni</button>
+                <p class="settings_block_usertables_fieldid" data-fieldid-word="{{ field.fieldid }}" data-fieldid="{{ field.id }}">{{field.description}}</p>
+                <button class="btn btn-secondary" onclick="settingsFieldsSettings('{{ field.fieldid }}')">Impostazioni</button>
             </div>
         {% endfor %}
     </div>
 </div>
+
+<script>
+    function settingsFieldsSettings(field) {
+        $('#selected-field-block').val(field);
+
+        $.ajax({
+            type: "POST",
+            data: {
+                'field': field
+            },
+            url: "{% url 'settings_table_fields_settings_block' %}",
+            success: function (response) {
+                $('#settings_table_fields_settings').html(response);
+            },
+            error: function () {
+            }
+        });
+    }
+</script>

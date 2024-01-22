@@ -1146,16 +1146,27 @@ def admin_page(request):
     page = request.POST.get('page')
 
     rows = SysUserDashboard.objects.all().values()
+    print(rows)  # Add this line to inspect the content of rows
 
-    userids = [row['userid'] for row in rows]
-    dashboardids = [row['dashboardid'] for row in rows]
+    userids = [row.get('userid', None) for row in rows]
+    dashboardids = [row.get('dashboardid', None) for row in rows]
 
     rows2 = SysUser.objects.filter(id__in=userids).values('firstname', 'lastname')
 
     names = [row['firstname'] + ' ' + row['lastname'] for row in rows2]
 
-    rows4 = SysView.objects.all().values()
-    rows5 = SysReport.objects.all().values()
+    with connection.cursor() as cursor4:
+        cursor4.execute(
+            "SELECT * FROM sys_view"
+        )
+        rows4 = dictfetchall(cursor4)
+
+    with connection.cursor() as cursor5:
+        cursor5.execute(
+            "SELECT * FROM sys_report"
+        )
+        rows5 = dictfetchall(cursor5)
+
     tables = SysTable.objects.all().values('id')
     fields = SysField.objects.all().values('tableid', 'fieldid')
 
@@ -1216,13 +1227,14 @@ def new_chart_block(request):
         view_id = request.POST.get('view_id')
         report_id = request.POST.get('report_id')
 
-        SysDashboardBlock.objects.create(
-            dashboardid=dashboard_id,
-            name=name,
-            userid=1,
-            viewid=view_id,
-            reportid=report_id
-        )
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO sys_dashboard_block (dashboardid, name, userid, viewid, reportid)
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                [dashboard_id, name, 1, view_id, report_id]
+            )
 
     return redirect('index')
 
@@ -1806,15 +1818,14 @@ def new_report(request):
     operation = request.POST.get('operation')
     layout = request.POST.get('layout')
     groupby = request.POST.get('groupby')
-    SysReport.objects.create(
-        userid=1,
-        tableid=tableid,
-        name=report_name,
-        fieldid=fieldid,
-        operation=operation,
-        layout=layout,
-        groupby=groupby
-    )
+    with connection.cursor() as cursor:
+        cursor.execute(
+            """
+            INSERT INTO sys_report (userid, tableid, name, fieldid, operation, layout, groupby)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """,
+            [1, tableid, report_name, fieldid, operation, layout, groupby]
+        )
 
     return JsonResponse({'success': True})
 
