@@ -430,7 +430,7 @@
                                         <select id="viewid" class="form-select" aria-label="Default select example"
                                                 style="width: 20%; float: left" onchange="refresh()">
                                             {% for view in views %}
-                                                {% if view.id == user_table_settings.default_viewid %}
+                                                {% if view.id ==  selected_view%}
                                                     <option selected value="{{ view.id }}">{{ view.name }}</option>
                                                 {% else %}
                                                     <option value="{{ view.id }}">{{ view.name }}</option>

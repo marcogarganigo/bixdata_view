@@ -97,6 +97,7 @@ def get_content_records(request):
     hv.context['views']=list(SysView.objects.filter(userid=1).filter(tableid=tableid).values())
     hv.context['layout_setting'] = get_user_setting(request, 'record_open_layout')
     hv.context['active_panel_setting'] = us.active_panel
+    hv.context['selected_view']=hv.context['user_table_settings']['default_viewid'] 
 
     t=Table(tableid=tableid,userid=1)
     t.context='search_fields'
@@ -252,3 +253,38 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
 
     records_table = bix_render_to_string('block/records/records_table.html', context, request)
     return records_table
+
+
+@login_required(login_url='/login/')
+def get_table_view(request, viewid):
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT tableid FROM sys_view WHERE id = '{viewid}'"
+        )
+        tableid = cursor.fetchone()[0]
+
+        table_obj = Table(tableid)
+
+        hv=HelperView(request)
+        sbl=SettingsBusinessLogic()
+        us=sbl.get_usersettings(request.user.id)
+        hv.context['records_table'] = ''
+        hv.context['table'] = tableid.upper()
+        hv.context['tableid'] = tableid
+        hv.context['user_table_settings'] = get_user_table_settings(request.user.id, tableid)   
+        hv.context['views']=list(SysView.objects.filter(userid=1).filter(tableid=tableid).values())
+        hv.context['layout_setting'] = get_user_setting(request, 'record_open_layout')
+        hv.context['active_panel_setting'] = us.active_panel
+        hv.context['selected_view']=int(viewid) 
+
+        t=Table(tableid=tableid,userid=1)
+        t.context='search_fields'
+        filter_fields=t.get_fields()
+        context_records_filters=dict()
+        context_records_filters['filter_fields']=filter_fields['Dati']
+        hv.context['block_search_fields'] = render_to_string('block/records/records_filters.html',context_records_filters, request)
+        content=hv.get_template('content/records.html')
+        return index(request, content)
+
+    

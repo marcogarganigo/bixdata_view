@@ -2536,17 +2536,4 @@ def deal_close_lost(request):
     return JsonResponse({'success': True})
 
 
-@login_required(login_url='/login/')
-def get_table_view(request, viewid):
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            f"SELECT tableid FROM sys_view WHERE id = '{viewid}'"
-        )
-        tableid = cursor.fetchone()[0]
-
-        table_obj = Table(tableid)
-
-        content = table_obj.get_records(viewid)
-
-    return index(request, content)
