@@ -142,4 +142,6 @@ urlpatterns = [
     path('settings_table_settings/', settings_view.settings_table_settings, name='settings_table_settings'),
     path('settings_table_fields_settings_block/', settings_view.settings_table_fields_settings_block, name='settings_table_fields_settings_block'),
     path('settings_table_fields_settings_fields_save/', settings_view.settings_table_fields_settings_fields_save, name='settings_table_fields_settings_fields_save'),
+    path('get_table_view/<str:viewid>/', alpha.get_table_view, name='get_table_view'),
+
 ]

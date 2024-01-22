@@ -1248,7 +1248,7 @@ def get_record_path(request, tableid, recordid):
         content = get_block_task(recordid, userid)
     elif tableid == 'ticket':
         content = insert_timesheet(request, recordid, userid)
-    return get_render_index(request, content)
+    return index(request, content)
 
 
 def insert_timesheet(request, ticketid, userid):
@@ -2535,3 +2535,17 @@ def deal_close_won(request):
 def deal_close_lost(request):
     return JsonResponse({'success': True})
 
+
+@login_required(login_url='/login/')
+def get_table_view(request, viewid):
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT tableid FROM sys_view WHERE id = '{viewid}'"
+        )
+        tableid = cursor.fetchone()[0]
+
+
+        content = get_records_table(request, tableid, '', '', '', '')
+
+    return index(request, content)
