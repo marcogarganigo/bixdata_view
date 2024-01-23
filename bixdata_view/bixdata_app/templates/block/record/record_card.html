@@ -591,17 +591,43 @@
                             var block_record_card = $(el).closest('.block_record_card')
                             var tableid = $(block_record_card).data('tableid')
                             var recordid = $(block_record_card).data('recordid')
-                            $.ajax({
-                                type: "POST",
-                                url: "{% url 'deal_close_lost' %}",
-                                success: function (response) {
-                                    alert('Chiuso perso')
-                                },
-                                error: function (response) {
 
+                            swal({
+                                text: "Mannaggina che peccato. Dai sarà per la prossima volta. forza roccia. Confermi la chiusura?",
+                                buttons: ["No", "Si"],
+                                icon: "warning",
+                                dangerMode: true,
+                            }).then(function (value) {
+                                if (value) {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "{% url 'deal_close_lost' %}",
+                                        data: {
+                                            'tableid': tableid,
+                                            'recordid': recordid,
+                                        },
+                                        success: function (response) {
+                                            $(el).closest('.modal').modal("hide");
+                                            swal({
+                                                text: "Trattativa aggiornata",
+                                                icon: "success",
+                                                timer: 1000,
+                                                buttons: false,
+                                            });
+                                            refresh();
+                                            
+                                        },
+                                        error: function () {
+                                            // Handle error if needed
+                                        }
+                                    });
+                                } else {
+                                    
                                 }
+                            });
 
-                            })
+                            
+                            
                         }
 
                         function selectFile() {
