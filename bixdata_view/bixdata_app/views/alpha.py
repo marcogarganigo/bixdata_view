@@ -1350,39 +1350,69 @@ def new_update(request):
 
 
 def stampa_timesheet(request):
-    recordid = ''
-    if request.method == 'POST':
-        recordid = request.POST.get('recordid')
-        filename = request.POST.get('filename')
 
-        with connection.cursor() as cursor:
-            cursor.execute(
-                f"SELECT   t.*,c.companyname,c.address,c.city,c.email,u.firstname, u.lastname FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ join sys_user as u on t.user = u.id WHERE t.recordid_='{recordid}'"
-            )
-            rows = dictfetchall(cursor)
+    recordid = request.POST.get('recordid')
+    tableid = request.POST.get('tableid')
+    filename = request.POST.get('filename')
 
-            row = rows[0]
-            row['recordid'] = recordid
+    uid = uuid.uuid4().hex
 
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=10,
+        border=0,
+    )
 
-        config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-        content = render_to_string('pdf/timesheet.html', row)
-        pdfkit.from_string(content, filename, configuration=config)
+    today = datetime.date.today()
+    d1 = today.strftime("%d/%m/%Y")
 
-        # Open the file and read its contents
-        with open(filename, 'rb') as file:
-            file_data = file.read()
-            file_data = file.read()
+    qrcontent = str(tableid) + '_' + str(recordid)
 
-        # Delete the file from the file system
-        # os.remove(filename)
+    data = qrcontent
+    qr.add_data(data)
+    qr.make(fit=True)
 
-        # Create an HTTP response with the file contents
-        response = HttpResponse(file_data, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    qr_name = 'qrcode' + uid + '.png'
+
+    img.save("bixdata_view/bixdata_app/static/pdf/" + qr_name)
+
+
+    filename_with_path = os.path.join('bixdata_view/bixdata_app/static/pdf', filename)
+
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT   t.*,c.companyname,c.address,c.city,c.email,u.firstname, u.lastname FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ join sys_user as u on t.user = u.id WHERE t.recordid_='{recordid}'"
+        )
+        rows = dictfetchall(cursor)
+
+        row = rows[0]
+        row['recordid'] = recordid
+        row['qr_name'] = qr_name
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
+
+    config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+    content = render_to_string('pdf/timesheet.html', row)
+
+    filename_with_path = os.path.abspath(filename_with_path)
+    pdfkit.from_string(content, filename_with_path, configuration=config)
+
+    os.remove("bixdata_view/bixdata_app/static/pdf/" + qr_name)
+
+    try:
+        with open(filename_with_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/pdf")
+            response['Content-Disposition'] = f'inline; filename={filename}'
+
         return response
+
+    finally:
+        os.remove(filename_with_path)
 
 
 def stampa_servicecontract(request):
@@ -1415,22 +1445,20 @@ def stampa_servicecontract(request):
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
         content = render_to_string('pdf/servicecontract.html', row)
 
-        filename_with_path = os.path.join('bixdata_app/static/pdf', filename)
+        filename_with_path = os.path.join('bixdata_view/bixdata_app/static/pdf', filename)
         filename_with_path = os.path.abspath(filename_with_path)
         print(filename_with_path)
-        pdfkit.from_string(content, filename_with_path, configuration=config)
+        pdfkit.from_string(content, filename_with_path, configuration=config, options={"enable-local-file-access": ""})
 
-        # Open the file and read its contents
-        with open(filename_with_path, 'rb') as file:
-            file_data = file.read()
+        try:
+            with open(filename_with_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type="application/pdf")
+                response['Content-Disposition'] = f'inline; filename={filename}'
 
-        # Delete the file from the file system
-        # os.remove(filename_with_path)
+            return response
 
-        # Create an HTTP response with the file contents
-        response = HttpResponse(file_data, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
-        return response
+        finally:
+            os.remove(filename_with_path)
 
 
 def stampa_servicecontract_test(request):
@@ -2185,7 +2213,7 @@ def print_word(request):
     doc.add_section(WD_SECTION.NEW_PAGE)
 
     p3 = doc.add_paragraph()
-    text3 = 'Definizione Economica Monte Ore'
+    text3 = 'Definizione Economica'
     run3 = p3.add_run(text3)
     font3 = run3.font
     font3.size = Pt(15)
@@ -2201,7 +2229,7 @@ def print_word(request):
     table.style = 'bixstyle'
 
     # Add the table header
-    header_cells = ['Monte ore assistenza tecnica', 'Qt.', 'Prezzo unitario', 'Prezzo totale']
+    header_cells = ['Descrizione', 'Qt.', 'Prezzo unitario', 'Prezzo totale']
     for i, header_text in enumerate(header_cells):
         table.cell(0, i).text = header_text
 
@@ -2231,16 +2259,7 @@ def print_word(request):
     text_space = ''
     run_space = p_space.add_run(text_space)
 
-    p4 = doc.add_paragraph()
-    text4 = 'Gli interventi saranno calcolati on line con frazioni di ½ ora e on site con intervento minimo fatturabile di un’ora.'
-    run4 = p4.add_run(text4)
-    font4 = run4.font
-    font4.size = Pt(10)
-    font4.name = 'Calibri'
-    font4.bold = False
-    font4.italic = True
-    font4.color.rgb = grey
-    p4.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
 
     doc.add_page_break()
 
@@ -2479,12 +2498,12 @@ def print_word(request):
                 pdf_filename = f"{tmp_dir}/{dealname}.pdf"
                 docx2pdf_convert(filename, pdf_filename)
 
-
                 with open(pdf_filename, 'rb') as fh:
                     response = HttpResponse(fh.read(), content_type="application/pdf")
                     response['Content-Disposition'] = f'inline; filename={dealname}.pdf'
 
                 return response
+
 
         else:
             with open(filename, 'rb') as fh:

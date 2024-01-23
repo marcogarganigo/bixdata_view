@@ -201,17 +201,37 @@
 
     function stampa(tableid) {
         var filename = tableid + new Date().getTime() + '.pdf';
-        var url = '/stampa_servicecontract/';
+        var url = '/stampa_' + tableid + '/';
 
         $.ajax({
             type: "POST",
             url: url,
             data: {
                 'recordid': '{{ recordid }}',
+                'tableid': '{{ tableid }}',
                 'filename': filename,
             },
-            success: function (response) {
-                window.open('/static/pdf/' + filename, '_blank');
+             xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (response, status, xhr) {
+                const contentType = xhr.getResponseHeader('content-type');
+                const blob = new Blob([response], {type: contentType});
+
+                const blobUrl = window.URL.createObjectURL(blob);
+
+                const contentDisposition = xhr.getResponseHeader('content-disposition');
+                const filename = contentDisposition.split(';')[1].trim().split('=')[1];
+
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+
+                a.click();
+
+                window.URL.revokeObjectURL(blobUrl);
+                document.body.removeChild(a);
             },
             error: function (response) {
                 alert('stampa')
