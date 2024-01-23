@@ -138,7 +138,7 @@
                             load_linked(tableid + '-' + master_recordid, tableid, master_recordid, master_tableid)
                             load_badge(master_tableid, master_recordid)
                         }
-                         
+
                     },
                     error: function () {
                         // Handle error if needed
@@ -222,7 +222,7 @@
                 'tableid': '{{ tableid }}',
                 'filename': filename,
             },
-             xhrFields: {
+            xhrFields: {
                 responseType: 'blob'
             },
             success: function (response, status, xhr) {
@@ -441,7 +441,9 @@
 
 </script>
 
-<div id="block_record_card-{{ recordid }}" class="block_record_card" data-recordid="{{ recordid }}" data-tableid="{{ tableid }}" data-master_tableid="{{ master_tableid }}" data-master_recordid="{{ master_recordid}}" style="height: 100%;width: 100%;">
+<div id="block_record_card-{{ recordid }}" class="block_record_card" data-recordid="{{ recordid }}"
+     data-tableid="{{ tableid }}" data-master_tableid="{{ master_tableid }}"
+     data-master_recordid="{{ master_recordid }}" style="height: 100%;width: 100%;">
     <div id="RecordCard" class="card RecordCard" style=" height: 100%; overflow: hidden">
         <div class="card-body" style="max-height: 100%">
             <p class="card-text">
@@ -453,7 +455,8 @@
                 {{ tableid }}
 
                 <button type="button" class="btn btn button-recordcard" data-bs-toggle="tooltip"
-                        data-bs-placement="bottom" data-bs-title="elimina" style="color: red" onclick="deleteFunc(this)"><i
+                        data-bs-placement="bottom" data-bs-title="elimina" style="color: red"
+                        onclick="deleteFunc(this)"><i
                         class=" mdi mdi-delete-outline"></i></button>
 
                 <button type="button" class="btn btn button-recordcard" data-bs-toggle="tooltip"
@@ -461,7 +464,7 @@
                         onclick="copyFunc(this,'{{ tableid }}', '{{ recordid }}')"><i
                         class="mdi mdi-content-copy"></i></button>
 
-            {% if layout_setting == 'rightcard' %}
+                {% if layout_setting == 'rightcard' %}
                     <button type="button" class="open-popup btn btn  button-recordcard"
                             onclick="openModalFromCard()">
                         <span class="material-symbols-outlined">
@@ -526,13 +529,18 @@
                     </button>
 
                     <input type="file" id="fileInput" style="display: none;"/>
-                    <button type="button" class="btn btn-success button-recordcard" data-bs-title="stampa" onclick="dealCloseWon(this)">
-                        Chiuso vinto
-                    </button>
+                    {% if dealstatus != 'Vinta' and dealstatus != 'Persa' %}
+                        <button type="button" class="btn btn-success button-recordcard" data-bs-title="stampa"
+                                onclick="dealCloseWon(this)">
+                            Chiuso vinto
+                        </button>
 
-                    <button type="button" class="btn btn-danger button-recordcard" data-bs-title="stampa" onclick="dealCloseLost(this)">
-                        Chiuso perso
-                    </button>
+                        <button type="button" class="btn btn-danger button-recordcard" data-bs-title="stampa"
+                                onclick="dealCloseLost(this)">
+                            Chiuso perso
+                        </button>
+
+                    {% endif %}
 
                     <script>
 
@@ -681,7 +689,8 @@
                     <button class="nav-link active" id="fields-tab-{{ recordid }}" data-bs-toggle="tab"
                             data-bs-target="#fields-tab-pane-{{ recordid }}" type="button" role="tab"
                             aria-controls="fields-tab-pane-{{ recordid }}"
-                            aria-selected="true" onclick="load_fields(this, '{{ tableid }}', '{{ recordid }}', '{{ master_tableid }}', '{{ master_recordid }}')">
+                            aria-selected="true"
+                            onclick="load_fields(this, '{{ tableid }}', '{{ recordid }}', '{{ master_tableid }}', '{{ master_recordid }}')">
 
                         <p class="tabs-title">Campi</p>
                         <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"

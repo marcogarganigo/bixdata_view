@@ -20,11 +20,21 @@
                 {{ block.html|safe }}
                 <i class="mdi mdi-delete" onclick="remove_widget(this)"
                    style="position: absolute; bottom: 5px; left: 5px;"></i>
-                  <a style="position: absolute; bottom: 5px; left: 25px" href="http://bixcrm01:8000/get_table_view/{{ block.viewid }}" target="_blank">apri tabella</a>
+                  <a id="dynamicHref{{ block.id }}" style="position: absolute; bottom: -2px; left: 25px; color: grey" href="" target="_blank">
+                      <span class="material-symbols-outlined">table_view</span></a>
             </div>
-
         </div>
+
+        <script>
+            var url = window.location.href;
+            var urlSplit = url.split('/');
+            var firstpart = urlSplit[0];
+            var completeURL = firstpart + '/get_table_view/' + '{{ block.viewid }}';
+            document.getElementById("dynamicHref{{ block.id }}").href = completeURL;
+        </script>
     {% endfor %}
+
+
 
 
     <style>
