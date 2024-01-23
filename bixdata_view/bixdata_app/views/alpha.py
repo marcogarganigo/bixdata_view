@@ -400,6 +400,8 @@ def get_render_content_dashboard(request):
 
                 block['width'] = width
                 block['height'] = height
+                block['viewid'] = results['viewid']
+
                 if results['reportid'] is None or results['reportid'] == 0:
 
                     tableid = results['tableid']
