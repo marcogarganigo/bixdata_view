@@ -104,7 +104,12 @@
     }
 
 
-    function deleteFunc() {
+    function deleteFunc(el) {
+        var block_record_card = $(el).closest('.block_record_card')
+        var tableid = $(block_record_card).data('tableid')
+        var recordid = $(block_record_card).data('recordid')
+        var master_tableid = $(block_record_card).data('master_tableid')
+        var master_recordid = $(block_record_card).data('master_recordid')
         swal({
             text: "Se sicuro di voler eliminare questo record?",
             buttons: ["No", "Si"],
@@ -116,18 +121,24 @@
                     type: "POST",
                     url: "{% url 'record_card_delete' %}",
                     data: {
-                        'csrfmiddlewaretoken': '{{ csrf_token }}',
-                        'tableid': '{{ tableid }}',
-                        'recordid': '{{ recordid }}',
+                        'tableid': tableid,
+                        'recordid': recordid,
                     },
                     success: function (response) {
-                        //$("#bixdata_recordcard_container").html(response);
+                        $(el).closest('.modal').modal("hide");
                         swal({
                             text: "Record eliminato",
                             icon: "success",
                             timer: 1000,
                             buttons: false,
                         });
+                        if ((master_tableid == 'None')) {
+                            refresh();
+                        } else {
+                            load_linked(tableid + '-' + master_recordid, tableid, master_recordid, master_tableid)
+                            load_badge(master_tableid, master_recordid)
+                        }
+                         
                     },
                     error: function () {
                         // Handle error if needed
@@ -422,7 +433,7 @@
                 {{ tableid }}
 
                 <button type="button" class="btn btn button-recordcard" data-bs-toggle="tooltip"
-                        data-bs-placement="bottom" data-bs-title="elimina" style="color: red" onclick="deleteFunc()"><i
+                        data-bs-placement="bottom" data-bs-title="elimina" style="color: red" onclick="deleteFunc(this)"><i
                         class=" mdi mdi-delete-outline"></i></button>
 
                 <button type="button" class="btn btn button-recordcard" data-bs-toggle="tooltip"

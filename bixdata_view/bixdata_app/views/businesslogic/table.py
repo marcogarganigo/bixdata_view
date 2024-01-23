@@ -59,8 +59,8 @@ class Table:
                     select_fields=select_fields+','
                 select_fields=select_fields+field
                 
-        conditions="True"
-        conditions=conditions+f" AND dealname like '%{searchTerm}%' " 
+        conditions="deleted_='N'"
+        #conditions=conditions+f" AND dealname like '%{searchTerm}%' " 
         for condition in conditions_list:
             conditions=conditions+f" AND {condition}"   
             
