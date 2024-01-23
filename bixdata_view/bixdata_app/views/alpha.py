@@ -400,8 +400,6 @@ def get_render_content_dashboard(request):
 
                 block['width'] = width
                 block['height'] = height
-                block['viewid'] = results['viewid']
-
                 if results['reportid'] is None or results['reportid'] == 0:
 
                     tableid = results['tableid']
@@ -2546,9 +2544,21 @@ def link_file(request):
 
 
 def deal_close_won(request):
+    if request.method == 'POST':
+        recordid = request.POST.get('recordid')
+        deal_record=Record(tableid='deal',recordid=recordid)
+        deal_record.fields['dealstage']='Chiuso vinto'
+        deal_record.fields['sync_adiuto']='Si'
+        deal_record.fields['dealstatus']='Vinta'
     return JsonResponse({'success': True})
 
 def deal_close_lost(request):
+    if request.method == 'POST':
+        recordid = request.POST.get('recordid')
+        deal_record=Record(tableid='deal',recordid=recordid)
+        deal_record.fields['dealstage']='Chiuso perso'
+        deal_record.fields['sync_adiuto']='No'
+        deal_record.fields['dealstatus']='Persa'
     return JsonResponse({'success': True})
 
 
