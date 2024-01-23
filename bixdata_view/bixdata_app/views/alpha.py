@@ -550,12 +550,7 @@ def get_record_card_delete(request):
         deleted_record=Record(tableid=tableid,recordid=recordid)
         if tableid == 'dealline':
             recordid_deal=deleted_record.fields['recordiddeal_'];
-            post_data = {
-                'tableid': 'deal',
-                'recordid': recordid_deal,
-                'fields': dict()
-            }
-            requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
+            custom_update(tableid='deal',recordid=recordid_deal)
     return JsonResponse({'success': True})
 
 
@@ -2557,4 +2552,23 @@ def deal_close_lost(request):
     return JsonResponse({'success': True})
 
 
-
+def custom_update(tableid, recordid):
+    if(tableid=='deal'):
+        deal_table=Table(tableid='deal')
+        deal_record=Record(tableid='deal',recordid=recordid)
+        calc_amount=0
+        calc_expectedcost=0
+        dealline_table=Table(tableid='dealline')
+        conditions_list=list()
+        conditions_list.append(f"recordiddeal_='{recordid}'")
+        dealline_records=dealline_table.get_records(conditions_list=conditions_list)
+        for dealline_record in dealline_records:
+            calc_amount=calc_amount+dealline_record['price']
+            calc_expectedcost=calc_expectedcost+dealline_record['expectedcost']
+        if calc_amount!=0:
+            deal_record.fields['amount']=calc_amount
+        if calc_expectedcost!=0:
+            deal_record.fields['expectedcost']=calc_expectedcost
+        deal_record.fields['expectedmargin']=deal_record.fields['amount']-deal_record.fields['expectedcost']
+        deal_record.save()
+    return True
