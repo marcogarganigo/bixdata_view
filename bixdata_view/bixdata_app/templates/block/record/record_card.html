@@ -506,17 +506,20 @@
                     </button>
 
                     <input type="file" id="fileInput" style="display: none;"/>
-                    <button type="button" class="btn btn-success button-recordcard" data-bs-title="stampa" onclick="dealCloseWon()">
+                    <button type="button" class="btn btn-success button-recordcard" data-bs-title="stampa" onclick="dealCloseWon(this)">
                         Chiuso vinto
                     </button>
 
-                    <button type="button" class="btn btn-danger button-recordcard" data-bs-title="stampa" onclick="dealCloseLost()">
+                    <button type="button" class="btn btn-danger button-recordcard" data-bs-title="stampa" onclick="dealCloseLost(this)">
                         Chiuso perso
                     </button>
 
                     <script>
 
-                        function dealCloseWon() {
+                        function dealCloseWon(el) {
+                            var block_record_card = $(el).closest('.block_record_card')
+                            var tableid = $(block_record_card).data('tableid')
+                            var recordid = $(block_record_card).data('recordid')
                             $.ajax({
                                 type: "POST",
                                 url: "{% url 'deal_close_won' %}",
@@ -530,7 +533,10 @@
                             })
                         }
 
-                        function dealCloseLost() {
+                        function dealCloseLost(el) {
+                            var block_record_card = $(el).closest('.block_record_card')
+                            var tableid = $(block_record_card).data('tableid')
+                            var recordid = $(block_record_card).data('recordid')
                             $.ajax({
                                 type: "POST",
                                 url: "{% url 'deal_close_lost' %}",
