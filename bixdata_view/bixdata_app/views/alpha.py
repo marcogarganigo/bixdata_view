@@ -2550,6 +2550,10 @@ def deal_close_won(request):
         deal_record.fields['dealstage']='Chiuso vinto'
         deal_record.fields['sync_adiuto']='Si'
         deal_record.fields['dealstatus']='Vinta'
+        today = datetime.date.today()
+        today = today.strftime("%Y-%m-%d")
+        deal_record.fields['closedate']=today
+        deal_record.save()
     return JsonResponse({'success': True})
 
 def deal_close_lost(request):
@@ -2559,6 +2563,10 @@ def deal_close_lost(request):
         deal_record.fields['dealstage']='Chiuso perso'
         deal_record.fields['sync_adiuto']='No'
         deal_record.fields['dealstatus']='Persa'
+        today = datetime.date.today()
+        today = today.strftime("%Y-%m-%d")
+        deal_record.fields['closedate']=today
+        deal_record.save()
     return JsonResponse({'success': True})
 
 
