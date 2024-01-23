@@ -384,6 +384,7 @@ def get_render_content_dashboard(request):
                 block['gsy'] = data['gsy']
                 block['gsw'] = data['gsw']
                 block['gsh'] = data['gsh']
+                block['viewid'] = results['viewid']
 
                 # if they are null set default values
                 if block['gsw'] == None or block['gsw'] == '':
@@ -721,6 +722,9 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
             cursor.execute(f"SELECT freshdeskid FROM user_ticket WHERE recordid_={recordid}")
             freshdeskid = cursor.fetchone()[0]
             context['freshdeskid'] = freshdeskid
+    if tableid == 'deal':
+        deal_record=Record(tableid='deal',recordid=recordid)
+        context['dealstatus']=deal_record.fields['dealstatus']
     context['userid'] = userid
     context['user_table_settings'] = get_user_table_settings(userid, tableid)
     # TODO: recuperare i dati dal table settings generico
@@ -2275,11 +2279,11 @@ def print_word(request):
 
 
     p5 = doc.add_paragraph()
-    text5 = 'Informazioni di contatto:'
+    text5 = 'Contatti per Assistenza Tecnica:'
     run5 = p5.add_run(text5)
     font5 = run5.font
     font5.size = Pt(10)
-    font5.name = 'Calibri'
+    font5.name = 'Lato'
     font5.bold = True
     font5.italic = False
     font5.color.rgb = grey
@@ -2287,69 +2291,69 @@ def print_word(request):
 
 
     p6 = doc.add_paragraph()  # Stile per elenco puntato con due punti
-    text6 = '-      Per tutte le richieste di assistenza: helpdesk@swissbix.ch'
+    text6 = '•      Per tutte le richieste di assistenza: apertura ticket scrivendo all’indirizzo helpdesk@swissbix.ch - \n        verrete ricontattati dal nostro servizio tecnico'
     run6 = p6.add_run(text6)
     font6 = run6.font
     font6.size = Pt(10)
-    font6.name = 'Calibri'
+    font6.name = 'Lato'
     font6.bold = False
     font6.color.rgb = grey
     p6.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p7 = doc.add_paragraph()
-    text7 = '-      In caso di urgenze è possibile chiamare il numero 091 960 22 09.'
+    text7 = '•      Orari di ufficio per supporto tecnico; dalle 9:00 alle 12:00 e dalle 14:00 alle 17:00'
     run7 = p7.add_run(text7)
     font7 = run7.font
     font7.size = Pt(10)
-    font7.name = 'Calibri'
+    font7.name = 'Lato'
     font7.bold = False
     font7.color.rgb = grey
     p7.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p8 = doc.add_paragraph()
-    text8 = 'Metodo di pagamento e fatturazione:'
+    text8 = 'Metodo di pagamento e fatturazione Hardware e Servizi:'
     run8 = p8.add_run(text8)
     font8 = run8.font
     font8.size = Pt(10)
-    font8.name = 'Calibri'
+    font8.name = 'Lato'
     font8.bold = True
     font8.italic = False
     font8.color.rgb = grey
     p8.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p9 = doc.add_paragraph()
-    text9 = '-      Monte Ore: Anticipato all’ordine'
+    text9 = '•      Hardware e Consumabili: Acconto 50% all’ordine, Saldo a 20gg fine lavori'
     run9 = p9.add_run(text9)
     font9 = run9.font
     font9.size = Pt(10)
-    font9.name = 'Calibri'
+    font9.name = 'Lato'
     font9.bold = False
     font9.color.rgb = grey
     p9.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p10 = doc.add_paragraph()
-    text10 = 'Condizioni generali di vendita:'
+    text10 = '•     Servizi a canone: Trimestrali anticipati a 20 giorni data fattura'
     run10 = p10.add_run(text10)
     font10 = run10.font
     font10.size = Pt(10)
-    font10.name = 'Calibri'
-    font10.bold = True
+    font10.name = 'Lato'
+    font10.bold = False
     font10.italic = False
     font10.color.rgb = grey
     p10.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p11 = doc.add_paragraph()
-    text11 = '-     Durata minima del contratto: 12 mesi.'
+    text11 = 'Condizioni generali di vendita:'
     run11 = p11.add_run(text11)
     font11 = run11.font
     font11.size = Pt(10)
-    font11.name = 'Calibri'
-    font11.bold = False
+    font11.name = 'Lato'
+    font11.bold = True
     font11.color.rgb = grey
     p11.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p12 = doc.add_paragraph()
-    text12 = '-     Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
+    text12 = '•     Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
     run12 = p12.add_run(text12)
     font12 = run12.font
     font12.size = Pt(10)
@@ -2359,7 +2363,7 @@ def print_word(request):
     p12.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p13 = doc.add_paragraph()
-    text13 = '-     Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
+    text13 = '•     Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
     run13 = p13.add_run(text13)
     font13 = run13.font
     font13.size = Pt(10)
@@ -2369,7 +2373,7 @@ def print_word(request):
     p13.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p14 = doc.add_paragraph()
-    text14 = '-     I servizi vengono rinnovati tacitamente salvo disdetta scritta 60 giorni prima della scadenza.'
+    text14 = '•     I servizi vengono rinnovati tacitamente salvo disdetta scritta 60 giorni prima della scadenza.'
     run14 = p14.add_run(text14)
     font14 = run14.font
     font14.size = Pt(10)
@@ -2379,7 +2383,7 @@ def print_word(request):
     p14.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p15 = doc.add_paragraph()
-    text15 = '-     Orari di ufficio per supporto tecnico; dalle 9:00 alle 12:00 e dalle 14:00 alle 17:00'
+    text15 = '•     Orari di ufficio per supporto tecnico; dalle 9:00 alle 12:00 e dalle 14:00 alle 17:00'
     run15 = p15.add_run(text15)
     font15 = run15.font
     font15.size = Pt(10)
@@ -2389,7 +2393,7 @@ def print_word(request):
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p16 = doc.add_paragraph()
-    text16 = '-     Prezzi Iva Esclusa'
+    text16 = '•     Prezzi Iva Esclusa'
     run16 = p16.add_run(text16)
     font16 = run16.font
     font16.size = Pt(10)
@@ -2399,7 +2403,7 @@ def print_word(request):
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p17 = doc.add_paragraph()
-    text17 = '-     Sono esclusi lavori di cablaggio, lavori a muro ed elettrici e di tutta la cavetteria aggiuntiva.'
+    text17 = '•     Sono esclusi lavori di cablaggio, lavori a muro ed elettrici e di tutta la cavetteria aggiuntiva.'
     run17 = p17.add_run(text17)
     font17 = run17.font
     font17.size = Pt(10)
