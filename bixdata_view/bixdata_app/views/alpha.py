@@ -2158,7 +2158,7 @@ def print_word(request):
     run1 = p1.add_run(text1)
     font1 = run1.font
     font1.size = Pt(10.5)
-    font1.name = 'Lato'
+    font1.name = 'Calibri'
     font1.bold = False
     font1.color.rgb = grey
     p1.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2168,7 +2168,7 @@ def print_word(request):
     run_companyname = p_companyname.add_run(text_companyname)
     font_companyname = run_companyname.font
     font_companyname.size = Pt(12)
-    font_companyname.name = 'Lato'
+    font_companyname.name = 'Calibri'
     font_companyname.bold = True
     font_companyname.color.rgb = grey
     p_companyname.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2179,7 +2179,7 @@ def print_word(request):
     run2 = p2.add_run(text2)
     font2 = run2.font
     font2.size = Pt(10)
-    font2.name = 'Lato'
+    font2.name = 'Calibri'
     font2.bold = False
     font2.color.rgb = grey
     p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2189,7 +2189,7 @@ def print_word(request):
     run_date = p_date.add_run(text_date)
     font_date = run_date.font
     font_date.size = Pt(11)
-    font_date.name = 'Lato'
+    font_date.name = 'Calibri'
     font_date.bold = True
     font_date.color.rgb = grey
     p_date.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2225,7 +2225,7 @@ def print_word(request):
     run3 = p3.add_run(text3)
     font3 = run3.font
     font3.size = Pt(15)
-    font3.name = 'Lato'
+    font3.name = 'Calibri'
     font3.color.rgb = RGBColor(0xC0, 0x00, 0x00)
     font3.bold = False
     p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2294,7 +2294,7 @@ def print_word(request):
     run5 = p5.add_run(text5)
     font5 = run5.font
     font5.size = Pt(10)
-    font5.name = 'Lato'
+    font5.name = 'Calibri'
     font5.bold = True
     font5.italic = False
     font5.color.rgb = grey
@@ -2306,7 +2306,7 @@ def print_word(request):
     run6 = p6.add_run(text6)
     font6 = run6.font
     font6.size = Pt(10)
-    font6.name = 'Lato'
+    font6.name = 'Calibri'
     font6.bold = False
     font6.color.rgb = grey
     p6.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2316,7 +2316,7 @@ def print_word(request):
     run7 = p7.add_run(text7)
     font7 = run7.font
     font7.size = Pt(10)
-    font7.name = 'Lato'
+    font7.name = 'Calibri'
     font7.bold = False
     font7.color.rgb = grey
     p7.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2326,7 +2326,7 @@ def print_word(request):
     run8 = p8.add_run(text8)
     font8 = run8.font
     font8.size = Pt(10)
-    font8.name = 'Lato'
+    font8.name = 'Calibri'
     font8.bold = True
     font8.italic = False
     font8.color.rgb = grey
@@ -2337,7 +2337,7 @@ def print_word(request):
     run9 = p9.add_run(text9)
     font9 = run9.font
     font9.size = Pt(10)
-    font9.name = 'Lato'
+    font9.name = 'Calibri'
     font9.bold = False
     font9.color.rgb = grey
     p9.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2347,7 +2347,7 @@ def print_word(request):
     run10 = p10.add_run(text10)
     font10 = run10.font
     font10.size = Pt(10)
-    font10.name = 'Lato'
+    font10.name = 'Calibri'
     font10.bold = False
     font10.italic = False
     font10.color.rgb = grey
@@ -2358,7 +2358,7 @@ def print_word(request):
     run11 = p11.add_run(text11)
     font11 = run11.font
     font11.size = Pt(10)
-    font11.name = 'Lato'
+    font11.name = 'Calibri'
     font11.bold = True
     font11.color.rgb = grey
     p11.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2368,7 +2368,7 @@ def print_word(request):
     run12 = p12.add_run(text12)
     font12 = run12.font
     font12.size = Pt(10)
-    font12.name = 'Lato'
+    font12.name = 'Calibri'
     font12.bold = False
     font12.color.rgb = grey
     p12.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2378,7 +2378,7 @@ def print_word(request):
     run13 = p13.add_run(text13)
     font13 = run13.font
     font13.size = Pt(10)
-    font13.name = 'Lato'
+    font13.name = 'Calibri'
     font13.bold = False
     font13.color.rgb = grey
     p13.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2388,7 +2388,7 @@ def print_word(request):
     run14 = p14.add_run(text14)
     font14 = run14.font
     font14.size = Pt(10)
-    font14.name = 'Lato'
+    font14.name = 'Calibri'
     font14.bold = False
     font14.color.rgb = grey
     p14.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2398,7 +2398,7 @@ def print_word(request):
     run15 = p15.add_run(text15)
     font15 = run15.font
     font15.size = Pt(10)
-    font15.name = 'Lato'
+    font15.name = 'Calibri'
     font15.bold = False
     font15.color.rgb = grey
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2408,7 +2408,7 @@ def print_word(request):
     run16 = p16.add_run(text16)
     font16 = run16.font
     font16.size = Pt(10)
-    font16.name = 'Lato'
+    font16.name = 'Calibri'
     font16.bold = False
     font16.color.rgb = grey
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2418,7 +2418,7 @@ def print_word(request):
     run17 = p17.add_run(text17)
     font17 = run17.font
     font17.size = Pt(10)
-    font17.name = 'Lato'
+    font17.name = 'Calibri'
     font17.bold = False
     font17.color.rgb = grey
     p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2428,7 +2428,7 @@ def print_word(request):
     run17 = p17.add_run(text17)
     font17 = run17.font
     font17.size = Pt(10)
-    font17.name = 'Lato'
+    font17.name = 'Calibri'
     font17.bold = False
     font17.color.rgb = grey
     p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2439,7 +2439,7 @@ def print_word(request):
     run17 = p17.add_run(text17)
     font17 = run17.font
     font17.size = Pt(10)
-    font17.name = 'Lato'
+    font17.name = 'Calibri'
     font17.bold = False
     font17.color.rgb = grey
     p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2449,7 +2449,7 @@ def print_word(request):
     run17 = p17.add_run(text17)
     font17 = run17.font
     font17.size = Pt(10)
-    font17.name = 'Lato'
+    font17.name = 'Calibri'
     font17.bold = False
     font17.color.rgb = grey
     p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2463,7 +2463,7 @@ def print_word(request):
     run18 = p18.add_run(text18)
     font18 = run18.font
     font18.size = Pt(10)
-    font18.name = 'Lato'
+    font18.name = 'Calibri'
     font18.bold = True
     font18.italic = False
     font18.color.rgb = grey
@@ -2474,7 +2474,7 @@ def print_word(request):
     run19 = p19.add_run(text19)
     font19 = run19.font
     font19.size = Pt(10)
-    font19.name = 'Lato'
+    font19.name = 'Calibri'
     font19.bold = True
     font19.italic = False
     font19.color.rgb = grey
@@ -2485,7 +2485,7 @@ def print_word(request):
     run20 = p20.add_run(text20)
     font20 = run20.font
     font20.size = Pt(10)
-    font20.name = 'Lato'
+    font20.name = 'Calibri'
     font20.bold = True
     font20.italic = False
     font20.color.rgb = grey
@@ -2519,7 +2519,7 @@ def print_word(request):
     # Set font properties
     font22 = run22.font
     font22.size = Pt(8)
-    font22.name = 'Lato'
+    font22.name = 'Calibri'
     font22.bold = False
     font22.italic = False
 
