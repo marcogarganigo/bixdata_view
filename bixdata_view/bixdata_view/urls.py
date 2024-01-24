@@ -137,6 +137,7 @@ urlpatterns = [
     path('link_file/', alpha.link_file, name='link_file'),
     path('deal_close_won/', alpha.deal_close_won, name='deal_close_won'),
     path('deal_close_lost/', alpha.deal_close_lost, name='deal_close_lost'),
+    path('deal_update_dealstage/', alpha.deal_update_dealstage, name='deal_update_dealstage'),
     path('settings_table_fields_settings_save/', settings_view.settings_table_fields_settings_save, name='settings_table_fields_settings_save'),
     path('load_table_settings_menu/', settings_view.load_table_settings_menu, name='load_table_settings_menu'),
     path('settings_table_settings/', settings_view.settings_table_settings, name='settings_table_settings'),
