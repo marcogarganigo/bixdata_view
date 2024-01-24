@@ -110,10 +110,10 @@
             success: function (response) {
                 $("#settings_col4").css('display', 'block');
 
-                $("#results-column-container").load('/loading/')
+                $("#settings_table_fields_settings").load('/loading/')
 
                 setTimeout(function () {
-                    $("#results-column-container").html(response);
+                    $("#settings_table_fields_settings").html(response);
                 }, 150);
 
             },
@@ -235,10 +235,10 @@
             },
             success: function (response) {
 
-                $("#settings_table_fields_settings").load('/loading/')
+                $("#fields_table_settings").load('/loading/')
 
                 setTimeout(function () {
-                    $("#settings_table_fields_settings").html(response);
+                    $("#fields_table_settings").html(response);
                 }, 150);
             },
         })
@@ -308,8 +308,10 @@
 
         <input type="hidden" id="selected-field-block">
 
-    <div id="settings_table_fields_settings" class="secondary-level third-level">
+    <div id="settings_table_fields_settings" class="secondary-level third-level" style="width: 300px; height: 100%; float: right">
+    </div>
 
+    <div id="fields_table_settings" class="secondary-level third-level">
 
     </div>
 </div>
