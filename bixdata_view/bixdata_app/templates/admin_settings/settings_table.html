@@ -235,10 +235,10 @@
             },
             success: function (response) {
 
-                $("#fields_table_settings").load('/loading/')
+                $("#settings_table_fields_settings").load('/loading/')
 
                 setTimeout(function () {
-                    $("#fields_table_settings").html(response);
+                    $("#settings_table_fields_settings").html(response);
                 }, 150);
             },
         })
@@ -308,10 +308,10 @@
 
         <input type="hidden" id="selected-field-block">
 
-    <div id="settings_table_fields_settings" class="secondary-level third-level" style="width: 300px; height: 100%; float: right">
+    <div id="settings_table_fields_settings" class="secondary-level third-level" style="width: 20%; height: 90%; float: left">
     </div>
 
-    <div id="fields_table_settings" class="secondary-level third-level">
+    <div id="fields_table_settings" class="secondary-level third-level" style="width: 20%; height: 90%; float: left">
 
     </div>
 </div>

@@ -1447,15 +1447,12 @@ def stampa_servicecontract(request):
         print(filename_with_path)
         pdfkit.from_string(content, filename_with_path, configuration=config, options={"enable-local-file-access": ""})
 
-        try:
-            with open(filename_with_path, 'rb') as fh:
-                response = HttpResponse(fh.read(), content_type="application/pdf")
-                response['Content-Disposition'] = f'inline; filename={filename}'
+        with open(filename_with_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/pdf")
+            response['Content-Disposition'] = f'inline; filename={filename}'
 
-            return response
+        return response
 
-        finally:
-            os.remove(filename_with_path)
 
 
 def stampa_servicecontract_test(request):

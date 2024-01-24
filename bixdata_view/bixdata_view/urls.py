@@ -144,5 +144,6 @@ urlpatterns = [
     path('settings_table_fields_settings_block/', settings_view.settings_table_fields_settings_block, name='settings_table_fields_settings_block'),
     path('settings_table_fields_settings_fields_save/', settings_view.settings_table_fields_settings_fields_save, name='settings_table_fields_settings_fields_save'),
     path('get_table_view/<str:viewid>/', bixdata_view.get_table_view, name='get_table_view'),
+    path('settings_table_fields_new_field/', settings_view.settings_table_fields_new_field, name='settings_table_fields_new_field'),
 
 ]

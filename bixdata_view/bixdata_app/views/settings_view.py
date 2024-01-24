@@ -175,3 +175,19 @@ def settings_table_fields_settings_fields_save(request):
                     [userid, tableid, field, setting['name'], setting['value']]
                 )
     return HttpResponse({'success': True})
+
+
+def settings_table_fields_new_field(request):
+
+    data = request.POST.get('serialized_data')
+    data = json.loads(data)
+
+    tableid = data['tableid']
+    userid = data['userid']
+    fieldid = data['fieldid']
+    fielddescription = data['fielddescription']
+    fieldtype = data['fieldtype']
+
+
+
+    return HttpResponse({'success': True})

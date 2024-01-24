@@ -1,9 +1,32 @@
+<div id="new-field-form" class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="new-field-id" class="form-label">ID</label>
+            <input type="text" class="form-control" id="new-field-id" placeholder="ID">
+        </div>
+        <div class="col-md-3">
+            <label for="new-field-description" class="form-label">Descrizione</label>
+            <input type="text" class="form-control" id="new-field-description" placeholder="Descrizione">
+        </div>
+        <div class="col-md-3">
+            <label for="new-field-type" class="form-label">Select</label>
+            <select class="form-select" id="new-field-type"></select>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-primary" onclick="newTableField()">Salva</button>
+        </div>
+    </div>
+</div>
+<br>
+
 <div id="settings_block_usertables_settings" class="drag-elements-container" style="height: 95%; overflow: scroll">
     <div class="drag-item">
         {% for field in fields %}
             <div class="drag-item2">
-                <p class="settings_block_usertables_fieldid" data-fieldid-word="{{ field.fieldid }}" data-fieldid="{{ field.id }}">{{field.description}}</p>
-                <button class="btn btn-secondary" onclick="settingsFieldsSettings('{{ field.fieldid }}')">Impostazioni</button>
+                <p class="settings_block_usertables_fieldid" data-fieldid-word="{{ field.fieldid }}"
+                   data-fieldid="{{ field.id }}">{{ field.description }}</p>
+                <button class="btn btn-secondary" onclick="settingsFieldsSettings('{{ field.fieldid }}')">Impostazioni
+                </button>
             </div>
         {% endfor %}
     </div>
@@ -20,10 +43,33 @@
             },
             url: "{% url 'settings_table_fields_settings_block' %}",
             success: function (response) {
-                $('#settings_table_fields_settings').html(response);
+                $('#fields_table_settings').html(response);
             },
             error: function () {
             }
         });
+    }
+
+    function newTableField() {
+        serialized_data = {
+            'fieldid': $('#new-field-id').val(),
+            'fielddescription': $('#new-field-description').val(),
+            'fieldtype': $('#new-field-type').val(),
+            'tableid': $('#table_settings_menu').data('tableid'),
+            'userid': $('#user_username').data('userid')
+        }
+
+        serialized_data = JSON.stringify(serialized_data);
+
+        $.ajax({
+            type: "POST",
+            data: serialized_data,
+            url: "{% url 'settings_table_fields_new_field' %}",
+            success: function (response) {
+                $('#fields_table_settings').html(response);
+            },
+            error: function () {
+            }
+        })
     }
 </script>
