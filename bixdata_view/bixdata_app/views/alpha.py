@@ -1352,6 +1352,10 @@ def stampa_timesheet(request):
     tableid = request.POST.get('tableid')
     filename = request.POST.get('filename')
 
+    path = os.path.dirname(os.path.abspath(__file__))
+    path = path.rsplit('views', 1)[0]
+    filename_with_path = path + '\\static\\pdf\\' + filename
+
     uid = uuid.uuid4().hex
 
     qr = qrcode.QRCode(
@@ -1374,10 +1378,9 @@ def stampa_timesheet(request):
 
     qr_name = 'qrcode' + uid + '.png'
 
-    img.save("bixdata_view/bixdata_app/static/pdf/" + qr_name)
+    img.save(path + qr_name)
 
 
-    filename_with_path = os.path.join('bixdata_view/bixdata_app/static/pdf', filename)
 
 
     with connection.cursor() as cursor:
@@ -1396,10 +1399,10 @@ def stampa_timesheet(request):
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
     content = render_to_string('pdf/timesheet.html', row)
 
-    filename_with_path = os.path.abspath(filename_with_path)
+
     pdfkit.from_string(content, filename_with_path, configuration=config)
 
-    os.remove("bixdata_view/bixdata_app/static/pdf/" + qr_name)
+    os.remove(path + qr_name)
 
     try:
         with open(filename_with_path, 'rb') as fh:
@@ -1442,16 +1445,20 @@ def stampa_servicecontract(request):
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
         content = render_to_string('pdf/servicecontract.html', row)
 
-        filename_with_path = os.path.join('bixdata_app/static/pdf', filename)
-        filename_with_path = os.path.abspath(filename_with_path)
-        print(filename_with_path)
+        filename_with_path = os.path.dirname(os.path.abspath(__file__))
+        filename_with_path = filename_with_path.rsplit('views', 1)[0]
+        filename_with_path = filename_with_path + '\\static\\pdf\\' + filename
         pdfkit.from_string(content, filename_with_path, configuration=config, options={"enable-local-file-access": ""})
 
-        with open(filename_with_path, 'rb') as fh:
-            response = HttpResponse(fh.read(), content_type="application/pdf")
-            response['Content-Disposition'] = f'inline; filename={filename}'
+        try:
+            with open(filename_with_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type="application/pdf")
+                response['Content-Disposition'] = f'inline; filename={filename}'
 
-        return response
+            return response
+
+        finally:
+            os.remove(filename_with_path)
 
 
 
