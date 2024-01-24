@@ -2615,6 +2615,15 @@ def deal_close_lost(request):
         deal_record.save()
     return JsonResponse({'success': True})
 
+def deal_update_dealstage(request):
+    if request.method == 'POST':
+        recordid = request.POST.get('recordid')
+        dealstage = request.POST.get('dealstage')
+        deal_record=Record(tableid='deal',recordid=recordid)
+        deal_record.fields['dealstage']=dealstage
+        deal_record.save()
+    return JsonResponse({'success': True})
+
 
 def custom_update(tableid, recordid):
     if(tableid=='deal'):

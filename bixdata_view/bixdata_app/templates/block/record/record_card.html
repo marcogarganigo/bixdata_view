@@ -539,6 +539,18 @@
                                 onclick="dealCloseLost(this)">
                             Chiuso perso
                         </button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                Fase vendita
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Appuntamento')">Appuntamento</a></li>
+                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Offerta da preparare')">Offerta da preparare</a></li>
+                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Offerta inviata')">Offerta inviata</a></li>
+                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Archiviato')">Offerta archiviata</a></li>
+                            </ul>
+                        </div>
 
                     {% endif %}
 
@@ -625,6 +637,40 @@
                                     
                                 }
                             });
+
+                            
+                            
+                        }
+
+                        function dealUpdateDealstage(el,dealstage) {
+                            var block_record_card = $(el).closest('.block_record_card')
+                            var tableid = $(block_record_card).data('tableid')
+                            var recordid = $(block_record_card).data('recordid')
+                            $.ajax({
+                                type: "POST",
+                                url: "{% url 'deal_update_dealstage' %}",
+                                data: {
+                                    'tableid': tableid,
+                                    'recordid': recordid,
+                                    'dealstage':dealstage
+                                },
+                                success: function (response) {
+                                    $(el).closest('.modal').modal("hide");
+                                    swal({
+                                        text: "Trattativa aggiornata",
+                                        icon: "success",
+                                        timer: 1000,
+                                        buttons: false,
+                                    });
+                                    refresh();
+                                    
+                                },
+                                error: function () {
+                                    // Handle error if needed
+                                }
+                            });
+                              
+                            
 
                             
                             
