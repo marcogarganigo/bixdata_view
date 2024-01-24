@@ -2070,6 +2070,8 @@ def print_word(request):
     tableid = request.POST.get('tableid')
     format = request.POST.get('format')
 
+
+
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_H,
@@ -2095,6 +2097,7 @@ def print_word(request):
 
     recordid_deal = request.POST.get('recordid')
     deal_record = Record('deal', recordid_deal)
+    dealuser1 = deal_record.fields['dealuser1']
     dealline_records = deal_record.get_linkedrecords('dealline')
 
     dealname = deal_record.fields['dealname']
@@ -2106,6 +2109,14 @@ def print_word(request):
     companyname = company_record.fields['companyname']
     address = company_record.fields['address']
     city = company_record.fields['city']
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT first_name, last_name FROM v_users WHERE sys_user_id ='{dealuser1}'"
+        )
+        rows = dictfetchall(cursor)
+
+        user = rows[0]['first_name'] + ' ' + rows[0]['last_name']
 
     id = uuid.uuid4().hex
 
@@ -2147,7 +2158,7 @@ def print_word(request):
     run1 = p1.add_run(text1)
     font1 = run1.font
     font1.size = Pt(10.5)
-    font1.name = 'Calibri'
+    font1.name = 'Lato'
     font1.bold = False
     font1.color.rgb = grey
     p1.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2157,7 +2168,7 @@ def print_word(request):
     run_companyname = p_companyname.add_run(text_companyname)
     font_companyname = run_companyname.font
     font_companyname.size = Pt(12)
-    font_companyname.name = 'Calibri'
+    font_companyname.name = 'Lato'
     font_companyname.bold = True
     font_companyname.color.rgb = grey
     p_companyname.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2168,7 +2179,7 @@ def print_word(request):
     run2 = p2.add_run(text2)
     font2 = run2.font
     font2.size = Pt(10)
-    font2.name = 'Calibri'
+    font2.name = 'Lato'
     font2.bold = False
     font2.color.rgb = grey
     p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2178,7 +2189,7 @@ def print_word(request):
     run_date = p_date.add_run(text_date)
     font_date = run_date.font
     font_date.size = Pt(11)
-    font_date.name = 'Calibri'
+    font_date.name = 'Lato'
     font_date.bold = True
     font_date.color.rgb = grey
     p_date.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2189,7 +2200,7 @@ def print_word(request):
     run3 = p3.add_run(text3)
     font3 = run3.font
     font3.size = Pt(16)
-    font3.name = 'Calibri'
+    font3.name = 'Lato'
     font3.color.rgb = RGBColor(0xC0, 0x00, 0x00)
     font3.bold = True
     p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2214,7 +2225,7 @@ def print_word(request):
     run3 = p3.add_run(text3)
     font3 = run3.font
     font3.size = Pt(15)
-    font3.name = 'Calibri'
+    font3.name = 'Lato'
     font3.color.rgb = RGBColor(0xC0, 0x00, 0x00)
     font3.bold = False
     p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2291,7 +2302,7 @@ def print_word(request):
 
 
     p6 = doc.add_paragraph()  # Stile per elenco puntato con due punti
-    text6 = '•      Per tutte le richieste di assistenza: apertura ticket scrivendo all’indirizzo helpdesk@swissbix.ch - \n        verrete ricontattati dal nostro servizio tecnico'
+    text6 = '          •      Per tutte le richieste di assistenza: apertura ticket scrivendo all’indirizzo helpdesk@swissbix.ch  \n                  verrete ricontattati dal nostro servizio tecnico'
     run6 = p6.add_run(text6)
     font6 = run6.font
     font6.size = Pt(10)
@@ -2301,7 +2312,7 @@ def print_word(request):
     p6.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p7 = doc.add_paragraph()
-    text7 = '•      Orari di ufficio per supporto tecnico; dalle 9:00 alle 12:00 e dalle 14:00 alle 17:00'
+    text7 = '          •      Orari di ufficio per supporto tecnico; dalle 9:00 alle 12:00 e dalle 14:00 alle 17:00'
     run7 = p7.add_run(text7)
     font7 = run7.font
     font7.size = Pt(10)
@@ -2322,7 +2333,7 @@ def print_word(request):
     p8.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p9 = doc.add_paragraph()
-    text9 = '•      Hardware e Consumabili: Acconto 50% all’ordine, Saldo a 20gg fine lavori'
+    text9 = '          •       Hardware e Consumabili: Acconto 50% all’ordine, Saldo a 20gg fine lavori'
     run9 = p9.add_run(text9)
     font9 = run9.font
     font9.size = Pt(10)
@@ -2332,7 +2343,7 @@ def print_word(request):
     p9.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p10 = doc.add_paragraph()
-    text10 = '•     Servizi a canone: Trimestrali anticipati a 20 giorni data fattura'
+    text10 = '          •       Servizi a canone: Trimestrali anticipati a 20 giorni data fattura'
     run10 = p10.add_run(text10)
     font10 = run10.font
     font10.size = Pt(10)
@@ -2353,61 +2364,92 @@ def print_word(request):
     p11.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p12 = doc.add_paragraph()
-    text12 = '•     Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
+    text12 = '           •      condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
     run12 = p12.add_run(text12)
     font12 = run12.font
     font12.size = Pt(10)
-    font12.name = 'Calibri'
+    font12.name = 'Lato'
     font12.bold = False
     font12.color.rgb = grey
     p12.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p13 = doc.add_paragraph()
-    text13 = '•     Le condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
+    text13 = '           •      La presente offerta comprende un servizio “chiavi in mano” al fine di \n                    garantire al cliente una totale garanzia della buona riuscita del progetto'
     run13 = p13.add_run(text13)
     font13 = run13.font
     font13.size = Pt(10)
-    font13.name = 'Calibri'
+    font13.name = 'Lato'
     font13.bold = False
     font13.color.rgb = grey
     p13.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p14 = doc.add_paragraph()
-    text14 = '•     I servizi vengono rinnovati tacitamente salvo disdetta scritta 60 giorni prima della scadenza.'
+    text14 = '           •      Offerta valida fino al #DATA CHIUSURA o fino ad esaurimento scorte'
     run14 = p14.add_run(text14)
     font14 = run14.font
     font14.size = Pt(10)
-    font14.name = 'Calibri'
+    font14.name = 'Lato'
     font14.bold = False
     font14.color.rgb = grey
     p14.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p15 = doc.add_paragraph()
-    text15 = '•     Orari di ufficio per supporto tecnico; dalle 9:00 alle 12:00 e dalle 14:00 alle 17:00'
+    text15 = '           •      Swissbix SA non sarà ritenuta responsabile in caso di ritardi nella consegna del materiale \n                   dovuti a causa di forza maggiore o problemi legati ai fornitori dei prodotti o dei servizi logistici'
     run15 = p15.add_run(text15)
     font15 = run15.font
     font15.size = Pt(10)
-    font15.name = 'Calibri'
+    font15.name = 'Lato'
     font15.bold = False
     font15.color.rgb = grey
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p16 = doc.add_paragraph()
-    text16 = '•     Prezzi Iva Esclusa'
+    text16 = '           •      Sono esclusi dalla presente proposta commerciale:'
     run16 = p16.add_run(text16)
     font16 = run16.font
     font16.size = Pt(10)
-    font16.name = 'Calibri'
+    font16.name = 'Lato'
     font16.bold = False
     font16.color.rgb = grey
     p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p17 = doc.add_paragraph()
-    text17 = '•     Sono esclusi lavori di cablaggio, lavori a muro ed elettrici e di tutta la cavetteria aggiuntiva.'
+    text17 = '                          o      Supporto, installazione ed eventuali uscite di fornitori esterni per gli applicativi \n                                  di terze parti utilizzati dal cliente'
     run17 = p17.add_run(text17)
     font17 = run17.font
     font17.size = Pt(10)
-    font17.name = 'Calibri'
+    font17.name = 'Lato'
+    font17.bold = False
+    font17.color.rgb = grey
+    p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p17 = doc.add_paragraph()
+    text17 = '                          o      Lavori di cablaggio, lavori a muro di fissaggio e/o montaggio di ogni dispositivo, \n                                  lavori elettrici'
+    run17 = p17.add_run(text17)
+    font17 = run17.font
+    font17.size = Pt(10)
+    font17.name = 'Lato'
+    font17.bold = False
+    font17.color.rgb = grey
+    p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+
+    p17 = doc.add_paragraph()
+    text17 = '                          o      Eventuali cavi, adattatori o convertitori che saranno fatturati a parte.'
+    run17 = p17.add_run(text17)
+    font17 = run17.font
+    font17.size = Pt(10)
+    font17.name = 'Lato'
+    font17.bold = False
+    font17.color.rgb = grey
+    p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+    p17 = doc.add_paragraph()
+    text17 = '           •      I prezzi indicati sono Iva Esclusa'
+    run17 = p17.add_run(text17)
+    font17 = run17.font
+    font17.size = Pt(10)
+    font17.name = 'Lato'
     font17.bold = False
     font17.color.rgb = grey
     p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2421,18 +2463,18 @@ def print_word(request):
     run18 = p18.add_run(text18)
     font18 = run18.font
     font18.size = Pt(10)
-    font18.name = 'Calibri'
+    font18.name = 'Lato'
     font18.bold = True
     font18.italic = False
     font18.color.rgb = grey
     p18.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p19 = doc.add_paragraph()
-    text19 = 'Nome Cognome'
+    text19 = user
     run19 = p19.add_run(text19)
     font19 = run19.font
     font19.size = Pt(10)
-    font19.name = 'Calibri'
+    font19.name = 'Lato'
     font19.bold = True
     font19.italic = False
     font19.color.rgb = grey
@@ -2443,7 +2485,7 @@ def print_word(request):
     run20 = p20.add_run(text20)
     font20 = run20.font
     font20.size = Pt(10)
-    font20.name = 'Calibri'
+    font20.name = 'Lato'
     font20.bold = True
     font20.italic = False
     font20.color.rgb = grey
@@ -2454,7 +2496,7 @@ def print_word(request):
     run_space = p_space.add_run(text_space)
 
     p21 = doc.add_paragraph()
-    text21 = '____________________________________'
+    text21 = '─────────────────────────────────────'
     run21 = p21.add_run(text21)
     font21 = run21.font
     font21.size = Pt(10)
@@ -2477,7 +2519,7 @@ def print_word(request):
     # Set font properties
     font22 = run22.font
     font22.size = Pt(8)
-    font22.name = 'Calibri'
+    font22.name = 'Lato'
     font22.bold = False
     font22.italic = False
 
