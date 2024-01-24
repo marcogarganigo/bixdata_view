@@ -394,24 +394,25 @@
         return formData;
     }
 
-    function stampaWord(format) {
+    function stampaWord(el,format) {
+        var block_record_card = $(el).closest('.block_record_card')
+        var tableid = $(block_record_card).data('tableid')
+        var recordid = $(block_record_card).data('recordid')
         serialized_form = serializeForm($('.save-button').closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
         //set the value of creator in serialized_form
         serialized_form['creator'] = '{{ userid}}';
         serialized_json = convertFormToJSON(serialized_form);
         var post_data = [];
-        post_data.push({name: 'tableid', value: '{{ tableid }}'});
-        post_data.push({name: 'recordid', value: '{{ recordid }}'});
+        post_data.push({name: 'tableid', value: tableid});
+        post_data.push({name: 'recordid', value: recordid});
         post_data.push({name: 'fields', value: serialized_json});
-        contextfunction = '{{contextfunction}}'
-        post_data.push({name: 'contextfunction', value: contextfunction});
 
         $.ajax({
             type: "POST",
-            url: "{% url 'print_word' %}",
+            url: "/print_word/",
             data: {
-                recordid: '{{ recordid }}',
-                tableid: '{{ tableid }}',
+                recordid: recordid,
+                tableid: tableid,
                 format: format,
             },
             xhrFields: {
@@ -492,10 +493,10 @@
                             </a></li>
                         {% endif %}
                         {% if tableid == 'deal' %}
-                            <li><a class="dropdown-item" onclick="stampaWord()">
+                            <li><a class="dropdown-item" onclick="stampaWord(this)">
                                 Stampa in word
                             </a></li>
-                            <li><a class="dropdown-item" onclick="stampaWord('pdf')">
+                            <li><a class="dropdown-item" onclick="stampaWord(this,'pdf')">
                                 Stampa in pdf
                             </a></li>
                         {% endif %}

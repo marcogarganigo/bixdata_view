@@ -103,7 +103,13 @@ def get_content_records(request):
     t.context='search_fields'
     filter_fields=t.get_fields()
     context_records_filters=dict()
-    context_records_filters['filter_fields']=filter_fields['Dati']
+    context_records_filters['filter_fields']=dict()
+    
+    for filter_fields_label_key,filter_fields_label in filter_fields.items():
+        for filter_field_key,filter_field in filter_fields_label.items():
+           context_records_filters['filter_fields'][filter_field_key]=filter_field
+    
+    
     hv.context['block_search_fields'] = render_to_string('block/records/records_filters.html',context_records_filters, request)
     return hv.render_template('content/records.html')
 
