@@ -903,20 +903,17 @@ def get_linked(request):
 
 @login_required(login_url='/login/')
 def save_record_fields(request):
+    file = request.FILES.get('file')
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
-    fields = request.POST.get('fields')
-    fields_dict = json.loads(fields)
     contextfunction = request.POST.get('contextfunction')
     creator= userid = get_userid(request.user.id)
     
-    file = request.FILES.get('file')
-    if file:
-        fs = FileSystemStorage()
-        filename = fs.save(file.name, file)
-        uploaded_file_url = fs.url(filename)
-        fields_dict['attachment'] = uploaded_file_url
-
+    fields_dict = request.POST.dict()
+    del fields_dict['tableid']
+    del fields_dict['recordid']
+    del fields_dict['contextfunction']
+    
 
     if tableid == 'timetracking':
         if fields_dict['stato'] == 'Terminato':
@@ -1015,6 +1012,18 @@ def save_record_fields(request):
 
 
 
+    for field_name, uploaded_files in request.FILES.items():
+        fs = FileSystemStorage(location='attachments')
+        basename, extension = os.path.splitext(uploaded_files.name)
+        filename=tableid+'_'+response_dict['recordid']
+        if tableid=='attachment':
+            if fields_dict['type']=='Documento firmato':
+                filename='deal'+'_'+fields_dict['recordiddeal_']
+            else:
+                filename='deal-attachment'+'_'+fields_dict['recordiddeal_']+'_'+fields_dict['note']
+        filename=filename+'_'+basename+extension
+        fs.save(filename, uploaded_files)
+        
     #return render(request, 'block/record/record_fields.html')
     custom_save_record(request,tableid,response_dict['recordid'])
     return HttpResponse(response_dict['recordid'])

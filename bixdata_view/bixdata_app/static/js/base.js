@@ -50,21 +50,25 @@ function save_record(el) {
     } else {
 
         serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
-        serialized_form['creator'] = '{{ userid}}';
         serialized_json = convertFormToJSON(serialized_form);
         var post_data = [];
         post_data.push({name: 'tableid', value: tableid});
         post_data.push({name: 'recordid', value: recordid});
         post_data.push({name: 'fields', value: serialized_json});
         post_data.push({name: 'contextfunction', value: contextfunction});
-
+        var formData = new FormData($("#form_fields_container")[0]);
+        formData.append('tableid', tableid);
+        formData.append('recordid', recordid);
+        formData.append('contextfunction', contextfunction);
 
         //closeNewRecordModal()
         $(el).closest('.modal').modal("hide");
         $.ajax({
             type: "POST",
             url: "/save_record_fields/",
-            data: post_data,
+            data: formData,
+            processData: false,
+            contentType: false,
             success: function (response) {
                 saved_recordid = response
                 if ((master_tableid == 'None')) {
