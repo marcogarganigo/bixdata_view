@@ -13,7 +13,7 @@ import json
 import datetime
 from django.contrib.auth.decorators import login_required
 import time
-from ...forms import LoginForm
+from ....forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db import connection, connections
@@ -24,7 +24,7 @@ from django_user_agents.utils import get_user_agent
 from django import template
 from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
-from .logic_helper import *
+from ..logic_helper import *
 
 
 class DatabaseHelper:

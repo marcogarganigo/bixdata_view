@@ -14,7 +14,6 @@ import datetime
 from django.contrib.auth.decorators import login_required
 import time
 import os
-from ...forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db import connection, connections
@@ -25,8 +24,7 @@ from django_user_agents.utils import get_user_agent
 from django import template
 from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
-from .logic_helper import *
-from ..beta import *
+from ..logic_helper import *
 from .database_helper import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
