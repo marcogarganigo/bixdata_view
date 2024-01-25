@@ -908,14 +908,6 @@ def save_record_fields(request):
     fields_dict = json.loads(fields)
     contextfunction = request.POST.get('contextfunction')
 
-    file = request.FILES.get('file')
-    if file:
-        fs = FileSystemStorage()
-        filename = fs.save(file.name, file)
-        uploaded_file_url = fs.url(filename)
-        fields_dict['attachment'] = uploaded_file_url
-
-
     if tableid == 'timetracking':
         if fields_dict['stato'] == 'Terminato':
             if fields_dict['end'] == '':
