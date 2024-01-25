@@ -57,7 +57,7 @@ function save_record(el) {
         post_data.push({name: 'recordid', value: recordid});
         post_data.push({name: 'fields', value: serialized_json});
         post_data.push({name: 'contextfunction', value: contextfunction});
-        
+
 
         //closeNewRecordModal()
         $(el).closest('.modal').modal("hide");
