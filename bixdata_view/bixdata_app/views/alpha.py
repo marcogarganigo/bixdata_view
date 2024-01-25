@@ -907,7 +907,8 @@ def save_record_fields(request):
     fields = request.POST.get('fields')
     fields_dict = json.loads(fields)
     contextfunction = request.POST.get('contextfunction')
-
+    creator= userid = get_userid(request.user.id)
+    
     file = request.FILES.get('file')
     if file:
         fs = FileSystemStorage()
@@ -969,7 +970,7 @@ def save_record_fields(request):
 
         elif tableid == 'task':
 
-            if fields_dict['user'] != fields_dict['creator']:
+            if fields_dict['user'] != creator:
                 with connection.cursor() as cursor:
                     cursor.execute("SELECT email FROM v_users WHERE sys_user_id = %s", [fields_dict['user']])
                     row = cursor.fetchone()
@@ -977,7 +978,7 @@ def save_record_fields(request):
                     email = row[0]
 
                     cursor.execute("SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s",
-                                   [fields_dict['creator']])
+                                   [creator])
                     row = cursor.fetchone()
                     first_name = row[0]
                     last_name = row[1]
