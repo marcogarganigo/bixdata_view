@@ -1,3 +1,4 @@
+import base64
 import tempfile
 import uuid
 import threading
@@ -1360,6 +1361,7 @@ def stampa_timesheet(request):
     recordid = request.POST.get('recordid')
     tableid = request.POST.get('tableid')
     filename = request.POST.get('filename')
+    completeUrl = request.POST.get('completeUrl')
 
     path = os.path.dirname(os.path.abspath(__file__))
     path = path.rsplit('views', 1)[0]
@@ -1387,7 +1389,7 @@ def stampa_timesheet(request):
 
     qr_name = 'qrcode' + uid + '.png'
 
-    img.save(path + qr_name)
+    img.save(path + '\\static\\pdf\\' + qr_name)
 
 
 
@@ -1400,7 +1402,7 @@ def stampa_timesheet(request):
 
         row = rows[0]
         row['recordid'] = recordid
-        row['qr_name'] = qr_name
+        row['completeUrl'] = completeUrl + qr_name
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
@@ -1411,7 +1413,7 @@ def stampa_timesheet(request):
 
     pdfkit.from_string(content, filename_with_path, configuration=config)
 
-    os.remove(path + qr_name)
+    os.remove(path + '\\static\\pdf\\' + qr_name)
 
     try:
         with open(filename_with_path, 'rb') as fh:
@@ -2665,3 +2667,89 @@ def custom_update(tableid, recordid):
         deal_record.fields['expectedmargin']=deal_record.fields['amount']-deal_record.fields['expectedcost']
         deal_record.save()
     return True
+
+def signature_function(request):
+    return render(request, 'other/signature.html')
+
+def save_signature(request):
+
+    recordid = request.POST.get('recordid')
+    tableid = request.POST.get('tableid')
+    signature = request.POST.get('signature')
+    completeUrl = request.POST.get('completeUrl')
+    filename = request.POST.get('filename')
+
+
+    #download the image
+    format, imgstr = signature.split(';base64,')
+    ext = format.split('/')[-1]
+    filename_signature = f"{tableid}_{recordid}.{ext}"
+
+    filepath_signature = 'bixdata_view/bixdata_app/static/pdf/' + filename_signature
+
+   #save the image
+
+    with open(filepath_signature, 'wb') as fh:
+        fh.write(base64.b64decode(imgstr))
+
+    path = os.path.dirname(os.path.abspath(__file__))
+    path = path.rsplit('views', 1)[0]
+    filename_with_path = path + '\\static\\pdf\\' + filename
+
+    uid = uuid.uuid4().hex
+
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=10,
+        border=0,
+    )
+
+    today = datetime.date.today()
+    d1 = today.strftime("%d/%m/%Y")
+
+    qrcontent = str(tableid) + '_' + str(recordid)
+
+    data = qrcontent
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    qr_name = 'qrcode' + uid + '.png'
+
+    img.save(path + '\\static\\pdf\\' + qr_name)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT   t.*,c.companyname,c.address,c.city,c.email,u.firstname, u.lastname FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ join sys_user as u on t.user = u.id WHERE t.recordid_='{recordid}'"
+        )
+        rows = dictfetchall(cursor)
+
+        row = rows[0]
+        row['recordid'] = recordid
+        row['completeQrUrl'] = completeUrl + qr_name
+        row['completeSignatureUrl'] = completeUrl + filename_signature
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
+
+    config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+    content = render_to_string('pdf/timesheet_signature.html', row)
+
+    pdfkit.from_string(content, filename_with_path, configuration=config)
+
+
+
+    try:
+        with open(filename_with_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/pdf")
+            response['Content-Disposition'] = f'inline; filename={filename}'
+
+        return response
+
+    finally:
+        os.remove(path + '\\static\\pdf\\' + qr_name)
+        os.remove(filepath_signature)
+        os.remove(filename_with_path)
+

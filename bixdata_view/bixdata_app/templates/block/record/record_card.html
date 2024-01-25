@@ -212,15 +212,23 @@
 
     function stampa(tableid) {
         var filename = tableid + new Date().getTime() + '.pdf';
-        var url = '/stampa_' + tableid + '/';
+        var urll = '/stampa_' + tableid + '/';
+
+
+        var url = window.location.href;
+        var urlSplit = url.split('/');
+        var firstpart = urlSplit[0] + '//' + urlSplit[2];
+        var completeURL = firstpart + '/static/pdf/'
+
 
         $.ajax({
             type: "POST",
-            url: url,
+            url: urll,
             data: {
                 'recordid': '{{ recordid }}',
                 'tableid': '{{ tableid }}',
                 'filename': filename,
+                'completeUrl': completeURL,
             },
             xhrFields: {
                 responseType: 'blob'
@@ -394,7 +402,7 @@
         return formData;
     }
 
-    function stampaWord(el,format) {
+    function stampaWord(el, format) {
         var block_record_card = $(el).closest('.block_record_card')
         var tableid = $(block_record_card).data('tableid')
         var recordid = $(block_record_card).data('recordid')
@@ -504,6 +512,45 @@
                 </div>
 
 
+                {% if tableid == 'timesheet' %}
+                    <button type="button" class="btn btn-light button-recordcard" data-bs-toggle="tooltip"
+                            data-bs-placement="bottom" data-bs-title="elimina"
+                            onclick="signatureFunction()">Firma
+                    </button>
+
+                    <div class="modal fade" id="signatureModal" aria-labelledby="signatureModal" aria-hidden="true"
+                         data-recordid="{{ recordid }}">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Firma qui</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div id="signatureModalContent" class="modal-body">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function signatureFunction() {
+                            $.ajax({
+                                type: "POST",
+                                url: "{% url 'signature_function' %}",
+                                success: function (response) {
+                                    $('#signatureModalContent').html(response);
+                                    $('#signatureModal').modal('show');
+                                },
+                                error: function (xhr, status, error) {
+                                }
+                            });
+                        }
+                    </script>
+                {% endif %}
+
+
                 <div class="dropdown">
                     <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -525,9 +572,6 @@
                 </div>
 
                 {% if tableid == 'deal' %}
-                    <button type="button" class="btn btn-outline-secondary button-recordcard" data-bs-title="stampa"
-                            onclick="selectFile()">Allega
-                    </button>
 
                     <input type="file" id="fileInput" style="display: none;"/>
                     {% if dealstatus != 'Vinta' and dealstatus != 'Persa' %}
@@ -541,15 +585,20 @@
                             Chiuso perso
                         </button>
                         <div class="dropdown">
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown"
                                     aria-expanded="false">
                                 Fase vendita
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Appuntamento')">Appuntamento</a></li>
-                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Offerta da preparare')">Offerta da preparare</a></li>
-                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Offerta inviata')">Offerta inviata</a></li>
-                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Archiviato')">Offerta archiviata</a></li>
+                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Appuntamento')">Appuntamento</a>
+                                </li>
+                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Offerta da preparare')">Offerta
+                                    da preparare</a></li>
+                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Offerta inviata')">Offerta
+                                    inviata</a></li>
+                                <li><a class="dropdown-item" onclick="dealUpdateDealstage(this,'Archiviato')">Offerta
+                                    archiviata</a></li>
                             </ul>
                         </div>
 
@@ -585,19 +634,18 @@
                                                 buttons: false,
                                             });
                                             refresh();
-                                            
+
                                         },
                                         error: function () {
                                             // Handle error if needed
                                         }
                                     });
                                 } else {
-                                    
+
                                 }
                             });
 
-                            
-                            
+
                         }
 
                         function dealCloseLost(el) {
@@ -628,22 +676,21 @@
                                                 buttons: false,
                                             });
                                             refresh();
-                                            
+
                                         },
                                         error: function () {
                                             // Handle error if needed
                                         }
                                     });
                                 } else {
-                                    
+
                                 }
                             });
 
-                            
-                            
+
                         }
 
-                        function dealUpdateDealstage(el,dealstage) {
+                        function dealUpdateDealstage(el, dealstage) {
                             var block_record_card = $(el).closest('.block_record_card')
                             var tableid = $(block_record_card).data('tableid')
                             var recordid = $(block_record_card).data('recordid')
@@ -653,7 +700,7 @@
                                 data: {
                                     'tableid': tableid,
                                     'recordid': recordid,
-                                    'dealstage':dealstage
+                                    'dealstage': dealstage
                                 },
                                 success: function (response) {
                                     $(el).closest('.modal').modal("hide");
@@ -664,17 +711,14 @@
                                         buttons: false,
                                     });
                                     refresh();
-                                    
+
                                 },
                                 error: function () {
                                     // Handle error if needed
                                 }
                             });
-                              
-                            
 
-                            
-                            
+
                         }
 
                         function selectFile() {
