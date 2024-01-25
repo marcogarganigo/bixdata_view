@@ -57,17 +57,7 @@ function save_record(el) {
         post_data.push({name: 'recordid', value: recordid});
         post_data.push({name: 'fields', value: serialized_json});
         post_data.push({name: 'contextfunction', value: contextfunction});
-
-        var hasFileInput = false;
-        $(serialized_form).each(function () {
-            if (this.type === 'file') {
-                // Pass file input separately if it exists
-                post_data.push({name: 'file', value: this.value});
-                hasFileInput = true;
-                return false; // Exit the loop if a file input is found
-            }
-        });
-
+        
 
         //closeNewRecordModal()
         $(el).closest('.modal').modal("hide");
