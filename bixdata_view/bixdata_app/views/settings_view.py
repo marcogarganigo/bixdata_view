@@ -140,6 +140,7 @@ def settings_table_fields(request):
     userid = request.POST.get('userid')
     hv = HelperView(request)
     hv.context['fields'] = list(SysField.objects.filter(tableid=tableid).values())
+    hv.context['tables'] = list(SysTable.objects.values())
     return hv.render_template('admin_settings/settings_table_fields.html')
 
 
