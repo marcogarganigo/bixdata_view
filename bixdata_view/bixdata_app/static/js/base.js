@@ -21,8 +21,7 @@ function load_fields(el, tableid, recordid, master_tableid, master_recordid) {
     });
 }
 
-function save_record(el)
-{
+function save_record(el) {
     console.info('FUN:base.js-save_record')
     var record_fields_container = $(el).closest('.record_fields_container')
     var tableid = $(record_fields_container).data('tableid')
@@ -59,6 +58,17 @@ function save_record(el)
         post_data.push({name: 'fields', value: serialized_json});
         post_data.push({name: 'contextfunction', value: contextfunction});
 
+        var hasFileInput = false;
+        $(serialized_form).each(function () {
+            if (this.type === 'file') {
+                // Pass file input separately if it exists
+                post_data.push({name: 'file', value: this.value});
+                hasFileInput = true;
+                return false; // Exit the loop if a file input is found
+            }
+        });
+
+
         //closeNewRecordModal()
         $(el).closest('.modal').modal("hide");
         $.ajax({
@@ -73,7 +83,7 @@ function save_record(el)
                     load_linked(tableid + '-' + master_recordid, tableid, master_recordid, master_tableid)
                     load_badge(master_tableid, master_recordid)
                 }
-                
+
 
                 setTimeout(function () {
 
@@ -145,7 +155,7 @@ function load_linked(linkedtableid, tableid, masterrecordid, mastertableid, orde
         },
         success: function (response) {
             //$(collapse).find('.linked_container').html(response);
-             $("#linked-container-" + linkedtableid).html(response)
+            $("#linked-container-" + linkedtableid).html(response)
         },
         error: function (response) {
         }

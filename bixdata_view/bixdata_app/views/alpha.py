@@ -908,6 +908,14 @@ def save_record_fields(request):
     fields_dict = json.loads(fields)
     contextfunction = request.POST.get('contextfunction')
 
+    file = request.FILES.get('file')
+    if file:
+        fs = FileSystemStorage()
+        filename = fs.save(file.name, file)
+        uploaded_file_url = fs.url(filename)
+        fields_dict['attachment'] = uploaded_file_url
+
+
     if tableid == 'timetracking':
         if fields_dict['stato'] == 'Terminato':
             if fields_dict['end'] == '':
@@ -2102,6 +2110,7 @@ def print_word(request):
     recordid_deal = request.POST.get('recordid')
     deal_record = Record('deal', recordid_deal)
     dealuser1 = deal_record.fields['dealuser1']
+    closedate = deal_record.fields['closedate']
     dealline_records = deal_record.get_linkedrecords('dealline')
 
     dealname = deal_record.fields['dealname']
@@ -2188,6 +2197,17 @@ def print_word(request):
     font2.color.rgb = grey
     p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
+
+    p_space = doc.add_paragraph()
+    text_space = ''
+    run_space = p_space.add_run(text_space)
+    font_space = run_space.font
+    font_space.size = Pt(10)
+    font_space.name = 'Calibri'
+    font_space.bold = False
+    font_space.italic = True
+    p_space.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
     p_date = doc.add_paragraph()
     text_date = f"Massagno {d1}"
     run_date = p_date.add_run(text_date)
@@ -2256,16 +2276,11 @@ def print_word(request):
         row.cells[3].paragraphs[0].runs[0].font.bold = True
 
 
-    #add a space between the table and the paragraph that is coming
+
+
     p_space = doc.add_paragraph()
     text_space = ''
     run_space = p_space.add_run(text_space)
-    font_space = run_space.font
-    font_space.size = Pt(10)
-    font_space.name = 'Calibri'
-    font_space.bold = False
-    font_space.italic = True
-    p_space.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p_space = doc.add_paragraph()
     text_space = ''
@@ -2388,7 +2403,7 @@ def print_word(request):
     p13.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
     p14 = doc.add_paragraph()
-    text14 = '           •      Offerta valida fino al #DATA CHIUSURA o fino ad esaurimento scorte'
+    text14 = '           •      Offerta valida fino al ' + str(closedate) + ' o fino ad esaurimento scorte'
     run14 = p14.add_run(text14)
     font14 = run14.font
     font14.size = Pt(10)
@@ -2468,7 +2483,7 @@ def print_word(request):
     font18 = run18.font
     font18.size = Pt(10)
     font18.name = 'Calibri'
-    font18.bold = True
+    font18.bold = False
     font18.italic = False
     font18.color.rgb = grey
     p18.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2479,7 +2494,7 @@ def print_word(request):
     font19 = run19.font
     font19.size = Pt(10)
     font19.name = 'Calibri'
-    font19.bold = True
+    font19.bold = False
     font19.italic = False
     font19.color.rgb = grey
     p19.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -2490,7 +2505,7 @@ def print_word(request):
     font20 = run20.font
     font20.size = Pt(10)
     font20.name = 'Calibri'
-    font20.bold = True
+    font20.bold = False
     font20.italic = False
     font20.color.rgb = grey
     p20.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT

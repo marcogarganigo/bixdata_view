@@ -10,12 +10,17 @@
         </div>
         <div class="col-md-3">
             <label for="new-field-type" class="form-label">Select</label>
-            <select class="form-select" id="new-field-type"></select>
+            <select class="form-select" id="new-field-type" onselect="newFieldLinkedTable()"></select>
         </div>
         <div class="col-md-3">
             <button class="btn btn-primary" onclick="newTableField()">Salva</button>
         </div>
     </div>
+
+<div id="linked-container-newfield">
+
+</div>
+
 </div>
 <br>
 
@@ -25,7 +30,7 @@
             <div class="drag-item2">
                 <p class="settings_block_usertables_fieldid" data-fieldid-word="{{ field.fieldid }}"
                    data-fieldid="{{ field.id }}">{{ field.description }}</p>
-                <button class="btn btn-secondary" onclick="settingsFieldsSettings('{{ field.fieldid }}')">Impostazioni
+                <button class="btn btn-secondary" onclick="settingsFieldsSettings(this.value)">Impostazioni
                 </button>
             </div>
         {% endfor %}
@@ -33,6 +38,11 @@
 </div>
 
 <script>
+
+    function newFieldLinkedTable(fieldtype) {
+        if (fieldtype == 'linked')
+    }
+
     function settingsFieldsSettings(field) {
         $('#selected-field-block').val(field);
 
