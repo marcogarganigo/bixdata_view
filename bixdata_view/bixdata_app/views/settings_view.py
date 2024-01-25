@@ -177,6 +177,12 @@ def settings_table_fields_settings_fields_save(request):
                 )
     return HttpResponse({'success': True})
 
+def settings_table_fields_linked_table(request):
+    tableid = request.POST.get('tableid')
+    hv = HelperView(request)
+    hv.context['fields'] = list(SysField.objects.filter(tableid=tableid).values())
+    return hv.render_template('admin_settings/settings_table_fields_linked_table_fields.html')
+
 
 def settings_table_fields_new_field(request):
 

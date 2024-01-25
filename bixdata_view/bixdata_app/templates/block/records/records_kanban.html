@@ -184,10 +184,13 @@
 
     var tsi_id = [];
 
+    /*
     $(".task-list-items").each(function (index) {
         var element_id = $(this).attr("id");
         tsi_id.push(document.getElementById(element_id));
     });
+    */
+
     console.log('Kanban debug:');
     console.log(tsi_id);
 
@@ -195,6 +198,8 @@
         //update_db(this, '{{ tableid }}', $('.kanban-record').data('recordid'), $(target).closest('.tasks').data('status'))
         alert('Funzione di aggiornamento stato tramite kanban non ancora attiva')
     });
+
+
 
     var cards = document.querySelectorAll('.kanban-record');
     cards.forEach(function (card) {

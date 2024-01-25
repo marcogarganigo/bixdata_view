@@ -1,0 +1,7 @@
+{% for field in fields %}
+    <div class="drag-item2">
+        <input class="form-check-input mt-0 checkbox" type="checkbox" value=""
+               aria-label="Checkbox for following text input">
+        <p class="linked-table-fields" data-fieldid="{{ field.fieldid }}">{{ field.description }}</p>
+    </div>
+{% endfor %}

@@ -10,16 +10,23 @@
         </div>
         <div class="col-md-3">
             <label for="new-field-type" class="form-label">Select</label>
-            <select class="form-select" id="new-field-type" onselect="newFieldLinkedTable()"></select>
+            <select class="form-select" id="new-field-type" onchange="newFieldLinkedTable(this.value)">
+                <option value="parola">Parola</option>
+                <option value="linked">Linked</option>
+            </select>
         </div>
         <div class="col-md-3">
             <button class="btn btn-primary" onclick="newTableField()">Salva</button>
         </div>
     </div>
 
-<div id="linked-container-newfield">
-
-</div>
+    <div id="linked-container-newfield" style="display:none">
+         <select class="form-select" id="field-linked-table" onchange="selectedLinkedTable(this.value)">
+            {% for table in tables %}
+                <option value="{{ table.id }}">{{ table.description }}</option>
+            {% endfor %}
+         </select>
+    </div>
 
 </div>
 <br>
@@ -30,7 +37,7 @@
             <div class="drag-item2">
                 <p class="settings_block_usertables_fieldid" data-fieldid-word="{{ field.fieldid }}"
                    data-fieldid="{{ field.id }}">{{ field.description }}</p>
-                <button class="btn btn-secondary" onclick="settingsFieldsSettings(this.value)">Impostazioni
+                <button class="btn btn-secondary" onclick="settingsFieldsSettings()">Impostazioni
                 </button>
             </div>
         {% endfor %}
@@ -39,8 +46,27 @@
 
 <script>
 
+    function selectedLinkedTable(tableid) {
+        $.ajax({
+            type: "POST",
+            data: {
+                'tableid': tableid
+            },
+            url: "{% url 'settings_table_fields_linked_table' %}",
+            success: function (response) {
+                $('#fields_table_settings').html(response);
+            },
+            error: function () {
+            }
+        })
+    }
+
     function newFieldLinkedTable(fieldtype) {
-        if (fieldtype == 'linked')
+        if (fieldtype == 'linked') {
+            $('#linked-container-newfield').show();
+        } else {
+            $('#linked-container-newfield').hide();
+        }
     }
 
     function settingsFieldsSettings(field) {
@@ -69,17 +95,24 @@
             'userid': $('#user_username').data('userid')
         }
 
+        if ($('#new-field-type').val() == 'linked') {
+            serialized_data['linkedtable'] = $('#field-linked-table').val();
+
+            var linkedTableFields = []
+            $('.linked-table-fields').each(function () {
+                if ($(this).siblings('.checkbox').is(':checked')) {
+                    linkedTableFields.push($(this).data('fieldid'));
+                }
+            });
+            serialized_data['linkedtablefields'] = linkedTableFields;
+        }
+
+        console.info(serialized_data);
+
         serialized_data = JSON.stringify(serialized_data);
 
-        $.ajax({
-            type: "POST",
-            data: serialized_data,
-            url: "{% url 'settings_table_fields_new_field' %}",
-            success: function (response) {
-                $('#fields_table_settings').html(response);
-            },
-            error: function () {
-            }
-        })
+
+
+
     }
 </script>
