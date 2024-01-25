@@ -45,7 +45,7 @@ from .helper_view import *
 from htmldocx import HtmlToDocx
 import csv
 from functools import wraps
-from .businesslogic.table import *
+from .businesslogic.models.table import *
 
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
@@ -56,7 +56,7 @@ from docx.enum.style import WD_STYLE_TYPE
 
 import qrcode
 
-from .businesslogic.record import *
+from .businesslogic.models.record import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 

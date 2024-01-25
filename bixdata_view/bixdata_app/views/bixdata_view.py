@@ -49,7 +49,8 @@ from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor
 from .businesslogic.bixdata_business_logic import *
 from .businesslogic.settings_business_logic import *
-from .businesslogic.record import *
+from .businesslogic.models.record import *
+from .businesslogic.models.table import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -130,7 +131,7 @@ def get_records_table_render(request):
     currentpage = request.POST.get('currentpage')
     if (currentpage == ''):
         currentpage = 1
-    render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid, currentpage,order_field, order)
+    render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid, currentpage,order_field, order, filters)
     return HttpResponse(render)
 
 
@@ -149,7 +150,7 @@ def get_records_linked(request):
 
 # Questa funzione prende tutti i record della tabella richiesta e li ritorna
 @login_required(login_url='/login/')
-def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=1,order_field='', order=''):
+def get_records_table(request, tableid, master_tableid='', master_recordid='', searchTerm='', viewid='', currentpage=1,order_field='', order='', filters=dict()):
     userid = get_userid(request.user.id)
     table_type = 'standard'
     table_height = '100%'
@@ -173,10 +174,10 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
         'order': order,
         'master_tableid': master_tableid,
         'master_recordid': master_recordid,
-        'userid': userid
+        'userid': userid,
+        'filters':filters
     }
-    response = requests.post(
-        f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
+    response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
     response_dict = json.loads(response.text)
     columns = response_dict['columns']
     records = response_dict['records']

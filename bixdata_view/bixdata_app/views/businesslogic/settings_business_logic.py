@@ -24,7 +24,7 @@ from django_user_agents.utils import get_user_agent
 from django import template
 from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
-from .database_helper import *
+from .models.database_helper import *
 
 
 class SettingsBusinessLogic:
