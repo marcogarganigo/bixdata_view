@@ -1012,7 +1012,7 @@ def save_record_fields(request):
 
 
     for field_name, uploaded_files in request.FILES.items():
-        fs = FileSystemStorage(location='attachment')
+        fs = FileSystemStorage(location='attachments')
         basename, extension = os.path.splitext(uploaded_files.name)
         filename=tableid+'_'+response_dict['recordid']
         if tableid=='attachment':
