@@ -542,6 +542,7 @@
                                 success: function (response) {
                                     $('#signatureModalContent').html(response);
                                     $('#signatureModal').modal('show');
+                                    createCanvas()
                                 },
                                 error: function (xhr, status, error) {
                                 }

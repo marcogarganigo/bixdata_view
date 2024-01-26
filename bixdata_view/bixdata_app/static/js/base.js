@@ -155,3 +155,96 @@ function load_linked(linkedtableid, tableid, masterrecordid, mastertableid, orde
         }
     });
 }
+
+
+function saveSignature() {
+
+    var url = window.location.href;
+    var urlSplit = url.split('/');
+    var firstpart = urlSplit[0] + '//' + urlSplit[2];
+    var completeURL = firstpart + '/static/pdf/'
+
+    var canvas = document.getElementById("signatureCanvas");
+
+    var signature = canvas.toDataURL()
+
+
+    var filename = 'timesheet' + new Date().getTime() + '.pdf';
+
+    $.ajax({
+        url: "/save_signature/",
+        type: "POST",
+        data: {
+            signature: signature,
+            tableid: 'timesheet',
+            recordid: $('#signatureModal').data('recordid'),
+            completeUrl: completeURL,
+            filename: filename,
+        },
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function (response, status, xhr) {
+            const contentType = xhr.getResponseHeader('content-type');
+            const blob = new Blob([response], {type: contentType});
+
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const contentDisposition = xhr.getResponseHeader('content-disposition');
+            const filename = contentDisposition.split(';')[1].trim().split('=')[1];
+
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+
+            a.click();
+
+            window.URL.revokeObjectURL(blobUrl);
+            document.body.removeChild(a);
+        }
+    })
+}
+
+function createCanvas() {
+    // Ottieni il riferimento al canvas e al contesto 2D
+    var canvas = document.getElementById("signatureCanvas");
+    var ctx = canvas.getContext("2d");
+
+    // Variabili per tracciare la firma
+    var isDrawing = false;
+    var lastX = 0;
+    var lastY = 0;
+
+    // Aggiungi eventi per iniziare e finire il disegno
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mouseup", endDrawing);
+    canvas.addEventListener("mousemove", draw);
+
+    // Funzione per iniziare il disegno
+    function startDrawing(e) {
+        isDrawing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+    }
+
+    // Funzione per finire il disegno
+    function endDrawing() {
+        isDrawing = false;
+    }
+
+    // Funzione per disegnare
+    function draw(e) {
+        if (!isDrawing) return;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+    }
+
+    // Funzione per salvare la firma come immagine PNG
+}
+
+
