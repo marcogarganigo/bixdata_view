@@ -2699,9 +2699,15 @@ def save_signature(request):
     ext = format.split('/')[-1]
     filename_signature = f"{tableid}_{recordid}.{ext}"
 
-    filepath_signature = 'bixdata_view/bixdata_app/static/pdf/' + filename_signature
+
+
+    filepath_signature = os.path.dirname(os.path.abspath(__file__))
+    filepath_signature = filepath_signature.rsplit('views', 1)[0]
+    filepath_signature = filepath_signature + '\\static\\pdf\\' + filename_signature
 
    #save the image
+
+
 
     with open(filepath_signature, 'wb') as fh:
         fh.write(base64.b64decode(imgstr))
