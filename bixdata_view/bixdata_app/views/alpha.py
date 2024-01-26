@@ -2682,11 +2682,16 @@ def signature_function(request):
 
 def save_signature(request):
 
+    print('funzione signature')
+
     recordid = request.POST.get('recordid')
     tableid = request.POST.get('tableid')
     signature = request.POST.get('signature')
     completeUrl = request.POST.get('completeUrl')
     filename = request.POST.get('filename')
+
+    print(tableid)
+    print(signature)
 
 
     #download the image
