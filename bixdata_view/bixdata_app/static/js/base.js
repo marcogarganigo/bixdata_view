@@ -207,44 +207,86 @@ function saveSignature() {
 }
 
 function createCanvas() {
-    // Ottieni il riferimento al canvas e al contesto 2D
-    var canvas = document.getElementById("signatureCanvas");
-    var ctx = canvas.getContext("2d");
+  // Ottieni il riferimento al canvas e al contesto 2D
+var canvas = document.getElementById("signatureCanvas");
+var ctx = canvas.getContext("2d");
 
-    // Variabili per tracciare la firma
-    var isDrawing = false;
-    var lastX = 0;
-    var lastY = 0;
+// Variabili per tracciare la firma
+var isDrawing = false;
+var lastX = 0;
+var lastY = 0;
 
-    // Aggiungi eventi per iniziare e finire il disegno
-    canvas.addEventListener("mousedown", startDrawing);
-    canvas.addEventListener("mouseup", endDrawing);
-    canvas.addEventListener("mousemove", draw);
+// Aggiungi eventi per iniziare e finire il disegno
+canvas.addEventListener("mousedown", startDrawing);
+canvas.addEventListener("mouseup", endDrawing);
+canvas.addEventListener("mousemove", draw);
+canvas.addEventListener("touchstart", startDrawingTouch);
+canvas.addEventListener("touchend", endDrawingTouch);
+canvas.addEventListener("touchmove", drawTouch);
 
-    // Funzione per iniziare il disegno
-    function startDrawing(e) {
-        isDrawing = true;
-        [lastX, lastY] = [e.offsetX, e.offsetY];
-    }
+// Funzione per iniziare il disegno con il mouse
+function startDrawing(e) {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+}
 
-    // Funzione per finire il disegno
-    function endDrawing() {
-        isDrawing = false;
-    }
+// Funzione per finire il disegno con il mouse
+function endDrawing() {
+    isDrawing = false;
+}
 
-    // Funzione per disegnare
-    function draw(e) {
-        if (!isDrawing) return;
-        ctx.beginPath();
-        ctx.moveTo(lastX, lastY);
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.strokeStyle = "#000";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        [lastX, lastY] = [e.offsetX, e.offsetY];
-    }
+// Funzione per disegnare con il mouse
+function draw(e) {
+    if (!isDrawing) return;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+}
 
-    // Funzione per salvare la firma come immagine PNG
+// Funzione per iniziare il disegno con il touch
+
+
+// Funzione per finire il disegno con il touch
+function endDrawingTouch() {
+    isDrawing = false;
+}
+
+// Funzione per disegnare con il touch
+// Funzione per iniziare il disegno con il touch
+function startDrawingTouch(e) {
+    isDrawing = true;
+    var touch = e.touches[0];
+    var rect = canvas.getBoundingClientRect();
+    [lastX, lastY] = [touch.clientX - rect.left, touch.clientY - rect.top];
+    e.preventDefault();
+}
+
+// Funzione per disegnare con il touch
+function drawTouch(e) {
+    if (!isDrawing) return;
+    var touch = e.touches[0];
+    var rect = canvas.getBoundingClientRect();
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    [lastX, lastY] = [touch.clientX - rect.left, touch.clientY - rect.top];
+    e.preventDefault();
+}
+
+
+// Funzione per salvare la firma come immagine PNG
+function saveSignature() {
+    var dataURL = canvas.toDataURL("image/png");
+    // Puoi usare dataURL per salvare l'immagine o inviarla al server
+}
+
 }
 
 
