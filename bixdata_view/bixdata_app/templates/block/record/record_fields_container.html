@@ -57,7 +57,7 @@
             });
 
         } else {
-            closeNewRecordModal()
+            closeNewRecordModal(el)
             //var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
             //var serialized_json = convertFormToJSON(serialized_array);
             serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));

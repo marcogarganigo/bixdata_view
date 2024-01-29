@@ -255,9 +255,7 @@
         }
     }
 
-    function closeNewRecordModal() {
-        $("#newRecordModal").modal("hide");
-    }
+
 
     function open_kanban() {
         var serialized_data = [];
@@ -303,7 +301,7 @@
         <div class="modal-content" style="width: 100%">
             <div class="modal-body" style="width: 100%">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                        onclick="closeNewRecordModal()"></button>
+                        onclick="closeNewRecordModal(this)"></button>
                 <div id="fullwidth_modal_newrecord" class="col-xl-4 col-md-4 mb-4" style="height: 100%; width: 100%;">
                 </div>
             </div>

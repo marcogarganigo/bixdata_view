@@ -61,7 +61,7 @@ function save_record(el) {
         formData.append('recordid', recordid);
         formData.append('contextfunction', contextfunction);
 
-        //closeNewRecordModal()
+        closeNewRecordModal(el)
         $(el).closest('.modal').modal("hide");
         $.ajax({
             type: "POST",
@@ -84,7 +84,7 @@ function save_record(el) {
 
                     //$('#fields_container_' + tableid + '_' + recordid).load('/loading/');
 
-
+                    /*
                     if ((master_tableid == 'None') && tableid != 'deal') {
                         if (window.innerWidth > min_width) {
                             if ($('#recordModal').hasClass('show')) {
@@ -94,11 +94,10 @@ function save_record(el) {
                             }
                         }
                     }
-
-
                     if (window.innerWidth < min_width) {
                         open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
                     }
+                    */
 
                     if (tableid == 'deal') {
                         open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
@@ -287,6 +286,41 @@ function saveSignature() {
     // Puoi usare dataURL per salvare l'immagine o inviarla al server
 }
 
+}
+
+
+function newRecord(tableid, new_linked = '') {
+    console.info('fun:newRecord')
+
+    var serialized_data = [];
+    serialized_data.push({name: 'tableid', value: tableid});
+    serialized_data.push({name: 'contextfunction', value: 'insert'});
+    serialized_data.push({name: 'contextreference', value: tableid});
+    serialized_data.push({name: 'http_response', value: true});
+    $.ajax({
+        type: "POST",
+        url: "/get_record_fields/",
+        data: serialized_data,
+        success: function (response) {
+            if (new_linked == 'yes') {
+                console.info('fun:newRecord - new linekd')
+                $('#newLinkedRecordModal').modal('show');
+                $("#newLinkdeRecordModalContent").html(response);
+            } else {
+                console.info('fun:newRecord - new master')
+                $('#newRecordModal').modal('show');
+                $("#fullwidth_modal_newrecord").html(response);
+            }
+        },
+        error: function () {
+            $("#bixdata_recordcard_container").html(response);
+        }
+    });
+}
+
+
+function closeNewRecordModal(el) {
+    $(el).closest(".modal").modal("hide");
 }
 
 

@@ -294,36 +294,7 @@
         }
     }
 
-    function newRecord(tableid, new_linked = '') {
-        if (tableid == null) {
-            tableid = '{{tableid}}'
-        }
-
-        var serialized_data = [];
-        serialized_data.push({name: 'tableid', value: tableid});
-        serialized_data.push({name: 'contextfunction', value: 'insert'});
-        serialized_data.push({name: 'contextreference', value: tableid});
-        serialized_data.push({name: 'http_response', value: true});
-        serialized_data.push({name: 'master_tableid', value: '{{ tableid }}'});
-        serialized_data.push({name: 'master_recordid', value: '{{ recordid }}'});
-        $.ajax({
-            type: "POST",
-            url: "{% url 'get_record_fields' %}",
-            data: serialized_data,
-            success: function (response) {
-                if (new_linked == 'yes') {
-                    $('#newLinkedRecordModal').modal('show');
-                    $("#newLinkdeRecordModalContent").html(response);
-                } else {
-                    $('#newRecordModal').modal('show');
-                    $("#fullwidth_modal_newrecord").html(response);
-                }
-            },
-            error: function () {
-                $("#bixdata_recordcard_container").html(response);
-            }
-        });
-    }
+    
 
 
 
@@ -350,9 +321,7 @@
         $("#fullwidth_modal_newrecord").html("");
     });
 
-    function closeNewRecordModal() {
-        $("#newRecordModal").modal("hide");
-    }
+
 
     function closeLinkedTableModal() {
         $("#linked-table-modal").modal("hide");
@@ -459,9 +428,7 @@
                                         <button class="btn btn-outline-danger me-md-2 center-icon-button records-button"
                                                 type="button" onclick="refresh()"><span
                                                 class="material-symbols-outlined">cached</span></button>
-                                        <button class="btn btn-outline-danger me-md-2 records-button" type="button"
-                                                onclick="newRecord()">Nuovo
-                                        </button>
+                                        <button class="btn btn-outline-danger me-md-2 records-button" type="button" onclick="newRecord('{{tableid}}')">Nuovo </button>
                                         <div class="dropdown">
                                             <button class="btn btn-outline-secondary me md-2 dropdown-toggle records-button-secondary"
                                                     type="button" data-bs-toggle="dropdown" aria-expanded="false">
