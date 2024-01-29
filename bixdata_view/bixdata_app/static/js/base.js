@@ -56,7 +56,7 @@ function save_record(el) {
         post_data.push({name: 'recordid', value: recordid});
         post_data.push({name: 'fields', value: serialized_json});
         post_data.push({name: 'contextfunction', value: contextfunction});
-        var formData = new FormData($("#form_fields_container")[0]);
+        var formData = new FormData($(el).closest('#universal-container-timesheet').find("#form_fields_container")[0]);
         formData.append('tableid', tableid);
         formData.append('recordid', recordid);
         formData.append('contextfunction', contextfunction);
