@@ -68,17 +68,29 @@
     <div style="float:left;width:33%">
         <b>Indirizzo</b>
         <br>
-        <p>{{ address }}</p>
+        <p>
+            {% if address %}
+                {{ address }}
+            {% endif %}
+        </p>
     </div>
     <div style="float:left;width:30%">
         <b>Città</b>
         <br>
-        <p>{{ city }}</p>
+        <p>
+            {% if city %}
+                {{ city }}
+            {% endif %}
+        </p>
     </div>
     <div style="float:left;width:30%">
         <b>E-mail</b>
         <br>
-        <p>{{ email }}</p>
+        <p>
+            {% if email %}
+                {{ email }}
+            {% endif %}
+        </p>
     </div>
 
     <div style="clear:both"></div>
@@ -172,7 +184,7 @@
     {{ firstname }} {{ lastname }}
 </div>
 <div style="float:left;width:35%; text-align: center">
-    <p class="border-bottom">Registrato VTE</p>
+    <p class="border-bottom">Registrato Bixdata</p>
 </div>
 
 <div style="clear:both"></div>
@@ -192,7 +204,7 @@
 
 <div class="border-bottom" style=" float: left; width: 100%; margin-top: 1.2%">
     <div class="" style="float:right;width:20%;">
-        <input type="checkbox">
+        <input type="checkbox" checked>
     </div>
 </div>
 
