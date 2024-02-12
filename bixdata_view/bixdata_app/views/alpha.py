@@ -1563,61 +1563,54 @@ def sort_records(request):
     return icon
 
 
+@login_required
 def export_excel(request):
-    tableid = request.POST.get('tableid')
-    master_tableid = request.POST.get('master_tableid')
-    master_recordid = request.POST.get('master_recordid')
-    searchTerm = request.POST.get('searchTerm')
-    viewid = request.POST.get('viewid')
-    order_field = request.POST.get('order_field')
-    order = request.POST.get('order')
-    # currentpage = request.POST.get('currentpage')
-    currentpage = 0
+    if request.method == 'POST':
+        tableid = request.POST.get('tableid')
+        master_tableid = request.POST.get('master_tableid')
+        master_recordid = request.POST.get('master_recordid')
+        searchTerm = request.POST.get('searchTerm')
+        viewid = request.POST.get('viewid')
+        order_field = request.POST.get('order_field')
+        order = request.POST.get('order')
+        currentpage = 0
 
-    post = {
-        'tableid': tableid,
-        'searchTerm': searchTerm,
-        'viewid': viewid,
-        'currentpage': currentpage,
-        'order_field': order_field,
-        'order': order,
-        'master_tableid': master_tableid,
-        'master_recordid': master_recordid,
-        'userid': request.user.id
-    }
-    response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
-    response_dict = json.loads(response.text)
+        post = {
+            'tableid': tableid,
+            'searchTerm': searchTerm,
+            'viewid': viewid,
+            'currentpage': currentpage,
+            'order_field': order_field,
+            'order': order,
+            'master_tableid': master_tableid,
+            'master_recordid': master_recordid,
+            'userid': request.user.id
+        }
 
-    csv_file = tableid + '-' + uuid.uuid4().hex + '.csv'
 
-    csv_columns = []
-    for count, col in enumerate(response_dict['columns']):
-        if count > 2:
-            csv_columns.append(col['desc'])
+        response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
+        response.raise_for_status()
+        response_dict = response.json()
 
-    # records = [row[3:] for row in response_dict['records']]
+        csv_file = f"{tableid}-{uuid.uuid4().hex}.csv"
 
-    records = []
-    for response_dict_record in response_dict['records']:
-        record = []
-        for response_dict_record_field in response_dict_record[3:]:
-            record.append(remove_html_tags(response_dict_record_field))
-        records.append(record)
+        csv_columns = [col['desc'] for count, col in enumerate(response_dict['columns']) if count > 2]
 
-    with open(csv_file, 'w', newline='', encoding='utf-8-sig') as file:
-        writer = csv.writer(file, delimiter=';')
+        records = [[remove_html_tags(field) for field in record[3:]] for record in response_dict['records']]
 
-        writer.writerow(csv_columns)
-        writer.writerows(records)
+        with open(csv_file, 'w', newline='', encoding='utf-8-sig') as file:
+            writer = csv.writer(file, delimiter=';')
+            writer.writerow(csv_columns)
+            writer.writerows(records)
 
-    with open(csv_file, 'rb') as file:
-        response = HttpResponse(file.read(), content_type='text/csv')
-        response['Content-Disposition'] = 'attachment'
-        response['filename'] = csv_file
+        with open(csv_file, 'rb') as file:
+            response = HttpResponse(file.read(), content_type='text/csv')
+            response['Content-Disposition'] = 'attachment'
+            response['filename'] = csv_file
 
-    os.remove(csv_file)
+        os.remove(csv_file)
 
-    return response
+        return response
 
 
 def get_records_grouped(request):
