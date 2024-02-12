@@ -12,6 +12,7 @@
             <label for="new-field-type" class="form-label">Select</label>
             <select class="form-select" id="new-field-type" onchange="newFieldLinkedTable(this.value)">
                 <option value="parola">Parola</option>
+                <option value="numero">Numero</option>
                 <option value="linked">Linked</option>
             </select>
         </div>
@@ -110,6 +111,19 @@
         console.info(serialized_data);
 
         serialized_data = JSON.stringify(serialized_data);
+
+        $.ajax({
+            type: "POST",
+            data: {
+                'serialized_data': serialized_data
+            },
+            url: "{% url 'settings_table_fields_new_field' %}",
+            success: function (response) {
+                $('#fields_table_settings').html(response);
+            },
+            error: function () {
+            }
+        });
 
 
 

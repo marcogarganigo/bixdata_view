@@ -907,7 +907,7 @@ def save_record_fields(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     contextfunction = request.POST.get('contextfunction')
-    creator= userid = get_userid(request.user.id)
+    creator = userid = get_userid(request.user.id)
     
     fields_dict = request.POST.dict()
     del fields_dict['tableid']
@@ -932,6 +932,9 @@ def save_record_fields(request):
 
             hours = time_difference.total_seconds() / 3600
             fields_dict['worktime'] = round(hours, 2)
+
+        if fields_dict['start'] == '':
+            fields_dict['start'] = datetime.datetime.now().strftime("%H:%M")
 
     selected_options = request.POST.getlist('service');
 
@@ -967,6 +970,8 @@ def save_record_fields(request):
                        subject='Supporto bixdata', html_message=message)
 
         elif tableid == 'task':
+
+            creator = str(creator)
 
             if fields_dict['user'] != creator:
                 with connection.cursor() as cursor:
