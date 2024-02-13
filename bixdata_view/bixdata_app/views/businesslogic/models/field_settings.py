@@ -57,8 +57,16 @@ class FieldSettings:
     def get_settings(self):
         return self.settings
     
-    def save_settings(self):
-        return True
+    def save(self):
+        field_settings=self.settings
+        if self.tableid and self.fieldid:
+            sql=f"DELETE FROM sys_user_field_settings WHERE tableid='{self.tableid}' AND fieldid='{self.fieldid}' AND userid='{self.userid}' "
+            self.db_helper.sql_execute(sql)
+            
+            sql=f"INSERT INTO sys_user_field_settings () VALUES "
+            self.db_helper.sql_execute(sql)
+            return True
+        return False        
         
    
     

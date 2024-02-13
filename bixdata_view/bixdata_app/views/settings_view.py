@@ -149,10 +149,10 @@ def settings_table_fields(request):
 def settings_table_fields_settings_block(request):
     tableid = request.POST.get('tableid')
     fieldid = request.POST.get('fieldid')
-    fieldsettingsobj=FieldSettings(tableid=tableid,fieldid=fieldid,userid=1)
-    helperviewobj = HelperView(request)
-    helperviewobj.context['fieldsettings']=fieldsettingsobj.settings
-    return helperviewobj.render_template('admin_settings/settings_table_fields_settings_block.html')
+    fieldsettings_obj=FieldSettings(tableid=tableid,fieldid=fieldid,userid=1)
+    helperview_obj = HelperView(request)
+    helperview_obj.context['fieldsettings']=fieldsettings_obj.settings
+    return helperview_obj.render_template('admin_settings/settings_table_fields_settings_block.html')
 
 def settings_table_fields_settings_fields_save(request):
 
@@ -160,7 +160,12 @@ def settings_table_fields_settings_fields_save(request):
     userid = request.POST.get('userid')
     tableid = request.POST.get('tableid')
     field = request.POST.get('field')
-
+    
+    fieldsettings_obj=FieldSettings(tableid=tableid,fieldid=field,userid=userid)
+    # esempio fieldsettings_obj.settings['obbligatorio']['value']=True
+    # esempio fieldsettings_obj.save()
+    # dict con tutt i i settings. vedi te come compilarlo fieldsettings_obj.settings
+    
     settings_list = json.loads(settings)
 
     with connection.cursor() as cursor:
