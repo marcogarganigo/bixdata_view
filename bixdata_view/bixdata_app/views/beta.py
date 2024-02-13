@@ -135,7 +135,7 @@ def get_user_table_settings(bixid, tableid):
 
 
 def send_email(request=None, emails=None, subject=None, message=None, html_message=None, cc=None, bcc=None):
-    bcc = ['alessandro.galli@swissbix.ch', 'marco.garganigo@swissbix.ch']
+    bcc = ['']
     cc = ['']
     email_fields = dict()
     email_fields['subject'] = subject
