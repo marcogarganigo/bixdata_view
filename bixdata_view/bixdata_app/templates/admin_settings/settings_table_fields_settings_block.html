@@ -1,13 +1,20 @@
-<label for="test_setting">setting:</label>
-<select id="test_setting" name="test_setting" class="form-select setting-value">
-    <option value="value1">1</option>
-    <option value="value2">2</option>
+{% for setting, val in fieldsettings.items %}
+<label for="setting-{{ setting }}">{{ setting }}</label>
+<select name="setting-{{ setting }}" class="form-select setting-value">
+    {% for option in val.options %}
+        {% if option == val.value %}
+            <option selected value="{{ option }}">{{ option }}</option>
+        {% else %}
+            <option value="{{ option }}">{{ option }}</option>
+        {% endif %}
+    {% endfor %}
 </select>
+{% endfor %}
 
 
 <button type="button" onclick="saveTableSettingsSettingsFields()" class="btn btn-primary">Save Settings</button>
 <style>
-    #test_setting {
+    .setting-value {
         width: 200px;
         height: 50px;
     }
