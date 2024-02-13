@@ -3,6 +3,7 @@ from .helper_view import *
 from django.db.models import OuterRef, Subquery
 from .businesslogic.settings_business_logic import *
 from .businesslogic.models.record import *
+from .businesslogic.models.field_settings import *
 
 
 @login_required(login_url='/login/')
@@ -148,8 +149,10 @@ def settings_table_fields(request):
 def settings_table_fields_settings_block(request):
     tableid = request.POST.get('tableid')
     fieldid = request.POST.get('fieldid')
-    hv = HelperView(request)
-    return hv.render_template('admin_settings/settings_table_fields_settings_block.html')
+    fieldsettingsobj=FieldSettings(tableid=tableid,fieldid=fieldid,userid=1)
+    helperviewobj = HelperView(request)
+    helperviewobj.context['fieldsettings']=fieldsettingsobj.settings
+    return helperviewobj.render_template('admin_settings/settings_table_fields_settings_block.html')
 
 def settings_table_fields_settings_fields_save(request):
 

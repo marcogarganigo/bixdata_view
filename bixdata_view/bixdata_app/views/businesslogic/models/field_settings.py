@@ -29,15 +29,21 @@ from .database_helper import *
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
 class FieldSettings:
-    settings=dict()
-    settings['obbligatorio']['options']=['true', 'false']
-    settings['obbligatorio']['value']='false'
     
-    settings['calcolato']['options']=['true', 'false']
-    settings['calcolato']['value']='false'
-    
-    settings['default']['options']=[]
-    settings['default']['value']='false'
+    settings = {
+        'obbligatorio': {
+            'options': ['true', 'false'],
+            'value': 'false'
+        },
+        'calcolato': {
+            'options': ['true', 'false'],
+            'value': 'false'
+        },
+        'calcolato': {
+            'options': [],
+            'value': 'false'
+        }
+    }
     
     def __init__(self, tableid, fieldid, userid=1):
         self.db_helper=DatabaseHelper('default')
