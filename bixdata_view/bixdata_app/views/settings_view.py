@@ -146,9 +146,10 @@ def settings_table_fields(request):
 
 
 def settings_table_fields_settings_block(request):
-    helperview = HelperView(request)
-    
-    return helperview.render_template('admin_settings/settings_table_fields_settings_block.html')
+    tableid = request.POST.get('tableid')
+    fieldid = request.POST.get('fieldid')
+    hv = HelperView(request)
+    return hv.render_template('admin_settings/settings_table_fields_settings_block.html')
 
 def settings_table_fields_settings_fields_save(request):
 

@@ -38,7 +38,7 @@
             <div class="drag-item2">
                 <p class="settings_block_usertables_fieldid" data-fieldid-word="{{ field.fieldid }}"
                    data-fieldid="{{ field.id }}">{{ field.description }}</p>
-                <button class="btn btn-secondary" onclick="settingsFieldsSettings()">Impostazioni
+                <button class="btn btn-secondary" onclick="settingsFieldsSettings('{{ field.fieldid }}')">Impostazioni
                 </button>
             </div>
         {% endfor %}
@@ -70,13 +70,14 @@
         }
     }
 
-    function settingsFieldsSettings(field) {
-        $('#selected-field-block').val(field);
+    function settingsFieldsSettings(fieldid) {
+        tableid = $('#table_settings_menu').data('tableid');
 
         $.ajax({
             type: "POST",
             data: {
-                'field': field
+                'fieldid': fieldid,
+                'tableid': tableid
             },
             url: "{% url 'settings_table_fields_settings_block' %}",
             success: function (response) {
