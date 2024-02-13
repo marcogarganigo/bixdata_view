@@ -1,6 +1,7 @@
+<div id="settings-fields-container">
 {% for setting, val in fieldsettings.items %}
-<label for="setting-{{ setting }}">{{ setting }}</label>
-<select name="setting-{{ setting }}" class="form-select setting-value">
+<label for="{{ setting }}">{{ setting }}</label>
+<select name="{{ setting }}" class="form-select setting-value">
     {% for option in val.options %}
         {% if option == val.value %}
             <option selected value="{{ option }}">{{ option }}</option>
@@ -10,7 +11,7 @@
     {% endfor %}
 </select>
 {% endfor %}
-
+</div>
 
 <button type="button" onclick="saveTableSettingsSettingsFields()" class="btn btn-primary">Save Settings</button>
 <style>
@@ -28,7 +29,7 @@
 
            var field = $('#selected-field-block').val()
 
-        $('#settings_table_fields_settings').find('.setting-value').each(function () {
+        $('#settings-fields-container').find('.setting-value').each(function () {
             var value = $(this).val();
             var name = $(this).attr('name');
             serialized_data.push({name: name, value: value});

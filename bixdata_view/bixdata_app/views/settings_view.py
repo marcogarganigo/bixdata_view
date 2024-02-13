@@ -156,6 +156,10 @@ def settings_table_fields_settings_block(request):
 
 def settings_table_fields_settings_fields_save(request):
 
+    settings_list = request.POST.get('settings')
+
+    settings_list = json.loads(settings_list)
+
     settings = request.POST.get('settings')
     userid = request.POST.get('userid')
     tableid = request.POST.get('tableid')
@@ -166,26 +170,15 @@ def settings_table_fields_settings_fields_save(request):
     # esempio fieldsettings_obj.save()
     # dict con tutt i i settings. vedi te come compilarlo fieldsettings_obj.settings
     
-    settings_list = json.loads(settings)
 
-    with connection.cursor() as cursor:
-        for setting in settings_list:
-            cursor.execute(
-                "SELECT * FROM sys_user_field_settings WHERE userid = %s AND fieldid = %s and settingid = %s and tableid = %s",
-                [userid, field, setting['name'], tableid]
-            )
-            existing_setting = cursor.fetchone()
+    for setting in settings_list:
+        fieldsettings_obj.settings[setting['name']]['value'] = setting['value']
 
-            if existing_setting:
-                cursor.execute(
-                    "UPDATE sys_user_field_settings SET value  = %s where tableid = %s AND userid = %s AND fieldid = %s and settingid = %s",
-                    [setting['value'], tableid, userid, field, setting['name']]
-                )
-            else:
-                cursor.execute(
-                    "INSERT INTO sys_user_field_settings (userid, tableid, fieldid, settingid, value) VALUES (%s, %s, %s, %s, %s)",
-                    [userid, tableid, field, setting['name'], setting['value']]
-                )
+    fieldsettings_obj.save()
+
+
+
+
     return HttpResponse({'success': True})
 
 def settings_table_fields_linked_table(request):
