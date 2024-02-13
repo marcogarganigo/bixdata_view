@@ -71,8 +71,11 @@ function save_record(el) {
             contentType: false,
             success: function (response) {
                 saved_recordid = response
-                if ((master_tableid == 'None')) {
-                    refresh();
+
+                if (master_tableid == 'None') {
+                    if(contextfunction=='insert'){
+                        refresh();
+                    }
                 } else {
                     load_linked(tableid + '-' + master_recordid, tableid, master_recordid, master_tableid)
                     load_badge(master_tableid, master_recordid)
