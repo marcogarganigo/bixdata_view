@@ -2,6 +2,7 @@ from .alpha import *
 from .helper_view import *
 from django.db.models import OuterRef, Subquery
 from .businesslogic.settings_business_logic import *
+from .businesslogic.models.record import *
 
 
 @login_required(login_url='/login/')
