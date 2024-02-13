@@ -2,6 +2,7 @@ from .alpha import *
 from .helper_view import *
 from django.db.models import OuterRef, Subquery
 from .businesslogic.settings_business_logic import *
+from .businesslogic.models.record import *
 
 
 @login_required(login_url='/login/')
@@ -145,8 +146,9 @@ def settings_table_fields(request):
 
 
 def settings_table_fields_settings_block(request):
-    hv = HelperView(request)
-    return hv.render_template('admin_settings/settings_table_fields_settings_block.html')
+    helperview = HelperView(request)
+    
+    return helperview.render_template('admin_settings/settings_table_fields_settings_block.html')
 
 def settings_table_fields_settings_fields_save(request):
 
