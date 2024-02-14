@@ -176,9 +176,6 @@ def settings_table_fields_settings_fields_save(request):
 
     fieldsettings_obj.save()
 
-
-
-
     return HttpResponse({'success': True})
 
 def settings_table_fields_linked_table(request):

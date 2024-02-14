@@ -314,16 +314,16 @@
                                             <span class="material-symbols-outlined">clear</span>
                                         </button>
                                     </div>
-
                                     <input type="hidden" class="hidden-input {{ mandatory }} {{ calcolato }}"
                                         name="{{ field.fieldid }}" value="{{ field.recordid }}">
+
+                                      <p id="autocomplete-paragraph-{{ recordid }}" style="display:none; color: red">la trattativa verrà impostata con un prezzo a progetto</p>
 
                                     <button type="button" class="btn btn-light" onclick="newRecord('{{ field.tablelink }}', 'yes')"
                                             name="add"
                                             style="width: auto">
                                         <span class="material-symbols-outlined">add</span>
                                     </button>
-
                                 </div>
 
                                 <script>
@@ -370,6 +370,12 @@
                                         $(this).closest('.field').find('.hidden-input').val(ui.item.id);
                                         {% if tableid == 'dealline' %}
                                             update_dealline(this)
+
+                                            if (ui.item.value == 'Consegna e Installazione' || ui.item.value == 'Installazione e configurazione a progetto') {
+                                                $('#autocomplete-paragraph-{{ recordid }}').css('display', 'block')
+                                            } else {
+                                                $('#autocomplete-paragraph-{{ recordid }}').css('display', 'none')
+                                            }
                                         {% endif %}
 
                                         /*

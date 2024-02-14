@@ -32,15 +32,21 @@ class FieldSettings:
     
     settings = {
         'obbligatorio': {
+            'type': 'select',
             'options': ['true', 'false'],
             'value': 'false'
         },
         'calcolato': {
+            'type': 'select',
             'options': ['true', 'false'],
             'value': 'false'
         },
-        'calcolato': {
-            'options': [],
+        'default': {
+            'type': 'parola',
+            'value': ''
+        },
+        'label': {
+            'type': 'parola',
             'value': 'false'
         }
     }
@@ -56,23 +62,26 @@ class FieldSettings:
         
     def get_settings(self):
         return self.settings
-    
-    def save(self):
 
-        field_settings=self.settings
+    def save(self):
+        field_settings = self.settings
 
         if self.tableid and self.fieldid:
-            sql = f"DELETE FROM sys_user_field_settings WHERE tableid='{self.tableid}' AND fieldid='{self.fieldid}' AND userid='{self.userid}' "
-            self.db_helper.sql_execute(sql)
+            sql_delete = f"DELETE FROM sys_user_field_settings WHERE tableid='{self.tableid}' AND fieldid='{self.fieldid}' AND userid='{self.userid}' "
+            self.db_helper.sql_execute(sql_delete)
+
+        success = True
 
         for setting in field_settings:
+            sql_insert = f"INSERT INTO sys_user_field_settings (userid, tableid, fieldid, settingid, value) VALUES " \
+                         f"('{self.userid}', '{self.tableid}', '{self.fieldid}', '{setting}', '{field_settings[setting]['value']}')"
+            try:
+                self.db_helper.sql_execute(sql_insert)
+            except Exception as e:
+                print(f"Error inserting setting {setting}: {e}")
+                success = False
 
-            sql=f"INSERT INTO sys_user_field_settings (userid, tableid, fieldid, settingid, value) VALUES " \
-                f"('{self.userid}', '{self.tableid}', '{self.fieldid}', '{setting}', '{field_settings[setting]['value']}')"
-            self.db_helper.sql_execute(sql)
-            return True
-        return False
-        
+        return success
    
     
         

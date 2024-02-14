@@ -38,12 +38,14 @@
             <div class="drag-item2">
                 <p class="settings_block_usertables_fieldid" data-fieldid-word="{{ field.fieldid }}"
                    data-fieldid="{{ field.id }}">{{ field.description }}</p>
-                <button class="btn btn-secondary" onclick="settingsFieldsSettings('{{ field.fieldid }}')">Impostazioni
+                <button class="btn btn-secondary" onclick="settingsFieldsSettings('{{ field.fieldid }}', $('#selected-fieldid').val('{{ field.fieldid }}'))">Impostazioni
                 </button>
             </div>
         {% endfor %}
     </div>
 </div>
+
+<input type="hidden" id="selected-fieldid" value="">
 
 <script>
 
