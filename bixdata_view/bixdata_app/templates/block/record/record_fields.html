@@ -373,8 +373,12 @@
 
                                             if (ui.item.value == 'Consegna e Installazione' || ui.item.value == 'Installazione e configurazione a progetto') {
                                                 $('#autocomplete-paragraph-{{ recordid }}').css('display', 'block')
+                                                $('#field-expectedhours').addClass('necessary')
+                                                $('[title="expectedhours"]').find('p').addClass('badge bg-danger fs-5 badge-color')
                                             } else {
                                                 $('#autocomplete-paragraph-{{ recordid }}').css('display', 'none')
+                                                $('#field-expectedhours').removeClass('necessary')
+                                                $('[title="expectedhours"]').find('p').removeClass('badge bg-danger fs-5 badge-color')
                                             }
                                         {% endif %}
 
