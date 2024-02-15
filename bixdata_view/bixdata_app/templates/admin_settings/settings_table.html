@@ -181,9 +181,13 @@
 
 
     function tableSettingsSettings() {
+        var tableid = $('#table_settings_menu').attr('data-tableid');
         $.ajax({
             type: "POST",
             url: "{% url 'settings_table_settings' %}",
+            data: {
+                'tableid': tableid
+            },
             success: function (response) {
                 $('#settings_table_fields_settings').load('/loading/')
                 setTimeout(function () {
@@ -192,34 +196,7 @@
             },
         });
     }
-
-    function saveTableSettingsSettings() {
-
-        var serialized_data = []
-
-        $('#settings_table_fields_settings').find('.setting-value').each(function () {
-            var value = $(this).val();
-            var name = $(this).attr('name');
-            serialized_data.push({name: name, value: value});
-        });
-        settings = JSON.stringify(serialized_data);
-
-        console.info(serialized_data)
-        $.ajax({
-            type: "POST",
-            data: {
-                'settings': settings,
-                'userid': $('#user_username').attr('data-userid'),
-                'tableid': $('#table_settings_menu').attr('data-tableid'),
-            },
-            url: "{% url 'settings_table_fields_settings_save' %}",
-            success: function (response) {
-
-            },
-            error: function () {
-            }
-        })
-    }
+    
 
     function fieldsSettingsSettings() {
 

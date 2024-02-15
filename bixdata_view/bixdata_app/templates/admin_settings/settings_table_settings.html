@@ -1,14 +1,61 @@
-<label for="record_open_layout">Layout:</label>
-<select id="record_open_layout" name="record_open_layout" class="form-select setting-value">
-    <option value="rightcard">Right card</option>
-    <option value="modal">Modal</option>
-</select>
-
-
-<button type="button" onclick="saveTableSettingsSettings()" class="btn btn-primary">Save Settings</button>
-<style>
-    #record_open_layout {
-        width: 200px;
-        height: 50px;
-    }
-</style>
+<div id="settings-table-container">
+    {% for setting, val in tablesettings.items %}
+        {% if val.type == 'select' %}
+            <label for="{{ setting }}">{{ setting }}</label>
+            <select name="{{ setting }}" class="form-select setting-value">
+                {% for option in val.options %}
+                    {% if option == val.value %}
+                        <option selected value="{{ option }}">{{ option }}</option>
+                    {% else %}
+                        <option value="{{ option }}">{{ option }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        {% else %}
+            <label for="{{ setting }}">{{ setting }}</label>
+            <input type="text" name="{{ setting }}" value="{{ val.value }}" class="form-control setting-value">
+        {% endif %}
+    {% endfor %}
+    </div>
+    
+    <button type="button" onclick="saveTableSettingsSettingsTables()" class="btn btn-primary">Save Settings</button>
+    <style>
+        .setting-value {
+            width: 200px;
+            height: 50px;
+        }
+    </style>
+    
+    
+    <script>
+           function saveTableSettingsSettingsTables() {
+    
+            var serialized_data = []
+    
+    
+            $('#settings-table-container').find('.setting-value').each(function () {
+                var value = $(this).val();
+                var name = $(this).attr('name');
+                serialized_data.push({name: name, value: value});
+            });
+            settings = JSON.stringify(serialized_data);
+    
+            console.info(serialized_data)
+            $.ajax({
+                type: "POST",
+                data: {
+                    'settings': settings,
+                    'userid': $('#user_username').attr('data-userid'),
+                    'tableid': $('#table_settings_menu').attr('data-tableid')
+                },
+                url: "{% url 'settings_table_fields_settings_save' %}",
+                success: function (response) {
+                },
+                error: function () {
+                }
+            })
+        }
+    </script>
+    
+    
+    

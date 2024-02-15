@@ -1,4 +1,5 @@
 from .alpha import *
+from .businesslogic.models.table_settings import TableSettings
 from .helper_view import *
 from django.db.models import OuterRef, Subquery
 from .businesslogic.settings_business_logic import *
@@ -88,34 +89,33 @@ def load_table_settings_menu(request):
     return hv.render_template('admin_settings/settings_table_menu.html')
 
 def settings_table_settings(request):
-    hv = HelperView(request)
-    return hv.render_template('admin_settings/settings_table_settings.html')
+
+    tableid = request.POST.get('tableid')
+    tablesettings_obj = TableSettings(tableid=tableid, userid=1)
+    helperview_obj = HelperView(request)
+    helperview_obj.context['tablesettings']=tablesettings_obj.get_settings()
+
+    return helperview_obj.render_template('admin_settings/settings_table_settings.html')
 
 def settings_table_fields_settings_save(request):
-    settings = request.POST.get('settings')
+    settings_list = request.POST.get('settings')
+
+    settings_list = json.loads(settings_list)
+
+
     userid = request.POST.get('userid')
     tableid = request.POST.get('tableid')
 
-    settings_list = json.loads(settings)
+    tablesettings_obj = TableSettings(tableid=tableid, userid=1)
+    # esempio fieldsettings_obj.settings['obbligatorio']['value']=True
+    # esempio fieldsettings_obj.save()
+    # dict con tutt i i settings. vedi te come compilarlo fieldsettings_obj.settings
 
-    with connection.cursor() as cursor:
-        for setting in settings_list:
-            cursor.execute(
-                "SELECT * FROM sys_user_table_settings WHERE userid = %s AND settingid = %s and tableid = %s",
-                [userid, setting['name'], tableid]
-            )
-            existing_setting = cursor.fetchone()
+    for setting in settings_list:
+        tablesettings_obj.settings[setting['name']]['value'] = setting['value']
 
-            if existing_setting:
-                cursor.execute(
-                    "UPDATE sys_user_table_settings SET value = %s WHERE userid = %s AND settingid = %s and tableid = %s",
-                    [setting['value'], userid, setting['name'], tableid]
-                )
-            else:
-                cursor.execute(
-                    "INSERT INTO sys_user_table_settings (userid, tableid, settingid, value) VALUES (%s, %s, %s, %s)",
-                    [userid, tableid, setting['name'], setting['value']]
-                )
+    tablesettings_obj.save()
+
     return HttpResponse({'success': True})
 
 
@@ -151,7 +151,7 @@ def settings_table_fields_settings_block(request):
     fieldid = request.POST.get('fieldid')
     fieldsettings_obj=FieldSettings(tableid=tableid,fieldid=fieldid,userid=1)
     helperview_obj = HelperView(request)
-    helperview_obj.context['fieldsettings']=fieldsettings_obj.settings
+    helperview_obj.context['fieldsettings']=fieldsettings_obj.get_settings()
     return helperview_obj.render_template('admin_settings/settings_table_fields_settings_block.html')
 
 def settings_table_fields_settings_fields_save(request):
