@@ -29,7 +29,6 @@ from .database_helper import *
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
 class FieldSettings:
-    
     settings = {
         'obbligatorio': {
             'type': 'select',
@@ -50,26 +49,27 @@ class FieldSettings:
             'value': 'false'
         }
     }
-    
+
     def __init__(self, tableid, fieldid, userid=1):
-        self.db_helper=DatabaseHelper('default')
-        self.tableid=tableid
-        self.fieldid=fieldid
-        self.userid=userid
-        self.settings=FieldSettings.settings
-        
-        
-        
+        self.db_helper = DatabaseHelper('default')
+        self.tableid = tableid
+        self.fieldid = fieldid
+        self.userid = userid
+        self.settings = self.get_settings()
+
     def get_settings(self):
         sql = f"SELECT settingid, value FROM sys_user_field_settings WHERE tableid='{self.tableid}' AND fieldid='{self.fieldid}' AND userid='{self.userid}'"
         rows = self.db_helper.sql_query(sql)
 
-        for setting in self.settings:
-            for row in rows:
-                if setting == row['settingid']:
-                    self.settings[setting]['value'] = row['value']
+        settings_copy = {key: value.copy() for key, value in self.settings.items()}
 
-        return self.settings
+        for setting_id, setting_info in settings_copy.items():
+            for row in rows:
+                if setting_id == row['settingid']:
+                    setting_info['value'] = row['value']
+
+        return settings_copy
+
     def save(self):
         field_settings = self.settings
 
