@@ -1,4 +1,4 @@
-<div id="settings-table-container">
+<div id="settings-table-container" style="height: 100%; overflow: scroll">
     {% for setting, val in tablesettings.items %}
         {% if val.type == 'select' %}
             <label for="{{ setting }}">{{ setting }}</label>

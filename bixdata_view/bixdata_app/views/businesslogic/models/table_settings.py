@@ -31,24 +31,266 @@ bixdata_server = os.environ.get('BIXDATA_SERVER')
 
 class TableSettings:
     settings = {
-        'obbligatorio': {
+        'edit': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'true'
+        },
+        'risultati_edit': {
             'type': 'select',
             'options': ['true', 'false'],
             'value': 'false'
         },
-        'calcolato': {
+        'autosave': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'true'
+        },
+        'delete': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'true'
+        },
+        'hidden': {
             'type': 'select',
             'options': ['true', 'false'],
             'value': 'false'
         },
-        'default': {
-            'type': 'parola',
-            'value': ''
-        },
-        'label': {
-            'type': 'parola',
+        'menu': {
+            'type': 'select',
+            'options': ['true', 'false'],
             'value': 'false'
-        }
+        },
+        'icon_type': {
+            'type': 'select',
+            'options': ['fontawesome', 'material'],
+            'value': 'fontawesome'
+        },
+        'icon': {
+            'type': 'parola',
+            'value': 'database'
+        },
+        'customview_list': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'false'
+        },
+        'customview_card': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'false'
+        },
+        'scheda_layout': {
+            'type': 'select',
+            'options': ['standard_dati', 'standard_allegati', 'allargata'],
+            'value': 'standard_dati'
+        },
+        'scheda_mostratutti': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'false'
+        },
+        'popup_layout': {
+            'type': 'select',
+            'options': ['standard_dati', 'standard_allegati', 'allargata'],
+            'value': 'standard_dati'
+        },
+        'popup_width': {
+            'type': 'select',
+            'options': ['30', '60', '90'],
+            'value': '60'
+        },
+        'scheda_record_width': {
+            'type': 'select',
+            'options': ['25', '42', '48', '57', '98'],
+            'value': '25'
+        },
+        'allargata_dati_width': {
+            'type': 'parola',
+            'value': '50'
+        },
+        'scheda_ricerca_display': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'true'
+        },
+        'scheda_ricerca_width': {
+            'type': 'select',
+            'options': ['20', '42', ''],
+            'value': '20'
+        },
+        'scheda_ricerca_default': {
+            'type': 'select',
+            'options': ['filtri', 'ricerche_salvate'],
+            'value': 'filtri'
+        },
+        'ricerca_lockedview': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'false'
+        },
+        'risultati_limit': {
+            'type': 'parola',
+            'value': '50'
+        },
+        'risultati_layout': {
+            'type': 'select',
+            'options': ['righe', 'table', 'preview', 'badge', 'report', 'calendar'],
+            'value': 'righe'
+        },
+        'risultati_width': {
+            'type': 'select',
+            'options': ['42', '48', '57', '98'],
+            'value': '57'
+        },
+        'risultati_border': {
+            'type': 'select',
+            'options': ['1px solid transparent', '1px solid #dedede'],
+            'value': '1px solid transparent'
+        },
+        'risultati_font_size': {
+            'type': 'select',
+            'options': ['6', '8', '10', '12', '14', '16', '18'],
+            'value': '14'
+        },
+        'risultati_open': {
+            'type': 'select',
+            'options': ['right', 'down', 'popup'],
+            'value': 'right'
+        },
+        'risultati_new': {
+            'type': 'select',
+            'options': ['right', 'down', 'popup'],
+            'value': 'right'
+        },
+        'risultati_order': {
+            'type': 'select',
+            'options': ['asc', 'desc', ''],
+            'value': 'desc'
+        },
+        'risultati_showreport': {
+            'type': 'select',
+            'options': ['true', 'false', ''],
+            'value': 'false'
+        },
+        'risultati_showcalendar': {
+            'type': 'select',
+            'options': ['true', 'false', ''],
+            'value': 'false'
+        },
+        'risultati_anteprima_aspectratio': {
+            'type': 'select',
+            'options': ['2:3', '3:2', '16:9'],
+            'value': '2:3'
+        },
+        'risultati_stampa_elenco_orientamento': {
+            'type': 'select',
+            'options': ['portrait', 'landscape', ''],
+            'value': 'portrait'
+        },
+        'linked_layout': {
+            'type': 'select',
+            'options': ['righe', 'preview', 'badge'],
+            'value': 'righe'
+        },
+        'linked_open': {
+            'type': 'select',
+            'options': ['right', 'down', 'popup'],
+            'value': 'down'
+        },
+        'linked_new': {
+            'type': 'select',
+            'options': ['right', 'down', 'popup'],
+            'value': 'popup'
+        },
+        'linked_rows': {
+            'type': 'select',
+            'options': ['5', '10', '15', '20', '25', '30'],
+            'value': '5'
+        },
+        'linked_label_opened': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'false'
+        },
+        'pages_display': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'true'
+        },
+        'pages_fileupload_display': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'true'
+        },
+        'pages_view': {
+            'type': 'select',
+            'options': ['thumbnail', 'name', 'detail'],
+            'value': 'thumbnail'
+        },
+        'pages_scheda_layout': {
+            'type': 'select',
+            'options': ['list', 'grid', 'hidden'],
+            'value': 'list'
+        },
+        'pages_popup_layout': {
+            'type': 'select',
+            'options': ['list', 'grid', 'hidden'],
+            'value': 'list'
+        },
+        'pages_thumbnail_show': {
+            'type': 'select',
+            'options': ['true', 'false', ''],
+            'value': 'true'
+        },
+        'default_save': {
+            'type': 'select',
+            'options': ['salva', 'salva e chiudi', 'salva e nuovo', 'salva e nuovo-salva e chiudi',
+                        'allega salva e nuovo', 'salva e ripeti'],
+            'value': 'salva'
+        },
+        'default_viewid': {
+            'type': 'parola',
+            'value': '0'
+        },
+        'default_recordstab': {
+            'type': 'parola',
+            'value': 'Tabella'
+        },
+        'default_recordtab': {
+            'type': 'parola',
+            'value': 'Fields'
+        },
+        'dem_mail_field': {
+            'type': 'select',
+            'options': ['address', 'bexio_contact_type_id', 'bexio_status', 'cap', 'city', 'companyname',
+                        'customertype', 'email', 'ictpbx_price', 'id', 'id_bexio', 'id_vte', 'note', 'paymentstatus',
+                        'phonenumber', 'recordidcontact_', 'recordiddealline_', 'recordiddeal_', 'recordidinvoiceline_',
+                        'recordidinvoice_', 'recordidprojectmilestone_', 'recordidproject_', 'recordidsalesorderline_',
+                        'recordidsalesorderplannedinvoice', 'recordidsalesorder_', 'recordidserviceandasset_',
+                        'recordidservicecontract_', 'recordidtask_', 'recordidticket_', 'recordidtimesheet_',
+                        'recordiduser_log_', 'recordid_jdoc', 'salesperson_text', 'salesuser', 'scn', 'sector',
+                        'servizitxt', 'state', 'status', 'sw_price', 'tipo', 'travelkm_price', 'travel_price',
+                        'vatnumber', 'website'],
+            'value': 'address'
+        },
+        'fields_autoscroll': {
+            'type': 'select',
+            'options': ['true', 'false'],
+            'value': 'false'
+        },
+        'col_s': {
+            'type': 'parola',
+            'value': '3'
+        },
+        'col_m': {
+            'type': 'parola',
+            'value': '3'
+        },
+        'col_l': {
+            'type': 'parola',
+            'value': '3'
+        },
     }
 
     def __init__(self, tableid, userid=1):
@@ -70,13 +312,10 @@ class TableSettings:
 
         return settings_copy
 
-
-
     def save(self):
         table_settings = self.settings
 
-        #if self.tableid:
-
+        # if self.tableid:
 
         success = True
 
@@ -95,12 +334,3 @@ class TableSettings:
                 success = False
 
         return success
-
-
-
-
-
-
-
-
-
