@@ -46,7 +46,7 @@ class FieldSettings:
         },
         'label': {
             'type': 'parola',
-            'value': 'false'
+            'value': ''
         }
     }
 
