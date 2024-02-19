@@ -914,6 +914,7 @@ def save_record_fields(request):
     
     post_dict = request.POST.dict()
     post_repr=repr(post_dict)
+    post_repr=post_repr.replace("'", "")
     sql=f"INSERT INTO sys_logquery (userid,funzione,post) VALUES ({userid},'salva_record_fields','{post_repr}')"
     db_helper.sql_execute(sql)
     fields_dict = request.POST.dict()
