@@ -946,13 +946,14 @@ def save_record_fields(request):
 
     selected_options = request.POST.getlist('service');
 
-    if tableid == 'task':
-        oc = OfficeCalendar()
-        if fields_dict['planneddate'] != '':
-            if fields_dict['o365_idcalendar'] == '':
-                fields_dict['o365_idcalendar'] = oc.add_calendar_event(fields_dict)
-            else:
-                oc.update_calendar_event(fields_dict)
+    #TODO: da testare e completare
+    #if tableid == 'task':
+        #oc = OfficeCalendar()
+        #if fields_dict['planneddate'] != '':
+            #if fields_dict['o365_idcalendar'] == '':
+                #fields_dict['o365_idcalendar'] = oc.add_calendar_event(fields_dict)
+            #else:
+                #oc.update_calendar_event(fields_dict)
 
     fields = json.dumps(fields_dict)
 
