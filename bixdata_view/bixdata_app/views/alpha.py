@@ -47,6 +47,7 @@ from htmldocx import HtmlToDocx
 import csv
 from functools import wraps
 from .businesslogic.models.table import *
+from .businesslogic.models.database_helper import *
 
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
@@ -54,6 +55,7 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.enum.section import WD_SECTION
 from docx.enum.style import WD_STYLE_TYPE
+
 
 import qrcode
 
@@ -903,12 +905,17 @@ def get_linked(request):
 
 @login_required(login_url='/login/')
 def save_record_fields(request):
+    db_helper=DatabaseHelper('default')
     file = request.FILES.get('file')
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     contextfunction = request.POST.get('contextfunction')
     creator = userid = get_userid(request.user.id)
     
+    post_dict = request.POST.dict()
+    post_repr=repr(post_dict)
+    sql=f"INSERT INTO sys_logquery (userid,funzione,post) VALUES ({userid},'salva_record_fields','{post_repr}')"
+    db_helper.sql_execute(sql)
     fields_dict = request.POST.dict()
     del fields_dict['tableid']
     del fields_dict['recordid']
