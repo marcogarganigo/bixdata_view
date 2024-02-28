@@ -637,6 +637,7 @@ class SysUserDashboardBlock(models.Model):
     gsy = models.IntegerField(blank=True, null=True)
     gsw = models.IntegerField(blank=True, null=True)
     gsh = models.IntegerField(blank=True, null=True)
+    size = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
         managed = False

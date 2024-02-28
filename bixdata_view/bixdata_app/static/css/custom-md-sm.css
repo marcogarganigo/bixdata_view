@@ -82,4 +82,64 @@
         width: 100%;
     }
 
+    td, tr {
+        padding: 3px !important;
+        font-size: 8pt;
+    }
+
+    .modal-fullscreen {
+        width: 85% !important;
+    }
+
+    #block_record_badge > .card-body {
+        padding: 5px !important;
+    }
+
+    #block_record_badge, #card-menu {
+        margin-bottom: 1% !important;
+    }
+
+    .card-body {
+        padding: 15px !important;
+    }
+
+    #RecordCard > .card-body {
+
+    }
+
+    #block_record_badge {
+        scale: 0.85;
+    }
+
+    .fields_container {
+        scale: 0.85;
+        margin-top: -2%;
+    }
+
+    #block_record_badge {
+        font-size: 13.3px;
+    }
+
+    #card-menu > button  {
+       font-size: 10px !important;
+    }
+
+    #card-menu > .dropdown > button {
+        font-size: 10px
+    }
+
+    .save-button {
+        font-size: 15px !important;
+        scale: 0.7;
+    }
+
+    .records-button {
+         font-size: 13px !important;
+    }
+
+    .records-button-secondary {
+         font-size: 13px !important;
+    }
+
+
 }

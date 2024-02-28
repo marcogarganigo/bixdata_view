@@ -367,7 +367,10 @@ def get_render_content_dashboard(request):
 
             context['userid'] = bixid
 
-            datas = SysUserDashboardBlock.objects.filter(userid=bixid).values()
+            size = request.POST.get('size')
+            context['size'] = size
+
+            datas = SysUserDashboardBlock.objects.filter(userid=bixid, size=size).values()
 
             all_blocks = SysDashboardBlock.objects.all()
 
@@ -462,13 +465,14 @@ def save_block_order(request):
     print(values)
     for value in values:
         record_id = value.get('id')
+        size = value.get('size')
         gsx = value.get('gsX')
         gsy = value.get('gsY')
         gsw = value.get('gsW')
         gsh = value.get('gsH')
 
         if record_id is not None:
-            SysUserDashboardBlock.objects.filter(id=record_id).update(gsx=gsx, gsy=gsy, gsw=gsw, gsh=gsh)
+            SysUserDashboardBlock.objects.filter(id=record_id, size=size).update(gsx=gsx, gsy=gsy, gsw=gsw, gsh=gsh, size=size)
 
     return JsonResponse({'success': True})
 
@@ -1853,18 +1857,20 @@ def test_gridstack(request):
 def new_block(request):
     blockid = request.POST.get('blockid')
     userid = request.POST.get('userid')
+    size = request.POST.get('size')
     dashboardid = request.POST.get('dashboardid')
     with connection.cursor() as cursor:
         cursor.execute(
-            "INSERT INTO sys_user_dashboard_block (userid, dashboard_block_id, dashboardid) VALUES (%s, %s, %s)",
-            [userid, blockid, dashboardid]
+            "INSERT INTO sys_user_dashboard_block (userid, dashboard_block_id, dashboardid, size) VALUES (%s, %s, %s, %s)",
+            [userid, blockid, dashboardid, size]
         )
     return JsonResponse({'success': True})
 
 
 def remove_block(request):
     blockid = request.POST.get('blockid')
-    SysUserDashboardBlock.objects.filter(id=blockid).delete()
+    size = request.POST.get('size')
+    SysUserDashboardBlock.objects.filter(id=blockid, size=size).delete()
 
     return JsonResponse({'success': True})
 

@@ -455,7 +455,6 @@
      data-master_recordid="{{ master_recordid }}" style="height: 100%;width: 100%;">
     <div id="RecordCard" class="card RecordCard" style=" height: 100%; overflow: hidden">
         <div class="card-body" style="max-height: 100%">
-            <p class="card-text">
 
             <div id="card-menu">
                 <button type="button" id="close-button" class="btn-close button-recordcard" data-bs-dismiss="modal"
@@ -796,11 +795,11 @@
 
 
             <div id="badge-container-{{ tableid }}-{{ recordid }}" class="container"
-                 style="height:10%;overflow: hidden;">
+                 style="overflow: hidden;">
                 {{ block_record_badge }}
             </div>
 
-            </br>
+
 
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -913,13 +912,13 @@
 </div>
 
 <style>
-    @media screen and (max-width: 1500px) {
+    @media screen and (max-width: 1080px) {
         #tableTabContent {
-            height: 60% !important;
+            height: 88% !important;
         }
     }
 
-    @media screen and (min-width: 1500px) and (max-width: 2000px) {
+    @media screen and (min-width: 1080px) and (max-width: 2000px) {
         #tableTabContent {
             height: 70% !important;
         }

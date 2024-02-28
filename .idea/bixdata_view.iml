@@ -20,22 +20,21 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jquery-3.6.0" level="application" />
     <orderEntry type="library" name="bootstrap" level="application" />
-    <orderEntry type="library" name="fullcalendar" level="application" />
     <orderEntry type="library" name="iconify-icon" level="application" />
     <orderEntry type="library" name="chart.js" level="application" />
     <orderEntry type="library" name="@popperjs/core" level="application" />
     <orderEntry type="library" name="jq-pagination" level="application" />
-    <orderEntry type="library" name="jquery-ui" level="application" />
     <orderEntry type="library" name="clipboardy" level="application" />
     <orderEntry type="library" name="copy-paste" level="application" />
-    <orderEntry type="library" name="gridstack" level="application" />
-    <orderEntry type="library" name="sweetalert2" level="application" />
-    <orderEntry type="library" name="bootstrap-select" level="application" />
+    <orderEntry type="library" name="zebra_datepicker" level="application" />
+    <orderEntry type="library" name="dragula" level="application" />
+    <orderEntry type="library" name="fullcalendar" level="application" />
     <orderEntry type="library" name="select2" level="application" />
     <orderEntry type="library" name="jquery-ui" level="application" />
-    <orderEntry type="library" name="dragula" level="application" />
-    <orderEntry type="library" name="zebra_datepicker" level="application" />
-    <orderEntry type="library" name="fullcalendar" level="application" />
+    <orderEntry type="library" name="gridstack" level="application" />
+    <orderEntry type="library" name="bootstrap-select" level="application" />
+    <orderEntry type="library" name="sweetalert2" level="application" />
+    <orderEntry type="library" name="panzoom" level="application" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />

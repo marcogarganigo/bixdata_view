@@ -253,10 +253,20 @@
             }
 
             function getDashboard() {
+                var size = window.innerWidth;
+                var resolution = '';
+                if (size < 2000) {
+                    resolution = 'small'
+                } else {
+                    resolution = 'full'
+                }
                 //$("#content_container").load('/loading/');
                 $.ajax({
                     type: "POST",
                     crossDomain: true,
+                    data: {
+                        'size': resolution
+                    },
                     url: "{% url 'dashboard' %}",
                     success: function (response) {
                         $("#content_container").html(response);
