@@ -126,6 +126,8 @@
         updateOrder()
         var orderArray = []
 
+
+
         var userid = $('#user_username').attr('data-userid');
         var tableid = $('#table_settings_menu').attr('data-tableid');
         var fields_type = $('#user_username').attr('data-fields_type');
@@ -136,6 +138,13 @@
                 orderArray.push(fieldid);
             }
         });
+
+       if ($('#linked_columns_select').length) {
+            master_tableid = $('#linked_columns_select').val();
+        } else {
+            master_tableid = null;
+       }
+
 
         orderArray = JSON.stringify(orderArray);
         console.info(orderArray)
@@ -148,6 +157,7 @@
                 'userid': userid,
                 'tableid': tableid,
                 'fields_type': fields_type,
+                'master_tableid': master_tableid
             },
             success: function (response) {
                 swal({

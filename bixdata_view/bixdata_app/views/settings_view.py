@@ -58,6 +58,9 @@ def settings_table_tablefields(request):
     hv = HelperView(request)
     bl = SettingsBusinessLogic()
     hv.context['fields'] = bl.get_search_column_results(userid, tableid, fields_type)
+    hv.context['fields_type'] = fields_type
+    if fields_type == 'linked_columns':
+        hv.context['linked_columns'] = list(SysTableLink.objects.filter(tablelinkid=tableid).values())
     return hv.render_template('admin_settings/settings_table_column_search_results.html')
 
 
@@ -68,13 +71,18 @@ def settings_table_tablefields_save(request):
     SysUserFieldOrder.objects.filter(userid=userid, tableid=tableid, typepreference=fields_type).delete()
     fields = request.POST.get('orderArray')
     fields = json.loads(fields)
+    master_tableid = request.POST.get('master_tableid')
     order = 0;
     for fieldid in fields:
         user=SysUser.objects.get(id=userid)
         table=SysTable.objects.get(id=tableid)
         field=SysField.objects.get(id=fieldid)
-        t = SysUserFieldOrder(userid=user, tableid=table, fieldid=field, typepreference=fields_type, fieldorder=order)
-        t.save()
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                  INSERT INTO sys_user_field_order (userid, tableid, fieldid, typepreference, fieldorder, master_tableid)
+                  VALUES (%s, %s, %s, %s, %s, %s)
+              """, [userid, tableid, fieldid, fields_type, order, master_tableid])
+
         order += 1
     return HttpResponse({'success': True})
 
