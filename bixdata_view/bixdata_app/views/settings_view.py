@@ -68,10 +68,10 @@ def settings_table_tablefields_save(request):
     tableid= request.POST.get('tableid')
     userid = request.POST.get('userid')
     fields_type = request.POST.get('fields_type')
-    SysUserFieldOrder.objects.filter(userid=userid, tableid=tableid, typepreference=fields_type).delete()
+    master_tableid = request.POST.get('master_tableid')
+    SysUserFieldOrder.objects.filter(userid=userid, tableid=tableid, typepreference=fields_type, master_tableid=master_tableid).delete()
     fields = request.POST.get('orderArray')
     fields = json.loads(fields)
-    master_tableid = request.POST.get('master_tableid')
     order = 0;
     for fieldid in fields:
         user=SysUser.objects.get(id=userid)
@@ -85,6 +85,20 @@ def settings_table_tablefields_save(request):
 
         order += 1
     return HttpResponse({'success': True})
+
+
+def master_columns(request):
+    master_tableid = request.POST.get('master_tableid')
+    tableid = request.POST.get('tableid')
+    typepreference = request.POST.get('typepreference')
+    userid = 1
+
+    hv = HelperView(request)
+    bl = SettingsBusinessLogic()
+    hv.context['fields'] = bl.get_search_column_results(userid, tableid, typepreference, master_tableid)
+
+    return hv.render_template('admin_settings/settings_table_column_search_results.html')
+
 
 def settings_table_fieldsettings(request):
     fieldid = request.POST.get('fieldid')

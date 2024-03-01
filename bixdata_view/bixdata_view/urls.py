@@ -148,5 +148,6 @@ urlpatterns = [
     path('settings_table_fields_linked_table/', settings_view.settings_table_fields_linked_table, name='settings_table_fields_linked_table'),
     path('signature_function/', alpha.signature_function, name='signature_function'),
     path('save_signature/', alpha.save_signature, name='save_signature'),
+    path('master_columns/', settings_view.master_columns, name='master_columns'),
 
 ]
