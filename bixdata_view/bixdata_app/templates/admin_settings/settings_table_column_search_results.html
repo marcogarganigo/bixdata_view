@@ -52,7 +52,17 @@
         });
     }
 
+    (function() {
+        var drake = dragula([document.querySelector('.drag-elements-container')], {
+            moves: function (el, container, handle) {
+                return !handle.classList.contains('drag-item2');
+            }
+        });
 
+        dragula([].slice.apply(document.querySelectorAll('.drag-item')), {
+            direction: 'vertical'
+        });
+    })();
 
     function settingsTableColumnSearchResultsOptions(fieldid) {
     $.ajax({

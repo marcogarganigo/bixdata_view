@@ -70,7 +70,11 @@ def settings_table_tablefields_save(request):
     userid = request.POST.get('userid')
     fields_type = request.POST.get('fields_type')
     master_tableid = request.POST.get('master_tableid')
-    SysUserFieldOrder.objects.filter(userid=userid, tableid=tableid, typepreference=fields_type, master_tableid=master_tableid).delete()
+    if fields_type == 'linked_columns':
+        SysUserFieldOrder.objects.filter(userid=userid, tableid=tableid, typepreference=fields_type,master_tableid=master_tableid).delete()
+    else:
+        SysUserFieldOrder.objects.filter(userid=userid, tableid=tableid, typepreference=fields_type).delete()
+
     fields = request.POST.get('orderArray')
     fields = json.loads(fields)
     order = 0;
@@ -78,11 +82,18 @@ def settings_table_tablefields_save(request):
         user=SysUser.objects.get(id=userid)
         table=SysTable.objects.get(id=tableid)
         field=SysField.objects.get(id=fieldid)
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                  INSERT INTO sys_user_field_order (userid, tableid, fieldid, typepreference, fieldorder, master_tableid)
-                  VALUES (%s, %s, %s, %s, %s, %s)
-              """, [userid, tableid, fieldid, fields_type, order, master_tableid])
+        if fields_type == 'linked_columns':
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                      INSERT INTO sys_user_field_order (userid, tableid, fieldid, typepreference, fieldorder, master_tableid)
+                      VALUES (%s, %s, %s, %s, %s, %s)
+                  """, [userid, tableid, fieldid, fields_type, order, master_tableid])
+        else:
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                      INSERT INTO sys_user_field_order (userid, tableid, fieldid, typepreference, fieldorder)
+                      VALUES (%s, %s, %s, %s, %s)
+                  """, [userid, tableid, fieldid, fields_type, order])
 
         order += 1
     return HttpResponse({'success': True})
