@@ -61,6 +61,7 @@ def settings_table_tablefields(request):
     hv.context['fields_type'] = fields_type
     if fields_type == 'linked_columns':
         hv.context['linked_columns'] = list(SysTableLink.objects.filter(tablelinkid=tableid).values())
+        hv.context['fields'] = ''
     return hv.render_template('admin_settings/settings_table_column_search_results.html')
 
 
@@ -94,8 +95,34 @@ def master_columns(request):
     userid = 1
 
     hv = HelperView(request)
-    bl = SettingsBusinessLogic()
-    hv.context['fields'] = bl.get_search_column_results(userid, tableid, typepreference, master_tableid)
+
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT * FROM sys_field WHERE sys_field.tableid=%s ORDER BY fieldid', [tableid])
+        fields = dictfetchall(cursor)
+
+        cursor.execute('SELECT * FROM sys_user_field_order AS t WHERE t.tableid=%s AND t.typepreference=%s AND t.master_tableid=%s ORDER BY fieldorder asc', [tableid, typepreference, master_tableid])
+        visible_fields = dictfetchall(cursor)
+
+    for field in fields:
+        field['fieldorder'] = None
+
+    if visible_fields is not None:
+        for visible_field in visible_fields:
+            for field in fields:
+                if visible_field['fieldid'] == field['id']:
+                    del fields[fields.index(field)]
+                    visible_field['id'] = field['id']
+                    visible_field['description'] = field['description']
+                    visible_field['label'] = field['label']
+
+    fields = visible_fields + fields
+
+
+
+
+    hv.context['fields'] = fields
+
+
 
     return hv.render_template('admin_settings/settings_table_column_search_results.html')
 

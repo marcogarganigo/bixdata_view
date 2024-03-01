@@ -1,6 +1,6 @@
 
 {% if fields_type == 'linked_columns' %}
-    <select class="form-control" id="linked_columns_select" onchange="masterColumns(this.value)">
+    <select class="form-control" id="linked_columns_select" onchange="masterColumns(this)">
         <option value="0">Seleziona</option>
         {% for linked in linked_columns %}
             <option value="{{ linked.tableid_id }}">{{ linked.tableid_id }}</option>
@@ -14,7 +14,7 @@
     <div id="settings_block_usertables_settings" class="drag-elements-container" >
         <div class="drag-item">
             {% for field in fields %}
-                <div class="drag-item2">
+                <div data-order="{{ forloop.counter0 }}" class="drag-item2">
                     {% if field.fieldorder != null %}
                         <input class="form-check-input mt-0 checkbox" type="checkbox" checked value="" aria-label="Checkbox for following text input">
                     {% else %}
@@ -35,14 +35,14 @@
 <script>
 
     function masterColumns(el) {
-        var mastertableid = el
+        var mastertableid = el.value
 
-        var tableid = $('#linked_columns_select').val();
+        var tableid = $('#table_settings_menu').attr('data-tableid');
         $.ajax({
             url: "{% url 'master_columns' %}",
             type: 'POST',
             data: {
-                'mastertableid': mastertableid,
+                'master_tableid': mastertableid,
                 'tableid': tableid,
                 'typepreference': 'linked_columns'
             },
@@ -52,17 +52,7 @@
         });
     }
 
-    (function() {
-        var drake = dragula([document.querySelector('.drag-elements-container')], {
-            moves: function (el, container, handle) {
-                return !handle.classList.contains('drag-item2');
-            }
-        });
 
-        dragula([].slice.apply(document.querySelectorAll('.drag-item')), {
-            direction: 'vertical'
-        });
-    })();
 
     function settingsTableColumnSearchResultsOptions(fieldid) {
     $.ajax({
@@ -76,4 +66,7 @@
             }
         });
     }
+
+
+
 </script>
