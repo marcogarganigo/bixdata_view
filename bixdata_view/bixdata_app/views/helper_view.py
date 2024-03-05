@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from bixdata_app.models import *
+from .businesslogic.models.database_helper import *
 
 # Questa funzione blocca l'accesso a bixdata da firefox
 def firefox_check(view_func):
@@ -22,6 +23,7 @@ class HelperView:
     def __init__(self,request):
         self.request=request
         self.context=dict()
+        self.db_helper=DatabaseHelper()
     
     
     def render_template(self,template_path):
@@ -55,4 +57,15 @@ class HelperView:
             return userid
         else:
             return None
+        
+    def get_userid(self):
+        django_userid=self.request.user.id
+        userid = 0
+        sql=f"SELECT id FROM sys_user WHERE bixid = {django_userid}"
+        user=self.db_helper.sql_query_row(sql)
+        if(user):
+            userid=user['id']
+        else:
+            userid=None    
+        return userid 
     

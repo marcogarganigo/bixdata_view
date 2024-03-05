@@ -74,12 +74,13 @@
 
     function settingsFieldsSettings(fieldid) {
         tableid = $('#table_settings_menu').data('tableid');
-
+        var userid = $('#user_username').attr('data-userid');
         $.ajax({
             type: "POST",
             data: {
                 'fieldid': fieldid,
-                'tableid': tableid
+                'tableid': tableid,
+                'userid': userid
             },
             url: "{% url 'settings_table_fields_settings_block' %}",
             success: function (response) {

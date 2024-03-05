@@ -49,7 +49,7 @@ class SettingsBusinessLogic:
         return workspaces
 
 
-    def get_search_column_results(self,userid,tableid, fields_type, master_tableid=None):
+    def get_search_column_results(self,userid,tableid, fields_type):
         dbh=DatabaseHelper()
         subquery = SysUserFieldOrder.objects.filter(fieldid=OuterRef('id')).filter(typepreference=fields_type).values('fieldorder')[:1]
         fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('order').values('id','fieldid','tableid','order','description')
