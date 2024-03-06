@@ -2158,7 +2158,10 @@ def print_word(request):
 
     id = uuid.uuid4().hex
 
+
     filename = dealname + id + '.docx'
+    filename= filename.replace("/", "-")
+    filename= filename.replace("\\", "-")
 
     #instead of creating a word i want to open one
 
