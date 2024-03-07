@@ -2162,6 +2162,7 @@ def print_word(request):
     filename = dealname + id + '.docx'
     filename= filename.replace("/", "-")
     filename= filename.replace("\\", "-")
+    filename= filename.replace("'", "")
 
     #instead of creating a word i want to open one
 
