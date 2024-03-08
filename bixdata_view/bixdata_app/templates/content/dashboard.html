@@ -5,10 +5,7 @@
 <button id="save-order-button" onclick="save_order()" class="btn btn-success" style="float: left">Salva disposizione</button>
 <select id="select-block" class="form-select" aria-label="Default select example" style="width: 10%; float: left; margin-left: 5%">
     {% for block in block_list %}
-        <!--skippa i primi 4 per i sales che ora danno errore-->
-        {% if forloop.counter > 4 %}
             <option name="blockid" value="{{ block.id }}">{{ block.name }}</option>
-        {% endif %}
     {% endfor %}
 </select>
 <button class="btn btn-primary" style="float: left" onclick="new_block()">Aggiungi</button>

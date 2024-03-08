@@ -341,6 +341,7 @@ def get_block_records_chart(request):
 # Questa funzione builda i dashboard blocks e li mette insieme nella pagina dashboard che ritorna
 @login_required(login_url='/login/')
 def get_render_content_dashboard(request):
+    dbh=DatabaseHelper()
     context = {}
     context['blocks'] = []  # Initialize the blocks list
     context['block_list'] = []  # Initialize the block_list list
@@ -372,7 +373,9 @@ def get_render_content_dashboard(request):
 
             datas = SysUserDashboardBlock.objects.filter(userid=bixid, size=size).values()
 
-            all_blocks = SysDashboardBlock.objects.all()
+            #all_blocks = SysDashboardBlock.objects.all()
+            sql="SELECT * FROM sys_dashboard_block ORDER BY name asc"
+            all_blocks=dbh.sql_query(sql)
 
             for block in all_blocks:
                 context['block_list'].append(block)
