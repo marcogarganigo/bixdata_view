@@ -1218,6 +1218,25 @@ def admin_page(request):
         chart_names = [row['name'] for row in rows3]
         chart_dashboard_id = [row['dashboardid'] for row in rows3]
 
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM v_users where is_active = 1"
+        )
+        users = dictfetchall(cursor)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM sys_dashboard"
+        )
+        dashboards = dictfetchall(cursor)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM sys_user_dashboard"
+        )
+        user_dashboards = dictfetchall(cursor)
+
     context = {
         'userids': userids,
         'dashboardids': dashboardids,
@@ -1228,6 +1247,9 @@ def admin_page(request):
         'reports': rows5,
         'tables': tables,
         'fields': fields,
+        'users': users,
+        'dashboards': dashboards,
+        'user_dashboards': user_dashboards
 
     }
 
@@ -2077,7 +2099,23 @@ def admin_table_settings(request):
 
 
 def settings_charts(request):
-    return render(request, 'admin_settings/settings_charts.html')
+    context = []
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM sys_dashboard"
+        )
+        rows = dictfetchall(cursor)
+
+        with connection.cursor as cursor:
+            cursor.execute(
+                "SELECT * FROM v_users where is_active = 1"
+
+            )
+            users = dictfetchall(cursor)
+
+    context['dashboards'] = rows
+    context['users'] = users
+    return render(request, 'admin_settings/settings_charts.html', {'context': context})
 
 
 def test_adiuto_db(request):
@@ -2792,4 +2830,13 @@ def save_signature(request):
         os.remove(path + '\\static\\pdf\\' + qr_name)
         os.remove(filepath_signature)
         os.remove(filename_with_path)
+
+def new_dashboard(request):
+    dashboard_name = request.POST.get('dashboard-name')
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO sys_dashboard (name,userid) VALUES (%s, %s)",
+            [dashboard_name, 1]
+        )
+    return HttpResponse('ok')
 
