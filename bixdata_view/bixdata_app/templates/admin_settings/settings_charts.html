@@ -194,6 +194,43 @@
 </div>
 
 
+<div class="container text-center card card-body" style="margin-top: 2%">
+    <h4>Nuova dashboard</h4>
+    <form method="post" action="{% url 'new_dashboard' %}" class="container text-center" style="float: left">
+
+        <label for="dashboard-name">Nome Dashboard</label>
+        <input type="text" name="dashboard-name">
+
+    <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
+    </form>
+</div>
+
+
+<div class="container text-center card card-body" style="margin-top: 2%; height: 300px; overflow:scroll ">
+    <h4>Nuova dashboard</h4>
+    <form method="post" action="{% url 'new_dashboard' %}" class="container text-center" style="float: left">
+
+        {% for user in context.users %}
+            <p>{{ user.username }}</p>
+            {% for user_dashboard in context.user_dashboards %}
+                {% if user_dashboard.userid == user.sys_user_id %}
+                    {% for dashboard in context.dashboards %}
+                        {% if user.sys_user_id == user_dashboard.userid and dashboard.id == user_dashboard.dashboardid %}
+                            <input type="checkbox" name="dashboard-{{ user.id }}" value="{{ dashboard.id }}" checked>
+                        {% else %}
+                            <input type="checkbox" name="dashboard-{{ user.id }}" value="{{ dashboard.id }}">
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+    <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
+    </form>
+</div>
+
+
+
 <script>
 
     function select_table_report() {

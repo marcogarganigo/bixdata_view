@@ -1,0 +1,65 @@
+
+
+
+    {% load static %}
+<!DOCTYPE html>
+<html lang="en" data-layout-mode="fluid" data-topbar-color="dark" data-sidenav-color="light" data-sidenav-user="true"
+      data-sidenav-size="default" style="overflow: hidden; height: 100%;" class="menuitem-active">
+
+<head>
+
+
+
+    <!-- gridstack js -->
+    <script src="https://cdn.jsdelivr.net/npm/gridstack@8.2.3/dist/gridstack-all.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/gridstack@8.2.3/dist/gridstack.min.css" rel="stylesheet">
+
+
+
+
+
+
+    <!-- Helper-->
+
+
+
+
+
+</head>
+
+<body>
+
+
+<style type="text/css">
+  .grid-stack { background: #FAFAD2; }
+  .grid-stack-item-content { background-color: #18BC9C; }
+</style>
+
+<div style="height: 10000px !important; overflow:scroll">
+    <div class="grid-stack" ></div>
+</div>
+
+<script type="text/javascript">
+    var grid = GridStack.init();
+
+    // Calculate number of columns and rows based on container size and grid item size
+    var containerWidth = document.querySelector('.grid-stack').clientWidth;
+    var itemWidth = 100; // Adjust this based on your grid item width
+    var columns = Math.floor(containerWidth / itemWidth);
+    var rows = Math.ceil(50 / columns);
+
+    // Add grid items to fill the container
+    for (var i = 0; i < rows; i++) {
+      for (var j = 0; j < columns; j++) {
+        grid.addWidget({x: j, y: i, width: 3, height: 3});
+      }
+    }
+</script>
+
+
+
+
+
+</body>
+
+</html>

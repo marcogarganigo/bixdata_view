@@ -149,5 +149,6 @@ urlpatterns = [
     path('signature_function/', alpha.signature_function, name='signature_function'),
     path('save_signature/', alpha.save_signature, name='save_signature'),
     path('master_columns/', settings_view.master_columns, name='master_columns'),
+    path('new_dashboard/', alpha.new_dashboard, name='new_dashboard'),
 
 ]
