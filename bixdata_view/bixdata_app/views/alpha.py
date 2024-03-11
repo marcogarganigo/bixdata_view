@@ -1237,6 +1237,11 @@ def admin_page(request):
         )
         user_dashboards = dictfetchall(cursor)
 
+
+
+    users_not_assigned = [user for user in users if user['sys_user_id'] not in [user_dashboard['userid'] for user_dashboard in user_dashboards]]
+    users = [user for user in users if user['sys_user_id'] in [user_dashboard['userid'] for user_dashboard in user_dashboards]]
+
     context = {
         'userids': userids,
         'dashboardids': dashboardids,
@@ -1249,7 +1254,8 @@ def admin_page(request):
         'fields': fields,
         'users': users,
         'dashboards': dashboards,
-        'user_dashboards': user_dashboards
+        'user_dashboards': user_dashboards,
+        'users_not_assigned': users_not_assigned
 
     }
 

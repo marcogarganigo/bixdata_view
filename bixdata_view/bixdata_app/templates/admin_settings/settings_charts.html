@@ -206,7 +206,7 @@
 </div>
 
 
-<div class="container text-center card card-body" style="margin-top: 2%; height: 300px; overflow:scroll ">
+<div class="container text-center card card-body" style="margin-top: 2%; height: 200px; overflow:scroll ">
     <h4>Nuova dashboard</h4>
     <form method="post" action="{% url 'new_dashboard' %}" class="container text-center" style="float: left">
 
@@ -215,6 +215,7 @@
             {% for user_dashboard in context.user_dashboards %}
                 {% if user_dashboard.userid == user.sys_user_id %}
                     {% for dashboard in context.dashboards %}
+
                         {% if user.sys_user_id == user_dashboard.userid and dashboard.id == user_dashboard.dashboardid %}
                             <input type="checkbox" name="dashboard-{{ user.id }}" value="{{ dashboard.id }}" checked>
                         {% else %}
@@ -222,6 +223,16 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
+
+            {% endfor %}
+        {% endfor %}
+
+        <br>
+        {% for user_not_assigned in context.users_not_assigned %}
+            <h4>{{ user_not_assigned.username }}</h4>
+            {% for dashboard in context.dashboards %}
+                <p>{{ dashboard.name }}</p>
+                <input type="checkbox" name="dashboard-{{ user.id }}" value="{{ dashboard.id }}">
             {% endfor %}
         {% endfor %}
 

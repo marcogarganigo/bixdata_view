@@ -8,15 +8,15 @@
     }
 
     table {
-        font-size: 10pt;
+        font-size: 12pt;
     }
 
     .board {
-        font-size: 10pt;
+        font-size: 12pt;
     }
 
     .task-header {
-        font-size: 10pt;
+        font-size: 12pt;
     }
 
     /*calendar */
@@ -26,15 +26,15 @@
     }
 
     .small-header .fc-header-title h2 {
-        font-size: 14px;
+        font-size: 12pt
     }
 
     .small-header .fc-header-left {
-        font-size: 10px;
+        font-size: 12pt
     }
 
     .small-header .fc-header-right {
-        font-size: 10px;
+        font-size: 12pt;
     }
 
     #card-menu .btn {
@@ -51,31 +51,30 @@
     }
 
     .span-pc {
-        font-size: 13px;
+        font-size: 12pt;
     }
 
     .tabs-icon {
-        font-size: 13pt;
+        font-size: 12pt;
     }
 
     #results {
-        font-size: 10pt;
+        font-size: 12pt;
     }
 
     .btn {
-        font-size: 10pt;
+        font-size: 12pt;
     }
 
     .nav-link {
-        font-size: 10pt;
-    }
+        font-size: 12pt;
 
     #fields-scroll-container {
-        font-size: 10pt;
+        font-size:12pt;
     }
 
     ul.ui-autocomplete {
-        font-size: 10pt;
+        font-size: 12pt;
     }
 
     #Recordcard {
@@ -117,28 +116,28 @@
     }
 
     #block_record_badge {
-        font-size: 13.3px;
+        font-size: 12pt;
     }
 
     #card-menu > button  {
-       font-size: 10px !important;
+       font-size: 12pt; !important;
     }
 
     #card-menu > .dropdown > button {
-        font-size: 10px
+        font-size: 12pt;
     }
 
     .save-button {
-        font-size: 15px !important;
+        font-size: 12pt; !important;
         scale: 0.7;
     }
 
     .records-button {
-         font-size: 13px !important;
+         font-size: 12pt; !important;
     }
 
     .records-button-secondary {
-         font-size: 13px !important;
+         font-size: 12pt; !important;
     }
 
 
