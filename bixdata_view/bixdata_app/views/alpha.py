@@ -510,6 +510,8 @@ def get_chart(request, sql, id, name, layout, fields):
         for i in range(len(value)):
             for j in range(len(value[i])):
                 if value[i][j] is not None:
+                    if value[i][j]=='None':
+                        value[i][j]=0
                     value[i][j] = round(value[i][j], 2)
 
         context = {
