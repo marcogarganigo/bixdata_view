@@ -1464,6 +1464,15 @@ def stampa_timesheet(request):
         row['recordid'] = recordid
         row['completeUrl'] = completeUrl + qr_name
 
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM user_timesheetline WHERE recordidtimesheet_='{recordid}'"
+        )
+
+        timesheetlines = dictfetchall(cursor)
+
+    row['timesheetlines'] = timesheetlines
+
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
 

@@ -185,16 +185,14 @@
 </div>
 <div style="float:left;width:35%; text-align: center">
     <p class="border-bottom">Registrato Bixdata</p>
+            <input type="checkbox" checked>
+
 </div>
 
 <div style="clear:both"></div>
 
 
-<div class="border-bottom" style=" float: left; width: 100%; margin-top">
-    <div class="" style="float:right;width:20%;">
-        <input type="checkbox" checked>
-    </div>
-</div>
+
 
 <div style="clear:both"></div>
 
@@ -206,6 +204,11 @@
 <br>
 {{ description }}
 
+<br>
+<br>
+<br>
+<br>
+<br>
 
 <div style="clear:both"></div>
 
@@ -218,26 +221,28 @@
     <p class="border-bottom">Descrizione completa</p>
 </div>
 <div style="float:left;width:20%; text-align: center">
-    <p class="border-bottom">Quantità</p>
+    <p class="border-bottom">Quantità prevista</p>
 </div>
+
 <div style="float:left;width:20%; text-align: center">
-    <p class="border-bottom">Prezzo</p>
+    <p class="border-bottom">Quantità attuale</p>
 </div>
 
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 1.5%">
-</div>
+{% for timesheetline in timesheetlines %}
 
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 3%">
-</div>
+    <div style="float:left;width:60%; text-align: center">
+        <p class=""> {{ timesheetline.note }}</p>
+    </div>
+    <div style="float:left;width:20%; text-align: center">
+        <p class="">{{ timesheetline.expectedquantity }}</p>
+    </div>
 
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 3%">
-</div>
+    <div style="float:left;width:20%; text-align: center">
+        <p class=""> {{ timesheetline.actualquantity }}</p>
+    </div>
 
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 3%">
-</div>
-
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 3%">
-</div>
+    <div class="border-bottom" style=" float: left; width: 100%; "></div>
+{% endfor %}
 
 
 <div style="clear:both"></div>
