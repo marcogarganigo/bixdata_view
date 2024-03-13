@@ -1072,6 +1072,58 @@ def custom_save_record(request,tableid,recordid):
             record_deal.fields['advancepayment']=0
         record_deal.fields['reference']=reference
         record_deal.save()
+        
+    if tableid=='timesheet':
+        #recupero informazioni necessarie
+        timesheet_record=Record('timesheet',recordid)
+        company_record=Record('company',timesheet_record.fields['recordidcompany_'])
+        project_record=Record('project',timesheet_record.fields['recordidproject_'])
+        record_ticket=Record('ticket',timesheet_record.fields['recordidticket_'])
+        service=timesheet_record.fields['service']
+        invoiceoption=timesheet_record.fields['invoiceoption']
+        invoicestatus=timesheet_record.fields['invoicestatus']
+        
+        #aggiorno dati a prescindere
+        worktime=timesheet_record.fields['worktime']
+        traveltime=timesheet_record.fields['traveltime']
+        worktime_decimal=0
+        travel_time_decimal=0
+        totaltime_decimal=0
+        if not isempty(worktime):
+            hours, minutes = map(int, worktime.split(':'))
+            worktime_decimal = hours + minutes / 60
+            hours, minutes = map(int, traveltime.split(':'))
+            travel_time_decimal=hours + minutes / 60
+            totaltime_decimal=worktime_decimal+travel_time_decimal
+            timesheet_record['worktime_decimal']=worktime_decimal
+            timesheet_record['travel_time_decimal']=travel_time_decimal
+            timesheet_record['totaltime_decimal']=totaltime_decimal
+            
+        #inizio valutazione invoice status
+        if invoicestatus!='Invoiced':
+            invoicestatus='To Process'
+            
+        # valutazione del tipo di servizio se produttivo o meno TODO    
+        if invoicestatus=='To Process':
+            if service=='Amministrazione' or service=='Commerciale':
+                invoicestatus=service
+        
+        # valutazione delle option TODO
+        if invoicestatus=='To Process':
+            if invoiceoption=='Under warranty' or invoiceoption=='Commercial support':
+                invoicestatus=invoiceoption
+            if invoiceoption=='Out of contract':
+                invoicestatus='Out of contract'  
+        
+        #valutazione eventuale project
+        if not isempty(project_record.recordid):
+            if project_record.fields['fixedprice']=='Si':
+                invoicestatus='Fixed price Project'
+        
+        #valutazione flat service contract
+        
+        #valutazione monte ore              
+
     return True
 
 
