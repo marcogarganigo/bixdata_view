@@ -30,7 +30,7 @@
 <div style="float:right; margin-bottom: -50px">
     <h1>Intervento IT</h1>
 </div>
-<img id="qr_image" src="{{ completeQrUrl }}"  height="100px" width="100px" alt="{{ qr_name }}"
+<img id="qr_image" src="{{ completeUrl }}"  height="100px" width="100px" alt="{{ qr_name }}"
      style="float:right; margin-right: 10px; margin-bottom: 10px">
 <div style="clear:both"></div>
 <div style="background-color:#e43b2c;width:100%;height:25px;color:white;padding:2px;">
@@ -68,17 +68,29 @@
     <div style="float:left;width:33%">
         <b>Indirizzo</b>
         <br>
-        <p>{{ address }}</p>
+        <p>
+            {% if address %}
+                {{ address }}
+            {% endif %}
+        </p>
     </div>
     <div style="float:left;width:30%">
         <b>Città</b>
         <br>
-        <p>{{ city }}</p>
+        <p>
+            {% if city %}
+                {{ city }}
+            {% endif %}
+        </p>
     </div>
     <div style="float:left;width:30%">
         <b>E-mail</b>
         <br>
-        <p>{{ email }}</p>
+        <p>
+            {% if email %}
+                {{ email }}
+            {% endif %}
+        </p>
     </div>
 
     <div style="clear:both"></div>
@@ -135,8 +147,8 @@
     <input type="checkbox">
     <label>Altro</label>
     <span class="border-bottom"
-          style=" margin-block-end: 0; margin-block-start: 0; display:unset">{{ recordidproject_ }}</span>
-    <span style=" margin-block-end: 0; margin-block-start: 0; display:unset">+IVA</span>
+          style=" margin-block-end: 0; margin-block-start: 0; display:unset"></span>
+    <span style=" margin-block-end: 0; margin-block-start: 0; display:unset"></span>
 </div>
 
 <div style="clear:both"></div>
@@ -172,29 +184,15 @@
     {{ firstname }} {{ lastname }}
 </div>
 <div style="float:left;width:35%; text-align: center">
-    <p class="border-bottom">Registrato VTE</p>
+    <p class="border-bottom">Registrato Bixdata</p>
+            <input type="checkbox" checked>
+
 </div>
 
 <div style="clear:both"></div>
 
 
-<div class="border-bottom" style=" float: left; width: 100%;">
-    <div class="" style="float:right;width:20%;">
-        <input type="checkbox">
-    </div>
-</div>
 
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 1.2%">
-    <div class="" style="float:right;width:20%;">
-        <input type="checkbox">
-    </div>
-</div>
-
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 1.2%">
-    <div class="" style="float:right;width:20%;">
-        <input type="checkbox">
-    </div>
-</div>
 
 <div style="clear:both"></div>
 
@@ -206,6 +204,11 @@
 <br>
 {{ description }}
 
+<br>
+<br>
+<br>
+<br>
+<br>
 
 <div style="clear:both"></div>
 
@@ -218,26 +221,28 @@
     <p class="border-bottom">Descrizione completa</p>
 </div>
 <div style="float:left;width:20%; text-align: center">
-    <p class="border-bottom">Quantità</p>
+    <p class="border-bottom">Quantità prevista</p>
 </div>
+
 <div style="float:left;width:20%; text-align: center">
-    <p class="border-bottom">Prezzo</p>
+    <p class="border-bottom">Quantità attuale</p>
 </div>
 
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 1.5%">
-</div>
+{% for timesheetline in timesheetlines %}
 
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 3%">
-</div>
+    <div style="float:left;width:60%; text-align: center">
+        <p class=""> {{ timesheetline.note }}</p>
+    </div>
+    <div style="float:left;width:20%; text-align: center">
+        <p class="">{{ timesheetline.expectedquantity }}</p>
+    </div>
 
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 3%">
-</div>
+    <div style="float:left;width:20%; text-align: center">
+        <p class=""> {{ timesheetline.actualquantity }}</p>
+    </div>
 
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 3%">
-</div>
-
-<div class="border-bottom" style=" float: left; width: 100%; margin-top: 3%">
-</div>
+    <div class="border-bottom" style=" float: left; width: 100%; "></div>
+{% endfor %}
 
 
 <div style="clear:both"></div>

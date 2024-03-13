@@ -517,14 +517,12 @@
                             onclick="signatureFunction()">Firma
                     </button>
 
-                    <div class="modal fade" id="signatureModal" aria-labelledby="signatureModal" aria-hidden="true"
-                         data-recordid="{{ recordid }}">
-                        <div class="modal-dialog modal-xl">
+                    <div class="modal fade" id="signatureModal" aria-labelledby="signatureModal" aria-hidden="true" data-recordid="{{ recordid }}">
+                        <div class="modal-dialog modal-fullscreen">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Firma qui</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Firma Digitale</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div id="signatureModalContent" class="modal-body">
 
@@ -532,6 +530,7 @@
                             </div>
                         </div>
                     </div>
+
 
                     <script>
                         function signatureFunction() {
