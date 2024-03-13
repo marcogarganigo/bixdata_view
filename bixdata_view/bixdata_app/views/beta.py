@@ -251,3 +251,10 @@ def remove_html_tags(input_string):
         cleaned_text = splitted[0]
 
     return cleaned_text
+
+
+def isempty(var):
+        if var is None or var=='' or var=='null' or var==0:
+            return True
+        else:
+            return False
