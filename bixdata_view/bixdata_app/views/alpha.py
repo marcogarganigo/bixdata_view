@@ -849,6 +849,8 @@ def get_block_record_fields(request):
 
             if userid in [53,2,47,50]:
                 context['edit_block'] = False
+        else:
+            context['edit_block'] = False
 
         context['block_record_fields_timesheet'] = render_to_string('block/record/record_fields.html', context, request=request)
         context['block_record_fields'] = render_to_string('block/record/custom/record_fields_timesheet.html', context,request=request)
