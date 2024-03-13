@@ -839,16 +839,16 @@ def get_block_record_fields(request):
 
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()
+        if contextfunction != 'insert':
+            timesheet_record=Record(tableid='timesheet',recordid=recordid)
 
-        timesheet_record=Record(tableid='timesheet',recordid=recordid)
+            if timesheet_record.fields['validated'] == 'Si':
+                context['edit_block'] = True
+            else:
+                context['edit_block'] = False
 
-        if timesheet_record.fields['validated'] == 'Si':
-            context['edit_block'] = True
-        else:
-            context['edit_block'] = False
-
-        if userid in [53,2,47,50]:
-            context['edit_block'] = False
+            if userid in [53,2,47,50]:
+                context['edit_block'] = False
 
         context['block_record_fields_timesheet'] = render_to_string('block/record/record_fields.html', context, request=request)
         context['block_record_fields'] = render_to_string('block/record/custom/record_fields_timesheet.html', context,request=request)
