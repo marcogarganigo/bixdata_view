@@ -1120,7 +1120,10 @@ def custom_save_record(request,tableid,recordid):
         
         #valutazione flat service contract
         
-        #valutazione monte ore              
+        #valutazione monte ore 
+        
+        #fatturazione
+                     
 
     return True
 
