@@ -839,6 +839,15 @@ def get_block_record_fields(request):
 
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()
+
+        if context['record_fields_labels']['Sistema']['validated']['value'] == 'Si':
+            context['edit_block'] = True
+        else:
+            context['edit_block'] = False
+
+        if userid in [53,2,47,50]:
+            context['edit_block'] = False
+
         context['block_record_fields_timesheet'] = render_to_string('block/record/record_fields.html', context, request=request)
         context['block_record_fields'] = render_to_string('block/record/custom/record_fields_timesheet.html', context,request=request)
         block_record_fields_container = render_to_string('block/record/record_fields_container.html', context, request=request)
@@ -2825,6 +2834,15 @@ def save_signature(request):
         row['recordid'] = recordid
         row['completeQrUrl'] = completeUrl + qr_name
         row['completeSignatureUrl'] = completeUrl + filename_signature
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM user_timesheetline WHERE recordidtimesheet_='{recordid}'"
+        )
+
+        timesheetlines = dictfetchall(cursor)
+
+    row['timesheetlines'] = timesheetlines
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'

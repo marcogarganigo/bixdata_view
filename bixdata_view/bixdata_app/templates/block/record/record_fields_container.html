@@ -19,7 +19,9 @@
             {% endif %}
         </div>
     </div>
+    {% if tableid == 'timesheet' and edit_block == False %}
     <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class=" save-button" onclick="save_record(this)">Salva</button>
+    {% endif %}
 </div>
 
 <style>
