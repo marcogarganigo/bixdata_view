@@ -1529,6 +1529,11 @@ def stampa_timesheet(request):
         rows = dictfetchall(cursor)
 
         row = rows[0]
+
+        for value in row:
+            if row[value] is None:
+                row[value] = ''
+
         row['recordid'] = recordid
         row['completeUrl'] = completeUrl + qr_name
 
@@ -2890,6 +2895,12 @@ def save_signature(request):
         rows = dictfetchall(cursor)
 
         row = rows[0]
+
+        for value in row:
+           if row[value] is None:
+               row[value] = ''
+
+
         row['recordid'] = recordid
         row['completeQrUrl'] = completeUrl + qr_name
         row['completeSignatureUrl'] = completeUrl + filename_signature
