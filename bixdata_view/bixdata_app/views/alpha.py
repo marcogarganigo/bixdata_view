@@ -840,7 +840,9 @@ def get_block_record_fields(request):
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()
 
-        if context['record_fields_labels']['Sistema']['validated']['value'] == 'Si':
+        timesheet_record=Record(tableid='timesheet',recordid=recordid)
+
+        if timesheet_record.fields['validated'] == 'Si':
             context['edit_block'] = True
         else:
             context['edit_block'] = False
