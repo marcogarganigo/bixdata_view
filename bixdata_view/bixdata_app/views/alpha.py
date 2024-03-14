@@ -820,14 +820,14 @@ def get_block_record_fields(request):
         userid = row[0]
         userid = userid['id']
         context['userid']=userid
-    
-    record=Record(tableid=tableid,recordid=recordid,userid=userid)    
+
+    record=Record(tableid=tableid,recordid=recordid,userid=userid)
     record.master_tableid=master_tableid
     record.master_recordid=master_recordid
     record.context=contextfunction
     fields=record.get_fields()
-    
-    
+
+
 
     context['record_fields_labels'] = fields
     context['contextfunction'] = contextfunction
@@ -933,7 +933,7 @@ def save_record_fields(request):
     recordid = request.POST.get('recordid')
     contextfunction = request.POST.get('contextfunction')
     creator = userid = get_userid(request.user.id)
-    
+
     post_dict = request.POST.dict()
     post_repr=repr(post_dict)
     post_repr=post_repr.replace("'", "")
@@ -943,7 +943,7 @@ def save_record_fields(request):
     del fields_dict['tableid']
     del fields_dict['recordid']
     del fields_dict['contextfunction']
-    
+
 
     if tableid == 'timetracking':
         if fields_dict['stato'] == 'Terminato':
@@ -1059,7 +1059,7 @@ def save_record_fields(request):
                 filename='deal-attachment'+'_'+fields_dict['recordiddeal_']+'_'+fields_dict['note']
         filename=filename+'_'+basename+extension
         fs.save(filename, uploaded_files)
-        
+
     #return render(request, 'block/record/record_fields.html')
     custom_save_record(request,tableid,response_dict['recordid'])
     return HttpResponse(response_dict['recordid'])
@@ -1074,7 +1074,7 @@ def custom_save_record(request,tableid,recordid):
             record_deal.fields['advancepayment']=0
         record_deal.fields['reference']=reference
         record_deal.save()
-        
+
     if tableid=='timesheet':
         #recupero informazioni necessarie
         timesheet_record=Record('timesheet',recordid)
@@ -1084,7 +1084,7 @@ def custom_save_record(request,tableid,recordid):
         service=timesheet_record.fields['service']
         invoiceoption=timesheet_record.fields['invoiceoption']
         invoicestatus=timesheet_record.fields['invoicestatus']
-        
+
         #aggiorno dati a prescindere
         worktime=timesheet_record.fields['worktime']
         traveltime=timesheet_record.fields['traveltime']
@@ -1100,34 +1100,34 @@ def custom_save_record(request,tableid,recordid):
             timesheet_record['worktime_decimal']=worktime_decimal
             timesheet_record['travel_time_decimal']=travel_time_decimal
             timesheet_record['totaltime_decimal']=totaltime_decimal
-            
+
         #inizio valutazione invoice status
         if invoicestatus!='Invoiced':
             invoicestatus='To Process'
-            
+
         # valutazione del tipo di servizio se produttivo o meno TODO    
         if invoicestatus=='To Process':
             if service=='Amministrazione' or service=='Commerciale':
                 invoicestatus=service
-        
+
         # valutazione delle option TODO
         if invoicestatus=='To Process':
             if invoiceoption=='Under warranty' or invoiceoption=='Commercial support':
                 invoicestatus=invoiceoption
             if invoiceoption=='Out of contract':
-                invoicestatus='Out of contract'  
-        
+                invoicestatus='Out of contract'
+
         #valutazione eventuale project
         if not isempty(project_record.recordid):
             if project_record.fields['fixedprice']=='Si':
                 invoicestatus='Fixed price Project'
-        
+
         #valutazione flat service contract
-        
-        #valutazione monte ore 
-        
+
+        #valutazione monte ore
+
         #fatturazione
-                     
+
 
     return True
 
@@ -1308,9 +1308,26 @@ def admin_page(request):
         user_dashboards = dictfetchall(cursor)
 
 
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM sys_dashboard"
+        )
+        dashboards = dictfetchall(cursor)
 
-    users_not_assigned = [user for user in users if user['sys_user_id'] not in [user_dashboard['userid'] for user_dashboard in user_dashboards]]
-    users = [user for user in users if user['sys_user_id'] in [user_dashboard['userid'] for user_dashboard in user_dashboards]]
+
+
+    for user in users:
+        for dashboard in dashboards:
+            user['dashboards'] = [dashboard for dashboard in dashboards]
+            for dash in user['dashboards']:
+                if dash['id'] in [user_dashboard['dashboardid'] for user_dashboard in user_dashboards if user_dashboard['userid'] == user['sys_user_id']]:
+                    dash['visible'] = True
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM sys_dashboard"
+            )
+            dashboards = dictfetchall(cursor)
+
 
     context = {
         'userids': userids,
@@ -1324,8 +1341,7 @@ def admin_page(request):
         'fields': fields,
         'users': users,
         'dashboards': dashboards,
-        'user_dashboards': user_dashboards,
-        'users_not_assigned': users_not_assigned
+        'user_dashboards': user_dashboards
 
     }
 
@@ -2943,5 +2959,27 @@ def new_dashboard(request):
             "INSERT INTO sys_dashboard (name,userid) VALUES (%s, %s)",
             [dashboard_name, 1]
         )
-    return HttpResponse('ok')
+    return JsonResponse({'success': True})
+
+
+def save_users_dashboards(request):
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "DELETE FROM sys_user_dashboard"
+        )
+
+    for key, value in request.POST.items():
+        if '-' in key:
+            dashboard_name, sys_user_id = key.split('-')
+            dashboard_id = value
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO sys_user_dashboard (userid,dashboardid) VALUES (%s, %s)",
+                    [sys_user_id, dashboard_id]
+                )
+
+    return JsonResponse({'success': True})
+
 
