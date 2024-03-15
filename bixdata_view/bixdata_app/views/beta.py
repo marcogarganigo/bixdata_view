@@ -254,7 +254,7 @@ def remove_html_tags(input_string):
 
 
 def isempty(var):
-        if var is None or var=='' or var=='null' or var==0:
+        if var is None or var=='None' or var=='' or var=='null' or var==0:
             return True
         else:
             return False
