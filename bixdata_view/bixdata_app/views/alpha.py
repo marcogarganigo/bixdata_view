@@ -1077,6 +1077,8 @@ def custom_save_record(request,tableid,recordid):
         
     if tableid=='timesheet':
         #recupero informazioni necessarie
+        timesheet_table=Table(tableid='timesheet')
+        servicecontract_table=Table(tableid='servicecontract')
         timesheet_record=Record('timesheet',recordid)
         company_record=Record('company',timesheet_record.fields['recordidcompany_'])
         project_record=Record('project',timesheet_record.fields['recordidproject_'])
@@ -1094,12 +1096,13 @@ def custom_save_record(request,tableid,recordid):
         if not isempty(worktime):
             hours, minutes = map(int, worktime.split(':'))
             worktime_decimal = hours + minutes / 60
-            hours, minutes = map(int, traveltime.split(':'))
-            travel_time_decimal=hours + minutes / 60
+            if not isempty(traveltime):
+                hours, minutes = map(int, traveltime.split(':'))
+                travel_time_decimal=hours + minutes / 60
             totaltime_decimal=worktime_decimal+travel_time_decimal
-            timesheet_record['worktime_decimal']=worktime_decimal
-            timesheet_record['travel_time_decimal']=travel_time_decimal
-            timesheet_record['totaltime_decimal']=totaltime_decimal
+            timesheet_record.fields['worktime_decimal']=worktime_decimal
+            timesheet_record.fields['travel_time_decimal']=travel_time_decimal
+            timesheet_record.fields['totaltime_decimal']=totaltime_decimal
             
         #inizio valutazione invoice status
         if invoicestatus!='Invoiced':
@@ -1114,16 +1117,17 @@ def custom_save_record(request,tableid,recordid):
         if invoicestatus=='To Process':
             if invoiceoption=='Under warranty' or invoiceoption=='Commercial support':
                 invoicestatus=invoiceoption
-            if invoiceoption=='Out of contract':
-                invoicestatus='Out of contract'  
+ 
         
         #valutazione eventuale project
-        if not isempty(project_record.recordid):
+        if (not isempty(project_record.recordid)) and invoiceoption!='Out of contract':
             if project_record.fields['fixedprice']=='Si':
                 invoicestatus='Fixed price Project'
         
         #valutazione flat service contract
-        
+        flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='Manutenzione PBX')"])
+        if flat_service_contract:
+            invoicestatus='Flat service contract'
         #valutazione monte ore 
         
         #fatturazione
