@@ -2321,29 +2321,28 @@ def print_word(request):
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Navigate to the 'views' directory and locate 'template.docx'
-    file_path = os.path.join(script_dir, 'template2.docx')
+    file_path = os.path.join(script_dir, 'template3.docx')
 
     #doc = Document(file_path)
 
-    doc1 = Document(file_path)
+    doc = Document(file_path)
 
 
 
-    paragraph = doc1.add_paragraph()
+    paragraph = doc.add_paragraph()
     run = paragraph.add_run()
     picture = run.add_picture(qr_name, width=Inches(1))
 
     # Set the paragraph alignment to right
     paragraph.alignment = 2  # 2 corresponds to the right alignment
-    picture.alignment = 1
 
     # Set spacing to minimize any additional space
-    paragraph.paragraph_format.space_before = Inches(4)
+    paragraph.paragraph_format.space_before = Inches(0)
     paragraph.paragraph_format.space_after = Inches(0)
 
     os.remove(qr_name)
 
-    section = doc1.sections[0]
+    section = doc.sections[0]
     section.left_margin = Inches(1)
     section.top_margin = Inches(1)
 
@@ -2352,7 +2351,7 @@ def print_word(request):
     grey = RGBColor(0x89, 0x89, 0x89)
 
 
-    p1 = doc1.add_paragraph()
+    p1 = doc.add_paragraph()
     text1 = f"Spett.le"
     run1 = p1.add_run(text1)
     font1 = run1.font
@@ -2362,7 +2361,7 @@ def print_word(request):
     font1.color.rgb = grey
     p1.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    p_companyname = doc1.add_paragraph()
+    p_companyname = doc.add_paragraph()
     text_companyname = f"{companyname}"
     run_companyname = p_companyname.add_run(text_companyname)
     font_companyname = run_companyname.font
@@ -2373,7 +2372,7 @@ def print_word(request):
     p_companyname.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
 
-    p2 = doc1.add_paragraph()
+    p2 = doc.add_paragraph()
     text2 = f"{address}, {city}"
     run2 = p2.add_run(text2)
     font2 = run2.font
@@ -2384,7 +2383,7 @@ def print_word(request):
     p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
 
-    p_space = doc1.add_paragraph()
+    p_space = doc.add_paragraph()
     text_space = ''
     run_space = p_space.add_run(text_space)
     font_space = run_space.font
@@ -2394,7 +2393,7 @@ def print_word(request):
     font_space.italic = True
     p_space.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-    p_date = doc1.add_paragraph()
+    p_date = doc.add_paragraph()
     text_date = f"Massagno {d1}"
     run_date = p_date.add_run(text_date)
     font_date = run_date.font
@@ -2405,7 +2404,7 @@ def print_word(request):
     p_date.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
 
-    p3 = doc1.add_paragraph()
+    p3 = doc.add_paragraph()
     text3 = dealname
     run3 = p3.add_run(text3)
     font3 = run3.font
@@ -2414,24 +2413,6 @@ def print_word(request):
     font3.color.rgb = RGBColor(0xC0, 0x00, 0x00)
     font3.bold = True
     p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    doc1.save('doc1.docx')
-
-    filename_master = "doc1.docx"
-    filename_second_docx = os.path.join(script_dir, 'template2pt2.docx')
-
-    # filename_master is name of the file to merge the docx file into
-    master = Document(filename_master)
-
-    composer = Composer(master)
-    # filename_second_docx is the name of the second docx file
-    doc2 = Document(filename_second_docx)
-    # append the doc2 into the master using composer.append function
-    composer.append(doc2)
-    # Save the combined docx with a name
-    composer.save("combined.docx")
-
-    doc = Document("combined.docx")
 
 
     """
