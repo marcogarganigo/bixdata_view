@@ -346,6 +346,7 @@ def get_render_content_dashboard(request):
     context['blocks'] = []  # Initialize the blocks list
     context['block_list'] = []  # Initialize the block_list list
     user_id = request.user.id
+    dashboard_id = request.POST.get('dashboard_id')
 
     with connection.cursor() as cursor2:
 
@@ -359,7 +360,7 @@ def get_render_content_dashboard(request):
         )
 
         righe = cursor2.fetchall()
-        dashboard_id = righe[0][0]
+        #dashboard_id = righe[0][0]
         context['dashboardid'] = dashboard_id
 
     if request.method == 'POST':
@@ -371,7 +372,7 @@ def get_render_content_dashboard(request):
             size = request.POST.get('size')
             context['size'] = size
 
-            datas = SysUserDashboardBlock.objects.filter(userid=bixid, size=size).values()
+            datas = SysUserDashboardBlock.objects.filter(userid=bixid, size=size, dashboardid=dashboard_id).values()
 
             #all_blocks = SysDashboardBlock.objects.all()
             sql="SELECT * FROM sys_dashboard_block ORDER BY name asc"
@@ -1328,7 +1329,6 @@ def admin_page(request):
             )
             dashboards = dictfetchall(cursor)
 
-
     context = {
         'userids': userids,
         'dashboardids': dashboardids,
@@ -1342,7 +1342,6 @@ def admin_page(request):
         'users': users,
         'dashboards': dashboards,
         'user_dashboards': user_dashboards
-
     }
 
     return render(request, f'admin_settings/{page}.html', {'context': context})
