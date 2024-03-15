@@ -10,6 +10,8 @@
 </select>
 <button class="btn btn-primary" style="float: left" onclick="new_block()">Aggiungi</button>
 
+<button id="" onclick="setDefaultDashboard()" class="btn btn-secondary" style="float: left">Imposta dashboard come default</button>
+
 <div style="height: 90% !important; overflow:scroll !important; width: 100%">
 
 <div style=" width: 100%; height: 100%;" class="grid-stack">
@@ -55,6 +57,21 @@
 
 
     <script>
+        
+        function setDefaultDashboard() {
+            $.ajax({
+                     url: '/set_default_dashboard/',
+                    type: 'POST',
+                    data: {
+                        'dashboardid': '{{ dashboardid }}'
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        getDashboard()
+                    },
+                })
+            };
+        
         button = document.createElement("button");
         button.innerHTML = "Rimuovi";
         button.onclick = function () {
@@ -88,7 +105,7 @@
         }
 
         function new_block() {
-            
+
             var blockid = $('#select-block').val();
             $.ajax({
                 url: '/new_block/',

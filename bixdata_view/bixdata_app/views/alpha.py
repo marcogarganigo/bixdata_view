@@ -2315,7 +2315,7 @@ def print_word(request):
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Navigate to the 'views' directory and locate 'template.docx'
-    file_path = os.path.join(script_dir, 'template.docx')
+    file_path = os.path.join(script_dir, 'template2.docx')
 
     #doc = Document(file_path)
 
@@ -2979,6 +2979,26 @@ def save_users_dashboards(request):
                     [sys_user_id, dashboard_id]
                 )
 
-    return JsonResponse({'success': True})
+    return True
+
+
+def set_default_dashboard(request):
+    dashboardid = request.POST.get('dashboardid')
+
+    sys_user = get_userid(request.user.id)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "UPDATE sys_user_dashboard SET defaultdashboard = %s WHERE dashboardid = %s AND userid = %s",
+            [1, dashboardid, sys_user]
+        )
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "UPDATE sys_user_dashboard SET defaultdashboard = %s WHERE dashboardid != %s AND userid = %s",
+            [0, dashboardid, sys_user]
+        )
+
+    return HttpResponse(status=204)
 
 

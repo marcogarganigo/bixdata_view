@@ -66,7 +66,11 @@
 
             $("#bixdata2").ready(function () {
                 {% if content == '' %}
-                    getDashboard('{{ active_dashboards.0.id }}');
+                    {% for dashboard in active_dashboards %}
+                        {% if dashboard.defaultdashboard == 1 %}
+                            getDashboard('{{ dashboard.id }}');
+                        {% endif %}
+                    {% endfor %}
                 {% endif %}
 
 

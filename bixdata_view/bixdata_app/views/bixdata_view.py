@@ -89,6 +89,7 @@ def index(request, content=''):
         for dashboard in dashboards:
             for user_dashboard in user_dashboards:
                 if user_dashboard['dashboardid'] == dashboard['id']:
+                    dashboard['defaultdashboard'] = user_dashboard['defaultdashboard']
                     active_dashboards.append(dashboard)
 
 
