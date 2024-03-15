@@ -1,66 +1,42 @@
-<form method="post" action="{% url 'save_chart_settings' %}" class="container text-center" style="float: left">
-    <div class="container text-center card card-body" style="margin-top: 2%">
+<div style="overflow:scroll; height: 100%">
+
+    <div class="container text-center card card-body" style="margin-top: 2%; float: left">
+        <h3>Nuova dashboard</h3>
+        {% csrf_token %}
+        <div class="container text-center card card-body" style="margin-top: 2%">
+            <h4>Nuova dashboard</h4>
+            <form method="post" action="{% url 'new_dashboard' %}" class="container text-center" style="float: left">
+                <label for="dashboard-name">Nome Dashboard</label>
+                <input type="text" name="dashboard-name">
+                <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="container text-center card card-body" style="margin-top: 2%" style="float: left; height: 20%">
         <h3>Aggiorna dashboard degli utenti</h3>
         {% csrf_token %}
-        <div class="row">
-            {% for item in context.userids %}
-                <div class="flex-fill" style="display: none">
-                    <input type="text" name="userids[]" hidden value="{{ item }}">
-                </div>
-            {% endfor %}
-
-            <div class="col-md-2 d-flex flex-column">
-                <h4>User Names</h4>
-                {% for item in context.names %}
-                    <div class="flex-fill">
-                        <input type="text" name="names[]" disabled value="{{ item }}">
-                    </div>
+        <div class="container text-center card card-body" style="margin-top: 2%; height: 100%; overflow:scroll ">
+            <form method="post" action="{% url 'save_users_dashboards' %}" class="container text-center" style="float: left">
+                {% for user in context.users %}
+                    <h4>{{ user.username }}</h4>
+                    {% for user_dashboard in user.dashboards %}
+                        {% if user_dashboard.visible == True %}
+                            {{ user_dashboard.name }}
+                            <input type="checkbox" name="{{ user_dashboard.name }}-{{ user.sys_user_id }}" value="{{ user_dashboard.id }}" checked>
+                        {% else %}
+                            {{ user_dashboard.name }}
+                            <input type="checkbox" name="{{ user_dashboard.name }}-{{ user.sys_user_id }}" value="{{ user_dashboard.id }}">
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
-            </div>
-            <div class="col-md-2 d-flex flex-column">
-                <h4>Dashboard id</h4>
-                {% for item in context.dashboardids %}
-                    <div class="flex-fill">
-                        <input type="text" name="dashboardids[]" value="{{ item }}">
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-    </div>
-
-
-    <div class="container text-center card card-body" style="margin-top: 2%" style="float: left">
-        <h3>Aggiorna dashboard dei grafici</h3>
-        {% csrf_token %}
-        <div class="row">
-            {% for item in context.chart_names %}
-                <div class="flex-fill" style="display: none">
-                    <input style="width: 100%" type="text" name="chartnames[]" hidden value="{{ item }}">
-                </div>
-            {% endfor %}
-
-            <div class="col-md-4 d-flex flex-column">
-                <h4>Chart Names</h4>
-                {% for item in context.chart_names %}
-                    <div class="flex-fill">
-                        <input style="width: 100%" type="text" disabled value="{{ item }}">
-                    </div>
-                {% endfor %}
-            </div>
-
-            <div class="col-md-2 d-flex flex-column">
-                <h4>Dashboard id</h4>
-                {% for item in context.chart_dashboard_id %}
-                    <div class="flex-fill">
-                        <input type="text" name="chartdashboardids[]" value="{{ item }}">
-                    </div>
-                {% endfor %}
-            </div>
+                <br>
+                <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
+            </form>
         </div>
     </div>
-    <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
-</form>
+
 
 
 <div class="container text-center card card-body" style="margin-top: 2%">
@@ -194,52 +170,12 @@
 </div>
 
 
-<div class="container text-center card card-body" style="margin-top: 2%">
-    <h4>Nuova dashboard</h4>
-    <form method="post" action="{% url 'new_dashboard' %}" class="container text-center" style="float: left">
 
-        <label for="dashboard-name">Nome Dashboard</label>
-        <input type="text" name="dashboard-name">
 
-    <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
-    </form>
+
+
+
 </div>
-
-
-<div class="container text-center card card-body" style="margin-top: 2%; height: 200px; overflow:scroll ">
-    <h4>Nuova dashboard</h4>
-    <form method="post" action="{% url 'new_dashboard' %}" class="container text-center" style="float: left">
-
-        {% for user in context.users %}
-            <p>{{ user.username }}</p>
-            {% for user_dashboard in context.user_dashboards %}
-                {% if user_dashboard.userid == user.sys_user_id %}
-                    {% for dashboard in context.dashboards %}
-
-                        {% if user.sys_user_id == user_dashboard.userid and dashboard.id == user_dashboard.dashboardid %}
-                            <input type="checkbox" name="dashboard-{{ user.id }}" value="{{ dashboard.id }}" checked>
-                        {% else %}
-                            <input type="checkbox" name="dashboard-{{ user.id }}" value="{{ dashboard.id }}">
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-
-            {% endfor %}
-        {% endfor %}
-
-        <br>
-        {% for user_not_assigned in context.users_not_assigned %}
-            <h4>{{ user_not_assigned.username }}</h4>
-            {% for dashboard in context.dashboards %}
-                <p>{{ dashboard.name }}</p>
-                <input type="checkbox" name="dashboard-{{ user.id }}" value="{{ dashboard.id }}">
-            {% endfor %}
-        {% endfor %}
-
-    <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
-    </form>
-</div>
-
 
 
 <script>

@@ -66,7 +66,7 @@
 
             $("#bixdata2").ready(function () {
                 {% if content == '' %}
-                    getDashboard();
+                    getDashboard('{{ active_dashboards.0.id }}');
                 {% endif %}
 
 
@@ -252,7 +252,7 @@
                 });
             }
 
-            function getDashboard() {
+            function getDashboard(dashboardid) {
                 var size = window.innerWidth;
                 var resolution = '';
                 if (size < 2000) {
@@ -265,7 +265,8 @@
                     type: "POST",
                     crossDomain: true,
                     data: {
-                        'size': resolution
+                        'size': resolution,
+                        'dashboard_id': dashboardid
                     },
                     url: "{% url 'dashboard' %}",
                     success: function (response) {
@@ -806,16 +807,19 @@
                         <ul class="side-nav">
 
                             <li class="side-nav-item">
-                                <a data-bs-toggle="collapse" onclick="getDashboard()" aria-expanded="false"
+                                <a data-bs-toggle="collapse" onclick="" href="#sidebarDashboards2" aria-expanded="false"
                                    aria-controls="sidebarDashboards2" class="side-nav-link">
                                     <i class="uil-dashboard"></i>
                                     <span> Dashboard </span>
+                                    <span class="menu-arrow"></span>
                                 </a>
                                 <div class="collapse" id="sidebarDashboards2">
                                     <ul class="side-nav-second-level">
-                                        <li>
-                                            <a onclick="getDashboard()">Analytics</a>
-                                        </li>
+                                        {% for dashboard in active_dashboards %}
+                                            <li onclick="getDashboard('{{ dashboard.id }}')">
+                                                <a class="side-nav-txt" onclick="setColor(this)">{{ dashboard.name }}</a>
+                                            </li>
+                                        {% endfor %}
                                     </ul>
                                 </div>
                             </li>

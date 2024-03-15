@@ -71,7 +71,29 @@ def index(request, content=''):
     response = requests.get(f"{bixdata_server}bixdata/index.php/rest_controller/get_tables_menu")
     menu_list = json.loads(response.text)
 
-    
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM sys_user_dashboard WHERE userid = '{userid}'"
+        )
+        user_dashboards = dictfetchall(cursor)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM sys_dashboard"
+        )
+        dashboards = dictfetchall(cursor)
+
+
+        active_dashboards = []
+
+        for dashboard in dashboards:
+            for user_dashboard in user_dashboards:
+                if user_dashboard['dashboardid'] == dashboard['id']:
+                    active_dashboards.append(dashboard)
+
+
+
+
 
     hv.context['menu_tables']=menu_tables
     hv.context['menu_list']=menu_list
@@ -81,6 +103,7 @@ def index(request, content=''):
     hv.context['theme']=get_user_setting(request, 'theme')
     hv.context['content']=content
     hv.context['layout_setting']=get_user_setting(request, 'record_open_layout')
+    hv.context['active_dashboards'] = active_dashboards
     return hv.render_template('index.html')
 
 

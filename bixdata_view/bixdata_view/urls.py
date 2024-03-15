@@ -150,5 +150,6 @@ urlpatterns = [
     path('save_signature/', alpha.save_signature, name='save_signature'),
     path('master_columns/', settings_view.master_columns, name='master_columns'),
     path('new_dashboard/', alpha.new_dashboard, name='new_dashboard'),
+    path('save_users_dashboards/', alpha.save_users_dashboards, name='save_users_dashboards'),
 
 ]
