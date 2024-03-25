@@ -86,8 +86,9 @@
         font-size: 12pt;
     }
 
-    .modal-fullscreen {
-        width: 85% !important;
+    .modal-dialog {
+        width: 90% !important;
+        height: 90% !important;
     }
 
     #block_record_badge > .card-body {
@@ -99,12 +100,11 @@
     }
 
     .card-body {
-        padding: 15px !important;
+        padding: 5px !important;
+        height: 100% !important;
+        width: 100% !important;
     }
 
-    #RecordCard > .card-body {
-
-    }
 
     #block_record_badge {
         scale: 0.85;
@@ -138,6 +138,8 @@
 
     .records-button-secondary {
          font-size: 12pt; !important;
+    }
+
     }
 
 

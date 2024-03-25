@@ -48,7 +48,13 @@ function save_record(el) {
         });
 
     } else {
-
+          swal({
+            title: "Bottone Cliccato!",
+            text: "Salvataggio in corso",
+            icon: "warning",
+            timer: 1200,
+            buttons: false,
+        })
         serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
         serialized_json = convertFormToJSON(serialized_form);
         var post_data = [];
