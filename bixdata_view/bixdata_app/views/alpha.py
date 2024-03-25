@@ -1067,6 +1067,7 @@ def save_record_fields(request):
 
 @login_required(login_url='/login/')
 def custom_save_record(request,tableid,recordid):
+    #---DEAL---
     if tableid=='deal':
         record_deal=Record('deal',recordid)
         record_company=Record('company',record_deal.fields['recordidcompany_'])
@@ -1075,7 +1076,8 @@ def custom_save_record(request,tableid,recordid):
             record_deal.fields['advancepayment']=0
         record_deal.fields['reference']=reference
         record_deal.save()
-
+        
+    #---TIMESHEET---
     if tableid=='timesheet':
         #recupero informazioni necessarie
         timesheet_table=Table(tableid='timesheet')
@@ -1083,17 +1085,21 @@ def custom_save_record(request,tableid,recordid):
         timesheet_record=Record('timesheet',recordid)
         company_record=Record('company',timesheet_record.fields['recordidcompany_'])
         project_record=Record('project',timesheet_record.fields['recordidproject_'])
-        record_ticket=Record('ticket',timesheet_record.fields['recordidticket_'])
+        ticket_record=Record('ticket',timesheet_record.fields['recordidticket_'])
         service=timesheet_record.fields['service']
         invoiceoption=timesheet_record.fields['invoiceoption']
         invoicestatus=timesheet_record.fields['invoicestatus']
-
-        #aggiorno dati a prescindere
         worktime=timesheet_record.fields['worktime']
         traveltime=timesheet_record.fields['traveltime']
+        
+        #inizializzo campi
+        productivity=''
         worktime_decimal=0
         travel_time_decimal=0
         totaltime_decimal=0
+        #aggiorno dati a prescindere
+        
+        
         if not isempty(worktime):
             hours, minutes = map(int, worktime.split(':'))
             worktime_decimal = hours + minutes / 60
@@ -1111,29 +1117,49 @@ def custom_save_record(request,tableid,recordid):
 
         # valutazione del tipo di servizio se produttivo o meno TODO    
         if invoicestatus=='To Process':
-            if service=='Amministrazione' or service=='Commerciale':
+            if service=='Amministrazione' or service=='Commerciale' or service=='Formazione Apprendista' or service=='Formazione e Test' or service=='Interno' or service=='Riunione':
                 invoicestatus=service
+                productivity='Senza ricavo'
 
         # valutazione delle option TODO
         if invoicestatus=='To Process':
-            if invoiceoption=='Under warranty' or invoiceoption=='Commercial support':
+            if invoiceoption=='Under warranty' or invoiceoption=='Commercial support' or invoiceoption=='Swisscom incident' or invoiceoption=='Swisscom ServiceNow' or invoiceoption=='To check':
                 invoicestatus=invoiceoption
+                productivity='Senza ricavo'
  
         
         #valutazione eventuale project
-        if (not isempty(project_record.recordid)) and invoiceoption!='Out of contract':
+        if invoicestatus=='To Process' and (not isempty(project_record.recordid)) and invoiceoption!='Out of contract':
             if project_record.fields['fixedprice']=='Si':
                 invoicestatus='Fixed price Project'
+                productivity='Ricavo indiretto'
 
         #valutazione flat service contract
-        flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='Manutenzione PBX')"])
-        if flat_service_contract:
-            invoicestatus='Flat service contract'
+        if invoicestatus=='To Process': 
+            flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='Manutenzione PBX')"])
+            if flat_service_contract:
+                invoicestatus='Flat service contract'
+                productivity='Ricavo indiretto'
+            
         #valutazione monte ore 
-        
-        #fatturazione
+        if invoicestatus=='To Process':
+            service_contracts=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","type='Monte Ore'","status='In Progress'"])
+            if service_contracts:
+                timesheet_record.fields['recordidservicecontract_']=service_contracts[0]['recordid_']
+                invoicestatus='Service contract'
+                productivity='Ricavo diretto'
+            
+        #da fattura quando chiusi
+        if invoicestatus=='To Process':
+            if not isempty(project_record.recordid):
+                if  project_record.fields['completed'] != 'Si':
+                    invoicestatus='To invoice when project completed'
+            if not isempty(ticket_record.recordid):
+                if  ticket_record.fields['vtestatus'] != 'Closed':
+                    invoicestatus='To invoice when ticket completed'
 
-
+        if invoicestatus=='To Process':
+            invoicestatus='To Invoice'
     return True
 
 
