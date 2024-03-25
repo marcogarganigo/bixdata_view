@@ -1069,7 +1069,6 @@ def save_record_fields(request):
 
 @login_required(login_url='/login/')
 def custom_save_record(request,tableid,recordid):
-    #---DEAL---
     if tableid=='deal':
         record_deal=Record('deal',recordid)
         record_company=Record('company',record_deal.fields['recordidcompany_'])
@@ -1078,8 +1077,7 @@ def custom_save_record(request,tableid,recordid):
             record_deal.fields['advancepayment']=0
         record_deal.fields['reference']=reference
         record_deal.save()
-        
-    #---TIMESHEET---
+
     if tableid=='timesheet':
         #recupero informazioni necessarie
         timesheet_table=Table(tableid='timesheet')
@@ -1087,21 +1085,17 @@ def custom_save_record(request,tableid,recordid):
         timesheet_record=Record('timesheet',recordid)
         company_record=Record('company',timesheet_record.fields['recordidcompany_'])
         project_record=Record('project',timesheet_record.fields['recordidproject_'])
-        ticket_record=Record('ticket',timesheet_record.fields['recordidticket_'])
+        record_ticket=Record('ticket',timesheet_record.fields['recordidticket_'])
         service=timesheet_record.fields['service']
         invoiceoption=timesheet_record.fields['invoiceoption']
         invoicestatus=timesheet_record.fields['invoicestatus']
+
+        #aggiorno dati a prescindere
         worktime=timesheet_record.fields['worktime']
         traveltime=timesheet_record.fields['traveltime']
-        
-        #inizializzo campi
-        productivity=''
         worktime_decimal=0
         travel_time_decimal=0
         totaltime_decimal=0
-        #aggiorno dati a prescindere
-        
-        
         if not isempty(worktime):
             hours, minutes = map(int, worktime.split(':'))
             worktime_decimal = hours + minutes / 60
@@ -1119,49 +1113,29 @@ def custom_save_record(request,tableid,recordid):
 
         # valutazione del tipo di servizio se produttivo o meno TODO    
         if invoicestatus=='To Process':
-            if service=='Amministrazione' or service=='Commerciale' or service=='Formazione Apprendista' or service=='Formazione e Test' or service=='Interno' or service=='Riunione':
+            if service=='Amministrazione' or service=='Commerciale':
                 invoicestatus=service
-                productivity='Senza ricavo'
 
         # valutazione delle option TODO
         if invoicestatus=='To Process':
-            if invoiceoption=='Under warranty' or invoiceoption=='Commercial support' or invoiceoption=='Swisscom incident' or invoiceoption=='Swisscom ServiceNow' or invoiceoption=='To check':
+            if invoiceoption=='Under warranty' or invoiceoption=='Commercial support':
                 invoicestatus=invoiceoption
-                productivity='Senza ricavo'
  
         
         #valutazione eventuale project
-        if invoicestatus=='To Process' and (not isempty(project_record.recordid)) and invoiceoption!='Out of contract':
+        if (not isempty(project_record.recordid)) and invoiceoption!='Out of contract':
             if project_record.fields['fixedprice']=='Si':
                 invoicestatus='Fixed price Project'
-                productivity='Ricavo indiretto'
 
         #valutazione flat service contract
-        if invoicestatus=='To Process': 
-            flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='Manutenzione PBX')"])
-            if flat_service_contract:
-                invoicestatus='Flat service contract'
-                productivity='Ricavo indiretto'
-            
+        flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='Manutenzione PBX')"])
+        if flat_service_contract:
+            invoicestatus='Flat service contract'
         #valutazione monte ore 
-        if invoicestatus=='To Process':
-            service_contracts=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","type='Monte Ore'","status='In Progress'"])
-            if service_contracts:
-                timesheet_record.fields['recordidservicecontract_']=service_contracts[0]['recordid_']
-                invoicestatus='Service contract'
-                productivity='Ricavo diretto'
-            
-        #da fattura quando chiusi
-        if invoicestatus=='To Process':
-            if not isempty(project_record.recordid):
-                if  project_record.fields['completed'] != 'Si':
-                    invoicestatus='To invoice when project completed'
-            if not isempty(ticket_record.recordid):
-                if  ticket_record.fields['vtestatus'] != 'Closed':
-                    invoicestatus='To invoice when ticket completed'
+        
+        #fatturazione
 
-        if invoicestatus=='To Process':
-            invoicestatus='To Invoice'
+
     return True
 
 
@@ -2347,7 +2321,7 @@ def print_word(request):
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Navigate to the 'views' directory and locate 'template.docx'
-    file_path = os.path.join(script_dir, 'template.docx')
+    file_path = os.path.join(script_dir, 'template3.docx')
 
     #doc = Document(file_path)
 
@@ -2439,535 +2413,6 @@ def print_word(request):
     font3.color.rgb = RGBColor(0xC0, 0x00, 0x00)
     font3.bold = True
     p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-
-    """
-    section = doc.sections[0]
-    header = section.header
-    watermark_path = 'background.jpg'  # Replace with your image path
-    watermark = header.paragraphs[0].add_run().add_picture(watermark_path)
-    watermark.alignment = WD_SECTION.DISTRIBUTE
-    """
-
-    """
-    img_path = 'background.jpg'
-    doc.add_picture(img_path, width=Inches(4))
-    """
-    doc.add_section(WD_SECTION.NEW_PAGE)
-
-    p3 = doc.add_paragraph()
-    text3 = 'Definizione Economica'
-    run3 = p3.add_run(text3)
-    font3 = run3.font
-    font3.size = Pt(15)
-    font3.name = 'Calibri'
-    font3.color.rgb = RGBColor(0xC0, 0x00, 0x00)
-    font3.bold = False
-    p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    dealline_records_length = len(dealline_records)
-
-    table = doc.add_table(rows=dealline_records_length + 1, cols=4)  # +1 for header
-
-    table.style = 'bixstyle'
-
-    # Add the table header
-    header_cells = ['Descrizione', 'Qt.', 'Prezzo unitario', 'Prezzo totale']
-    for i, header_text in enumerate(header_cells):
-        table.cell(0, i).text = header_text
-
-    # Add data for each dealline
-    for i, dealline in enumerate(dealline_records, start=1):
-        row = table.rows[i]
-        row.cells[0].text = str(dealline['name'])
-        row.cells[0].paragraphs[0].runs[0].font.bold = True
-        row.cells[1].text = "{:.2f}".format(dealline['quantity'])
-        row.cells[2].text = "{:.2f} CHF".format(dealline['unitprice'])
-        row.cells[3].text = "{:.2f} CHF".format(dealline['price'])
-        row.cells[3].paragraphs[0].runs[0].font.bold = True
-
-
-
-
-    p_space = doc.add_paragraph()
-    text_space = ''
-    run_space = p_space.add_run(text_space)
-
-    p_space = doc.add_paragraph()
-    text_space = ''
-    run_space = p_space.add_run(text_space)
-
-
-
-    doc.add_page_break()
-
-    p_space = doc.add_paragraph()
-    text_space = ''
-    run_space = p_space.add_run(text_space)
-
-
-    table2 = doc.add_table(rows=1, cols=1)
-
-    table2.style = 'bixstyle'
-
-    row_table2 = table2.rows[0]
-    cell_table2 = row_table2.cells[0]
-    cell_table2.text = 'Condizioni contrattuali di vendita'
-
-    p_space = doc.add_paragraph()
-    text_space = ''
-    run_space = p_space.add_run(text_space)
-
-
-    p5 = doc.add_paragraph()
-    text5 = 'Contatti per Assistenza Tecnica:'
-    run5 = p5.add_run(text5)
-    font5 = run5.font
-    font5.size = Pt(10)
-    font5.name = 'Calibri'
-    font5.bold = True
-    font5.italic = False
-    font5.color.rgb = grey
-    p5.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-
-    p6 = doc.add_paragraph()  # Stile per elenco puntato con due punti
-    text6 = '          •      Per tutte le richieste di assistenza: apertura ticket scrivendo all’indirizzo helpdesk@swissbix.ch  \n                  verrete ricontattati dal nostro servizio tecnico'
-    run6 = p6.add_run(text6)
-    font6 = run6.font
-    font6.size = Pt(10)
-    font6.name = 'Calibri'
-    font6.bold = False
-    font6.color.rgb = grey
-    p6.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p7 = doc.add_paragraph()
-    text7 = '          •      Orari di ufficio per supporto tecnico; dalle 9:00 alle 12:00 e dalle 14:00 alle 17:00'
-    run7 = p7.add_run(text7)
-    font7 = run7.font
-    font7.size = Pt(10)
-    font7.name = 'Calibri'
-    font7.bold = False
-    font7.color.rgb = grey
-    p7.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p8 = doc.add_paragraph()
-    text8 = 'Metodo di pagamento e fatturazione Hardware e Servizi:'
-    run8 = p8.add_run(text8)
-    font8 = run8.font
-    font8.size = Pt(10)
-    font8.name = 'Calibri'
-    font8.bold = True
-    font8.italic = False
-    font8.color.rgb = grey
-    p8.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p9 = doc.add_paragraph()
-    text9 = '          •       Hardware e Consumabili: Acconto 50% all’ordine, Saldo a 20gg fine lavori'
-    run9 = p9.add_run(text9)
-    font9 = run9.font
-    font9.size = Pt(10)
-    font9.name = 'Calibri'
-    font9.bold = False
-    font9.color.rgb = grey
-    p9.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p10 = doc.add_paragraph()
-    text10 = '          •       Servizi a canone: Trimestrali anticipati a 20 giorni data fattura'
-    run10 = p10.add_run(text10)
-    font10 = run10.font
-    font10.size = Pt(10)
-    font10.name = 'Calibri'
-    font10.bold = False
-    font10.italic = False
-    font10.color.rgb = grey
-    p10.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p11 = doc.add_paragraph()
-    text11 = 'Condizioni generali di vendita:'
-    run11 = p11.add_run(text11)
-    font11 = run11.font
-    font11.size = Pt(10)
-    font11.name = 'Calibri'
-    font11.bold = True
-    font11.color.rgb = grey
-    p11.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p12 = doc.add_paragraph()
-    text12 = '           •      condizioni generali di vendita sono visionabili al link: https://www.swissbix.ch/cgv.pdf'
-    run12 = p12.add_run(text12)
-    font12 = run12.font
-    font12.size = Pt(10)
-    font12.name = 'Calibri'
-    font12.bold = False
-    font12.color.rgb = grey
-    p12.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p13 = doc.add_paragraph()
-    text13 = '           •      La presente offerta comprende un servizio “chiavi in mano” al fine di \n                    garantire al cliente una totale garanzia della buona riuscita del progetto'
-    run13 = p13.add_run(text13)
-    font13 = run13.font
-    font13.size = Pt(10)
-    font13.name = 'Calibri'
-    font13.bold = False
-    font13.color.rgb = grey
-    p13.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p14 = doc.add_paragraph()
-    text14 = '           •      Offerta valida fino al ' + str(closedate) + ' o fino ad esaurimento scorte'
-    run14 = p14.add_run(text14)
-    font14 = run14.font
-    font14.size = Pt(10)
-    font14.name = 'Calibri'
-    font14.bold = False
-    font14.color.rgb = grey
-    p14.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p15 = doc.add_paragraph()
-    text15 = '           •      Swissbix SA non sarà ritenuta responsabile in caso di ritardi nella consegna del materiale \n                   dovuti a causa di forza maggiore o problemi legati ai fornitori dei prodotti o dei servizi logistici'
-    run15 = p15.add_run(text15)
-    font15 = run15.font
-    font15.size = Pt(10)
-    font15.name = 'Calibri'
-    font15.bold = False
-    font15.color.rgb = grey
-    p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p16 = doc.add_paragraph()
-    text16 = '           •      Sono esclusi dalla presente proposta commerciale:'
-    run16 = p16.add_run(text16)
-    font16 = run16.font
-    font16.size = Pt(10)
-    font16.name = 'Calibri'
-    font16.bold = False
-    font16.color.rgb = grey
-    p15.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p17 = doc.add_paragraph()
-    text17 = '                          o      Supporto, installazione ed eventuali uscite di fornitori esterni per gli applicativi \n                                  di terze parti utilizzati dal cliente'
-    run17 = p17.add_run(text17)
-    font17 = run17.font
-    font17.size = Pt(10)
-    font17.name = 'Calibri'
-    font17.bold = False
-    font17.color.rgb = grey
-    p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p17 = doc.add_paragraph()
-    text17 = '                          o      Lavori di cablaggio, lavori a muro di fissaggio e/o montaggio di ogni dispositivo, \n                                  lavori elettrici'
-    run17 = p17.add_run(text17)
-    font17 = run17.font
-    font17.size = Pt(10)
-    font17.name = 'Calibri'
-    font17.bold = False
-    font17.color.rgb = grey
-    p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-
-    p17 = doc.add_paragraph()
-    text17 = '                          o      Eventuali cavi, adattatori o convertitori che saranno fatturati a parte.'
-    run17 = p17.add_run(text17)
-    font17 = run17.font
-    font17.size = Pt(10)
-    font17.name = 'Calibri'
-    font17.bold = False
-    font17.color.rgb = grey
-    p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p17 = doc.add_paragraph()
-    text17 = '           •      I prezzi indicati sono Iva Esclusa'
-    run17 = p17.add_run(text17)
-    font17 = run17.font
-    font17.size = Pt(10)
-    font17.name = 'Calibri'
-    font17.bold = False
-    font17.color.rgb = grey
-    p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p_space = doc.add_paragraph()
-    text_space = ''
-    run_space = p_space.add_run(text_space)
-
-    p18 = doc.add_paragraph()
-    text18 = 'Massagno' + ', ' + d1
-    run18 = p18.add_run(text18)
-    font18 = run18.font
-    font18.size = Pt(10)
-    font18.name = 'Calibri'
-    font18.bold = False
-    font18.italic = False
-    font18.color.rgb = grey
-    p18.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p19 = doc.add_paragraph()
-    text19 = user
-    run19 = p19.add_run(text19)
-    font19 = run19.font
-    font19.size = Pt(10)
-    font19.name = 'Calibri'
-    font19.bold = False
-    font19.italic = False
-    font19.color.rgb = grey
-    p19.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p20 = doc.add_paragraph()
-    text20 = 'Per Accettazione'
-    run20 = p20.add_run(text20)
-    font20 = run20.font
-    font20.size = Pt(10)
-    font20.name = 'Calibri'
-    font20.bold = False
-    font20.italic = False
-    font20.color.rgb = grey
-    p20.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
-
-    p_space = doc.add_paragraph()
-    text_space = ''
-    run_space = p_space.add_run(text_space)
-
-    p21 = doc.add_paragraph()
-    text21 = '─────────────────────────────────────'
-    run21 = p21.add_run(text21)
-    font21 = run21.font
-    font21.size = Pt(10)
-    font21.name = 'Calibri'
-    font21.bold = True
-    font21.italic = False
-    p21.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
-
-    # Access the section of the document (assuming there's only one section)
-    section = doc.sections[0]
-
-    # Create a footer
-    footer = section.footer
-
-    # Add a paragraph to the footer
-    p22 = footer.paragraphs[0]
-    text22 = 'Swissbix SA Via Baroffio 6, 6900 Lugano E-Mail: finance@swissbix.ch Telefono: +41 91 960 22 00 Banca: UBS Switzerland AG \n Titolare del conto: Swissbix SA BIC: UBSWCHZH80A IBAN: CH62 0024 7247 2096 9101 U N. IVA UE: CHE-136.887.933 '
-    run22 = p22.add_run(text22)
-
-    # Set font properties
-    font22 = run22.font
-    font22.size = Pt(8)
-    font22.name = 'Calibri'
-    font22.bold = False
-    font22.italic = False
-
-    # Set text color to grey
-    font22.color.rgb = grey
-
-    # Set paragraph alignment to center
-    p22.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-
-    doc.save(filename)
-
-    try:
-        if format == 'pdf':
-            with tempfile.TemporaryDirectory() as tmp_dir:
-                pdf_filename = f"{tmp_dir}/{dealname}.pdf"
-                docx2pdf_convert(filename, pdf_filename)
-
-                with open(pdf_filename, 'rb') as fh:
-                    response = HttpResponse(fh.read(), content_type="application/pdf")
-                    response['Content-Disposition'] = f'inline; filename={dealname}.pdf'
-
-                return response
-
-
-        else:
-            with open(filename, 'rb') as fh:
-                response = HttpResponse(fh.read(),
-                                        content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-                response['Content-Disposition'] = f'inline; filename={dealname}.docx'
-
-            return response
-
-    finally:
-        os.remove(filename)
-
-
-
-def print_word_2(request):
-
-    recordid = request.POST.get('recordid')
-    tableid = request.POST.get('tableid')
-    format = request.POST.get('format')
-
-
-
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_H,
-        box_size=10,
-        border=0,
-    )
-
-    today = datetime.date.today()
-    d1 = today.strftime("%d/%m/%Y")
-
-    qrcontent = str(tableid) + '_' + str(recordid)
-
-    data = qrcontent
-    qr.add_data(data)
-    qr.make(fit=True)
-
-    img = qr.make_image(fill_color="black", back_color="white")
-
-    qr_name = 'qrcode' + uuid.uuid4().hex + '.png'
-
-    img.save(qr_name)
-
-
-    recordid_deal = request.POST.get('recordid')
-    deal_record = Record('deal', recordid_deal)
-    dealuser1 = deal_record.fields['dealuser1']
-    closedate = deal_record.fields['closedate']
-    dealline_records = deal_record.get_linkedrecords('dealline')
-
-    dealname = deal_record.fields['dealname']
-    amount = deal_record.fields['amount']
-    company_record = Record('company', deal_record.fields['recordidcompany_'])
-
-    deal_description = deal_record.fields['description']
-
-    companyname = company_record.fields['companyname']
-    address = company_record.fields['address']
-    city = company_record.fields['city']
-
-    with connection.cursor() as cursor:
-        cursor.execute(
-            f"SELECT first_name, last_name FROM v_users WHERE sys_user_id ='{dealuser1}'"
-        )
-        rows = dictfetchall(cursor)
-
-        user = rows[0]['first_name'] + ' ' + rows[0]['last_name']
-
-    id = uuid.uuid4().hex
-
-
-    filename = dealname + id + '.docx'
-    filename= filename.replace("/", "-")
-    filename= filename.replace("\\", "-")
-    filename= filename.replace("'", "")
-
-    #instead of creating a word i want to open one
-
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-
-    # Navigate to the 'views' directory and locate 'template.docx'
-    file_path = os.path.join(script_dir, 'template2.docx')
-
-    #doc = Document(file_path)
-
-    doc1 = Document(file_path)
-
-
-
-    paragraph = doc1.add_paragraph()
-    run = paragraph.add_run()
-    picture = run.add_picture(qr_name, width=Inches(1))
-
-    # Set the paragraph alignment to right
-    paragraph.alignment = 2  # 2 corresponds to the right alignment
-    picture.alignment = 1
-
-    # Set spacing to minimize any additional space
-    paragraph.paragraph_format.space_before = Inches(0)
-    paragraph.paragraph_format.space_after = Inches(0)
-
-    os.remove(qr_name)
-
-    section = doc1.sections[0]
-    section.left_margin = Inches(1)
-    section.top_margin = Inches(1)
-
-
-
-    grey = RGBColor(0x89, 0x89, 0x89)
-
-
-    p1 = doc1.add_paragraph()
-    text1 = f"Spett.le"
-    run1 = p1.add_run(text1)
-    font1 = run1.font
-    font1.size = Pt(10.5)
-    font1.name = 'Calibri'
-    font1.bold = False
-    font1.color.rgb = grey
-    p1.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p_companyname = doc1.add_paragraph()
-    text_companyname = f"{companyname}"
-    run_companyname = p_companyname.add_run(text_companyname)
-    font_companyname = run_companyname.font
-    font_companyname.size = Pt(12)
-    font_companyname.name = 'Calibri'
-    font_companyname.bold = True
-    font_companyname.color.rgb = grey
-    p_companyname.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-
-    p2 = doc1.add_paragraph()
-    text2 = f"{address}, {city}"
-    run2 = p2.add_run(text2)
-    font2 = run2.font
-    font2.size = Pt(10)
-    font2.name = 'Calibri'
-    font2.bold = False
-    font2.color.rgb = grey
-    p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-
-    p_space = doc1.add_paragraph()
-    text_space = ''
-    run_space = p_space.add_run(text_space)
-    font_space = run_space.font
-    font_space.size = Pt(10)
-    font_space.name = 'Calibri'
-    font_space.bold = False
-    font_space.italic = True
-    p_space.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    p_date = doc1.add_paragraph()
-    text_date = f"Massagno {d1}"
-    run_date = p_date.add_run(text_date)
-    font_date = run_date.font
-    font_date.size = Pt(11)
-    font_date.name = 'Calibri'
-    font_date.bold = True
-    font_date.color.rgb = grey
-    p_date.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-
-    p3 = doc1.add_paragraph()
-    text3 = dealname
-    run3 = p3.add_run(text3)
-    font3 = run3.font
-    font3.size = Pt(16)
-    font3.name = 'Lato'
-    font3.color.rgb = RGBColor(0xC0, 0x00, 0x00)
-    font3.bold = True
-    p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
-    doc1.add_page_break()
-
-    doc1.save('doc1.docx')
-
-    filename_master = "doc1.docx"
-    filename_second_docx = os.path.join(script_dir, 'template2pt2.docx')
-
-    # filename_master is name of the file to merge the docx file into
-    master = Document(filename_master)
-
-    composer = Composer(master)
-    # filename_second_docx is the name of the second docx file
-    doc2 = Document(filename_second_docx)
-    # append the doc2 into the master using composer.append function
-    composer.append(doc2)
-    # Save the combined docx with a name
-    composer.save("combined.docx")
-
-    doc = Document("combined.docx")
 
 
     """

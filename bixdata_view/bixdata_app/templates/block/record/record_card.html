@@ -402,7 +402,7 @@
         return formData;
     }
 
-    function stampaWord(el, format) {
+    function stampaWord(el, format, func) {
         var block_record_card = $(el).closest('.block_record_card')
         var tableid = $(block_record_card).data('tableid')
         var recordid = $(block_record_card).data('recordid')
@@ -415,9 +415,12 @@
         post_data.push({name: 'recordid', value: recordid});
         post_data.push({name: 'fields', value: serialized_json});
 
+        function_name = "/" + func + "/"
+
+
         $.ajax({
             type: "POST",
-            url: "/print_word/",
+            url: function_name,
             data: {
                 recordid: recordid,
                 tableid: tableid,
@@ -500,10 +503,13 @@
                             </a></li>
                         {% endif %}
                         {% if tableid == 'deal' %}
-                            <li><a class="dropdown-item" onclick="stampaWord(this)">
+                            <li><a class="dropdown-item" onclick="stampaWord(this,'','print_word')">
                                 Stampa in word
                             </a></li>
-                            <li><a class="dropdown-item" onclick="stampaWord(this,'pdf')">
+                            <li><a class="dropdown-item" onclick="stampaWord(this,'','print_word_2')">
+                                Stampa in word 2
+                            </a></li>
+                            <li><a class="dropdown-item" onclick="stampaWord(this,'pdf','print_word')">
                                 Stampa in pdf
                             </a></li>
                         {% endif %}

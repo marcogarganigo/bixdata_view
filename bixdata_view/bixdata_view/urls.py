@@ -133,6 +133,7 @@ urlpatterns = [
     path('test_admin_doc/', alpha.test_admin_doc, name='test_admin_doc'),
     path('time/', alpha.time_calc, name='time'),
     path('print_word/', alpha.print_word, name='print_word'),
+    path('print_word_2/', alpha.print_word_2, name='print_word_2'),
     path('get_record/', alpha.get_record, name='get_record'),
     path('link_file/', alpha.link_file, name='link_file'),
     path('deal_close_won/', alpha.deal_close_won, name='deal_close_won'),
@@ -151,5 +152,6 @@ urlpatterns = [
     path('master_columns/', settings_view.master_columns, name='master_columns'),
     path('new_dashboard/', alpha.new_dashboard, name='new_dashboard'),
     path('save_users_dashboards/', alpha.save_users_dashboards, name='save_users_dashboards'),
+    path('set_default_dashboard/', alpha.set_default_dashboard, name = 'set_default_dashboard')
 
 ]
