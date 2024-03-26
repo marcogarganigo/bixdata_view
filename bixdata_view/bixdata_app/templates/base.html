@@ -78,20 +78,27 @@
     <!-- App css -->
     <link href="{% static 'css/app-modern.min.css' %}" rel="stylesheet" type="text/css" id="app-style"/>
 
-    <!-- Base css -->
+    <!-- Theme Base css -->
     <link href="{% static 'css/' %}{{ theme }}.css?v={{ date }}" rel="stylesheet" type="text/css" id="app-style"/>
 
 
-    <!--Custom small css-->
-    <link href="{% static 'css/custom-sm.css' %}?v={{ date }}" rel="stylesheet" type="text/css" id="app-style"/>
+     <!--Real Base css-->
+    <link href="{% static 'css/base.css' %}?v={{ date }}" rel="stylesheet" type="text/css" id="app-style"/>
 
-    <!-- Custom medium small css -->
-    <link href="{% static 'css/custom-md-sm.css' %}?v={{ date }}" rel="stylesheet" type="text/css" id="app-style"/>
+
+    <!--Custom medium css-->
+    <link href="{% static 'css/custom-md.css' %}?v={{ date }}" rel="stylesheet" type="text/css" id="app-style"/>
+
+    <!--Custom large css-->
+    <link href="{% static 'css/custom-lg.css' %}?v={{ date }}" rel="stylesheet" type="text/css" id="app-style"/>
+
+    <!-- Custom small css -->
+    <link href="{% static 'css/custom-sm.css' %}?v={{ date }}" rel="stylesheet" type="text/css" id="app-style"/>
 
 
     <!-- Frappe-gantt css -->
     <!--<link href="{% static 'vendor/frappe-gantt/frappe-gantt.min.css' %}" rel="stylesheet"id="app-style"/>
- type="text/css"-->
+    type="text/css"-->
 
     <!-- Gantt js-->
     <!--<script src="{% static 'vendor/frappe-gantt/frappe-gantt.min.js' %}"></script>-->

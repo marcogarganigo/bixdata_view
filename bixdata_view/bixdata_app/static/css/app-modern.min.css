@@ -7485,12 +7485,7 @@ fieldset:disabled .btn {
     }
 }
 
-.modal-fullscreen {
-    width: 100vw;
-    max-width: none;
-    height: 100%;
-    margin: 0
-}
+
 
 .modal-fullscreen .modal-content {
     height: 100%;

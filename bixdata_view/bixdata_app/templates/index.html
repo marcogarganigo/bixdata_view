@@ -52,7 +52,7 @@
         </style>
         <script type="text/javascript">
 
-            const min_width = 1920;
+            const min_width = 3200;
             const fhd_width = 1920;
 
 
@@ -259,7 +259,7 @@
             function getDashboard(dashboardid) {
                 var size = window.innerWidth;
                 var resolution = '';
-                if (size < 2000) {
+                if (size < 1900) {
                     resolution = 'small'
                 } else {
                     resolution = 'full'
@@ -1016,7 +1016,7 @@
                         <div class="modal-body" style="width: 100%; overflow: hidden">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                     onclick="closeNewRecordModal(this)"></button>
-                            <div id="fullwidth_modal_newrecord" style="height: 100%; width: 100%;" 
+                            <div id="fullwidth_modal_newrecord" style="height: 100%; width: 100%;"
                                  class="col-xl-4 col-md-4 mb-4">
                             </div>
                         </div>
@@ -1027,7 +1027,7 @@
             <!--record modal start-->
             <div class="modal fade" id="recordModal"
                  aria-hidden="true" style="width: 100%">
-                <div class="modal-dialog  modal-fullscreen" style="width: 80%; height: 90%; margin: 1% auto auto;">
+                <div class="modal-dialog  modal-fullscreen" style=" margin: 1% auto auto;">
                     <div class="modal-content" style="width: 100%">
                         <div class="modal-body" style="width: 100%; overflow: hidden; padding: 0">
                             <div id="record-modal-content" class="col-xl-4 col-md-4 mb-4"

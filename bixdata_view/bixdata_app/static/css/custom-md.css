@@ -1,5 +1,17 @@
-@media screen and (max-width: 2000px) {
-    #content-card {
+@media screen and (min-width: 1900px) and (max-width: 3339px) {
+
+    .card-body {
+        padding: 10px !important;
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    .modal-dialog {
+        width: 85%;
+        height: 90%;
+    }
+
+   #content-card {
         padding: 10px;
     }
 
@@ -8,33 +20,33 @@
     }
 
     table {
-        font-size: 12pt;
+        font-size: 13pt;
     }
 
     .board {
-        font-size: 12pt;
+        font-size: 13pt;
     }
 
     .task-header {
-        font-size: 12pt;
+        font-size: 13pt;
     }
 
     /*calendar */
     .small-header .fc-header {
-        font-size: 12px;
+        font-size: 13px;
         width: 10px;
     }
 
     .small-header .fc-header-title h2 {
-        font-size: 12pt
+        font-size: 13pt;
     }
 
     .small-header .fc-header-left {
-        font-size: 12pt
+        font-size: 13pt;
     }
 
     .small-header .fc-header-right {
-        font-size: 12pt;
+        font-size: 13pt;
     }
 
     #card-menu .btn {
@@ -51,44 +63,36 @@
     }
 
     .span-pc {
-        font-size: 12pt;
+        font-size: 13pt;
     }
 
     .tabs-icon {
-        font-size: 12pt;
+        font-size: 13pt;
     }
 
     #results {
-        font-size: 12pt;
+        font-size: 13pt;
     }
 
     .btn {
-        font-size: 12pt;
+        font-size: 13pt;
     }
 
     .nav-link {
-        font-size: 12pt;
+        font-size: 13pt;
 
     #fields-scroll-container {
-        font-size:12pt;
+        font-size: 13pt;
     }
 
     ul.ui-autocomplete {
-        font-size: 12pt;
+        font-size: 13pt;
     }
 
-    #Recordcard {
-        width: 100%;
-    }
 
     td, tr {
-        padding: 3px !important;
-        font-size: 12pt;
-    }
-
-    .modal-dialog {
-        width: 90% !important;
-        height: 90% !important;
+        padding: 2px !important;
+        font-size: 13pt;
     }
 
     #block_record_badge > .card-body {
@@ -98,13 +102,6 @@
     #block_record_badge, #card-menu {
         margin-bottom: 1% !important;
     }
-
-    .card-body {
-        padding: 5px !important;
-        height: 100% !important;
-        width: 100% !important;
-    }
-
 
     #block_record_badge {
         scale: 0.85;
@@ -116,31 +113,32 @@
     }
 
     #block_record_badge {
-        font-size: 12pt;
+        font-size: 13pt;
     }
 
     #card-menu > button  {
-       font-size: 12pt; !important;
+       font-size: 13pt; !important;
     }
 
     #card-menu > .dropdown > button {
-        font-size: 12pt;
+        font-size: 13pt;
     }
 
     .save-button {
-        font-size: 12pt; !important;
+        font-size: 13pt; !important;
         scale: 0.7;
     }
 
+        /* non usato */
     .records-button {
-         font-size: 12pt; !important;
+         font-size: 13pt; !important;
     }
 
+        /* non usato */
     .records-button-secondary {
-         font-size: 12pt; !important;
+         font-size: 13pt; !important;
     }
 
     }
-
 
 }

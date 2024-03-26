@@ -1,12 +1,145 @@
-.content-page {
-    min-height: 1px !important;
-    height: 10px;
-}
+@media screen and (max-width: 1899px) {
 
-html[data-sidenav-size=condensed]:not(.authentication-bg) {
-    min-height: 0px !important;
-}
+    .card-body {
+        padding: 5px !important;
+        height: 100% !important;
+        width: 100% !important;
+    }
 
-.wrapper {
-    min-height: 0px !important;
+    .modal-dialog {
+        width: 95%;
+        height: 95%;
+    }
+
+    #content-card {
+        padding: 10px;
+    }
+
+    #results {
+        margin-top: -2%
+    }
+
+    table {
+        font-size: 11pt;
+    }
+
+    .board {
+        font-size: 11pt;
+    }
+
+    .task-header {
+        font-size: 11pt;
+    }
+
+    /*calendar */
+    .small-header .fc-header {
+        font-size: 11px;
+        width: 10px;
+    }
+
+    .small-header .fc-header-title h2 {
+        font-size: 11pt;
+    }
+
+    .small-header .fc-header-left {
+        font-size: 11pt;
+    }
+
+    .small-header .fc-header-right {
+        font-size: 11pt;
+    }
+
+    #card-menu .btn {
+        font-size: small;
+        margin-top: 10px;
+    }
+
+    .btn .mdi:before {
+        font-size: small;
+    }
+
+    #card-menu {
+        margin-bottom: 15px
+    }
+
+    .span-pc {
+        font-size: 11pt;
+    }
+
+    .tabs-icon {
+        font-size: 11pt;
+    }
+
+    #results {
+        font-size: 11pt;
+    }
+
+    .btn {
+        font-size: 10pt;
+    }
+
+    .nav-link {
+        font-size: 11pt;
+
+    #fields-scroll-container {
+        font-size: 11pt;
+    }
+
+    ul.ui-autocomplete {
+        font-size: 11pt;
+    }
+
+
+    td, tr {
+        padding: 2px !important;
+        font-size: 11pt;
+    }
+
+    #block_record_badge > .card-body {
+        padding: 5px !important;
+    }
+
+    #block_record_badge, #card-menu {
+        margin-bottom: 1% !important;
+    }
+
+    #block_record_badge {
+        scale: 0.85;
+    }
+
+    .fields_container {
+        scale: 0.85;
+        margin-top: -2%;
+    }
+
+    #block_record_badge {
+        font-size: 11pt;
+    }
+
+    #card-menu > button  {
+       font-size: 11pt; !important;
+    }
+
+    #card-menu > .dropdown > button {
+        font-size: 11pt;
+    }
+
+    .save-button {
+        font-size: 11pt; !important;
+        scale: 0.7;
+    }
+
+        /* non usato */
+    .records-button {
+         font-size: 11pt; !important;
+    }
+
+        /* non usato */
+    .records-button-secondary {
+         font-size: 11pt; !important;
+    }
+
+    }
+
+
 }
