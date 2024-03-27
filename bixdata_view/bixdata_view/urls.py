@@ -152,6 +152,7 @@ urlpatterns = [
     path('master_columns/', settings_view.master_columns, name='master_columns'),
     path('new_dashboard/', alpha.new_dashboard, name='new_dashboard'),
     path('save_users_dashboards/', alpha.save_users_dashboards, name='save_users_dashboards'),
-    path('set_default_dashboard/', alpha.set_default_dashboard, name = 'set_default_dashboard')
+    path('set_default_dashboard/', alpha.set_default_dashboard, name = 'set_default_dashboard'),
+    path('new_timesheet/', alpha.new_timesheet, name='new_timesheet')
 
 ]

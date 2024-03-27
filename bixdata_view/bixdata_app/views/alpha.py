@@ -868,6 +868,11 @@ def get_block_record_fields(request):
         return block_record_fields_container
 
 
+def new_timesheet(request):
+    block = get_block_record_fields(request)
+    return HttpResponse(block)
+
+
 @login_required(login_url='/login/')
 def get_block_record_linked_OLD(request):
     context = dict()

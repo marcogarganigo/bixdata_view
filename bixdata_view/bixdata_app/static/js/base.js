@@ -44,7 +44,7 @@ function save_record(el) {
             text: "Compilare tutti i campi obbligatori",
             icon: "error",
             button: "Ok",
-            dangerMode: true
+            dangerMode: true,
         });
 
     } else {
@@ -325,6 +325,36 @@ function newRecord(tableid, new_linked = '') {
             $("#bixdata_recordcard_container").html(response);
         }
     });
+}
+
+
+function newTimesheet() {
+    new_linked = ''
+    tableid = 'timesheet'
+    var serialized_data = [];
+    serialized_data.push({name: 'tableid', value: tableid});
+    serialized_data.push({name: 'contextfunction', value: 'insert'});
+    serialized_data.push({name: 'contextreference', value: tableid});
+    serialized_data.push({name: 'http_response', value: true});
+    $.ajax({
+        type: "POST",
+        url: "/new_timesheet/",
+        data: serialized_data,
+        success: function (response) {
+            if (new_linked == 'yes') {
+                console.info('fun:newRecord - new linekd')
+                $('#newLinkedRecordModal').modal('show');
+                $("#newLinkdeRecordModalContent").html(response);
+            } else {
+                console.info('fun:newRecord - new master')
+                $('#newRecordModal').modal('show');
+                $("#fullwidth_modal_newrecord").html(response);
+            }
+        },
+        error: function () {
+            $("#bixdata_recordcard_container").html(response);
+        }
+    })
 }
 
 
