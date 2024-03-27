@@ -869,6 +869,7 @@ def get_block_record_fields(request):
 
 
 def new_timesheet(request):
+    timetr_recordid = request.POST.get('timetr_recordid')
     block = get_block_record_fields(request)
     return HttpResponse(block)
 

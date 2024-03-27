@@ -328,7 +328,7 @@ function newRecord(tableid, new_linked = '') {
 }
 
 
-function newTimesheet() {
+function newTimesheet(recordid) {
     new_linked = ''
     tableid = 'timesheet'
     var serialized_data = [];
@@ -336,6 +336,7 @@ function newTimesheet() {
     serialized_data.push({name: 'contextfunction', value: 'insert'});
     serialized_data.push({name: 'contextreference', value: tableid});
     serialized_data.push({name: 'http_response', value: true});
+    serialized_data.push({name: 'timetr_recordid', value: recordid});
     $.ajax({
         type: "POST",
         url: "/new_timesheet/",
