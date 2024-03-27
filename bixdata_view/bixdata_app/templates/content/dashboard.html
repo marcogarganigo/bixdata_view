@@ -24,8 +24,10 @@
                 {{ block.html|safe }}
                 <i class="mdi mdi-delete" onclick="remove_widget(this)"
                    style="position: absolute; bottom: 5px; left: 5px;"></i>
+                {% if block.widgetid == None %}
                   <a id="dynamicHref{{ block.id }}" style="position: absolute; bottom: -2px; left: 25px; color: grey" href="" target="_blank">
                       <span class="material-symbols-outlined">table_view</span></a>
+                {% endif %}
             </div>
         </div>
 
@@ -57,7 +59,7 @@
 
 
     <script>
-        
+
         function setDefaultDashboard() {
             $.ajax({
                      url: '/set_default_dashboard/',
@@ -71,7 +73,7 @@
                     },
                 })
             };
-        
+
         button = document.createElement("button");
         button.innerHTML = "Rimuovi";
         button.onclick = function () {
