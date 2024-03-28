@@ -376,6 +376,7 @@ def get_render_content_dashboard(request):
 
             datas = SysUserDashboardBlock.objects.filter(userid=bixid, size=size, dashboardid=dashboard_id).values()
 
+
             #all_blocks = SysDashboardBlock.objects.all()
             sql="SELECT * FROM sys_dashboard_block ORDER BY name asc"
             all_blocks=dbh.sql_query(sql)
@@ -397,6 +398,7 @@ def get_render_content_dashboard(request):
                 block['gsw'] = data['gsw']
                 block['gsh'] = data['gsh']
                 block['viewid'] = results['viewid']
+                block['widgetid'] = results['widgetid']
 
                 # if they are null set default values
                 if block['gsw'] == None or block['gsw'] == '':
@@ -415,11 +417,14 @@ def get_render_content_dashboard(request):
                 block['height'] = height
                 if results['reportid'] is None or results['reportid'] == 0:
 
-                    tableid = results['tableid']
-                    tableid = 'user_' + tableid
+                    if results['widgetid'] is None:
+                        tableid = results['tableid']
+                        tableid = 'user_' + tableid
 
-                    block['html'] = get_records_table(request, results['tableid'], None, None, '', results['viewid'], 1,
-                                                      '', '')
+                        block['html'] = get_records_table(request, results['tableid'], None, None, '', results['viewid'], 1,
+                                                          '', '')
+                    else:
+                        block['html'] = render_to_string('widgets/' +  str(results['widgetid']) + '.html')
 
 
                 else:
@@ -3575,5 +3580,25 @@ def set_default_dashboard(request):
         )
 
     return HttpResponse(status=204)
+
+
+def get_company_card(request, phonenumber):
+
+    userid = request.user.id
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM user_company WHERE phonenumber='{phonenumber}'"
+        )
+        rows = dictfetchall(cursor)
+        rows = rows[0]
+
+
+    if (rows):
+        context = dict()
+        context['company'] = rows
+        context['company_block'] = get_block_record_card(request, 'company', rows['recordid_'], userid)
+        content = render_to_string('other/company_card.html', context)
+        return index(request, content)
+
 
 
