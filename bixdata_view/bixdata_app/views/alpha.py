@@ -3578,3 +3578,23 @@ def set_default_dashboard(request):
     return HttpResponse(status=204)
 
 
+def get_company_card(request, phonenumber):
+
+    userid = request.user.id
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM user_company WHERE phonenumber='{phonenumber}'"
+        )
+        rows = dictfetchall(cursor)
+        rows = rows[0]
+
+
+    if (rows):
+        context = dict()
+        context['company'] = rows
+        context['company_block'] = get_block_record_card(request, 'company', rows['recordid_'], userid)
+        content = render_to_string('other/company_card.html', context)
+        return index(request, content)
+
+
+

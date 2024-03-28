@@ -153,6 +153,7 @@ urlpatterns = [
     path('new_dashboard/', alpha.new_dashboard, name='new_dashboard'),
     path('save_users_dashboards/', alpha.save_users_dashboards, name='save_users_dashboards'),
     path('set_default_dashboard/', alpha.set_default_dashboard, name = 'set_default_dashboard'),
-    path('new_timesheet/', alpha.new_timesheet, name='new_timesheet')
+    path('new_timesheet/', alpha.new_timesheet, name='new_timesheet'),
+    path('get_company_card/<str:phonenumber>/', alpha.get_company_card, name='get_record_path'),
 
 ]
