@@ -49,8 +49,8 @@ function save_record(el) {
 
     } else {
           swal({
-            title: "Bottone Cliccato!",
-            text: "Salvataggio in corso",
+            title: "Salvataggio in corso!",
+            text: " ",
             icon: "warning",
             timer: 1200,
             buttons: false,
