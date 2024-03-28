@@ -804,7 +804,7 @@ def get_block_record_badge(tableid, recordid):
 
 
 @login_required(login_url='/login/s')
-def get_block_record_fields(request):
+def get_block_record_fields(request, prefilled_fields=dict()):
     context = dict()
     http_response = request.POST.get('http_response')
     tableid = request.POST.get('tableid')
@@ -870,7 +870,11 @@ def get_block_record_fields(request):
 
 def new_timesheet(request):
     timetr_recordid = request.POST.get('timetr_recordid')
-    block = get_block_record_fields(request)
+    prefilled_fields=dict()
+    prefilled_fields['description']='testvalue'
+    prefilled_fields['worktime']='01:30'
+    
+    block = get_block_record_fields(request,prefilled_fields=prefilled_fields)
     return HttpResponse(block)
 
 
