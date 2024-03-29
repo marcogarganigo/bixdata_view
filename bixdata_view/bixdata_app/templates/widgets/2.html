@@ -1,0 +1,65 @@
+
+<img width="100%" src="https://static.wikia.nocookie.net/markiplier/images/8/87/DO_NOT_PRESS.png/revision/latest?cb=20151115205538" onclick="playSound1()">
+
+<script>
+function playSound1() {
+  var audio = new Audio('../static/audio/beep_beep_shuffle.mp3'); // Replace 'sound.mp3' with the path to your sound file
+  audio.play();
+
+  var elements = document.querySelectorAll('.grid-elements, .navbar-custom');
+
+  // Function to continuously move, rotate, and scale elements until audio ends
+  function animateElements() {
+    if (!audio.ended) {
+      elements.forEach(function(element) {
+        // Randomize position
+        var top = Math.random() * window.innerHeight;
+        var left = Math.random() * window.innerWidth;
+        element.style.top = top + 'px';
+        element.style.left = left + 'px';
+
+        // Randomize rotation
+        var rotation = Math.random() * 360; // Degrees
+        element.style.transform = 'rotate(' + rotation + 'deg)';
+
+        // Randomize scale
+        var scale = Math.random() * 2; // Random scale between 0 and 2
+        element.style.transform += ' scale(' + scale + ')';
+
+        // Randomize skew
+        var skewX = Math.random() * 60 - 30; // Random skew between -30 and 30 degrees
+        var skewY = Math.random() * 60 - 30; // Random skew between -30 and 30 degrees
+        element.style.transform += ' skew(' + skewX + 'deg, ' + skewY + 'deg)';
+
+        // Randomize opacity
+        var opacity = Math.random(); // Random opacity between 0 and 1
+        element.style.opacity = opacity;
+
+        // Randomize colors
+        var randomColor = '#' + Math.floor(Math.random()*16777215).toString(16); // Random hex color
+        element.style.backgroundColor = randomColor;
+      });
+      requestAnimationFrame(animateElements); // Keep calling animateElements() recursively
+    }
+  }
+
+  animateElements(); // Start animation
+
+  // Randomly shake the image when clicked
+  var image = document.querySelector('img');
+  var shakeIntensity = 20; // Adjust the intensity of the shake
+
+  function shakeImage() {
+    var deltaX = (Math.random() - 0.5) * shakeIntensity;
+    var deltaY = (Math.random() - 0.5) * shakeIntensity;
+    image.style.transform = 'translate(' + deltaX + 'px, ' + deltaY + 'px)';
+    setTimeout(function() {
+      image.style.transform = 'translate(0, 0)';
+    }, 100);
+  }
+
+  shakeImage(); // Start shaking the image
+}
+</script>
+
+
