@@ -53,6 +53,13 @@
             },
             url: "{% url 'settings_table_fields_settings_fields_save' %}",
             success: function (response) {
+                  swal({
+                        title: "Salvato!",
+                        text: "Il record è stato salvato",
+                        icon: "success",
+                        timer: 800,
+                        buttons: false,
+                    })
 
             },
             error: function () {

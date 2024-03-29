@@ -155,5 +155,7 @@ urlpatterns = [
     path('set_default_dashboard/', alpha.set_default_dashboard, name = 'set_default_dashboard'),
     path('new_timesheet/', alpha.new_timesheet, name='new_timesheet'),
     path('get_company_card/<str:phonenumber>/', alpha.get_company_card, name='get_record_path'),
+    path('get_3cx_card/<str:phonenumber>/', alpha.get_3cx_card, name='get_record_path'),
+    path('notify_error/', alpha.notify_error, name='notify_error')
 
 ]
