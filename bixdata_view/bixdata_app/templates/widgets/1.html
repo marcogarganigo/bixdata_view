@@ -39,3 +39,112 @@
 </div>
 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circular Countdown Timer</title>
+<style>
+    .countdown {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin: 50px auto;
+    }
+    .countdown canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .countdown span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+    }
+</style>
+</head>
+<body>
+<div class="countdown" id="countdown"></div>
+
+<script>
+    function circularCountdown(options) {
+        var element = options.element,
+            radius = options.radius || 70,
+            strokeWidth = options.strokeWidth || 10,
+            duration = options.duration || 60,
+            color = options.color || '#4CAF50',
+            fillColor = options.fillColor || 'transparent',
+            strokeColor = options.strokeColor || '#555';
+
+        var canvas = document.createElement('canvas');
+        var span = document.createElement('span');
+        element.appendChild(canvas);
+        element.appendChild(span);
+
+        var ctx = canvas.getContext('2d');
+        var remaining = duration;
+        var angle = 0;
+        var counter = duration;
+
+        canvas.width = canvas.height = radius * 2 + strokeWidth;
+        span.textContent = counter;
+
+        ctx.translate(radius + strokeWidth / 2, radius + strokeWidth / 2);
+        ctx.rotate(-Math.PI / 2);
+
+        var drawCircle = function(color, lineWidth, percent) {
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, 0, Math.PI * 2 * percent);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.stroke();
+        };
+
+        var draw = function() {
+            ctx.clearRect(-radius - strokeWidth / 2, -radius - strokeWidth / 2, canvas.width, canvas.height);
+
+            drawCircle(fillColor, strokeWidth, 1);
+            drawCircle(color, strokeWidth, angle / 360);
+
+            span.textContent = counter;
+
+            if (remaining <= 0) {
+                clearInterval(interval);
+            } else {
+                remaining--;
+                angle = (remaining / duration) * 360;
+                counter = Math.ceil(remaining / 60);
+            }
+        };
+
+        var interval = setInterval(draw, 1000);
+    }
+
+    circularCountdown({
+        element: document.getElementById('countdown'),
+        radius: 70,
+        strokeWidth: 10,
+        duration: 120, // Durata in secondi
+        color: '#4CAF50', // Colore del contorno
+        fillColor: 'transparent', // Colore di riempimento
+        strokeColor: '#555' // Colore del contorno
+    });
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

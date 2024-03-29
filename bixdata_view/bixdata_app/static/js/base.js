@@ -91,9 +91,9 @@ function save_record(el) {
                 setTimeout(function () {
 
 
-                    //$('#fields_container_' + tableid + '_' + recordid).load('/loading/');
+                    $('#fields_container_' + tableid + '_' + recordid).load('/loading/');
 
-                    /*
+
                     if ((master_tableid == 'None') && tableid != 'deal') {
                         if (window.innerWidth > min_width) {
                             if ($('#recordModal').hasClass('show')) {
@@ -106,7 +106,7 @@ function save_record(el) {
                     if (window.innerWidth < min_width) {
                         open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
                     }
-                    */
+
 
                     if (tableid == 'deal') {
                         open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
@@ -125,7 +125,7 @@ function save_record(el) {
 
             },
             error: function () {
-                alert('ko')
+                notify_error()
             }
         });
     }
@@ -361,6 +361,25 @@ function newTimesheet(recordid) {
 
 function closeNewRecordModal(el) {
     $(el).closest(".modal").modal("hide");
+}
+
+function notify_error() {
+    $.ajax({
+        type: "POST",
+        url: "/notify_error/",
+        success: function (response) {
+          swal({
+            title: "Si è verificato un errore",
+            text: "L'errore è stato segnalato ai nostri tecnici competenti (credici)",
+            icon: "error",
+            button: "Ok",
+            dangerMode: true,
+        });
+        },
+        error: function (response) {
+
+        }
+    });
 }
 
 
