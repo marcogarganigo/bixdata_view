@@ -21,7 +21,7 @@ function load_fields(el, tableid, recordid, master_tableid, master_recordid) {
     });
 }
 
-function save_record(el) {
+function save_record(el, setting) {
     console.info('FUN:base.js-save_record')
     var record_fields_container = $(el).closest('.record_fields_container')
     var tableid = $(record_fields_container).data('tableid')
@@ -51,7 +51,7 @@ function save_record(el) {
           swal({
             title: "Salvataggio in corso!",
             text: " ",
-            icon: "warning",
+            icon: "info",
             timer: 1200,
             buttons: false,
         })
@@ -96,15 +96,16 @@ function save_record(el) {
 
                     if ((master_tableid == 'None') && tableid != 'deal') {
                         if (window.innerWidth > min_width) {
-                            if ($('#recordModal').hasClass('show')) {
-                                open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
+                            if (setting == 'modal') {
+                                //open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
                             } else {
+                                //$('#fields_container_' + tableid + '_' + recordid).load('/loading/');
                                 open_record(window.content, tableid, saved_recordid, contextfunction, 'card')
                             }
                         }
                     }
                     if (window.innerWidth < min_width) {
-                        open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
+                        //open_record(window.content, tableid, saved_recordid, contextfunction, 'modal')
                     }
 
 

@@ -845,6 +845,18 @@ def get_block_record_fields(request, prefilled_fields=dict()):
     context['master_tableid'] = master_tableid
     context['master_recordid'] = master_recordid
 
+    bixuserid = get_userid(request.user.id)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT value FROM sys_user_settings WHERE setting = 'record_open_layout' AND userid = %s",
+            [bixuserid]
+        )
+        user_setting = cursor.fetchone()
+        user_setting = user_setting[0]
+
+        context['user_setting'] = user_setting
+
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()
         if contextfunction != 'insert':
@@ -855,7 +867,7 @@ def get_block_record_fields(request, prefilled_fields=dict()):
             else:
                 context['edit_block'] = False
 
-            if userid in [53,2,47,50]:
+            if userid in [53,2,47,50,3]:
                 context['edit_block'] = False
         else:
             context['edit_block'] = False

@@ -21,10 +21,10 @@
     </div>
     {% if tableid == 'timesheet' %}
         {% if edit_block == False %}
-            <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class=" save-button" onclick="save_record(this)">Salva</button>
+            <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class=" save-button" onclick="save_record(this, '{{ user_setting }}')">Salva</button>
         {% endif %}
     {% else %}
-        <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class=" save-button" onclick="save_record(this)">Salva</button>
+        <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class=" save-button" onclick="save_record(this, '{{ user_setting }}')">Salva</button>
     {% endif %}
 </div>
 
