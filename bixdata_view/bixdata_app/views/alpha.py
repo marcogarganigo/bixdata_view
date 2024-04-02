@@ -1175,7 +1175,7 @@ def custom_save_record(request,tableid,recordid):
                     
         #valutazione eventuale project
         if invoicestatus=='To Process' and ((not isempty(project_record.recordid)) and invoiceoption!='Out of contract'):
-            timesheet_record.fields['print_type']='Progetto N. '+project_record.fields['id']
+            timesheet_record.fields['print_type']='Progetto N. '+str(project_record.fields['id'])
             if project_record.fields['fixedprice']=='Si':
                 invoicestatus='Fixed price Project'
                 productivity='Ricavo indiretto'
