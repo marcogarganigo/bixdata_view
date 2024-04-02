@@ -1332,7 +1332,15 @@ def get_temp(request):
 def get_settings(request):
     settings_list = get_user_setting_list(request)
 
-    return render(request, 'other/settings.html', {'settings_list': settings_list})
+    hv = HelperView(request)
+    bl = SettingsBusinessLogic()
+    userid = request.POST.get('userid')
+
+    hv.context['workspaces'] = bl.get_user_tables(userid)
+    context = hv.context
+    context['settings_list'] = settings_list
+
+    return render(request, 'other/settings.html', context)
 
 
 @login_required(login_url='/login/')
@@ -1746,7 +1754,7 @@ def stampa_timesheet(request):
 
     pdfkit.from_string(content, filename_with_path, configuration=config)
 
-    os.remove(path + '\\static\\pdf\\' + qr_name)
+
 
     try:
         with open(filename_with_path, 'rb') as fh:
@@ -1757,7 +1765,7 @@ def stampa_timesheet(request):
 
     finally:
         os.remove(filename_with_path)
-
+        os.remove(path + '\\static\\pdf\\' + qr_name)
 
 def stampa_servicecontract(request):
     recordid = ''
