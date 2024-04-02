@@ -1147,7 +1147,7 @@ def custom_save_record(request,tableid,recordid):
         #se ho già un service contract lo mantengo
         if "Service Contract" in invoicestatus and invoiceoption!='Out of contract':
             if not isempty(servicecontract_record.recordid):
-                    if servicecontract_record.fields['Monte Ore']:
+                    if servicecontract_record.fields['type']=='Monte Ore':
                         timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
                         invoicestatus="Service Contract: "+servicecontract_record.fields['type']
                         productivity='Ricavo diretto'
@@ -1158,7 +1158,7 @@ def custom_save_record(request,tableid,recordid):
         # valutazione del tipo di servizio se produttivo o meno TODO    
         if invoicestatus=='To Process':
             if service=='Amministrazione' or service=='Commerciale' or service=='Formazione Apprendista' or service=='Formazione e Test' or service=='Interno' or service=='Riunione':
-                invoicestatus=service
+                invoicestatus='Altre attività'
                 productivity='Senza ricavo'
 
         # valutazione delle option TODO
