@@ -1147,9 +1147,10 @@ def custom_save_record(request,tableid,recordid):
         #se ho già un service contract lo mantengo
         if "Service Contract" in invoicestatus and invoiceoption!='Out of contract':
             if not isempty(servicecontract_record.recordid):
-                    timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
-                    invoicestatus="Service Contract: "+servicecontract_record.fields['type']
-                    productivity='Ricavo diretto'
+                    if servicecontract_record.fields['Monte Ore']:
+                        timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
+                        invoicestatus="Service Contract: "+servicecontract_record.fields['type']
+                        productivity='Ricavo diretto'
         else:            
             if invoicestatus!='Invoiced':
                 invoicestatus='To Process'
@@ -1186,7 +1187,7 @@ def custom_save_record(request,tableid,recordid):
             if not isempty(timesheet_record.fields['worktime']) and invoiceoption!='Out of contract':
                 flat_service_contract=None
                 if service=='Assistenza PBX':
-                    if travel_time_decimal==0 and worktime_decimal==0.25:
+                    if ((travel_time_decimal==0 and worktime_decimal==0.25) or invoiceoption=='In contract'):
                         flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='Manutenzione PBX')"])
                         
                 if service=='Assistenza IT':
