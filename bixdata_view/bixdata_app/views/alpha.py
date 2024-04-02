@@ -1163,6 +1163,12 @@ def custom_save_record(request,tableid,recordid):
                         timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
                         invoicestatus="Service Contract: "+servicecontract_record.fields['type']
                         productivity='Ricavo diretto'
+                    else:
+                        if invoicestatus!='Invoiced':
+                            invoicestatus='To Process'     
+            else:
+                if invoicestatus!='Invoiced':
+                    invoicestatus='To Process' 
         else:            
             if invoicestatus!='Invoiced':
                 invoicestatus='To Process'
@@ -1170,7 +1176,7 @@ def custom_save_record(request,tableid,recordid):
         # valutazione del tipo di servizio se produttivo o meno TODO    
         if invoicestatus=='To Process':
             if service=='Amministrazione' or service=='Commerciale' or service=='Formazione Apprendista' or service=='Formazione e Test' or service=='Interno' or service=='Riunione':
-                invoicestatus='Altre attività'
+                invoicestatus='Attività non fatturabile'
                 productivity='Senza ricavo'
 
         # valutazione delle option TODO
@@ -1241,22 +1247,62 @@ def custom_save_record(request,tableid,recordid):
             
             if not isempty(project_record.recordid):
                 if  project_record.fields['completed'] != 'Si':
-                    invoicestatus='To invoice when project completed'
+                    invoicestatus='To invoice when Project Completed'
                     
             if not isempty(ticket_record.recordid):
                 if  ticket_record.fields['vtestatus'] != 'Closed':
-                    invoicestatus='To invoice when ticket completed'
+                    invoicestatus='To invoice when Ticket Closed'
 
             if invoicestatus=='To Process':
                 invoicestatus='To Invoice'
                 
             
-        if not isempty(servicecontract_record.recordid):
-            servicecontract_record.save()
+        
         
         timesheet_record.fields['invoicestatus']=invoicestatus
         timesheet_record.fields['productivity']=productivity    
         timesheet_record.save()
+        
+        if not isempty(servicecontract_record.recordid):
+            custom_save_record(request,tableid='servicecontract',recordid=servicecontract_record.recordid)
+        
+    #---SERVICE CONTRACT
+    if tableid=='servicecontract':
+        servicecontract_table=Table(tableid='servicecontract')
+        servicecontract_record=Record('servicecontract',recordid)
+        
+        #recupero campi
+        contracthours=servicecontract_record.fields['contracthours']
+        if contracthours==None:
+            contracthours=0
+        previousresidual=servicecontract_record.fields['previousresidual']
+        if previousresidual==None:
+            previousresidual=0
+        excludetravel=servicecontract_record.fields['excludetravel']
+        
+        #inizializzo campi
+        usedhours=0
+        progress=0
+        residualhours=contracthours
+        
+        timesheet_linkedrecords=servicecontract_record.get_linkedrecords(linkedtable='timesheet')
+        for timesheet_linkedrecord in timesheet_linkedrecords:
+            usedhours=usedhours+timesheet_linkedrecord['worktime_decimal']
+            if excludetravel!='1' and excludetravel!='Si':
+                if not isempty(timesheet_linkedrecord['traveltime_decimal']):
+                    usedhours=usedhours+timesheet_linkedrecord['traveltime_decimal']
+        residualhours=contracthours+previousresidual-usedhours
+        if contracthours+residualhours!=0:
+            progress=(usedhours/(contracthours+residualhours))*100
+
+        if isempty(servicecontract_record.fields['status']):
+            servicecontract_record.fields['status']='In Progress'
+            
+        servicecontract_record.fields['usedhours']=usedhours
+        servicecontract_record.fields['residualhours']=residualhours
+        servicecontract_record.fields['progress']=progress
+        servicecontract_record.save()
+    
     return True
 
 
