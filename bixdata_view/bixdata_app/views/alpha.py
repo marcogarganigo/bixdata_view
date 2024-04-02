@@ -1158,7 +1158,7 @@ def custom_save_record(request,tableid,recordid):
         # valutazione del tipo di servizio se produttivo o meno TODO    
         if invoicestatus=='To Process':
             if service=='Amministrazione' or service=='Commerciale' or service=='Formazione Apprendista' or service=='Formazione e Test' or service=='Interno' or service=='Riunione':
-                invoicestatus='Altre attività'
+                invoicestatus='Attività non fatturabile'
                 productivity='Senza ricavo'
 
         # valutazione delle option TODO
@@ -1229,11 +1229,11 @@ def custom_save_record(request,tableid,recordid):
             
             if not isempty(project_record.recordid):
                 if  project_record.fields['completed'] != 'Si':
-                    invoicestatus='To invoice when project completed'
+                    invoicestatus='To invoice when Project Completed'
                     
             if not isempty(ticket_record.recordid):
                 if  ticket_record.fields['vtestatus'] != 'Closed':
-                    invoicestatus='To invoice when ticket completed'
+                    invoicestatus='To invoice when Ticket Closed'
 
             if invoicestatus=='To Process':
                 invoicestatus='To Invoice'
