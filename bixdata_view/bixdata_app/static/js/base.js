@@ -93,7 +93,6 @@ function save_record(el, setting) {
 
                     $('#fields_container_' + tableid + '_' + recordid).load('/loading/');
 
-
                     if ((master_tableid == 'None') && tableid != 'deal') {
                         if (window.innerWidth > min_width) {
                             if (setting == 'modal') {

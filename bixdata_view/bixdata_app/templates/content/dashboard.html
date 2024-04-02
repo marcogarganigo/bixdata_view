@@ -99,7 +99,7 @@
                         },
                         dataType: 'json',
                         success: function (data) {
-                            getDashboard()
+                            getDashboard('{{ dashboardid }}')
                         },
                     });
                 }
@@ -121,7 +121,7 @@
                 },
                 dataType: 'json',
                 success: function (data) {
-                    getDashboard()
+                    getDashboard('{{ dashboardid }}')
                 },
             });
         }
