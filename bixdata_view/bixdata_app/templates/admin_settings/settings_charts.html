@@ -66,7 +66,7 @@
                 <h4>View name</h4>
                 <select class="form-select build-form" aria-label="Default select example" name="view_id">
                     <option selected></option>
-                        {% for item in context.views %}
+                        {% for item in context.views|dictsort:"name" %}
                             <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }}
                                 - {{ item.tableid }}</option>
                         {% endfor %}
@@ -78,7 +78,7 @@
                 <select class="form-select build-form" aria-label="Default select example" name="report_id">
                     <option selected></option>
                     <option value="0">Nessun report</option>
-                        {% for item in context.reports %}
+                        {% for item in context.reports|dictsort:"name" %}
                             <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }}
                                 - {{ item.tableid }}</option>
                         {% endfor %}
@@ -125,7 +125,7 @@
                 <h4>Fieldid</h4>
                 <select class="form-select build-form-report" aria-label="Default select example" name="fieldid">
                     <option selected></option>
-                    {% for field in context.fields %}
+                    {% for field in context.fields|dictsort:"fieldid" %}
                         <option data-tableid="{{ field.tableid }}" value="{{ field.fieldid }}">{{ field.fieldid }}</option>
                     {% endfor %}
                 </select>
@@ -170,8 +170,51 @@
 </div>
 
 
+<div class="container text-center card card-body" style="margin-top: 2%">
+
+    <h4>Nuova View </h4>
+
+    <form method="post" action="{% url 'new_view' %}" class="container text-center" style="float: left">
+
+        <div class="row">
+
+            <div class="col-md-4 d-flex flex-column">
+                <h4>Tableid</h4>
+                <select class="form-select" id="table-select-report" aria-label="Default select example" name="tableid">
+                    <option selected></option>
+                    {% for table in context.tables %}
+                        <option value="{{ table.id }}">{{ table.id }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-secondary" type="button" onclick="select_table_report()">Seleziona</button>
+            </div>
 
 
+            <div class="col-md-4 d-flex flex-column">
+                <h4>Nome view</h4>
+                <div class="flex-fill">
+                    <input style="width: 100%" type="text" name="view_name">
+                </div>
+            </div>
+
+
+
+
+            <div class="col-md-4 d-flex flex-column">
+                <h4>Query conditions</h4>
+                <div class="flex-fill">
+                    <textarea style="width: 100%"  name="query_conditions"></textarea>
+                </div>
+            </div>
+
+
+        </div>
+
+    <button style="float: right" type="submit" class="btn btn-primary">Salva</button>
+    </form>
+
+
+</div>
 
 
 

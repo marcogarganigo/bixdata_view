@@ -156,6 +156,7 @@ urlpatterns = [
     path('new_timesheet/', alpha.new_timesheet, name='new_timesheet'),
     path('get_company_card/<str:phonenumber>/', alpha.get_company_card, name='get_record_path'),
     path('get_3cx_card/<str:phonenumber>/', alpha.get_3cx_card, name='get_record_path'),
-    path('notify_error/', alpha.notify_error, name='notify_error')
+    path('notify_error/', alpha.notify_error, name='notify_error'),
+    path('new_view/', alpha.new_view, name="new_view"),
 
 ]

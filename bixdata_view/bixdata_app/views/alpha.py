@@ -2208,6 +2208,23 @@ def new_report(request):
     return JsonResponse({'success': True})
 
 
+
+def new_view(request):
+    tableid = request.POST.get('tableid')
+    view_name = request.POST.get('view_name')
+    query_conditions = request.POST.get('query_conditions')
+    with connection.cursor() as cursor:
+        cursor.execute(
+            """
+            INSERT INTO sys_view (userid, name, tableid, query_conditions)
+            VALUES (%s, %s, %s, %s)
+            """,
+            [1, view_name, tableid, query_conditions]
+        )
+
+    return JsonResponse({'success': True})
+
+
 def test_select(request):
     return render(request, 'other/test.html')
 
@@ -2391,7 +2408,7 @@ def settings_charts(request):
     context = []
     with connection.cursor() as cursor:
         cursor.execute(
-            "SELECT * FROM sys_dashboard"
+            "SELECT * FROM sys_dashboard ORDER BY name asc"
         )
         rows = dictfetchall(cursor)
 
