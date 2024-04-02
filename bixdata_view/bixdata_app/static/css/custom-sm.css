@@ -6,9 +6,32 @@
         width: 100% !important;
     }
 
-    .modal-dialog {
+    .modal-fullscreen {
+        max-width: 100% !important;
+    }
+
+    #newRecordModal > .modal-fullscreen {
+        width: 50%;
+        margin: 2% auto auto;
+        height: 85%
+    }
+
+    #recordModal > .modal-fullscreen {
         width: 95%;
         height: 95%;
+        margin: 1% auto auto;
+    }
+
+    #linked-table-modal > .modal-fullscreen {
+        width: 50%;
+        margin: 2% auto auto;
+        height: 85%
+    }
+
+    #newLinkedRecordModal > .modal-fullscreen {
+        width: 40%;
+        margin: 2% auto auto;
+        height: 75%
     }
 
     #content-card {
