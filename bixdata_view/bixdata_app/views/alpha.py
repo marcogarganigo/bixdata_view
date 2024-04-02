@@ -1151,6 +1151,12 @@ def custom_save_record(request,tableid,recordid):
                         timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
                         invoicestatus="Service Contract: "+servicecontract_record.fields['type']
                         productivity='Ricavo diretto'
+                    else:
+                        if invoicestatus!='Invoiced':
+                            invoicestatus='To Process'     
+            else:
+                if invoicestatus!='Invoiced':
+                            invoicestatus='To Process' 
         else:            
             if invoicestatus!='Invoiced':
                 invoicestatus='To Process'
@@ -1271,7 +1277,8 @@ def custom_save_record(request,tableid,recordid):
         for timesheet_linkedrecord in timesheet_linkedrecords:
             usedhours=usedhours+timesheet_linkedrecord['worktime_decimal']
             if excludetravel!='1' and excludetravel!='Si':
-                usedhours=usedhours+timesheet_linkedrecord['traveltime_decimal']
+                if not isempty(timesheet_linkedrecord['traveltime_decimal']):
+                    usedhours=usedhours+timesheet_linkedrecord['traveltime_decimal']
         residualhours=contracthours+previousresidual-usedhours
         if contracthours+residualhours!=0:
             progress=(usedhours/(contracthours+residualhours))*100
