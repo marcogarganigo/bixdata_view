@@ -1214,7 +1214,10 @@ def custom_save_record(request,tableid,recordid):
                      
                 if service=='Printing':
                     flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='Manutenzione Printing')"])
-                    
+                
+                if service=='Assistenza Web Hosting':
+                    flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(service='Assistenza Web Hosting')"])
+                        
                 if flat_service_contract:
                     servicecontract_record=Record('servicecontract',flat_service_contract[0]['recordid_'])
                     timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
