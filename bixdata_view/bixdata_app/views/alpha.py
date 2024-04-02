@@ -1156,7 +1156,7 @@ def custom_save_record(request,tableid,recordid):
                             invoicestatus='To Process'     
             else:
                 if invoicestatus!='Invoiced':
-                            invoicestatus='To Process' 
+                    invoicestatus='To Process' 
         else:            
             if invoicestatus!='Invoiced':
                 invoicestatus='To Process'
