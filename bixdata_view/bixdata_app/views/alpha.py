@@ -538,6 +538,8 @@ def get_chart(request, sql, id, name, layout, fields):
             return render_to_string('other/linechart.html', context, request=request)
         elif layout_chart == 'horizontalbarchart':
             return render_to_string('other/horizontalbarchart.html', context, request=request)
+        elif layout_chart == 'donutchart':
+            return render_to_string('other/donutchart.html', context, request=request)
 
 
 @login_required(login_url='/login/')
