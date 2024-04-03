@@ -1359,7 +1359,7 @@ def get_settings(request):
         cursor.execute(
             query
         )
-    favorite_tables = dictfetchall(cursor)
+        favorite_tables = dictfetchall(cursor)
 
     i = 0
     list_table = []
