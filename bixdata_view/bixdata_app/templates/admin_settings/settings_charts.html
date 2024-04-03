@@ -77,7 +77,6 @@
                 <h4>Report name</h4>
                 <select class="form-select build-form" aria-label="Default select example" name="report_id">
                     <option selected></option>
-                    <option value="0">Nessun report</option>
                         {% for item in context.reports|dictsort:"name" %}
                             <option data-tableid="{{ item.tableid }}" value="{{ item.id }}">{{ item.name }}
                                 - {{ item.tableid }}</option>
