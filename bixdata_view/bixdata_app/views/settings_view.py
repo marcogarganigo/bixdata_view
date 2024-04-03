@@ -27,7 +27,7 @@ def settings_table_usertables(request):
 def settings_table_usertables_save(request):
 
     userid = request.POST.get('userid')
-    SysUserTableOrder.objects.filter(userid=1, typepreference='menu').delete()
+    SysUserTableOrder.objects.filter(userid=userid, typepreference='menu').delete()
 
     workspaces = request.POST.get('tables')
     workspaces = json.loads(workspaces)
@@ -39,7 +39,7 @@ def settings_table_usertables_save(request):
             t = SysTable.objects.get(id=tableid)
             t.workspace = workspace_name
             t.save()
-            t = SysUserTableOrder(userid=SysUser.objects.get(id=1), tableid=SysTable.objects.get(id=tableid),typepreference='menu', tableorder=order)
+            t = SysUserTableOrder(userid=SysUser.objects.get(id=userid), tableid=SysTable.objects.get(id=tableid),typepreference='menu', tableorder=order)
             t.save()
             order += 1
 

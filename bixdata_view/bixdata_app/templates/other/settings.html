@@ -1,3 +1,5 @@
+
+
 <div class="container" style="margin-top: 2%">
     {% for item in settings_list %}
     <form method="POST" action="{% url 'save_settings' %}">
@@ -85,6 +87,49 @@
         <button type="submit" class="btn btn-primary" style="float:right">Salva</button>
     </form>
 
-
+    <h3 style="margin-top: 7%">Tabelle preferite</h3>
+  <select id="fav-tables" name="favorite-tables" class="select2-input" multiple="multiple">
+    {% for table in tables %}
+        <option name="{{ table.tableid }}">{{ table.tableid }}</option>
+    {% endfor %}
+  </select>
+<br>
+      <button class="btn btn-secondary" onclick="saveFavTables()">Salva tabelle prefetite</button>
 
 </div>
+
+
+<script>
+
+    function saveFavTables() {
+        var selectedTables = []
+        selectedTables = $('#fav-tables').val()
+
+        JSON.stringify(selectedTables)
+        console.info(JSON.stringify(selectedTables))
+
+       $.ajax({
+            type: "POST",
+            url: "{% url 'save_favorite_tables' %}",
+            data: {
+                'tables': JSON.stringify(selectedTables),
+            },
+            success: function (data) {
+
+            }
+        });
+    }
+
+    $('.select2-input').each(function () {
+        $(this).select2({
+            dropdownParent: $(this).parent()
+        }).addClass('select2-initialized');
+    });
+
+
+    $(document).on('select2:open', function (e) {
+        window.setTimeout(function () {
+            document.querySelector('input.select2-search__field').focus();
+        }, 0);
+    })
+</script>

@@ -93,6 +93,15 @@ def index(request, content=''):
                     active_dashboards.append(dashboard)
 
 
+    query = "SELECT tableid FROM sys_user_favorite_tables WHERE sys_user_id = '{}'".format(userid)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            query
+        )
+        favorite_tables = dictfetchall(cursor)
+
+
 
 
 
@@ -105,6 +114,7 @@ def index(request, content=''):
     hv.context['content']=content
     hv.context['layout_setting']=get_user_setting(request, 'record_open_layout')
     hv.context['active_dashboards'] = active_dashboards
+    hv.context['favorite_tables'] = favorite_tables
     return hv.render_template('index.html')
 
 

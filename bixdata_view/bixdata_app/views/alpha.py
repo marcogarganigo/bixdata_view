@@ -890,7 +890,7 @@ def new_timesheet(request):
     prefilled_fields=dict()
     prefilled_fields['description']='testvalue'
     prefilled_fields['worktime']='01:30'
-    
+
     block = get_block_record_fields(request,prefilled_fields=prefilled_fields)
     return HttpResponse(block)
 
@@ -1105,7 +1105,7 @@ def custom_save_record(request,tableid,recordid):
             record_deal.fields['advancepayment']=0
         record_deal.fields['reference']=reference
         record_deal.save()
-        
+
     #---TIMESHEET---
     if tableid=='timesheet':
         #recupero informazioni necessarie
@@ -1123,7 +1123,7 @@ def custom_save_record(request,tableid,recordid):
             invoicestatus=''
         worktime=timesheet_record.fields['worktime']
         traveltime=timesheet_record.fields['traveltime']
-        
+
         #inizializzo campi
         productivity=''
         worktime_decimal=0
@@ -1140,8 +1140,8 @@ def custom_save_record(request,tableid,recordid):
         timesheet_record.fields['print_hourprice']=''
         timesheet_record.fields['print_travel']=''
         #aggiorno dati a prescindere
-        
-        
+
+
         if not isempty(worktime):
             hours, minutes = map(int, worktime.split(':'))
             worktime_decimal = hours + minutes / 60
@@ -1152,10 +1152,10 @@ def custom_save_record(request,tableid,recordid):
             timesheet_record.fields['worktime_decimal']=worktime_decimal
             timesheet_record.fields['traveltime_decimal']=travel_time_decimal
             timesheet_record.fields['totaltime_decimal']=totaltime_decimal
-            
+
         #inizio valutazione invoice status
-        
-        
+
+
         #se ho già un service contract lo mantengo
         if "Service Contract" in invoicestatus and invoiceoption!='Out of contract':
             if not isempty(servicecontract_record.recordid):
@@ -1165,11 +1165,11 @@ def custom_save_record(request,tableid,recordid):
                         productivity='Ricavo diretto'
                     else:
                         if invoicestatus!='Invoiced':
-                            invoicestatus='To Process'     
+                            invoicestatus='To Process'
             else:
                 if invoicestatus!='Invoiced':
-                    invoicestatus='To Process' 
-        else:            
+                    invoicestatus='To Process'
+        else:
             if invoicestatus!='Invoiced':
                 invoicestatus='To Process'
 
@@ -1188,9 +1188,9 @@ def custom_save_record(request,tableid,recordid):
                 timesheet_record.fields['print_type']='Garanzia'
                 timesheet_record.fields['print_hourprice']='Garanzia'
                 timesheet_record.fields['print_travel']='Garanzia'
- 
-        
-                    
+
+
+
         #valutazione eventuale project
         if invoicestatus=='To Process' and ((not isempty(project_record.recordid)) and invoiceoption!='Out of contract'):
             timesheet_record.fields['print_type']='Progetto N. '+str(project_record.fields['id'])
@@ -1201,23 +1201,23 @@ def custom_save_record(request,tableid,recordid):
                 timesheet_record.fields['print_travel']='Inclusa'
 
         #valutazione flat service contract
-        if invoicestatus=='To Process': 
+        if invoicestatus=='To Process':
             if not isempty(timesheet_record.fields['worktime']) and invoiceoption!='Out of contract':
                 flat_service_contract=None
                 if service=='Assistenza PBX':
                     if ((travel_time_decimal==0 and worktime_decimal==0.25) or invoiceoption=='In contract'):
                         flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='Manutenzione PBX')"])
-                        
+
                 if service=='Assistenza IT':
                     if travel_time_decimal==0:
                         flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='BeAll (All-inclusive)')"])
-                     
+
                 if service=='Printing':
                     flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='Manutenzione Printing')"])
-                
+
                 if service=='Assistenza Web Hosting':
                     flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(service='Assistenza Web Hosting')"])
-                        
+
                 if flat_service_contract:
                     servicecontract_record=Record('servicecontract',flat_service_contract[0]['recordid_'])
                     timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
@@ -1236,44 +1236,44 @@ def custom_save_record(request,tableid,recordid):
                 timesheet_record.fields['print_hourprice']='Monte Ore'
                 if servicecontract_record.fields['excludetravel']:
                     timesheet_record.fields['print_travel']='Non scalata dal monte ore e non fatturata'
-            
+
         #da fatturare quando chiusi
         if invoicestatus=='To Process':
             productivity='Ricavo diretto'
             hourprice=140
             travelprice=70
             timesheet_record.fields['print_travel']='Da fatturare'
-            
+
             if not isempty(company_record.fields['ictpbx_price']):
                 hourprice=company_record.fields['ictpbx_price']
             timesheet_record.fields['print_hourprice']='Fr.'+ str(hourprice)+'.--'
-            
+
             if not isempty(project_record.recordid):
                 if  project_record.fields['completed'] != 'Si':
                     invoicestatus='To invoice when Project Completed'
-                    
+
             if not isempty(ticket_record.recordid):
                 if  ticket_record.fields['vtestatus'] != 'Closed':
                     invoicestatus='To invoice when Ticket Closed'
 
             if invoicestatus=='To Process':
                 invoicestatus='To Invoice'
-                
-            
-        
-        
+
+
+
+
         timesheet_record.fields['invoicestatus']=invoicestatus
-        timesheet_record.fields['productivity']=productivity    
+        timesheet_record.fields['productivity']=productivity
         timesheet_record.save()
-        
+
         if not isempty(servicecontract_record.recordid):
             custom_save_record(request,tableid='servicecontract',recordid=servicecontract_record.recordid)
-        
+
     #---SERVICE CONTRACT
     if tableid=='servicecontract':
         servicecontract_table=Table(tableid='servicecontract')
         servicecontract_record=Record('servicecontract',recordid)
-        
+
         #recupero campi
         contracthours=servicecontract_record.fields['contracthours']
         if contracthours==None:
@@ -1282,12 +1282,12 @@ def custom_save_record(request,tableid,recordid):
         if previousresidual==None:
             previousresidual=0
         excludetravel=servicecontract_record.fields['excludetravel']
-        
+
         #inizializzo campi
         usedhours=0
         progress=0
         residualhours=contracthours
-        
+
         timesheet_linkedrecords=servicecontract_record.get_linkedrecords(linkedtable='timesheet')
         for timesheet_linkedrecord in timesheet_linkedrecords:
             usedhours=usedhours+timesheet_linkedrecord['worktime_decimal']
@@ -1300,12 +1300,12 @@ def custom_save_record(request,tableid,recordid):
 
         if isempty(servicecontract_record.fields['status']):
             servicecontract_record.fields['status']='In Progress'
-            
+
         servicecontract_record.fields['usedhours']=usedhours
         servicecontract_record.fields['residualhours']=residualhours
         servicecontract_record.fields['progress']=progress
         servicecontract_record.save()
-    
+
     return True
 
 
@@ -1334,13 +1334,69 @@ def get_settings(request):
 
     hv = HelperView(request)
     bl = SettingsBusinessLogic()
-    userid = request.POST.get('userid')
-
-    hv.context['workspaces'] = bl.get_user_tables(userid)
-    context = hv.context
+    sys_user_id = get_userid(request.user.id)
+    context = dict()
     context['settings_list'] = settings_list
 
+    query = "SELECT tableid FROM sys_user_table_order WHERE userid = '{}'".format(sys_user_id)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            query
+        )
+        tables = dictfetchall(cursor)
+
+    if not tables:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT tableid FROM sys_user_table_order WHERE userid = 1"
+            )
+            tables = dictfetchall(cursor)
+
+
+
+    query = f"SELECT tableid FROM sys_user_favorite_tables WHERE sys_user_id = {sys_user_id}"
+    with connection.cursor() as cursor:
+        cursor.execute(
+            query
+        )
+    favorite_tables = dictfetchall(cursor)
+
+    i = 0
+    list_table = []
+
+    for table in tables:
+        if i < len(favorite_tables) and table['tableid'] == favorite_tables[i]['tableid']:
+            table['favorite'] = True
+            i += 1
+        else:
+            table['favorite'] = False
+        list_table.append(table)
+
+    context['tables'] = tables
+
     return render(request, 'other/settings.html', context)
+
+
+def save_favorite_tables(request):
+    fav_tables = request.POST.get('tables')
+    fav_tables = json.loads(fav_tables)
+    sys_user_id = get_userid(request.user.id)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "DELETE FROM sys_user_favorite_tables where sys_user_id = %s",
+            [sys_user_id]
+        )
+
+    with connection.cursor() as cursor:
+        for table in fav_tables:
+            cursor.execute(
+                "INSERT INTO sys_user_favorite_tables(sys_user_id, tableid) VALUES (%s, %s)",
+                [sys_user_id, table]
+            )
+
+    return True
+
 
 
 @login_required(login_url='/login/')

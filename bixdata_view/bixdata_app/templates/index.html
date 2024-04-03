@@ -52,6 +52,8 @@
         </style>
         <script type="text/javascript">
 
+
+
             const min_width = 3200;
             const fhd_width = 1920;
 
@@ -809,6 +811,24 @@
 
                         <!--- Sidemenu -->
                         <ul class="side-nav">
+
+                            <li class="side-nav-item">
+                                <a data-bs-toggle="collapse" onclick="" href="#sidebarFavoriteTables" aria-expanded="true"
+                                   aria-controls="sidebarFavoriteTables" class="side-nav-link">
+                                    <i class="uil-star"></i>
+                                    <span> Preferiti </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <div class="collapse show" id="sidebarFavoriteTables">
+                                    <ul class="side-nav-second-level">
+                                        {% for table in favorite_tables %}
+                                         <li onclick="getContentRecords('{{ table.tableid }}')">
+                                                <a class="side-nav-txt" onclick="setColor(this)">{{ table.tableid }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </li>
 
                             <li class="side-nav-item">
                                 <a data-bs-toggle="collapse" onclick="" href="#sidebarDashboards2" aria-expanded="false"
