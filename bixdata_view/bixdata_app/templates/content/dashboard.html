@@ -69,7 +69,13 @@
                     },
                     dataType: 'json',
                     success: function (data) {
-                        getDashboard()
+                        swal({
+                        title: "Dashboard default salvata",
+                        text: "La nuova dashboard default è stata salvata con successo",
+                        icon: "success",
+                        timer: 800,
+                        buttons: false,
+                    })
                     },
                 })
             };

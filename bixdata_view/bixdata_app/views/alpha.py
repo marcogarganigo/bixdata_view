@@ -1362,15 +1362,21 @@ def get_settings(request):
         favorite_tables = dictfetchall(cursor)
 
     i = 0
-    list_table = []
-
     for table in tables:
         if i < len(favorite_tables) and table['tableid'] == favorite_tables[i]['tableid']:
             table['favorite'] = True
             i += 1
         else:
             table['favorite'] = False
-        list_table.append(table)
+
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM sys_table")
+        all_tables = dictfetchall(cursor)
+
+    for a, table in enumerate(all_tables):
+        for b, t in enumerate(tables):
+            if t['tableid'] == table['id']:
+                tables[b]['description'] = table['description']
 
     context['tables'] = tables
 
@@ -1395,7 +1401,7 @@ def save_favorite_tables(request):
                 [sys_user_id, table]
             )
 
-    return True
+    return JsonResponse({'success': True})
 
 
 
@@ -3779,17 +3785,17 @@ def set_default_dashboard(request):
 
     with connection.cursor() as cursor:
         cursor.execute(
-            "UPDATE sys_user_dashboard SET defaultdashboard = %s WHERE dashboardid = %s AND userid = %s",
-            [1, dashboardid, sys_user]
+            "UPDATE sys_user_settings SET value = %s WHERE setting = 'default_dashboard' AND userid = %s",
+            [dashboardid, sys_user]
         )
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "UPDATE sys_user_dashboard SET defaultdashboard = %s WHERE dashboardid != %s AND userid = %s",
-            [0, dashboardid, sys_user]
-        )
+        if cursor.rowcount == 0:
+            cursor.execute(
+                "INSERT INTO sys_user_settings (userid, setting, value) VALUES (%s, 'default_dashboard', %s)",
+                [sys_user, dashboardid]
+            )
 
-    return HttpResponse(status=204)
+    return JsonResponse({'success': True})
 
 
 def get_company_card(request, phonenumber):

@@ -89,7 +89,6 @@ def index(request, content=''):
         for dashboard in dashboards:
             for user_dashboard in user_dashboards:
                 if user_dashboard['dashboardid'] == dashboard['id']:
-                    dashboard['defaultdashboard'] = user_dashboard['defaultdashboard']
                     active_dashboards.append(dashboard)
 
 
@@ -101,9 +100,28 @@ def index(request, content=''):
         )
         favorite_tables = dictfetchall(cursor)
 
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM sys_table"
+        )
+        tables = dictfetchall(cursor)
 
 
+    if favorite_tables:
+        i = 0
+        for table in tables:
+            if i < len(favorite_tables) and table['id'] == favorite_tables[i]['tableid']:
+                favorite_tables[i]['description'] = table['description']
+                i += 1
 
+    query = "SELECT value FROM sys_user_settings WHERE setting = 'default_dashboard' AND userid = '{}'".format(userid)
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        default_dashboard_result = cursor.fetchone()
+        if default_dashboard_result:
+            default_dashboard = int(default_dashboard_result[0].strip("'"))
+        else:
+            default_dashboard = None
 
     hv.context['menu_tables']=menu_tables
     hv.context['menu_list']=menu_list
@@ -115,6 +133,7 @@ def index(request, content=''):
     hv.context['layout_setting']=get_user_setting(request, 'record_open_layout')
     hv.context['active_dashboards'] = active_dashboards
     hv.context['favorite_tables'] = favorite_tables
+    hv.context['default_dashboard'] = default_dashboard
     return hv.render_template('index.html')
 
 

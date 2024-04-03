@@ -90,11 +90,14 @@
     <h3 style="margin-top: 7%">Tabelle preferite</h3>
   <select id="fav-tables" name="favorite-tables" class="select2-input" multiple="multiple">
     {% for table in tables %}
-        <option name="{{ table.tableid }}">{{ table.tableid }}</option>
+        {% if table.favorite == True %}
+            <option selected name="{{ table.tableid }}" value="{{ table.tableid }}">{{ table.description }}</option>
+        {% else %}
+             <option name="{{ table.tableid }}" value="{{ table.tableid }}">{{ table.description }}</option>
+        {% endif %}
     {% endfor %}
   </select>
-<br>
-      <button class="btn btn-secondary" onclick="saveFavTables()">Salva tabelle prefetite</button>
+      <button class="btn btn-secondary" onclick="saveFavTables()">Salva preferiti</button>
 
 </div>
 
@@ -115,7 +118,7 @@
                 'tables': JSON.stringify(selectedTables),
             },
             success: function (data) {
-
+                window.location.reload()
             }
         });
     }

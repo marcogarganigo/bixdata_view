@@ -69,7 +69,7 @@
             $("#bixdata2").ready(function () {
                 {% if content == '' %}
                     {% for dashboard in active_dashboards %}
-                        {% if dashboard.defaultdashboard == 1 %}
+                        {% if dashboard.id == default_dashboard %}
                             getDashboard('{{ dashboard.id }}');
                         {% endif %}
                     {% endfor %}
@@ -823,7 +823,7 @@
                                     <ul class="side-nav-second-level">
                                         {% for table in favorite_tables %}
                                          <li onclick="getContentRecords('{{ table.tableid }}')">
-                                                <a class="side-nav-txt" onclick="setColor(this)">{{ table.tableid }}</a>
+                                                <a class="side-nav-txt" onclick="setColor(this)">{{ table.description }}</a>
                                             </li>
                                         {% endfor %}
                                     </ul>
