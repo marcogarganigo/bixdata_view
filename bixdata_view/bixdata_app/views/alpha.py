@@ -1238,27 +1238,34 @@ def custom_save_record(request, tableid, recordid):
                 if servicecontract_record.fields['excludetravel']:
                     timesheet_record.fields['print_travel'] = 'Non scalata dal monte ore e non fatturata'
 
-        # da fatturare quando chiusi
-        if invoicestatus == 'To Process':
-            productivity = 'Ricavo diretto'
-            hourprice = 140
-            travelprice = 70
-            timesheet_record.fields['print_travel'] = 'Da fatturare'
+        #da fatturare quando chiusi
+        if invoicestatus=='To Process':
+            productivity='Ricavo diretto'
+            hourprice=140
+            travelprice=None
+            timesheet_record.fields['print_travel']='Da fatturare'
 
             if not isempty(company_record.fields['ictpbx_price']):
-                hourprice = company_record.fields['ictpbx_price']
-            timesheet_record.fields['print_hourprice'] = 'Fr.' + str(hourprice) + '.--'
+                hourprice=company_record.fields['ictpbx_price']
+                travelprice=company_record.fields['travel_price']
+            timesheet_record.fields['print_hourprice']='Fr.'+ str(hourprice)+'.--'
 
             if not isempty(project_record.recordid):
                 if project_record.fields['completed'] != 'Si':
                     invoicestatus = 'To invoice when Project Completed'
 
             if not isempty(ticket_record.recordid):
-                if ticket_record.fields['vtestatus'] != 'Closed':
-                    invoicestatus = 'To invoice when Ticket Closed'
-
-            if invoicestatus == 'To Process':
-                invoicestatus = 'To Invoice'
+                if  ticket_record.fields['vtestatus'] != 'Closed':
+                    invoicestatus='To invoice when Ticket Closed'
+            timesheet_record.fields['hourprice']=hourprice
+            timesheet_record.fields['workprice']=hourprice*worktime_decimal;
+            if travelprice:
+                timesheet_record.fields['travelprice']=travelprice;
+            else:
+                timesheet_record.fields['travelprice']=hourprice*travel_time_decimal;
+            timesheet_record.fields['totalprice']=timesheet_record.fields['workprice']+timesheet_record.fields['travelprice']
+            if invoicestatus=='To Process':
+                invoicestatus='To Invoice'
 
         timesheet_record.fields['invoicestatus'] = invoicestatus
         timesheet_record.fields['productivity'] = productivity
