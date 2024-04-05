@@ -1,0 +1,49 @@
+        <div class="row" id="edit-dashboards">
+
+                <h4>Tableid</h4>
+
+<table id="dashboardTable">
+    <thead>
+        {% for field in context.dashboards.0 %}
+            <th>{{ field }}</th>
+        {% endfor %}
+        <th>Edit</th>
+        <th>Delete</th>
+    </thead>
+    {% for dashboard in context.dashboards %}
+        <tr data-action="">
+            <div class="dashboardrow">
+                {% for key, value in dashboard.items %}
+                    <td>
+                        <input class="dashboard-values" disabled value="{{ value }}" id="{{ key }}" name="{{ key }}">
+                    </td>
+                {% endfor %}
+                <td>
+                    <button class="btn btn-secondary edit-btn">
+                        <span class="material-symbols-outlined">
+                            edit
+                        </span>
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-danger delete-btn">
+                        <span class="material-symbols-outlined">
+                            delete
+                        </span>
+                    </button>
+                </td>
+            </div>
+        </tr>
+    {% endfor %}
+</table>
+<button class="btn btn-success" style="width: 5%; margin: auto;" id="addRowButton">
+    <span class="material-symbols-outlined">
+        add
+    </span>
+</button>
+
+
+
+    <button style="float: right; width: 10%" class="btn btn-primary" onclick="save_dashboard_table()">Salva</button>
+
+</div>

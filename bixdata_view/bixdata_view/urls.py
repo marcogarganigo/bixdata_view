@@ -158,6 +158,7 @@ urlpatterns = [
     path('get_3cx_card/<str:phonenumber>/', alpha.get_3cx_card, name='get_record_path'),
     path('notify_error/', alpha.notify_error, name='notify_error'),
     path('new_view/', alpha.new_view, name="new_view"),
-    path('save_favorite_tables/', alpha.save_favorite_tables, name='save_favorite_tables')
+    path('save_favorite_tables/', alpha.save_favorite_tables, name='save_favorite_tables'),
+    path('save_dashboard_table/', alpha.save_dashboard_table, name ='save_dashboard_table')
 
 ]
