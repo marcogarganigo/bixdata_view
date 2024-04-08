@@ -27,13 +27,12 @@ import pdfkit
 import tempfile
 from docx2pdf import convert as docx2pdf_convert
 
-
 from .bixdata_view import *
 from .businesslogic.office_calendar import OfficeCalendar
 from ..forms import LoginForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
-from django.db import connection,transaction
+from django.db import connection, transaction
 from django.http import JsonResponse
 from django.contrib.auth.models import Group, Permission, User, Group
 from django_user_agents.utils import get_user_agent
@@ -56,8 +55,6 @@ from docx.oxml import OxmlElement
 from docx.enum.section import WD_SECTION
 from docx.enum.style import WD_STYLE_TYPE
 from docxcompose.composer import Composer
-
-
 
 import qrcode
 
@@ -337,13 +334,10 @@ def get_block_records_chart(request):
     return HttpResponse(records_table)
 
 
-
-
-
 # Questa funzione builda i dashboard blocks e li mette insieme nella pagina dashboard che ritorna
 @login_required(login_url='/login/')
 def get_render_content_dashboard(request):
-    dbh=DatabaseHelper()
+    dbh = DatabaseHelper()
     context = {}
     context['blocks'] = []  # Initialize the blocks list
     context['block_list'] = []  # Initialize the block_list list
@@ -362,7 +356,7 @@ def get_render_content_dashboard(request):
         )
 
         righe = cursor2.fetchall()
-        #dashboard_id = righe[0][0]
+        # dashboard_id = righe[0][0]
         context['dashboardid'] = dashboard_id
 
     if request.method == 'POST':
@@ -376,10 +370,9 @@ def get_render_content_dashboard(request):
 
             datas = SysUserDashboardBlock.objects.filter(userid=bixid, size=size, dashboardid=dashboard_id).values()
 
-
-            #all_blocks = SysDashboardBlock.objects.all()
-            sql="SELECT * FROM sys_dashboard_block ORDER BY name asc"
-            all_blocks=dbh.sql_query(sql)
+            # all_blocks = SysDashboardBlock.objects.all()
+            sql = "SELECT * FROM sys_dashboard_block ORDER BY name asc"
+            all_blocks = dbh.sql_query(sql)
 
             for block in all_blocks:
                 context['block_list'].append(block)
@@ -421,10 +414,11 @@ def get_render_content_dashboard(request):
                         tableid = results['tableid']
                         tableid = 'user_' + tableid
 
-                        block['html'] = get_records_table(request, results['tableid'], None, None, '', results['viewid'], 1,
+                        block['html'] = get_records_table(request, results['tableid'], None, None, '',
+                                                          results['viewid'], 1,
                                                           '', '')
                     else:
-                        block['html'] = render_to_string('widgets/' +  str(results['widgetid']) + '.html')
+                        block['html'] = render_to_string('widgets/' + str(results['widgetid']) + '.html')
 
 
                 else:
@@ -436,11 +430,10 @@ def get_render_content_dashboard(request):
                             field = 'SUM(' + field + ')'
                             selected += field + ','
                         groupby = results['groupby']
-                        if results['custom']=='group_by_day':
-                            groupby=f"DATE_FORMAT({groupby}, '%Y-%m-%d')"
-                        if results['custom']=='group_by_month':
-                            groupby=f"DATE_FORMAT({groupby}, '%Y-%m')"
-
+                        if results['custom'] == 'group_by_day':
+                            groupby = f"DATE_FORMAT({groupby}, '%Y-%m-%d')"
+                        if results['custom'] == 'group_by_month':
+                            groupby = f"DATE_FORMAT({groupby}, '%Y-%m')"
 
                     query_conditions = results['query_conditions']
                     userid = get_userid(request.user.id)
@@ -449,11 +442,12 @@ def get_render_content_dashboard(request):
                     tableid = results['tableid']
                     name = results['name']
                     layout = results['layout']
-                    fromtable= 'user_' + tableid
-                    db=DatabaseHelper()
-                    groupby_field_record=db.sql_query_row(f"select * from sys_field where tableid='{tableid}' and fieldid='{results['groupby']}'")
-                    if groupby_field_record['fieldtypeid']=='Utente':
-                        fromtable=fromtable+f" LEFT JOIN sys_user ON {fromtable}.{results['groupby']}=sys_user.id "
+                    fromtable = 'user_' + tableid
+                    db = DatabaseHelper()
+                    groupby_field_record = db.sql_query_row(
+                        f"select * from sys_field where tableid='{tableid}' and fieldid='{results['groupby']}'")
+                    if groupby_field_record['fieldtypeid'] == 'Utente':
+                        fromtable = fromtable + f" LEFT JOIN sys_user ON {fromtable}.{results['groupby']}=sys_user.id "
                         selected += f"sys_user.firstname as {groupby}"
                     else:
                         selected += groupby
@@ -483,7 +477,8 @@ def save_block_order(request):
         gsh = value.get('gsH')
 
         if record_id is not None:
-            SysUserDashboardBlock.objects.filter(id=record_id, size=size).update(gsx=gsx, gsy=gsy, gsw=gsw, gsh=gsh, size=size)
+            SysUserDashboardBlock.objects.filter(id=record_id, size=size).update(gsx=gsx, gsy=gsy, gsw=gsw, gsh=gsh,
+                                                                                 size=size)
 
     return JsonResponse({'success': True})
 
@@ -505,7 +500,7 @@ def get_chart(request, sql, id, name, layout, fields):
             formatted_row = [str(value) if not isinstance(value, (int, float)) else value for value in row]
             formatted_rows.append(formatted_row)
 
-        rows=formatted_rows
+        rows = formatted_rows
         value = []
         for num in range(0, len(fields_chart)):
             value.append([row[num] for row in rows])
@@ -518,8 +513,8 @@ def get_chart(request, sql, id, name, layout, fields):
         for i in range(len(value)):
             for j in range(len(value[i])):
                 if value[i][j] is not None:
-                    if value[i][j]=='None':
-                        value[i][j]=0
+                    if value[i][j] == 'None':
+                        value[i][j] = 0
                     value[i][j] = round(value[i][j], 2)
 
         context = {
@@ -568,10 +563,10 @@ def get_record_card_delete(request):
             cursor.execute(
                 query
             )
-        deleted_record=Record(tableid=tableid,recordid=recordid)
+        deleted_record = Record(tableid=tableid, recordid=recordid)
         if tableid == 'dealline':
-            recordid_deal=deleted_record.fields['recordiddeal_'];
-            custom_update(tableid='deal',recordid=recordid_deal)
+            recordid_deal = deleted_record.fields['recordiddeal_'];
+            custom_update(tableid='deal', recordid=recordid_deal)
     return JsonResponse({'success': True})
 
 
@@ -629,13 +624,13 @@ def get_block_records_kanban(request):
 
     response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
     response_dict = json.loads(response.text)
-    groups=response_dict['groups']
-    return_groups= []
+    groups = response_dict['groups']
+    return_groups = []
     for key, group in groups.items():
         return_group = dict()
-        return_group['description']=group['description']
+        return_group['description'] = group['description']
         return_group_records = []
-        return_record=dict()
+        return_record = dict()
         return_record['recordid'] = '123456789'
         return_record['title'] = 'title'
         return_record['tag'] = 'tag'
@@ -648,8 +643,6 @@ def get_block_records_kanban(request):
         return_group_records.append(return_record)
         return_group['records'] = group['records']
         return_groups.append(return_group)
-
-
 
     context = {
         'groups': return_groups,
@@ -736,8 +729,8 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
     context['block_record_fields'] = ""
     context['recordid'] = recordid
     context['tableid'] = tableid
-    context['master_tableid']=master_tableid
-    context['master_recordid']=master_recordid
+    context['master_tableid'] = master_tableid
+    context['master_recordid'] = master_recordid
     context['layout_setting'] = get_user_setting(request, 'record_open_layout')
     if tableid == 'ticket':
         with connection.cursor() as cursor:
@@ -745,14 +738,14 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
             freshdeskid = cursor.fetchone()[0]
             context['freshdeskid'] = freshdeskid
     if tableid == 'deal':
-        deal_record=Record(tableid='deal',recordid=recordid)
-        context['dealstatus']=deal_record.fields['dealstatus']
+        deal_record = Record(tableid='deal', recordid=recordid)
+        context['dealstatus'] = deal_record.fields['dealstatus']
     context['userid'] = userid
     context['user_table_settings'] = get_user_table_settings(userid, tableid)
     # TODO: recuperare i dati dal table settings generico
-    context['recordtab']='fields'
+    context['recordtab'] = 'fields'
     if tableid == 'deal':
-        context['recordtab']='linked'
+        context['recordtab'] = 'linked'
     # returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
     return render_to_string('block/record/record_card.html', context)
 
@@ -762,7 +755,7 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
 def request_block_record_badge(request, http_response=False):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
-    #return HttpResponse({'success': True})
+    # return HttpResponse({'success': True})
     return HttpResponse(get_block_record_badge(tableid, recordid))
 
 
@@ -790,7 +783,7 @@ def get_block_record_badge(tableid, recordid):
     context['fields'] = context_fields
 
     records_table = ""
-    block_record_badge=''
+    block_record_badge = ''
 
     if tableid == 'company':
         sql = f"SELECT DISTINCT type FROM user_servicecontract WHERE recordidcompany_='{recordid}' AND STATUS='In Progress'"
@@ -798,16 +791,14 @@ def get_block_record_badge(tableid, recordid):
         context['fields'] = context_fields
         block_record_badge = render_to_string('block/record/custom/record_badge_company.html', context)
     elif tableid == 'deal':
-        deal_record=Record('deal',recordid)
-        company_record=Record(tableid='company',recordid=deal_record.fields['recordidcompany_'])
-        deal_record.fields['companyname']=company_record.fields['companyname']
-        context['fields']=deal_record.fields
-        block_record_badge= render_to_string('block/record/custom/record_badge_deal.html', context)
+        deal_record = Record('deal', recordid)
+        company_record = Record(tableid='company', recordid=deal_record.fields['recordidcompany_'])
+        deal_record.fields['companyname'] = company_record.fields['companyname']
+        context['fields'] = deal_record.fields
+        block_record_badge = render_to_string('block/record/custom/record_badge_deal.html', context)
     else:
-        block_record_badge= render_to_string('block/record/record_badge.html', context)
+        block_record_badge = render_to_string('block/record/record_badge.html', context)
     return block_record_badge
-
-
 
 
 @login_required(login_url='/login/s')
@@ -829,15 +820,13 @@ def get_block_record_fields(request, prefilled_fields=dict()):
     if row:
         userid = row[0]
         userid = userid['id']
-        context['userid']=userid
+        context['userid'] = userid
 
-    record=Record(tableid=tableid,recordid=recordid,userid=userid)
-    record.master_tableid=master_tableid
-    record.master_recordid=master_recordid
-    record.context=contextfunction
-    fields=record.get_fields()
-
-
+    record = Record(tableid=tableid, recordid=recordid, userid=userid)
+    record.master_tableid = master_tableid
+    record.master_recordid = master_recordid
+    record.context = contextfunction
+    fields = record.get_fields()
 
     context['record_fields_labels'] = fields
     context['contextfunction'] = contextfunction
@@ -862,24 +851,28 @@ def get_block_record_fields(request, prefilled_fields=dict()):
     if tableid == 'timesheet':
         context['timesheet'] = uuid.uuid4()
         if contextfunction != 'insert':
-            timesheet_record=Record(tableid='timesheet',recordid=recordid)
+            timesheet_record = Record(tableid='timesheet', recordid=recordid)
 
             if timesheet_record.fields['validated'] == 'Si':
                 context['edit_block'] = True
             else:
                 context['edit_block'] = False
 
-            if userid in [53,2,47,50,3]:
+            if userid in [53, 2, 47, 50, 3]:
                 context['edit_block'] = False
         else:
             context['edit_block'] = False
 
-        context['block_record_fields_timesheet'] = render_to_string('block/record/record_fields.html', context, request=request)
-        context['block_record_fields'] = render_to_string('block/record/custom/record_fields_timesheet.html', context,request=request)
-        block_record_fields_container = render_to_string('block/record/record_fields_container.html', context, request=request)
+        context['block_record_fields_timesheet'] = render_to_string('block/record/record_fields.html', context,
+                                                                    request=request)
+        context['block_record_fields'] = render_to_string('block/record/custom/record_fields_timesheet.html', context,
+                                                          request=request)
+        block_record_fields_container = render_to_string('block/record/record_fields_container.html', context,
+                                                         request=request)
     else:
         context['block_record_fields'] = render_to_string('block/record/record_fields.html', context, request=request)
-        block_record_fields_container = render_to_string('block/record/record_fields_container.html', context, request=request)
+        block_record_fields_container = render_to_string('block/record/record_fields_container.html', context,
+                                                         request=request)
 
     if (http_response):
         return HttpResponse(block_record_fields_container)
@@ -889,11 +882,11 @@ def get_block_record_fields(request, prefilled_fields=dict()):
 
 def new_timesheet(request):
     timetr_recordid = request.POST.get('timetr_recordid')
-    prefilled_fields=dict()
-    prefilled_fields['description']='testvalue'
-    prefilled_fields['worktime']='01:30'
+    prefilled_fields = dict()
+    prefilled_fields['description'] = 'testvalue'
+    prefilled_fields['worktime'] = '01:30'
 
-    block = get_block_record_fields(request,prefilled_fields=prefilled_fields)
+    block = get_block_record_fields(request, prefilled_fields=prefilled_fields)
     return HttpResponse(block)
 
 
@@ -959,7 +952,7 @@ def get_linked(request):
 
 @login_required(login_url='/login/')
 def save_record_fields(request):
-    db_helper=DatabaseHelper('default')
+    db_helper = DatabaseHelper('default')
     file = request.FILES.get('file')
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
@@ -967,15 +960,14 @@ def save_record_fields(request):
     creator = userid = get_userid(request.user.id)
 
     post_dict = request.POST.dict()
-    post_repr=repr(post_dict)
-    post_repr=post_repr.replace("'", "")
-    sql=f"INSERT INTO sys_logquery (userid,funzione,post) VALUES ({userid},'salva_record_fields','{post_repr}')"
+    post_repr = repr(post_dict)
+    post_repr = post_repr.replace("'", "")
+    sql = f"INSERT INTO sys_logquery (userid,funzione,post) VALUES ({userid},'salva_record_fields','{post_repr}')"
     db_helper.sql_execute(sql)
     fields_dict = request.POST.dict()
     del fields_dict['tableid']
     del fields_dict['recordid']
     del fields_dict['contextfunction']
-
 
     if tableid == 'timetracking':
         if fields_dict['stato'] == 'Terminato':
@@ -1000,14 +992,14 @@ def save_record_fields(request):
 
     selected_options = request.POST.getlist('service');
 
-    #TODO: da testare e completare
-    #if tableid == 'task':
-        #oc = OfficeCalendar()
-        #if fields_dict['planneddate'] != '':
-            #if fields_dict['o365_idcalendar'] == '':
-                #fields_dict['o365_idcalendar'] = oc.add_calendar_event(fields_dict)
-            #else:
-                #oc.update_calendar_event(fields_dict)
+    # TODO: da testare e completare
+    # if tableid == 'task':
+    # oc = OfficeCalendar()
+    # if fields_dict['planneddate'] != '':
+    # if fields_dict['o365_idcalendar'] == '':
+    # fields_dict['o365_idcalendar'] = oc.add_calendar_event(fields_dict)
+    # else:
+    # oc.update_calendar_event(fields_dict)
 
     fields = json.dumps(fields_dict)
 
@@ -1078,84 +1070,83 @@ def save_record_fields(request):
 
                     send_email(emails=[email], subject='Nuovo task assegnato', html_message=message)
 
-
-
     for field_name, uploaded_files in request.FILES.items():
         fs = FileSystemStorage(location='attachments')
         basename, extension = os.path.splitext(uploaded_files.name)
-        filename=tableid+'_'+response_dict['recordid']
-        if tableid=='attachment':
-            if fields_dict['type']=='Documento firmato':
-                filename='deal'+'_'+fields_dict['recordiddeal_']
+        filename = tableid + '_' + response_dict['recordid']
+        if tableid == 'attachment':
+            if fields_dict['type'] == 'Documento firmato':
+                filename = 'deal' + '_' + fields_dict['recordiddeal_']
             else:
-                filename='deal-attachment'+'_'+fields_dict['recordiddeal_']+'_'+fields_dict['note']
-        filename=filename+'_'+basename+extension
+                filename = 'deal-attachment' + '_' + fields_dict['recordiddeal_'] + '_' + fields_dict['note']
+        filename = filename + '_' + basename + extension
         fs.save(filename, uploaded_files)
 
-    #return render(request, 'block/record/record_fields.html')
-    custom_save_record(request,tableid,response_dict['recordid'])
+    # return render(request, 'block/record/record_fields.html')
+    custom_save_record(request, tableid, response_dict['recordid'])
     return HttpResponse(response_dict['recordid'])
 
+
 @login_required(login_url='/login/')
-def custom_save_record(request,tableid,recordid):
-    #---DEAL---
-    if tableid=='deal':
-        record_deal=Record('deal',recordid)
-        record_company=Record('company',record_deal.fields['recordidcompany_'])
-        reference=str(record_deal.fields['id'])+' - '+record_company.fields['companyname']+' - '+record_deal.fields['dealname']
-        if record_deal.fields['advancepayment']==None :
-            record_deal.fields['advancepayment']=0
-        record_deal.fields['reference']=reference
+def custom_save_record(request, tableid, recordid):
+    # ---DEAL---
+    if tableid == 'deal':
+        record_deal = Record('deal', recordid)
+        record_company = Record('company', record_deal.fields['recordidcompany_'])
+        reference = str(record_deal.fields['id']) + ' - ' + record_company.fields['companyname'] + ' - ' + \
+                    record_deal.fields['dealname']
+        if record_deal.fields['advancepayment'] == None:
+            record_deal.fields['advancepayment'] = 0
+        record_deal.fields['reference'] = reference
         record_deal.save()
 
-    #---TIMESHEET---
-    if tableid=='timesheet':
-        #recupero informazioni necessarie
-        timesheet_table=Table(tableid='timesheet')
-        servicecontract_table=Table(tableid='servicecontract')
-        timesheet_record=Record('timesheet',recordid)
-        company_record=Record('company',timesheet_record.fields['recordidcompany_'])
-        project_record=Record('project',timesheet_record.fields['recordidproject_'])
-        ticket_record=Record('ticket',timesheet_record.fields['recordidticket_'])
-        servicecontract_record=Record('servicecontract',timesheet_record.fields['recordidservicecontract_'])
-        service=timesheet_record.fields['service']
-        invoiceoption=timesheet_record.fields['invoiceoption']
-        invoicestatus=timesheet_record.fields['invoicestatus']
+    # ---TIMESHEET---
+    if tableid == 'timesheet':
+        # recupero informazioni necessarie
+        timesheet_table = Table(tableid='timesheet')
+        servicecontract_table = Table(tableid='servicecontract')
+        timesheet_record = Record('timesheet', recordid)
+        company_record = Record('company', timesheet_record.fields['recordidcompany_'])
+        project_record = Record('project', timesheet_record.fields['recordidproject_'])
+        ticket_record = Record('ticket', timesheet_record.fields['recordidticket_'])
+        servicecontract_record = Record('servicecontract', timesheet_record.fields['recordidservicecontract_'])
+        service = timesheet_record.fields['service']
+        invoiceoption = timesheet_record.fields['invoiceoption']
+        invoicestatus = timesheet_record.fields['invoicestatus']
         if isempty(invoicestatus):
-            invoicestatus=''
-        worktime=timesheet_record.fields['worktime']
-        traveltime=timesheet_record.fields['traveltime']
+            invoicestatus = ''
+        worktime = timesheet_record.fields['worktime']
+        traveltime = timesheet_record.fields['traveltime']
 
-        #inizializzo campi
-        productivity=''
-        worktime_decimal=0
-        travel_time_decimal=0
-        totaltime_decimal=0
-        timesheet_record.fields['worktime_decimal']=''
-        timesheet_record.fields['traveltime_decimal']=''
-        timesheet_record.fields['totaltime_decimal']=''
-        timesheet_record.fields['workprice']=''
-        timesheet_record.fields['travelprice']=''
-        timesheet_record.fields['totalprice']=''
-        timesheet_record.fields['recordidservicecontract_']='';
-        timesheet_record.fields['print_type']='Normale'
-        timesheet_record.fields['print_hourprice']=''
-        timesheet_record.fields['print_travel']=''
-        #aggiorno dati a prescindere
-
+        # inizializzo campi
+        productivity = ''
+        worktime_decimal = 0
+        travel_time_decimal = 0
+        totaltime_decimal = 0
+        timesheet_record.fields['worktime_decimal'] = ''
+        timesheet_record.fields['traveltime_decimal'] = ''
+        timesheet_record.fields['totaltime_decimal'] = ''
+        timesheet_record.fields['workprice'] = ''
+        timesheet_record.fields['travelprice'] = ''
+        timesheet_record.fields['totalprice'] = ''
+        timesheet_record.fields['recordidservicecontract_'] = '';
+        timesheet_record.fields['print_type'] = 'Normale'
+        timesheet_record.fields['print_hourprice'] = ''
+        timesheet_record.fields['print_travel'] = ''
+        # aggiorno dati a prescindere
 
         if not isempty(worktime):
             hours, minutes = map(int, worktime.split(':'))
             worktime_decimal = hours + minutes / 60
             if not isempty(traveltime):
                 hours, minutes = map(int, traveltime.split(':'))
-                travel_time_decimal=hours + minutes / 60
-            totaltime_decimal=worktime_decimal+travel_time_decimal
-            timesheet_record.fields['worktime_decimal']=worktime_decimal
-            timesheet_record.fields['traveltime_decimal']=travel_time_decimal
-            timesheet_record.fields['totaltime_decimal']=totaltime_decimal
+                travel_time_decimal = hours + minutes / 60
+            totaltime_decimal = worktime_decimal + travel_time_decimal
+            timesheet_record.fields['worktime_decimal'] = worktime_decimal
+            timesheet_record.fields['traveltime_decimal'] = travel_time_decimal
+            timesheet_record.fields['totaltime_decimal'] = totaltime_decimal
 
-        #inizio valutazione invoice status
+        # inizio valutazione invoice status
 
 
         #se ho già un service contract lo mantengo
@@ -1179,10 +1170,10 @@ def custom_save_record(request,tableid,recordid):
             invoicestatus='To Process'
 
         # valutazione del tipo di servizio se produttivo o meno TODO    
-        if invoicestatus=='To Process':
-            if service=='Amministrazione' or service=='Commerciale' or service=='Formazione Apprendista' or service=='Formazione e Test' or service=='Interno' or service=='Riunione':
-                invoicestatus='Attività non fatturabile'
-                productivity='Senza ricavo'
+        if invoicestatus == 'To Process':
+            if service == 'Amministrazione' or service == 'Commerciale' or service == 'Formazione Apprendista' or service == 'Formazione e Test' or service == 'Interno' or service == 'Riunione':
+                invoicestatus = 'Attività non fatturabile'
+                productivity = 'Senza ricavo'
 
         # valutazione delle option TODO
         if invoicestatus=='To Process':
@@ -1193,34 +1184,41 @@ def custom_save_record(request,tableid,recordid):
                 timesheet_record.fields['print_hourprice']='Garanzia'
                 timesheet_record.fields['print_travel']='Garanzia'
 
+        # valutazione eventuale project
+        if invoicestatus == 'To Process' and (
+                (not isempty(project_record.recordid)) and invoiceoption != 'Out of contract'):
+            timesheet_record.fields['print_type'] = 'Progetto N. ' + str(project_record.fields['id'])
+            if project_record.fields['fixedprice'] == 'Si':
+                invoicestatus = 'Fixed price Project'
+                productivity = 'Ricavo indiretto'
+                timesheet_record.fields['print_hourprice'] = 'Compreso nel progetto'
+                timesheet_record.fields['print_travel'] = 'Inclusa'
 
+        # valutazione flat service contract
+        if invoicestatus == 'To Process':
+            if not isempty(timesheet_record.fields['worktime']) and invoiceoption != 'Out of contract':
+                flat_service_contract = None
+                if service == 'Assistenza PBX':
+                    if ((travel_time_decimal == 0 and worktime_decimal == 0.25) or invoiceoption == 'In contract'):
+                        flat_service_contract = servicecontract_table.get_records(
+                            conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'",
+                                             "(type='Manutenzione PBX')"])
 
-        #valutazione eventuale project
-        if invoicestatus=='To Process' and ((not isempty(project_record.recordid)) and invoiceoption!='Out of contract'):
-            timesheet_record.fields['print_type']='Progetto N. '+str(project_record.fields['id'])
-            if project_record.fields['fixedprice']=='Si':
-                invoicestatus='Fixed price Project'
-                productivity='Ricavo indiretto'
-                timesheet_record.fields['print_hourprice']='Compreso nel progetto'
-                timesheet_record.fields['print_travel']='Inclusa'
+                if service == 'Assistenza IT':
+                    if travel_time_decimal == 0:
+                        flat_service_contract = servicecontract_table.get_records(
+                            conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'",
+                                             "(type='BeAll (All-inclusive)')"])
 
-        #valutazione flat service contract
-        if invoicestatus=='To Process':
-            if not isempty(timesheet_record.fields['worktime']) and invoiceoption!='Out of contract':
-                flat_service_contract=None
-                if service=='Assistenza PBX':
-                    if ((travel_time_decimal==0 and worktime_decimal==0.25) or invoiceoption=='In contract'):
-                        flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='Manutenzione PBX')"])
+                if service == 'Printing':
+                    flat_service_contract = servicecontract_table.get_records(
+                        conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'",
+                                         "(type='Manutenzione Printing')"])
 
-                if service=='Assistenza IT':
-                    if travel_time_decimal==0:
-                        flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='BeAll (All-inclusive)')"])
-
-                if service=='Printing':
-                    flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(type='Manutenzione Printing')"])
-
-                if service=='Assistenza Web Hosting':
-                    flat_service_contract=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","(service='Assistenza Web Hosting')"])
+                if service == 'Assistenza Web Hosting':
+                    flat_service_contract = servicecontract_table.get_records(
+                        conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'",
+                                         "(service='Assistenza Web Hosting')"])
 
                 if flat_service_contract:
                     servicecontract_record=Record('servicecontract',flat_service_contract[0]['recordid_'])
@@ -1243,7 +1241,7 @@ def custom_save_record(request,tableid,recordid):
                 timesheet_record.fields['print_type']='Normale'
                 timesheet_record.fields['print_hourprice']='Monte Ore'
                 if servicecontract_record.fields['excludetravel']:
-                    timesheet_record.fields['print_travel']='Non scalata dal monte ore e non fatturata'
+                    timesheet_record.fields['print_travel'] = 'Non scalata dal monte ore e non fatturata'
 
         #da fatturare quando chiusi
         if invoicestatus=='To Process':
@@ -1258,8 +1256,8 @@ def custom_save_record(request,tableid,recordid):
             timesheet_record.fields['print_hourprice']='Fr.'+ str(hourprice)+'.--'
 
             if not isempty(project_record.recordid):
-                if  project_record.fields['completed'] != 'Si':
-                    invoicestatus='To invoice when Project Completed'
+                if project_record.fields['completed'] != 'Si':
+                    invoicestatus = 'To invoice when Project Completed'
 
             if not isempty(ticket_record.recordid):
                 if  ticket_record.fields['vtestatus'] != 'Closed':
@@ -1274,36 +1272,33 @@ def custom_save_record(request,tableid,recordid):
             if invoicestatus=='To Process':
                 invoicestatus='To Invoice'
 
-
-
-
-        timesheet_record.fields['invoicestatus']=invoicestatus
-        timesheet_record.fields['productivity']=productivity
+        timesheet_record.fields['invoicestatus'] = invoicestatus
+        timesheet_record.fields['productivity'] = productivity
         timesheet_record.save()
 
         if not isempty(servicecontract_record.recordid):
-            custom_save_record(request,tableid='servicecontract',recordid=servicecontract_record.recordid)
+            custom_save_record(request, tableid='servicecontract', recordid=servicecontract_record.recordid)
 
-    #---SERVICE CONTRACT
-    if tableid=='servicecontract':
-        servicecontract_table=Table(tableid='servicecontract')
-        servicecontract_record=Record('servicecontract',recordid)
+    # ---SERVICE CONTRACT
+    if tableid == 'servicecontract':
+        servicecontract_table = Table(tableid='servicecontract')
+        servicecontract_record = Record('servicecontract', recordid)
 
-        #recupero campi
-        contracthours=servicecontract_record.fields['contracthours']
-        if contracthours==None:
-            contracthours=0
-        previousresidual=servicecontract_record.fields['previousresidual']
-        if previousresidual==None:
-            previousresidual=0
-        excludetravel=servicecontract_record.fields['excludetravel']
+        # recupero campi
+        contracthours = servicecontract_record.fields['contracthours']
+        if contracthours == None:
+            contracthours = 0
+        previousresidual = servicecontract_record.fields['previousresidual']
+        if previousresidual == None:
+            previousresidual = 0
+        excludetravel = servicecontract_record.fields['excludetravel']
 
-        #inizializzo campi
-        usedhours=0
-        progress=0
-        residualhours=contracthours
+        # inizializzo campi
+        usedhours = 0
+        progress = 0
+        residualhours = contracthours
 
-        timesheet_linkedrecords=servicecontract_record.get_linkedrecords(linkedtable='timesheet')
+        timesheet_linkedrecords = servicecontract_record.get_linkedrecords(linkedtable='timesheet')
         for timesheet_linkedrecord in timesheet_linkedrecords:
             if timesheet_linkedrecord['invoiceoption']!='Under Warranty' and timesheet_linkedrecord['invoiceoption']!='Commercial support':
                 usedhours=usedhours+timesheet_linkedrecord['worktime_decimal']
@@ -1315,11 +1310,11 @@ def custom_save_record(request,tableid,recordid):
             progress=(usedhours/(contracthours+residualhours))*100
 
         if isempty(servicecontract_record.fields['status']):
-            servicecontract_record.fields['status']='In Progress'
+            servicecontract_record.fields['status'] = 'In Progress'
 
-        servicecontract_record.fields['usedhours']=usedhours
-        servicecontract_record.fields['residualhours']=residualhours
-        servicecontract_record.fields['progress']=progress
+        servicecontract_record.fields['usedhours'] = usedhours
+        servicecontract_record.fields['residualhours'] = residualhours
+        servicecontract_record.fields['progress'] = progress
         servicecontract_record.save()
 
     return True
@@ -1367,8 +1362,6 @@ def get_settings(request):
                 "SELECT tableid FROM sys_user_table_order WHERE userid = 1"
             )
             tables = dictfetchall(cursor)
-
-
 
     query = f"SELECT tableid FROM sys_user_favorite_tables WHERE sys_user_id = {sys_user_id}"
     with connection.cursor() as cursor:
@@ -1418,7 +1411,6 @@ def save_favorite_tables(request):
             )
 
     return JsonResponse({'success': True})
-
 
 
 @login_required(login_url='/login/')
@@ -1551,7 +1543,6 @@ def admin_page(request):
         chart_names = [row['name'] for row in rows3]
         chart_dashboard_id = [row['dashboardid'] for row in rows3]
 
-
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT * FROM v_users where is_active = 1"
@@ -1570,20 +1561,24 @@ def admin_page(request):
         )
         user_dashboards = dictfetchall(cursor)
 
-
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT * FROM sys_dashboard"
         )
         dashboards = dictfetchall(cursor)
-
-
+        
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM sys_dashboard_block"
+        )
+        dashboard_blocks = dictfetchall(cursor)
 
     for user in users:
         for dashboard in dashboards:
             user['dashboards'] = [dashboard for dashboard in dashboards]
             for dash in user['dashboards']:
-                if dash['id'] in [user_dashboard['dashboardid'] for user_dashboard in user_dashboards if user_dashboard['userid'] == user['sys_user_id']]:
+                if dash['id'] in [user_dashboard['dashboardid'] for user_dashboard in user_dashboards if
+                                  user_dashboard['userid'] == user['sys_user_id']]:
                     dash['visible'] = True
         with connection.cursor() as cursor:
             cursor.execute(
@@ -1603,6 +1598,7 @@ def admin_page(request):
         'fields': fields,
         'users': users,
         'dashboards': dashboards,
+        'dashboard_blocks': dashboard_blocks,
         'user_dashboards': user_dashboards
     }
 
@@ -1762,7 +1758,6 @@ def new_update(request):
 
 
 def stampa_timesheet(request):
-
     recordid = request.POST.get('recordid')
     tableid = request.POST.get('tableid')
     filename = request.POST.get('filename')
@@ -1796,9 +1791,6 @@ def stampa_timesheet(request):
 
     img.save(path + '\\static\\pdf\\' + qr_name)
 
-
-
-
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT   t.*,c.companyname,c.address,c.city,c.email,u.firstname, u.lastname FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ join sys_user as u on t.user = u.id WHERE t.recordid_='{recordid}'"
@@ -1829,10 +1821,7 @@ def stampa_timesheet(request):
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
     content = render_to_string('pdf/timesheet.html', row)
 
-
     pdfkit.from_string(content, filename_with_path, configuration=config)
-
-
 
     try:
         with open(filename_with_path, 'rb') as fh:
@@ -1844,6 +1833,7 @@ def stampa_timesheet(request):
     finally:
         os.remove(filename_with_path)
         os.remove(path + '\\static\\pdf\\' + qr_name)
+
 
 def stampa_servicecontract(request):
     recordid = ''
@@ -1889,7 +1879,6 @@ def stampa_servicecontract(request):
 
         finally:
             os.remove(filename_with_path)
-
 
 
 def stampa_servicecontract_test(request):
@@ -1991,7 +1980,6 @@ def export_excel(request):
             'master_recordid': master_recordid,
             'userid': request.user.id
         }
-
 
         response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
         response.raise_for_status()
@@ -2286,7 +2274,6 @@ def new_report(request):
     return JsonResponse({'success': True})
 
 
-
 def new_view(request):
     tableid = request.POST.get('tableid')
     view_name = request.POST.get('view_name')
@@ -2527,12 +2514,9 @@ def time_calc(request):
 
 
 def print_word(request):
-
     recordid = request.POST.get('recordid')
     tableid = request.POST.get('tableid')
     format = request.POST.get('format')
-
-
 
     qr = qrcode.QRCode(
         version=1,
@@ -2555,7 +2539,6 @@ def print_word(request):
     qr_name = 'qrcode' + uuid.uuid4().hex + '.png'
 
     img.save(qr_name)
-
 
     recordid_deal = request.POST.get('recordid')
     deal_record = Record('deal', recordid_deal)
@@ -2583,24 +2566,21 @@ def print_word(request):
 
     id = uuid.uuid4().hex
 
-
     filename = dealname + id + '.docx'
-    filename= filename.replace("/", "-")
-    filename= filename.replace("\\", "-")
-    filename= filename.replace("'", "")
+    filename = filename.replace("/", "-")
+    filename = filename.replace("\\", "-")
+    filename = filename.replace("'", "")
 
-    #instead of creating a word i want to open one
+    # instead of creating a word i want to open one
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Navigate to the 'views' directory and locate 'template.docx'
     file_path = os.path.join(script_dir, 'template.docx')
 
-    #doc = Document(file_path)
+    # doc = Document(file_path)
 
     doc = Document(file_path)
-
-
 
     paragraph = doc.add_paragraph()
     run = paragraph.add_run()
@@ -2619,10 +2599,7 @@ def print_word(request):
     section.left_margin = Inches(1)
     section.top_margin = Inches(1)
 
-
-
     grey = RGBColor(0x89, 0x89, 0x89)
-
 
     p1 = doc.add_paragraph()
     text1 = f"Spett.le"
@@ -2644,7 +2621,6 @@ def print_word(request):
     font_companyname.color.rgb = grey
     p_companyname.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-
     p2 = doc.add_paragraph()
     text2 = f"{address}, {city}"
     run2 = p2.add_run(text2)
@@ -2654,7 +2630,6 @@ def print_word(request):
     font2.bold = False
     font2.color.rgb = grey
     p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
 
     p_space = doc.add_paragraph()
     text_space = ''
@@ -2676,7 +2651,6 @@ def print_word(request):
     font_date.color.rgb = grey
     p_date.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-
     p3 = doc.add_paragraph()
     text3 = dealname
     run3 = p3.add_run(text3)
@@ -2686,7 +2660,6 @@ def print_word(request):
     font3.color.rgb = RGBColor(0xC0, 0x00, 0x00)
     font3.bold = True
     p3.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
 
     """
     section = doc.sections[0]
@@ -2733,9 +2706,6 @@ def print_word(request):
         row.cells[3].text = "{:.2f} CHF".format(dealline['price'])
         row.cells[3].paragraphs[0].runs[0].font.bold = True
 
-
-
-
     p_space = doc.add_paragraph()
     text_space = ''
     run_space = p_space.add_run(text_space)
@@ -2743,15 +2713,12 @@ def print_word(request):
     p_space = doc.add_paragraph()
     text_space = ''
     run_space = p_space.add_run(text_space)
-
-
 
     doc.add_page_break()
 
     p_space = doc.add_paragraph()
     text_space = ''
     run_space = p_space.add_run(text_space)
-
 
     table2 = doc.add_table(rows=1, cols=1)
 
@@ -2765,7 +2732,6 @@ def print_word(request):
     text_space = ''
     run_space = p_space.add_run(text_space)
 
-
     p5 = doc.add_paragraph()
     text5 = 'Contatti per Assistenza Tecnica:'
     run5 = p5.add_run(text5)
@@ -2776,7 +2742,6 @@ def print_word(request):
     font5.italic = False
     font5.color.rgb = grey
     p5.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
 
     p6 = doc.add_paragraph()  # Stile per elenco puntato con due punti
     text6 = '          •      Per tutte le richieste di assistenza: apertura ticket scrivendo all’indirizzo helpdesk@swissbix.ch  \n                  verrete ricontattati dal nostro servizio tecnico'
@@ -2909,7 +2874,6 @@ def print_word(request):
     font17.bold = False
     font17.color.rgb = grey
     p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
 
     p17 = doc.add_paragraph()
     text17 = '                          o      Eventuali cavi, adattatori o convertitori che saranno fatturati a parte.'
@@ -3033,14 +2997,10 @@ def print_word(request):
         os.remove(filename)
 
 
-
 def print_word_2(request):
-
     recordid = request.POST.get('recordid')
     tableid = request.POST.get('tableid')
     format = request.POST.get('format')
-
-
 
     qr = qrcode.QRCode(
         version=1,
@@ -3063,7 +3023,6 @@ def print_word_2(request):
     qr_name = 'qrcode' + uuid.uuid4().hex + '.png'
 
     img.save(qr_name)
-
 
     recordid_deal = request.POST.get('recordid')
     deal_record = Record('deal', recordid_deal)
@@ -3091,24 +3050,21 @@ def print_word_2(request):
 
     id = uuid.uuid4().hex
 
-
     filename = dealname + id + '.docx'
-    filename= filename.replace("/", "-")
-    filename= filename.replace("\\", "-")
-    filename= filename.replace("'", "")
+    filename = filename.replace("/", "-")
+    filename = filename.replace("\\", "-")
+    filename = filename.replace("'", "")
 
-    #instead of creating a word i want to open one
+    # instead of creating a word i want to open one
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Navigate to the 'views' directory and locate 'template.docx'
     file_path = os.path.join(script_dir, 'template2.docx')
 
-    #doc = Document(file_path)
+    # doc = Document(file_path)
 
     doc1 = Document(file_path)
-
-
 
     paragraph = doc1.add_paragraph()
     run = paragraph.add_run()
@@ -3128,10 +3084,7 @@ def print_word_2(request):
     section.left_margin = Inches(1)
     section.top_margin = Inches(1)
 
-
-
     grey = RGBColor(0x89, 0x89, 0x89)
-
 
     p1 = doc1.add_paragraph()
     text1 = f"Spett.le"
@@ -3153,7 +3106,6 @@ def print_word_2(request):
     font_companyname.color.rgb = grey
     p_companyname.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
-
     p2 = doc1.add_paragraph()
     text2 = f"{address}, {city}"
     run2 = p2.add_run(text2)
@@ -3163,7 +3115,6 @@ def print_word_2(request):
     font2.bold = False
     font2.color.rgb = grey
     p2.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
 
     p_space = doc1.add_paragraph()
     text_space = ''
@@ -3184,7 +3135,6 @@ def print_word_2(request):
     font_date.bold = True
     font_date.color.rgb = grey
     p_date.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
 
     p3 = doc1.add_paragraph()
     text3 = dealname
@@ -3215,7 +3165,6 @@ def print_word_2(request):
     composer.save("combined.docx")
 
     doc = Document("combined.docx")
-
 
     """
     section = doc.sections[0]
@@ -3262,9 +3211,6 @@ def print_word_2(request):
         row.cells[3].text = "{:.2f} CHF".format(dealline['price'])
         row.cells[3].paragraphs[0].runs[0].font.bold = True
 
-
-
-
     p_space = doc.add_paragraph()
     text_space = ''
     run_space = p_space.add_run(text_space)
@@ -3272,15 +3218,12 @@ def print_word_2(request):
     p_space = doc.add_paragraph()
     text_space = ''
     run_space = p_space.add_run(text_space)
-
-
 
     doc.add_page_break()
 
     p_space = doc.add_paragraph()
     text_space = ''
     run_space = p_space.add_run(text_space)
-
 
     table2 = doc.add_table(rows=1, cols=1)
 
@@ -3294,7 +3237,6 @@ def print_word_2(request):
     text_space = ''
     run_space = p_space.add_run(text_space)
 
-
     p5 = doc.add_paragraph()
     text5 = 'Contatti per Assistenza Tecnica:'
     run5 = p5.add_run(text5)
@@ -3305,7 +3247,6 @@ def print_word_2(request):
     font5.italic = False
     font5.color.rgb = grey
     p5.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
 
     p6 = doc.add_paragraph()  # Stile per elenco puntato con due punti
     text6 = '          •      Per tutte le richieste di assistenza: apertura ticket scrivendo all’indirizzo helpdesk@swissbix.ch  \n                  verrete ricontattati dal nostro servizio tecnico'
@@ -3438,7 +3379,6 @@ def print_word_2(request):
     font17.bold = False
     font17.color.rgb = grey
     p17.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-
 
     p17 = doc.add_paragraph()
     text17 = '                          o      Eventuali cavi, adattatori o convertitori che saranno fatturati a parte.'
@@ -3565,14 +3505,15 @@ def print_word_2(request):
 def get_record(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
-    r=Record(tableid,recordid)
-    return_value=dict()
-    if tableid=='product':
-        return_value['unitprice']=r.fields['price']
-        return_value['unitcost']=r.fields['cost']
-        return_value['name']=r.fields['name']
+    r = Record(tableid, recordid)
+    return_value = dict()
+    if tableid == 'product':
+        return_value['unitprice'] = r.fields['price']
+        return_value['unitcost'] = r.fields['cost']
+        return_value['name'] = r.fields['name']
 
     return JsonResponse(return_value)
+
 
 def link_file(request):
     if request.method == 'POST' and 'file' in request.FILES:
@@ -3598,65 +3539,68 @@ def link_file(request):
 def deal_close_won(request):
     if request.method == 'POST':
         recordid = request.POST.get('recordid')
-        deal_record=Record(tableid='deal',recordid=recordid)
-        deal_record.fields['dealstage']='Chiuso vinto'
-        deal_record.fields['sync_adiuto']='Si'
-        deal_record.fields['dealstatus']='Vinta'
+        deal_record = Record(tableid='deal', recordid=recordid)
+        deal_record.fields['dealstage'] = 'Chiuso vinto'
+        deal_record.fields['sync_adiuto'] = 'Si'
+        deal_record.fields['dealstatus'] = 'Vinta'
         today = datetime.date.today()
         today = today.strftime("%Y-%m-%d")
-        deal_record.fields['closedate']=today
+        deal_record.fields['closedate'] = today
         deal_record.save()
     return JsonResponse({'success': True})
+
 
 def deal_close_lost(request):
     if request.method == 'POST':
         recordid = request.POST.get('recordid')
-        deal_record=Record(tableid='deal',recordid=recordid)
-        deal_record.fields['dealstage']='Chiuso perso'
-        deal_record.fields['sync_adiuto']='No'
-        deal_record.fields['dealstatus']='Persa'
+        deal_record = Record(tableid='deal', recordid=recordid)
+        deal_record.fields['dealstage'] = 'Chiuso perso'
+        deal_record.fields['sync_adiuto'] = 'No'
+        deal_record.fields['dealstatus'] = 'Persa'
         today = datetime.date.today()
         today = today.strftime("%Y-%m-%d")
-        deal_record.fields['closedate']=today
+        deal_record.fields['closedate'] = today
         deal_record.save()
     return JsonResponse({'success': True})
+
 
 def deal_update_dealstage(request):
     if request.method == 'POST':
         recordid = request.POST.get('recordid')
         dealstage = request.POST.get('dealstage')
-        deal_record=Record(tableid='deal',recordid=recordid)
-        deal_record.fields['dealstage']=dealstage
+        deal_record = Record(tableid='deal', recordid=recordid)
+        deal_record.fields['dealstage'] = dealstage
         deal_record.save()
     return JsonResponse({'success': True})
 
 
 def custom_update(tableid, recordid):
-    if(tableid=='deal'):
-        deal_table=Table(tableid='deal')
-        deal_record=Record(tableid='deal',recordid=recordid)
-        calc_amount=0
-        calc_expectedcost=0
-        dealline_table=Table(tableid='dealline')
-        conditions_list=list()
+    if (tableid == 'deal'):
+        deal_table = Table(tableid='deal')
+        deal_record = Record(tableid='deal', recordid=recordid)
+        calc_amount = 0
+        calc_expectedcost = 0
+        dealline_table = Table(tableid='dealline')
+        conditions_list = list()
         conditions_list.append(f"recordiddeal_='{recordid}'")
-        dealline_records=dealline_table.get_records(conditions_list=conditions_list)
+        dealline_records = dealline_table.get_records(conditions_list=conditions_list)
         for dealline_record in dealline_records:
-            calc_amount=calc_amount+dealline_record['price']
-            calc_expectedcost=calc_expectedcost+dealline_record['expectedcost']
-        if calc_amount!=0:
-            deal_record.fields['amount']=calc_amount
-        if calc_expectedcost!=0:
-            deal_record.fields['expectedcost']=calc_expectedcost
-        deal_record.fields['expectedmargin']=deal_record.fields['amount']-deal_record.fields['expectedcost']
+            calc_amount = calc_amount + dealline_record['price']
+            calc_expectedcost = calc_expectedcost + dealline_record['expectedcost']
+        if calc_amount != 0:
+            deal_record.fields['amount'] = calc_amount
+        if calc_expectedcost != 0:
+            deal_record.fields['expectedcost'] = calc_expectedcost
+        deal_record.fields['expectedmargin'] = deal_record.fields['amount'] - deal_record.fields['expectedcost']
         deal_record.save()
     return True
+
 
 def signature_function(request):
     return render(request, 'other/signature.html')
 
-def save_signature(request):
 
+def save_signature(request):
     print('funzione signature')
 
     recordid = request.POST.get('recordid')
@@ -3668,21 +3612,16 @@ def save_signature(request):
     print(tableid)
     print(signature)
 
-
-    #download the image
+    # download the image
     format, imgstr = signature.split(';base64,')
     ext = format.split('/')[-1]
     filename_signature = f"{tableid}_{recordid}.{ext}"
-
-
 
     filepath_signature = os.path.dirname(os.path.abspath(__file__))
     filepath_signature = filepath_signature.rsplit('views', 1)[0]
     filepath_signature = filepath_signature + '\\static\\pdf\\' + filename_signature
 
-   #save the image
-
-
+    # save the image
 
     with open(filepath_signature, 'wb') as fh:
         fh.write(base64.b64decode(imgstr))
@@ -3724,9 +3663,8 @@ def save_signature(request):
         row = rows[0]
 
         for value in row:
-           if row[value] is None:
-               row[value] = ''
-
+            if row[value] is None:
+                row[value] = ''
 
         row['recordid'] = recordid
         row['completeQrUrl'] = completeUrl + qr_name
@@ -3749,8 +3687,6 @@ def save_signature(request):
 
     pdfkit.from_string(content, filename_with_path, configuration=config)
 
-
-
     try:
         with open(filename_with_path, 'rb') as fh:
             response = HttpResponse(fh.read(), content_type="application/pdf")
@@ -3763,6 +3699,7 @@ def save_signature(request):
         os.remove(filepath_signature)
         os.remove(filename_with_path)
 
+
 def new_dashboard(request):
     dashboard_name = request.POST.get('dashboard-name')
     with connection.cursor() as cursor:
@@ -3774,7 +3711,6 @@ def new_dashboard(request):
 
 
 def save_users_dashboards(request):
-
     with connection.cursor() as cursor:
         cursor.execute(
             "DELETE FROM sys_user_dashboard"
@@ -3815,7 +3751,6 @@ def set_default_dashboard(request):
 
 
 def get_company_card(request, phonenumber):
-
     userid = request.user.id
     with connection.cursor() as cursor:
         cursor.execute(
@@ -3824,13 +3759,13 @@ def get_company_card(request, phonenumber):
         rows = dictfetchall(cursor)
         rows = rows[0]
 
-
     if (rows):
         context = dict()
         context['company'] = rows
         context['company_block'] = get_block_record_card(request, 'company', rows['recordid_'], userid)
         content = render_to_string('other/company_card.html', context)
         return index(request, content)
+
 
 def get_3cx_card(request, phonenumber):
     def get_company_card(request, phonenumber):
@@ -3849,8 +3784,41 @@ def get_3cx_card(request, phonenumber):
             content = render_to_string('other/company_card.html', context)
             return index(request, content)
 
+
 def notify_error(request):
     return JsonResponse({'success': True})
 
 
+def save_dashboard_table(request):
+    rows = request.POST.get('rows')
+    rows = json.loads(rows)
 
+    for row in rows:
+        names = []
+        values = []
+
+        for value in row['values']:
+            names.append(value['name'])
+            values.append(value['value'])
+            formatted_values = ["'{}'".format(value) for value in values]
+
+        if row['action'] == 'add':
+            query = "INSERT INTO sys_dashboard ({}) VALUES ({})".format(
+                ', '.join(names), ', '.join(formatted_values)
+            )
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+
+        if row['action'] == 'delete':
+            query = "DELETE FROM sys_dashboard where id = '{}'".format(values[0])
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+
+        if row['action'] == 'edit':
+            query = "REPLACE INTO sys_dashboard ({}) VALUES ({})".format(
+                ', '.join(names), ', '.join(formatted_values)
+            )
+            with connection.cursor() as cursor:
+                cursor.execute(query)
+
+    return JsonResponse({'success': True})

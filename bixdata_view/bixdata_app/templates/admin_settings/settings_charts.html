@@ -217,10 +217,166 @@
 
 
 
+<div class="container text-center card card-body" style="margin-top: 2%">
+
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">Active</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"aria-current="page" href="#">Much longer nav link</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+    </ul>
+
+    <h4>Modifica dashboards </h4>
+
+        <div class="row" id="edit-dashboards">
+
+                <h4>Tableid</h4>
+
+<table id="dashboardTable">
+    <thead>
+        {% for field in context.dashboards.0 %}
+            <th>{{ field }}</th>
+        {% endfor %}
+        <th>Edit</th>
+        <th>Delete</th>
+    </thead>
+    {% for dashboard in context.dashboards %}
+        <tr data-action="">
+            <div class="dashboardrow">
+                {% for key, value in dashboard.items %}
+                    <td>
+                        <input class="dashboard-values" disabled value="{{ value }}" id="{{ key }}" name="{{ key }}">
+                    </td>
+                {% endfor %}
+                <td>
+                    <button class="btn btn-secondary edit-btn">
+                        <span class="material-symbols-outlined">
+                            edit
+                        </span>
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-danger delete-btn">
+                        <span class="material-symbols-outlined">
+                            delete
+                        </span>
+                    </button>
+                </td>
+            </div>
+        </tr>
+    {% endfor %}
+</table>
+<button class="btn btn-success" style="width: 5%; margin: auto;" id="addRowButton">
+    <span class="material-symbols-outlined">
+        add
+    </span>
+</button>
+
+
+
+    <button style="float: right; width: 10%" class="btn btn-primary" onclick="save_dashboard_table()">Salva</button>
+
+</div>
+
+
+
 </div>
 
 
 <script>
+
+    function save_dashboard_table() {
+        dashboard_rows = []
+
+
+       $('#dashboardTable tr:has(td)').each(function() {
+            if ($(this).attr('data-action') != '') {
+                console.info($('#dashboardTable tr').val())
+                row_values = []
+                $(this).find('.dashboard-values').each(function () {
+                    row_values.push({name: this.id, value: this.value});
+                });
+                dashboard_rows.push({action: $(this).attr('data-action'), values: row_values});
+            }
+        })
+
+        console.info(dashboard_rows)
+
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'save_dashboard_table' %}",
+            data: {
+                'rows': JSON.stringify(dashboard_rows),
+            },
+            success: function (response) {
+                 swal({
+                    title: "Dashboard aggiornate",
+                    text: "Hai modificato la tabella delle dashboard con successo",
+                    icon: "success",
+                    timer: 800,
+                    buttons: false,
+                })
+            },
+
+
+
+            error: function (response) {
+
+            }
+        });
+
+    }
+
+    $(document).ready(function() {
+    // Attach click event to each edit button
+    $('.edit-btn').click(function() {
+        var row = $(this).closest('tr'); // Find the parent row of the clicked button
+        $(row).attr('data-action', 'edit')
+
+        // Access input fields within this row
+        row.find('input').each(function() {
+           $(this).prop('disabled', false);
+        });
+
+        // You can also identify the row being edited by using its index or any other unique identifier
+        var rowIndex = row.index();
+        console.log('Editing row at index:', rowIndex);
+    });
+
+
+    $('.delete-btn').click(function() {
+        var row = $(this).closest('tr'); // Find the parent row of the clicked button
+        $(row).attr('data-action', 'delete')
+        $(row).css('background-color', '#f27d74')
+    });
+
+        // Function to handle "Add" button click
+    $('#addRowButton').click(function() {
+        var newRow = '<tr data-action="add"><div class="dashboardrow">';
+        // Add input fields for each column
+        {% for field in context.dashboards.0 %}
+            newRow += '<td><input class="dashboard-values" value="" id="{{ field }}" name="{{ field }}"></td>';
+        {% endfor %}
+        newRow += '';
+
+
+
+        // Append the new row to the table
+        $('#dashboardTable tbody').append(newRow);
+
+    });
+
+});
+
+
+
+
 
     function select_table_report() {
         var selected_table = $('#table-select-report').val()
