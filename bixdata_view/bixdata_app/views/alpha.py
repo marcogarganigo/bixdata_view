@@ -1159,21 +1159,24 @@ def custom_save_record(request,tableid,recordid):
 
 
         #se ho già un service contract lo mantengo
-        if "Service Contract" in invoicestatus and invoiceoption!='Out of contract':
-            if not isempty(servicecontract_record.recordid):
-                    if servicecontract_record.fields['type']=='Monte Ore':
-                        timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
-                        invoicestatus="Service Contract: "+servicecontract_record.fields['type']
-                        productivity='Ricavo diretto'
-                    else:
-                        if invoicestatus!='Invoiced':
-                            invoicestatus='To Process'
-            else:
-                if invoicestatus!='Invoiced':
-                    invoicestatus='To Process'
-        else:
-            if invoicestatus!='Invoiced':
-                invoicestatus='To Process'
+        #if "Service Contract" in invoicestatus and invoiceoption!='Out of contract':
+         #   if not isempty(servicecontract_record.recordid):
+          #          if servicecontract_record.fields['type']=='Monte Ore':
+           #             timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
+            #            invoicestatus="Service Contract: "+servicecontract_record.fields['type']
+             #           productivity='Ricavo diretto'
+              #      else:
+               #         if invoicestatus!='Invoiced':
+                #            invoicestatus='To Process'
+           # else:
+            #    if invoicestatus!='Invoiced':
+             #       invoicestatus='To Process'
+       # else:
+        #    if invoicestatus!='Invoiced':
+         #       invoicestatus='To Process'
+
+        if invoicestatus!='Invoiced':
+            invoicestatus='To Process'
 
         # valutazione del tipo di servizio se produttivo o meno TODO    
         if invoicestatus=='To Process':
@@ -1186,7 +1189,6 @@ def custom_save_record(request,tableid,recordid):
             if invoiceoption=='Under Warranty' or invoiceoption=='Commercial support' or invoiceoption=='Swisscom incident' or invoiceoption=='Swisscom ServiceNow' or invoiceoption=='To check':
                 invoicestatus=invoiceoption
                 productivity='Senza ricavo'
-                invoiceoption=='Under Warranty'
                 timesheet_record.fields['print_type']='Garanzia'
                 timesheet_record.fields['print_hourprice']='Garanzia'
                 timesheet_record.fields['print_travel']='Garanzia'
@@ -1225,15 +1227,19 @@ def custom_save_record(request,tableid,recordid):
                     timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
                     invoicestatus='Service Contract: '+servicecontract_record.fields['type']
                     productivity='Ricavo indiretto'
+
         #valutazione monte ore
-        #TODO verificare se ho già un contratto e controllare se è un monte ore. se ho già un monte ore associato, non lo cambio
-        if invoicestatus=='To Process' and invoiceoption!='Out of contract':
+        if ((invoicestatus=='To Process' or invoicestatus=='Under Warranty') and invoiceoption!='Out of contract'):
             service_contracts=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","type='Monte Ore'","status='In Progress'"])
             if service_contracts:
                 timesheet_record.fields['recordidservicecontract_']=service_contracts[0]['recordid_']
                 servicecontract_record=Record('servicecontract',service_contracts[0]['recordid_'])
-                invoicestatus='Service Contract: Monte Ore'
-                productivity='Ricavo diretto'
+                if invoicestatus=='To Process':
+                    invoicestatus='Service Contract: Monte Ore'
+                    productivity='Ricavo diretto'
+                if invoicestatus=='Under Warranty':
+                    invoicestatus='Under Warranty'
+                    productivity='Senza ricavo'
                 timesheet_record.fields['print_type']='Normale'
                 timesheet_record.fields['print_hourprice']='Monte Ore'
                 if servicecontract_record.fields['excludetravel']:
@@ -1299,10 +1305,11 @@ def custom_save_record(request,tableid,recordid):
 
         timesheet_linkedrecords=servicecontract_record.get_linkedrecords(linkedtable='timesheet')
         for timesheet_linkedrecord in timesheet_linkedrecords:
-            usedhours=usedhours+timesheet_linkedrecord['worktime_decimal']
-            if excludetravel!='1' and excludetravel!='Si':
-                if not isempty(timesheet_linkedrecord['traveltime_decimal']):
-                    usedhours=usedhours+timesheet_linkedrecord['traveltime_decimal']
+            if timesheet_linkedrecord['invoiceoption']!='Under Warranty' and timesheet_linkedrecord['invoiceoption']!='Commercial support':
+                usedhours=usedhours+timesheet_linkedrecord['worktime_decimal']
+                if excludetravel!='1' and excludetravel!='Si':
+                    if not isempty(timesheet_linkedrecord['traveltime_decimal']):
+                        usedhours=usedhours+timesheet_linkedrecord['traveltime_decimal']
         residualhours=contracthours+previousresidual-usedhours
         if contracthours+residualhours!=0:
             progress=(usedhours/(contracthours+residualhours))*100
