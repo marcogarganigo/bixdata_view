@@ -32,7 +32,12 @@
 
     <div style="clear:both"></div>
     <p style="float:left; width: 100px"><b>Riporto ore</b></p>
-    <p style="float:left; margin-left: 30px"><b>{{ previousresidual }}</b></p>
+    <p style="float:left; margin-left: 30px">
+      {% if previousresidual is not None %}
+        <b>{{ previousresidual }}</b>
+      {% endif %}
+      
+    </p>
 </div>
 
 <div style="clear:both"></div>
@@ -53,7 +58,16 @@
             <tr>
                 <td>{{ tms.date|date:"d/m/Y" }}</td>
                 <td style="width: 20%">{{ tms.firstname }} {{ tms.lastname }} </td>
-                <td>{{ tms.worktime_decimal }}</td>
+                <td nowrap>{{ tms.worktime_decimal }}
+                  {% if tms.invoiceoption == 'Under Warranty' %}
+                    <br/>
+                      Non conteggiato<br/> In garanzia
+                  {% endif %}
+                  {% if tms.invoiceoption == 'Commercial support' %}
+                    <br/>
+                      Non conteggiato<br/> Supporto commerciale
+                  {% endif %}
+                </td>
                 {% if excludetravel != 'Si' %}
                   <td>
                     {% if tms.traveltime_decimal is not None %}

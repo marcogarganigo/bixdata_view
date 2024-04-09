@@ -1230,7 +1230,7 @@ def custom_save_record(request, tableid, recordid):
                     productivity='Ricavo indiretto'
 
         #valutazione monte ore
-        if ((invoicestatus=='To Process' or invoicestatus=='Under Warranty') and invoiceoption!='Out of contract'):
+        if ((invoicestatus=='To Process' or invoicestatus=='Under Warranty' or invoicestatus=='Commercial support') and invoiceoption!='Out of contract'):
             service_contracts=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","type='Monte Ore'","status='In Progress'"])
             if service_contracts:
                 timesheet_record.fields['recordidservicecontract_']=service_contracts[0]['recordid_']
@@ -1240,6 +1240,9 @@ def custom_save_record(request, tableid, recordid):
                     productivity='Ricavo diretto'
                 if invoicestatus=='Under Warranty':
                     invoicestatus='Under Warranty'
+                    productivity='Senza ricavo'
+                if invoicestatus=='Commercial support':
+                    invoicestatus='Commercial support'
                     productivity='Senza ricavo'
                 timesheet_record.fields['print_type']='Normale'
                 timesheet_record.fields['print_hourprice']='Monte Ore'
