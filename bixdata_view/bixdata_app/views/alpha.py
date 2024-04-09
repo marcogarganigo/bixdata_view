@@ -1123,6 +1123,9 @@ def custom_save_record(request, tableid, recordid):
         worktime_decimal = 0
         travel_time_decimal = 0
         totaltime_decimal = 0
+        workprice=0
+        travelprice=0
+        totalprice=0
         timesheet_record.fields['worktime_decimal'] = ''
         timesheet_record.fields['traveltime_decimal'] = ''
         timesheet_record.fields['totaltime_decimal'] = ''
@@ -1247,12 +1250,13 @@ def custom_save_record(request, tableid, recordid):
         if invoicestatus=='To Process':
             productivity='Ricavo diretto'
             hourprice=140
-            travelprice=None
+            travelstandardprice=None
             timesheet_record.fields['print_travel']='Da fatturare'
 
             if not isempty(company_record.fields['ictpbx_price']):
                 hourprice=company_record.fields['ictpbx_price']
-                travelprice=company_record.fields['travel_price']
+                travelstandardprice=company_record.fields['travel_price']
+
             timesheet_record.fields['print_hourprice']='Fr.'+ str(hourprice)+'.--'
 
             if not isempty(project_record.recordid):
@@ -1263,12 +1267,16 @@ def custom_save_record(request, tableid, recordid):
                 if  ticket_record.fields['vtestatus'] != 'Closed':
                     invoicestatus='To invoice when Ticket Closed'
             timesheet_record.fields['hourprice']=hourprice
-            timesheet_record.fields['workprice']=hourprice*worktime_decimal;
-            if travelprice:
-                timesheet_record.fields['travelprice']=travelprice;
-            else:
-                timesheet_record.fields['travelprice']=hourprice*travel_time_decimal;
-            timesheet_record.fields['totalprice']=timesheet_record.fields['workprice']+timesheet_record.fields['travelprice']
+            workprice=hourprice*worktime_decimal
+            timesheet_record.fields['workprice']=workprice
+            if travel_time_decimal:
+                if travel_time_decimal>0:
+                    if travelstandardprice:
+                        travelprice=travelstandardprice;
+                    else:
+                        travelprice=hourprice*travel_time_decimal;
+                    timesheet_record.fields['travelprice']=travelprice
+            timesheet_record.fields['totalprice']=workprice+travelprice
             if invoicestatus=='To Process':
                 invoicestatus='To Invoice'
 
