@@ -137,6 +137,57 @@
 
     }
 
+    function update_salesorderline(el) {
+        container = $(el).closest('.container ');
+        field_type = $(el).data('type');
+
+        quantity = $(container).find('#field-quantity').val();
+        if (quantity == "") {
+            quantity = 1
+            $(container).find('#field-quantity').val(1);
+        }
+
+        if (field_type == "linkedmaster") {
+
+            recordid = $(el).closest('.field').find('.hidden-input').val()
+
+            var serialized_data = [];
+            serialized_data.push({name: 'tableid', value: 'product'});
+            serialized_data.push({name: 'recordid', value: recordid});
+            $.ajax({
+                type: "POST",
+                url: "{% url 'get_record' %}",
+                data: serialized_data,
+                success: function (response) {
+                    console.info(response)
+                    var product_fields = response
+                    $(container).find('#field-unitcost').val(product_fields.unitcost);
+                    unitcost = $(container).find('#field-unitcost').val();
+                    linecost = unitcost * quantity
+                    $(container).find('#field-cost').val(linecost);
+                    $(container).find('#field-margin').val(lineprice - linecost);
+                },
+                error: function (response) {
+                    console.info(response)
+                }
+            });
+
+        }
+
+        unitprice = $(container).find('#field-unitprice').val();
+        unitexpectedcost = $(container).find('#field-unitexpectedcost').val();
+        lineprice = unitprice * quantity
+        lineexpectedcost = unitexpectedcost * quantity
+        lineexpectedmargin = lineprice - lineexpectedcost
+        $(container).find('#field-price').val(lineprice);
+        $(container).find('#field-expectedcost').val(lineexpectedcost);
+        $(container).find('#field-expectedmargin').val(lineexpectedmargin);
+
+    }
+
+
+    
+
 
 </script>
 
@@ -380,6 +431,9 @@
                                                 $('#field-expectedhours').removeClass('necessary')
                                                 $('[title="expectedhours"]').find('p').removeClass('badge bg-danger fs-5 badge-color')
                                             }
+                                        {% endif %}
+                                        {% if tableid == 'salesorderline' %}
+                                            update_salesorderline(this)
                                         {% endif %}
 
                                         /*

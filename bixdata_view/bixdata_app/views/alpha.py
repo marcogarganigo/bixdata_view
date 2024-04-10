@@ -1202,7 +1202,7 @@ def custom_save_record(request, tableid, recordid):
                                              "(type='Manutenzione PBX')"])
 
                 if service == 'Assistenza IT':
-                    if travel_time_decimal == 0:
+                    if travel_time_decimal == 0 or invoiceoption == 'In contract':
                         flat_service_contract = servicecontract_table.get_records(
                             conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'",
                                              "(type='BeAll (All-inclusive)')"])
