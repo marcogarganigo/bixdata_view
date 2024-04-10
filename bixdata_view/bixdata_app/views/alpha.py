@@ -1323,6 +1323,35 @@ def custom_save_record(request, tableid, recordid):
         servicecontract_record.fields['progress'] = progress
         servicecontract_record.save()
 
+    # ---SALES ORDER
+    if tableid=='salesorder':
+        salesorder_record=Record('salesorder',recordid)
+        totalcost=0
+        salesorderline_linkedrecords = salesorder_record.get_linkedrecords(linkedtable='salesorderline')
+        for salesorderline_record_dict in salesorderline_linkedrecords:
+            if not isempty(salesorderline_record_dict['cost']):
+                totalcost=totalcost+salesorderline_record_dict['cost']
+        salesorder_record.fields['totalcostyearly']=totalcost*salesorder_record.fields['multiplier']
+        salesorder_record.fields['totalmargin']=salesorder_record.fields['totalnet']-totalcost
+        salesorder_record.fields['totalmarginyearly']=salesorder_record.fields['totalmargin']*salesorder_record.fields['multiplier']
+        salesorder_record.save()
+
+    # ---SALES ORDER LINE
+    if tableid=='salesorderline':
+        salesorderline_record = Record('salesorderline', recordid)
+        salesorder_record=Record('salesorder',salesorderline_record.fields['recordidsalesorder_'])
+        unitcost=salesorderline_record.fields['unitcost']
+        quantity=salesorderline_record.fields['quantity']
+        linecost=unitcost*quantity
+        salesorderline_record.fields['cost']=linecost
+        salesorderline_record.fields['margin']=salesorderline_record.fields['price']-linecost
+        multiplier=salesorder_record.fields['multiplier']
+        salesorderline_record.fields['total_net_yearly']=salesorderline_record.fields['price']*multiplier
+        salesorderline_record.fields['marginyearly']=salesorderline_record.fields['margin']*multiplier
+        salesorderline_record.save()
+        if not isempty(salesorder_record.recordid):
+            custom_save_record(request, tableid='salesorder', recordid=salesorder_record.recordid)
+
     return True
 
 
