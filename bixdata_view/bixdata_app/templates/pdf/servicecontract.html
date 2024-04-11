@@ -79,7 +79,12 @@
                       document.getElementById("td-trasferta").removeAttribute("style");
                   </script>
                 {% endif %}
-                <td>{{ tms.description }}</td>
+                <td>
+                  {% if tms.ticket_subject != '' %}
+                    <b>Ticket: {{ tms.ticket_subject }}</b><br/><br/>
+                  {% endif %}
+                  {{ tms.description }}
+                </td>
             </tr>
         {% endfor %}
 

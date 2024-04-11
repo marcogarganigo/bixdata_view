@@ -1899,7 +1899,14 @@ def stampa_servicecontract(request):
                 f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}' AND deleted_='N'"
             )
             timesheets = dictfetchall(cursor)
-        context['timesheets'] = timesheets
+        timesheets_updated=list()
+        for timesheet in timesheets:
+            ticket_record=Record(tableid='ticket',recordid=timesheet['recordidticket_'])
+            timesheet['ticket_subject']=''
+            if not isempty(ticket_record.recordid):
+                timesheet['ticket_subject']=ticket_record.fields['subject']
+            timesheets_updated.append(timesheet)
+        context['timesheets'] = timesheets_updated
 
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
         content = render_to_string('pdf/servicecontract.html', row)
