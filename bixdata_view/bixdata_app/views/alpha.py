@@ -1280,6 +1280,10 @@ def custom_save_record(request, tableid, recordid):
 
         timesheet_record.fields['invoicestatus'] = invoicestatus
         timesheet_record.fields['productivity'] = productivity
+        if service=='Assistenza IT' or service=='Assistenza PBX' or service=='Assistenza SW' or service=='Assistenza Web Hosting' or service=='Printing':
+            if timesheet_record.fields['validated']!='Si':
+                timesheet_record.fields['validated']='No'
+
         timesheet_record.save()
 
         if not isempty(servicecontract_record.recordid):
