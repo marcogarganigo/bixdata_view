@@ -1289,6 +1289,9 @@ def custom_save_record(request, tableid, recordid):
         if not isempty(servicecontract_record.recordid):
             custom_save_record(request, tableid='servicecontract', recordid=servicecontract_record.recordid)
 
+        if not isempty(project_record.recordid):
+            custom_save_record(request, tableid='project', recordid=project_record.recordid)
+
     # ---SERVICE CONTRACT
     if tableid == 'servicecontract':
         servicecontract_table = Table(tableid='servicecontract')
@@ -1356,6 +1359,150 @@ def custom_save_record(request, tableid, recordid):
         if not isempty(salesorder_record.recordid):
             custom_save_record(request, tableid='salesorder', recordid=salesorder_record.recordid)
 
+
+    # ---PROJECT
+    if tableid == 'project':
+        project_record=Record('project',recordid)
+        completed=project_record.fields['completed']
+        deal_record=Record('deal',project_record.fields['recordiddeal_'])
+        usedhours=0
+        timesheet_records_list=project_record.get_linkedrecords('timesheet')
+        for timesheet_record_dict in timesheet_records_list:
+            usedhours=usedhours+timesheet_record_dict['totaltime_decimal']
+        project_record.fields['usedhours']=usedhours
+        deal_record.fields['usedhours']=usedhours
+        deal_record.fields['projectcompleted']=completed
+        deal_record.save()
+        project_record.save()
+        if not isempty(deal_record.recordid):
+            custom_save_record(request, tableid='deal', recordid=deal_record.recordid)
+        
+
+
+    # ---DEALLINE
+    if tableid == 'dealline':
+        dealline_record=Record('dealline',recordid)
+        custom_save_record(request, tableid='deal', recordid=dealline_record.fields['recordiddeal_'])
+
+    # ---DEAL
+    if tableid == 'deal':
+        dbh=DatabaseHelper()
+        # recupero informazioni necessarie
+        deal_record = Record('deal', recordid)
+        creation=deal_record.fields['creation_']
+        deal_record.fields['opendate']=creation.strftime("%Y-%m-%d")
+        deal_user_recorddict= dbh.sql_query_row(f"select * from sys_user where id={deal_record.fields['dealuser1']}")
+        deal_record.fields['adiuto_dealuser']=deal_user_recorddict['adiutoid']
+        deal_project_recorddict= dbh.sql_query_row(f"select * from user_project where recordiddeal_={recordid}")
+        project_recordid=''
+        if deal_project_recorddict:
+            project_recordid=deal_project_recorddict['recordid_']
+
+        deal_price=deal_record.fields['amount']
+        if not deal_price:
+            deal_price=0
+        deal_price_sum=0
+        deal_expectedcost=deal_record.fields['expectedcost']
+        if not deal_expectedcost:
+            deal_expectedcost=0
+        deal_expectedcost_sum=0
+        deal_actualcost=0
+        deal_expectedhours=0
+        deal_usedhours=deal_record.fields['usedhours']
+        if not deal_usedhours:
+            deal_usedhours=0
+        deal_expectedmargin=0
+        deal_actualmargin=0
+        deal_annualprice=0
+        deal_annualcost=0
+        deal_annualmargin=0
+
+        deal_record.fields['fixedprice']=0
+        dealline_records=deal_record.get_linkedrecords(linkedtable='dealline')
+        for dealline_recorddict in dealline_records:
+            dealline_recordid=dealline_recorddict['recordid_']
+            product_recordid=dealline_recorddict['recordidproduct_']
+            dealline_recordid=dealline_recorddict['recordid_']
+            dealline_quantity=dealline_recorddict['quantity']
+            dealline_price=dealline_recorddict['price']
+            dealline_expectedcost=dealline_recorddict['expectedcost']
+            dealline_expectedmargin=dealline_recorddict['expectedmargin']
+            dealline_unitactualcost=dealline_recorddict['uniteffectivecost']
+            if not dealline_unitactualcost:
+                dealline_unitactualcost=0
+            dealline_frequency=dealline_recorddict['frequency']
+            multiplier=1
+            if dealline_frequency=='Annuale':
+                multiplier=1
+            if dealline_frequency=='Semestrale':
+                multiplier=2
+            if dealline_frequency=='Trimestrale':
+                multiplier=3
+            if dealline_frequency=='Bimestrale':
+                multiplier=6
+            if dealline_frequency=='Mensile':
+                multiplier=12
+            deal_price_sum=deal_price_sum+dealline_price
+            deal_expectedcost_sum=deal_expectedcost_sum+dealline_expectedcost
+            dealline_record=Record('dealline',dealline_recordid)
+            dealline_record.fields['recordidproject_']=project_recordid
+
+            dealline_actualcost=dealline_unitactualcost*dealline_quantity
+            product_record=Record('product',product_recordid)
+            product_fixedprice=product_record.fields['fixedprice']
+            if not dealline_recorddict['expectedhours']:
+                dealline_recorddict['expectedhours']=0
+            deal_expectedhours=deal_expectedhours+dealline_recorddict['expectedhours']
+            if product_fixedprice=='Si':
+                deal_record.fields['fixedprice']='Si'
+                if isempty(dealline_record.fields['expectedhours']):
+                    dealline_record.fields['expectedhours']=dealline_price/140
+                if deal_usedhours!=0:
+                    dealline_record.fields['usedhours']=deal_usedhours
+                    dealline_actualcost=deal_usedhours*60
+                    deal_usedhours=0
+            if dealline_actualcost!=0:
+                dealline_actualmargin=dealline_price-dealline_actualcost
+            else:
+                dealline_actualmargin=dealline_expectedmargin
+            dealline_record.fields['effectivecost']=dealline_actualcost
+            dealline_record.fields['margin_actual']=dealline_actualmargin
+
+            if not isempty(dealline_frequency):
+                dealline_record.fields['annualprice']=dealline_price*multiplier
+                if dealline_actualcost!=0:
+                    dealline_record.fields['annualcost']=dealline_actualcost*multiplier
+                else:
+                    dealline_record.fields['annualcost']=dealline_expectedcost*multiplier
+                dealline_record.fields['annualmargin']=dealline_record.fields['annualprice']-dealline_record.fields['annualcost']
+                deal_annualprice=deal_annualprice+dealline_record.fields['annualprice']
+                deal_annualcost=deal_annualcost+dealline_record.fields['annualcost']
+                deal_annualmargin=deal_annualmargin+dealline_record.fields['annualmargin']
+            dealline_record.save()
+
+            deal_actualcost=deal_actualcost+dealline_actualcost
+            deal_actualmargin=deal_actualmargin+dealline_actualmargin
+
+        if deal_price_sum!=0:
+            deal_price=deal_price_sum
+        if deal_expectedcost_sum!=0:
+            deal_expectedcost=deal_expectedcost_sum
+        deal_expectedmargin=deal_price-deal_expectedcost
+        if deal_actualcost==0:
+            deal_actualmargin= deal_expectedmargin
+        
+        deal_record.fields['amount']=round(deal_price, 2)
+        deal_record.fields['expectedcost']=round(deal_expectedcost, 2)
+        deal_record.fields['expectedmargin']= round(deal_expectedmargin, 2)
+        deal_record.fields['expectedhours']=deal_expectedhours
+        deal_record.fields['actualcost']=deal_actualcost
+        deal_record.fields['effectivemargin']=deal_actualmargin
+        deal_record.fields['margindifference']=deal_actualmargin-deal_expectedmargin
+        deal_record.fields['annualprice']=deal_annualprice
+        deal_record.fields['annualcost']=deal_annualcost
+        deal_record.fields['annualmargin']=deal_annualmargin
+        deal_record.save()
+    
     return True
 
 
