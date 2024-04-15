@@ -1417,7 +1417,7 @@ def custom_save_record(request, tableid, recordid):
         deal_annualcost=0
         deal_annualmargin=0
 
-        deal_record.fields['fixedprice']=0
+        deal_record.fields['fixedprice']='No'
         dealline_records=deal_record.get_linkedrecords(linkedtable='dealline')
         for dealline_recorddict in dealline_records:
             dealline_recordid=dealline_recorddict['recordid_']
