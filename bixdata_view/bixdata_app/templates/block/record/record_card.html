@@ -788,7 +788,7 @@
 
                 {% if tableid == 'timesheet' %}
                     {% if userid == 3 or userid == 9 or userid == 11 %}
-                        <button onclick="$('#field-validated').val('Si'); $('#save-button-{{ recordid }}').click();"
+                        <button onclick="validate_timesheet()"
                                 type="button" id="validate-button" style="display: none"
                                 class="btn btn-outline-success">Valida
                         </button>
@@ -804,8 +804,7 @@
                 {{ block_record_badge }}
             </div>
 
-
-
+        
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <button class="nav-link active" id="fields-tab-{{ recordid }}" data-bs-toggle="tab"
