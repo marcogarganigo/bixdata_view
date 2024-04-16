@@ -1333,6 +1333,7 @@ def custom_save_record(request, tableid, recordid):
     # ---SALES ORDER
     if tableid=='salesorder':
         salesorder_record=Record('salesorder',recordid)
+        deal_record=Record('deal',salesorder_record.fields['recordiddeal_'])
         totalcost=0
         salesorderline_linkedrecords = salesorder_record.get_linkedrecords(linkedtable='salesorderline')
         for salesorderline_record_dict in salesorderline_linkedrecords:
@@ -1341,6 +1342,8 @@ def custom_save_record(request, tableid, recordid):
         salesorder_record.fields['totalcostyearly']=totalcost*salesorder_record.fields['multiplier']
         salesorder_record.fields['totalmargin']=salesorder_record.fields['totalnet']-totalcost
         salesorder_record.fields['totalmarginyearly']=salesorder_record.fields['totalmargin']*salesorder_record.fields['multiplier']
+        if not isempty(deal_record.recordid):
+            salesorder_record.fields['expectedmarginyearly']=deal_record.fields['annualmargin']
         salesorder_record.save()
 
     # ---SALES ORDER LINE
@@ -1417,7 +1420,7 @@ def custom_save_record(request, tableid, recordid):
         deal_annualcost=0
         deal_annualmargin=0
 
-        deal_record.fields['fixedprice']=0
+        deal_record.fields['fixedprice']='No'
         dealline_records=deal_record.get_linkedrecords(linkedtable='dealline')
         for dealline_recorddict in dealline_records:
             dealline_recordid=dealline_recorddict['recordid_']
