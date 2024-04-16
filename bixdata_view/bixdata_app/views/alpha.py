@@ -1452,7 +1452,9 @@ def custom_save_record(request, tableid, recordid):
 
             dealline_actualcost=dealline_unitactualcost*dealline_quantity
             product_record=Record('product',product_recordid)
-            product_fixedprice=product_record.fields['fixedprice']
+            product_fixedprice='No'
+            if not isempty(product_record.recordid):
+                product_fixedprice=product_record.fields['fixedprice']
             if not dealline_recorddict['expectedhours']:
                 dealline_recorddict['expectedhours']=0
             deal_expectedhours=deal_expectedhours+dealline_recorddict['expectedhours']
