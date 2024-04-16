@@ -788,7 +788,7 @@
 
                 {% if tableid == 'timesheet' %}
                     {% if userid == 3 or userid == 9 or userid == 11 %}
-                        <button onclick="$('#field-validated-filters').val('Si'); $('#save-button-{{ recordid }}').click()"
+                        <button onclick="$('#field-validated-filters').val('Si'); alert($('#field-validated-filters').val())"
                                 type="button" id="validate-button" style="display: none"
                                 class="btn btn-outline-success">Valida
                         </button>
