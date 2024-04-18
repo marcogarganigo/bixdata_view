@@ -1,4 +1,6 @@
 {% load static %}
+
+
 <style>
     #block_records_table {
         height: 100%;
@@ -6,7 +8,7 @@
     }
 
     #results-row {
-        display: table;
+        /*display:table;*/
         width: 100%;
         table-layout: fixed;
     }
@@ -19,10 +21,10 @@
 
     #results-body {
         overflow: auto;
-        max-height: 1000px; /*calc(100% - 40px);*/
+        max-height: 1000px; calc(100% - 40px);
         height: 100%;
         width: 100%;
-        display: block;
+        /*display: block;*/
     }
 
 
@@ -32,6 +34,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         max-width: 200px;
+        border: 1px solid black;
     }
 
 
@@ -125,6 +128,8 @@
         });
     });
 
+
+
     function activeRow(el, id) {
 
         var row = document.getElementById(id);
@@ -207,10 +212,11 @@
 </script>
 
 
-<div data-order="" data-order-field="" id="block_records_table" style="width: 100%;" data-type="{{ table_type }}">
 
+
+<div data-order="" data-order-field="" id="block_records_table" style="width: 100%;" data-type="{{ table_type }}">
     <div class="col s12 m6 l6" id="pagination-container">
-        <table id="results-table" class="">
+        <table id="results-table">
             <thead id="results-head">
                 <tr id="results-row">
                     {% for column in columns %}
@@ -309,7 +315,7 @@
                         {% elif column_value.fieldtypeweb == 'lookup' %}
                             <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                                 data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                           
+
                          <img src="{% static 'images/lookup/' %}{{ column_value.code}}.png?v={{ date }}" width="40px" height="40px" class="" onerror="handleImageError(this)">
                             {{ column_value.value }}
                             </td>
@@ -346,3 +352,170 @@
     </div>
 
 </div>
+
+
+
+<style>
+    [data-table-col] {
+        --rng-h: 1px;
+        --rng-thumb-bgc: transparent;
+        --rng-thumb-h: var(--th, 6rem);
+        --rng-thumb-ico: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M15.5 8l-4.5 4.5v-3.5h-6v3.5l-4.5-4.5 4.5-4.5v3.5h6v-3.5l4.5 4.5z"></path></svg>');
+        --rng-thumb-w: 2rem;
+
+        background: transparent;
+        box-sizing: border-box;
+        font-family: inherit;
+        height: 1px;
+        margin: 0;
+        outline: none;
+        position: absolute;
+        top: 0;
+        width: 100%;
+      }
+      [data-table-col]::-webkit-slider-thumb {
+        background-color: var(--rng-thumb-bgc);
+        background-position: 50% 0;
+        background-repeat: no-repeat;
+        background-size: 80%;
+          border: 0;
+        cursor: ew-resize;
+        height: var(--rng-thumb-h);
+        width: var(--rng-thumb-w);
+      }
+      [data-table-col]:focus-visible::-webkit-slider-thumb {
+        --rng-thumb-bgc: rgb(0, 0, 0, 0.1);
+        background-image: var(--rng-thumb-ico);
+        outline: 2px solid rgb(0, 0, 0, 0.8)
+      }
+      [data-table-col]::-webkit-slider-runnable-track {
+        background: transparent;
+        height: var(--rng-h);
+      }
+      [data-table-col],
+      [data-table-col]::-webkit-slider-runnable-track,
+      [data-table-col]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+      }
+</style>
+
+
+
+
+<script>
+    var resizeTimer;
+
+    function resizeTable(table, selector = 'thead tr th', minWidth = 5) {
+        if (!table) return;
+        const cols = table.querySelectorAll(selector);
+        const parent = table.parentNode;
+        const tableWidth = table.offsetWidth;
+        let value = 0;
+
+        widths = '{{ column_width }}'
+
+        if (widths.length != 0) {
+            widths = widths.split(',')
+        } else {
+            widths = undefined
+        }
+
+        parent.dataset.tableParent = '';
+        parent.style.setProperty(`--th`, `${table.offsetHeight}px`);
+
+        cols.forEach((col, index) => {
+        let colWidth;
+        if (typeof widths !== 'undefined') {
+            colWidth = parseInt(widths[index]);
+        } else {
+            colWidth = parseInt(100 / (tableWidth / col.offsetWidth));
+        }
+
+        col.style.width = `calc(1% * var(--c${index}))`;
+        table.style.setProperty(`--c${index}`, colWidth);
+
+        if (index > 0) {
+            const input = document.createElement('input');
+            input.dataset.tableCol = index;
+            input.setAttribute('aria-hidden', true);
+            input.type = 'range';
+            input.value = value;
+            parent.appendChild(input);
+
+            input.addEventListener('input', () => {
+              if (input.value < minWidth) input.value = minWidth;
+              if (input.value > 100 - minWidth) input.value = 100 - minWidth;
+
+              const next = input.nextElementSibling;
+              const prev = input.previousElementSibling;
+
+              if (next?.nodeName === 'INPUT' && (input.valueAsNumber > (next.valueAsNumber - minWidth))) {
+                    input.value = next.valueAsNumber - minWidth;
+                    return;
+              }
+              if (prev?.nodeName === 'INPUT' && (input.valueAsNumber < (prev.valueAsNumber + minWidth))) {
+                    input.value = prev.valueAsNumber + minWidth;
+                    return;
+              }
+
+              table.style.setProperty(`--c${index-1}`, prev?.nodeName === 'INPUT' ? input.valueAsNumber - prev.valueAsNumber : input.valueAsNumber);
+              table.style.setProperty(`--c${index}`, next?.nodeName === 'INPUT' ? next.valueAsNumber - input.valueAsNumber : 100 - input.valueAsNumber);
+
+               clearTimeout(resizeTimer);
+               resizeTimer = setTimeout(save_columns_width, 1000);
+            });
+          }
+          value += colWidth;
+        });
+
+      }
+    
+      var table = document.querySelector('table');
+      resizeTable(table);
+
+      var widths = []
+
+      for (var i = 0; i < table.querySelectorAll('thead tr th').length; i++) {
+          widths.push(parseInt(table.style.getPropertyValue(`--c${i}`)))
+      }
+      console.log(widths)
+
+      window.addEventListener('resize', function() {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(save_columns_width, 2000);
+      });
+
+    function save_columns_width() {
+         var widths = ''
+
+          for (var i = 0; i < table.querySelectorAll('thead tr th').length; i++) {
+                widths += parseInt(table.style.getPropertyValue(`--c${i}`)) + ','
+          }
+
+          widths = widths.slice(0, -1);
+          console.log(widths)
+        
+          $.ajax({
+              type: "POST",
+              crossDomain: true,
+              url: "{% url 'save_columns_width' %}",
+              data: {
+                  'widths': widths,
+                  'tableid': '{{ tableid }}',
+                  'csrfmiddlewaretoken': '{{ csrf_token }}'
+              },
+              success: function (response) {
+                  console.log(response)
+              },
+              error: function (response) {
+                  console.log(response)
+              }
+        });
+    }
+
+    table.addEventListener('resize', save_columns_width);
+
+</script>
+
+

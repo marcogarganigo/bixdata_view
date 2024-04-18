@@ -693,6 +693,7 @@ def get_block_record(request):
         'records': records,
         'columns': columns,
         'tableid': table,
+
     }
 
     for records_index, record in enumerate(records):
@@ -4018,5 +4019,31 @@ def save_dashboard_table(request):
             )
             with connection.cursor() as cursor:
                 cursor.execute(query)
+
+    return JsonResponse({'success': True})
+
+    
+def save_columns_width(request):
+    tableid = request.POST.get('tableid')
+    width = request.POST.get('widths')
+    userid = get_userid(request.user.id)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM sys_user_column_width WHERE userid = %s AND tableid = %s",
+            [userid, tableid]
+        )
+        existing_row = cursor.fetchone()
+
+        if existing_row:
+            cursor.execute(
+                "UPDATE sys_user_column_width SET column_width = %s WHERE userid = %s AND tableid = %s",
+                [width, userid, tableid]
+            )
+        else:
+            cursor.execute(
+                "INSERT INTO sys_user_column_width (userid, tableid, column_width) VALUES (%s, %s, %s)",
+                [userid, tableid, width]
+            )
 
     return JsonResponse({'success': True})

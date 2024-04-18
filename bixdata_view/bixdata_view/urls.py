@@ -160,5 +160,6 @@ urlpatterns = [
     path('new_view/', alpha.new_view, name="new_view"),
     path('save_favorite_tables/', alpha.save_favorite_tables, name='save_favorite_tables'),
     path('save_dashboard_table/', alpha.save_dashboard_table, name ='save_dashboard_table'),
+    path('save_columns_width/', alpha.save_columns_width, name='save_columns_width'),
 
 ]
