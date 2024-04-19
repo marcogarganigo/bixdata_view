@@ -9,7 +9,7 @@
         <th>City</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody style=" overflow:scroll">
       <tr>
         <td>1</td>
         <td>Apu</td>
@@ -317,7 +317,7 @@
     background-size: 80%;
       border: 0;
     cursor: ew-resize;
-    height: var(--rng-thumb-h);
+    /*height: var(--rng-thumb-h);*/
     width: var(--rng-thumb-w);
   }
   [data-table-col]:focus-visible::-webkit-slider-thumb {
@@ -327,7 +327,7 @@
   }
   [data-table-col]::-webkit-slider-runnable-track {
     background: transparent;
-    height: var(--rng-h);
+    /*height: var(--rng-h);*/
   }
   [data-table-col],
   [data-table-col]::-webkit-slider-runnable-track,
@@ -349,7 +349,7 @@
     background-size: 80%;
       border: 0;
     cursor: ew-resize;
-    height: var(--rng-thumb-h);
+    /*height: var(--rng-thumb-h);*/
       width: var(--rng-thumb-w);
   }
   [data-table-col]:focus-visible::-moz-range-thumb {
@@ -368,6 +368,8 @@
     font-family: ui-sans-serif, system-ui, sans-serif;
     margin: 0 auto;
     padding: 1rem;
+    height: 100%;
+    overflow: unset;
   }
   code {
     background: #e3fffd;
