@@ -55,7 +55,7 @@ bixdata_server = os.environ.get('BIXDATA_SERVER')
 
 def test(request):
     num = 1
-    return render(request, 'test/test_dashboard.html', {'num': num})
+    return render(request, 'test/test_table.html', {'num': num})
 
 @login_required(login_url='/login/')
 def test_content(request):

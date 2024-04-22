@@ -260,6 +260,17 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
         'icon': icon
     }
 
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT column_width FROM sys_user_column_width WHERE tableid = %s AND userid = %s",
+            [tableid, get_userid(request.user.id)]
+        )
+        column_width = cursor.fetchone()
+
+        if column_width:
+            column_width = column_width[0]
+            context['column_width'] = column_width
+
     for records_index, record in enumerate(records):
         for record_index, value in enumerate(record):
             record[record_index] = dict()
