@@ -96,6 +96,18 @@ def settings_table_tablefields_save(request):
                   """, [userid, tableid, fieldid, fields_type, order])
 
         order += 1
+
+    if userid == '1':
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM sys_user_column_width WHERE tableid=%s",
+                [tableid])
+    else:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM sys_user_column_width WHERE userid=%s AND tableid=%s",
+                [userid, tableid])
+
     return HttpResponse({'success': True})
 
 
