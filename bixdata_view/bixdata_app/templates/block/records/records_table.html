@@ -228,6 +228,7 @@ thead th { position: sticky; top: 0; background-color: white;}
                         {% endfor %}
                     </tr>
                 </thead id="results-head">
+            <div id="input-container" style="position: relative; z-index: 100"></div>
                 <tbody id="results-body">
                     {% for record in records %}
                         {% if record.2 %}
@@ -362,34 +363,36 @@ thead th { position: sticky; top: 0; background-color: white;}
             margin: 0;
             outline: none;
             position: absolute;
+            left: 0;
             top: 0;
             width: 100%;
-          }
-          [data-table-col]::-webkit-slider-thumb {
-            background-color: var(--rng-thumb-bgc);
-            background-position: 50% 0;
+        }
+        [data-table-col]::-webkit-slider-thumb {
+            background-color: transparent;
+            background-position: 50% 50%;
             background-repeat: no-repeat;
-            background-size: 80%;
-              border: 0;
+            background-size: 20%;
+            border: 0;
+            height: 42px;
             cursor: ew-resize;
-            height: var(--rng-thumb-h);
             width: var(--rng-thumb-w);
-          }
-          [data-table-col]:focus-visible::-webkit-slider-thumb {
+        }
+        [data-table-col]:focus-visible::-webkit-slider-thumb {
             --rng-thumb-bgc: rgb(0, 0, 0, 0.1);
             background-image: var(--rng-thumb-ico);
-            outline: 2px solid rgb(0, 0, 0, 0.8)
-          }
-          [data-table-col]::-webkit-slider-runnable-track {
+            outline: 2px solid rgb(0, 0, 0, 0.8);
+        }
+        [data-table-col]::-webkit-slider-runnable-track {
             background: transparent;
             height: var(--rng-h);
-          }
-          [data-table-col],
-          [data-table-col]::-webkit-slider-runnable-track,
-          [data-table-col]::-webkit-slider-thumb {
+        }
+        [data-table-col],
+        [data-table-col]::-webkit-slider-runnable-track,
+        [data-table-col]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-          }
+        }
+
 
         .block-records-table-standard th {
             white-space: nowrap;
@@ -412,6 +415,7 @@ thead th { position: sticky; top: 0; background-color: white;}
             var resizeTimer;
 
             function resizeTable(table, selector = 'thead tr th', minWidth = 5) {
+
                 if (!table) return;
                 const cols = table.querySelectorAll(selector);
                 const parent = table.parentNode;
@@ -446,35 +450,40 @@ thead th { position: sticky; top: 0; background-color: white;}
                         input.setAttribute('aria-hidden', true);
                         input.type = 'range';
                         input.value = value;
-                        parent.appendChild(input);
+                        inputcontainer = document.getElementById('input-container')
+
+                        inputcontainer.appendChild(input);
+
 
                         input.addEventListener('input', () => {
-                          if (input.value < minWidth) input.value = minWidth;
-                          if (input.value > 100 - minWidth) input.value = 100 - minWidth;
+                            if (input.value < minWidth) input.value = minWidth;
+                            if (input.value > 100 - minWidth) input.value = 100 - minWidth;
 
-                          const next = input.nextElementSibling;
-                          const prev = input.previousElementSibling;
+                            const next = input.nextElementSibling;
+                            const prev = input.previousElementSibling;
 
-                          if (next?.nodeName === 'INPUT' && (input.valueAsNumber > (next.valueAsNumber - minWidth))) {
+                            if (next?.nodeName === 'INPUT' && (input.valueAsNumber > (next.valueAsNumber - minWidth))) {
                                 input.value = next.valueAsNumber - minWidth;
                                 return;
-                          }
-                          if (prev?.nodeName === 'INPUT' && (input.valueAsNumber < (prev.valueAsNumber + minWidth))) {
+                            }
+                            if (prev?.nodeName === 'INPUT' && (input.valueAsNumber < (prev.valueAsNumber + minWidth))) {
                                 input.value = prev.valueAsNumber + minWidth;
                                 return;
-                          }
+                            }
 
-                          table.style.setProperty(`--c${index-1}`, prev?.nodeName === 'INPUT' ? input.valueAsNumber - prev.valueAsNumber : input.valueAsNumber);
-                          table.style.setProperty(`--c${index}`, next?.nodeName === 'INPUT' ? next.valueAsNumber - input.valueAsNumber : 100 - input.valueAsNumber);
+                            table.style.setProperty(`--c${index - 1}`, prev?.nodeName === 'INPUT' ? input.valueAsNumber - prev.valueAsNumber : input.valueAsNumber);
+                            table.style.setProperty(`--c${index}`, next?.nodeName === 'INPUT' ? next.valueAsNumber - input.valueAsNumber : 100 - input.valueAsNumber);
 
-                           clearTimeout(resizeTimer);
-                           resizeTimer = setTimeout(save_columns_width, 1000);
+
+                            clearTimeout(resizeTimer);
+                            resizeTimer = setTimeout(save_columns_width, 1000);
                         });
-                      }
-                      value += colWidth;
+                    }
+                    value += colWidth;
                 });
 
-              }
+            }
+
 
               var table = document.querySelector('table');
               resizeTable(table);
@@ -520,9 +529,6 @@ thead th { position: sticky; top: 0; background-color: white;}
             }
 
             table.addEventListener('resize', save_columns_width);
-
-
-
         } else {
             const thElements = document.querySelectorAll('.block-records-table-standard th');
 
@@ -530,6 +536,8 @@ thead th { position: sticky; top: 0; background-color: white;}
                 th.style.border = '0px';
             });
         }
+
     </script>
+
 
 {% endif %}
