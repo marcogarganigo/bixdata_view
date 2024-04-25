@@ -5,7 +5,7 @@ import threading
 from django.contrib.sessions.models import Session
 import threading
 from bixdata_app.models import *
-from .businesslogic.helper_business_logic import *
+from .businesslogic.helper_logic import *
 from bixdata_app.models import *
 
 
@@ -47,7 +47,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor
-from .businesslogic.bixdata_business_logic import *
+from .businesslogic.bixdata_logic import *
 from .businesslogic.settings_business_logic import *
 from .businesslogic.models.record import *
 from .businesslogic.models.table import *
@@ -60,16 +60,14 @@ bixdata_server = os.environ.get('BIXDATA_SERVER')
 @login_required(login_url='/login/')
 def index(request, content=''):
     hv=HelperView(request)
-    bl=BixdataBusinessLogic()
     
     sys_user = SysUser.objects.get(bixid=request.user.id)
     username = sys_user.username
     role = sys_user.description
     userid=sys_user.id
     
-    menu_tables=bl.get_menu_tables(userid)
-    response = requests.get(f"{bixdata_server}bixdata/index.php/rest_controller/get_tables_menu")
-    menu_list = json.loads(response.text)
+    menu_tables=BixdataLogic.get_menu_tables(userid)
+
 
     with connection.cursor() as cursor:
         cursor.execute(
@@ -124,7 +122,6 @@ def index(request, content=''):
             default_dashboard = None
 
     hv.context['menu_tables']=menu_tables
-    hv.context['menu_list']=menu_list
     hv.context['date']=datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
     hv.context['username']=username
     hv.context['role']=role

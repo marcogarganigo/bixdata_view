@@ -23,10 +23,13 @@ from bixdata_app.views import settings_view
 from bixdata_app.views import bixdata_view
 from bixdata_app.views import script_view
 from bixdata_app.views import scheduler
+from bixdata_app.views import bixapp_view
 
 urlpatterns = [
     path('', bixdata_view.index, name='base'),
+    path('bixapp/', bixapp_view.index, name='bixapp'),
     path('index/', bixdata_view.index, name='index'),
+    path('bixapp/index', bixapp_view.index, name='bixapp/index'),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     path('loading/', alpha.get_render_loading, name='loading'),

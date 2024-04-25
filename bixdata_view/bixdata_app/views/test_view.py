@@ -7,7 +7,7 @@ from bixdata_app.models import *
 from .businesslogic.test_business_logic import *
 
 
-from .businesslogic.helper_business_logic import *
+from .businesslogic.helper_logic import *
 from bixdata_app.models import *
 
 
