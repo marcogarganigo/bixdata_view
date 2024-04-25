@@ -1,84 +1,382 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
-<body style="overflow: unset !important; background-color: whitesmoke">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<!--
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: white !important">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Navbar</a>
+          <a class="navbar-brand" href="#">Bixapp</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+              <i class="mdi mdi-menu"></i>
           </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="dashboard.html">Dashboard</a>
+
+            <div class="navbar-collapse collapse" id="navbarSupportedContent" style="">
+             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item" onclick="getDashboard()">
+                <a class="nav-link active" aria-current="page">Dashboard</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="table-view.html">Tables</a>
               </li>
+                 {% for dashboard in active_dashboards %}
+                  <li class="nav-item" onclick="getDashboard('{{ dashboard.id }}')">
+                    <a class="nav-link active" onclick="setColor(this)">{{ dashboard.name }}</a>
+                  </li>
+                {% endfor %}
                 </ul>
-            </ul>
+
             <form class="d-flex" role="search">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
           </div>
+
+
+            <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown"
+               role="button" aria-haspopup="false" aria-expanded="false">
+                <span class="account-user-avatar">
+                    <img src="{% static 'images/users/' %}{{ username }}.png?v=" + time alt=""
+                         class="rounded-circle">
+                </span>
+                <span>
+                    <span class="user-hover">
+                        <span class="account-user-name">{{ username }}</span>
+                        <span class="account-position">{{ role }}</span>
+                    </span>
+                </span>
+            </a>
+            <div
+                    class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
+                    -->
+                <!-- item-->
+    <!--
+                <div class=" dropdown-header noti-title">
+                    <h6 class="text-overflow m-0">Welcome !</h6>
+                </div>
+
+                <a class="dropdown-item notify-item" onclick="get_account()">
+                    <i class="mdi mdi-lifebuoy me-1"></i>
+
+                    <span>Account</span>
+                </a>
+
+
+                <a onclick="get_settings()" class="dropdown-item notify-item">
+                    <i class="mdi mdi-account-edit me-1"></i>
+                    <span>Settings</span>
+                </a>
+
+
+
+                <a class="dropdown-item notify-item" onclick="support('ticketbixdata')">
+                    <i class="mdi mdi-lifebuoy me-1"></i>
+
+                    <span>Support</span>
+                </a>
+
+
+
+
+
+                <script>
+                    function openSupportModal() {
+                        $('#supportModal').modal('show');
+                    }
+                </script>
+
+
+                <a href="{% url 'logout' %}" class="dropdown-item notify-item">
+                    <i class="mdi mdi-logout me-1"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+
         </div>
+
       </nav>
+-->
 
-      <div style="display: flex; align-items: center; scale: 0.8">
-        <button class="btn btn-primary" style="margin-right: 5%;">Salva disposizione</button>
-        <select class="form-select" aria-label="Default select example" style="width: 100px">
-          <option selected>Seleziona un layout</option>
-          <option value="1">Layout 1</option>
-          <option value="2">Layout 2</option>
-          <option value="3">Layout 3</option>
-        </select>
-        <button class="btn btn-secondary">Aggiungi blocco</button>
-      </div>
-      
+    <div class="navbar-custom topnav-navbar">
+                <div class="container-fluid detached-nav">
 
-      <div class="container text-center">
-        <h4>Dashboard</h4>
-        <div class="card mx-auto mb-3 mt-3" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Dashboard block</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <!-- Topbar Logo -->
+                    <div class="logo-topbar">
+                        <!-- Logo light -->
+                        <a class="sidebar-brand d-flex align-items-center justify-content-center"
+                           href="{{ index.html }}">
+
+                            <p class="shadow-sm p-0 mb-0 bg-white rounded"
+                               style="width: 50px; color: red; margin-right: 1px;"> <span class="logo-sm">
+                            <img src="{% static 'images/logos/logo_big_' %}{{ theme }}.jpg" alt="small logo"
+                                 height="55">
+
+                        </span></p>
+
+                            <p class=" mb-0" style="width: 50px; color: white; margin-left: 0px;"> <span
+                                    class="logo-sm">
+                           <img src="{% static 'images/logos/logo_big_' %}{{ theme }}.jpg" alt="small logo"
+                                height="55">
+                        </span></p>
+                        </a>
+
+                        <!-- Logo Dark -->
+                        <a href="{{ index.html }}" class="logo-dark">
+                            <span class="logo-lg">
+                                <img src="{% static 'images/logo-dark.png' %}" alt="dark logo" height="22">
+                            </span>
+                            <span class="logo-sm">
+                                <img src="{% static 'images/logo-dark-sm.png' %}" alt="small logo" height="22">
+                            </span>
+                        </a>
+                    </div>
+
+                    <!-- Sidebar Menu Toggle Button -->
+                    <button class="button-toggle-menu" id="toggle-menu" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="mdi mdi-menu"></i>
+                    </button>
+
+
+
+
+
+                    <!-- Horizontal Menu Toggle Button -->
+                    <button class="navbar-toggle" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+                        <div class="lines">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </button>
+
+                    <ul class="list-unstyled topbar-menu float-end mb-0">
+                        <li class="dropdown notification-list d-lg-none">
+                            <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown"
+                               role="button" aria-haspopup="false" aria-expanded="false">
+                                <i class="ri-search-line noti-icon"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
+                                <form class="p-3">
+                                    <input type="search" class="form-control" placeholder="Search ..."
+                                           aria-label="Recipient's username">
+                                </form>
+                            </div>
+                        </li>
+
+                        <!--
+                        <li class="dropdown notification-list">
+                            <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="{% url 'under_construction' %}">
+                                <i class="ri-notification-3-line noti-icon"></i>
+                                <span class="noti-icon-badge"></span>
+                            </a>
+
+                        </li>
+                    -->
+
+                        <li onclick="get_settings()" class="notification-list d-none d-sm-inline-block">
+                            <a class="nav-link" data-bs-toggle="offcanvas" href="#theme-settings-offcanvas">
+                                <i class="ri-settings-3-line noti-icon" data-bs-toggle="tooltip"
+                                   data-bs-placement="bottom" data-bs-title="Impostazioni"></i>
+                            </a>
+                        </li>
+
+                        <script>
+                            const time = Date.now();
+                        </script>
+
+                        <li class="dropdown notification-list">
+                            <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown"
+                               role="button" aria-haspopup="false" aria-expanded="false">
+                                <span class="account-user-avatar">
+                                    <img src="{% static 'images/users/' %}{{ username }}.png?v=" + time alt=""
+                                         class="rounded-circle">
+                                </span>
+                                <span>
+                                    <span class="user-hover">
+                                        <span class="account-user-name">{{ username }}</span>
+                                        <span class="account-position">{{ role }}</span>
+                                    </span>
+                                </span>
+                            </a>
+                            <div
+                                    class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
+                                <!-- item-->
+                                <div class=" dropdown-header noti-title">
+                                    <h6 class="text-overflow m-0">Welcome !</h6>
+                                </div>
+
+                                <a class="dropdown-item notify-item" onclick="get_account()">
+                                    <i class="mdi mdi-lifebuoy me-1"></i>
+
+                                    <span>Account</span>
+                                </a>
+
+                                <!-- item-->
+                                <a onclick="get_settings()" class="dropdown-item notify-item">
+                                    <i class="mdi mdi-account-edit me-1"></i>
+                                    <span>Settings</span>
+                                </a>
+
+
+                                <!-- item-->
+                                <a class="dropdown-item notify-item" onclick="support('ticketbixdata')">
+                                    <i class="mdi mdi-lifebuoy me-1"></i>
+
+                                    <span>Support</span>
+                                </a>
+
+
+                                <script>
+                                    function support(tableid) {
+                                        $('#newRecordModal').modal('show');
+                                        var serialized_data = [];
+                                        serialized_data.push({name: 'tableid', value: tableid});
+                                        serialized_data.push({name: 'function', value: 'insert'});
+                                        serialized_data.push({name: 'http_response', value: true});
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "{% url 'get_record_fields' %}",
+                                            data: serialized_data,
+                                            success: function (response) {
+                                                $("#fullwidth_modal_newrecord").html(response);
+
+                                            },
+                                            error: function () {
+                                                $("#bixdata_recordcard_container").html(response);
+                                            }
+                                        });
+
+
+                                    }
+                                </script>
+
+
+                                <script>
+                                    function openSupportModal() {
+                                        $('#supportModal').modal('show');
+                                    }
+                                </script>
+
+                                <!-- item-->
+                                <a href="{% url 'logout' %}" class="dropdown-item notify-item">
+                                    <i class="mdi mdi-logout me-1"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <!-- Topbar Search Form -->
+                     <div class="app-search dropdown">
+                    <!--
+                        <form>
+                            <div class="input-group">
+                                <input type="search" class="form-control dropdown-toggle" placeholder="Search..."
+                                       id="top-search" autocomplete="off">
+                                <span class="mdi mdi-magnify search-icon"></span>
+                                <button class="input-group-text btn btn-primary" type="submit"
+                                        style="background-color: #ff5b5b; border: #ff5b5b">Cerca
+                                </button>
+                            </div>
+                        </form>
+
+
+                        <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
+                            <h4>Qui non c'è ancora niente ma ci stiamo lavorando</h4>
+                            <img src="{% static 'images/mauro&lorenzo.jpg' %}" width="300px">
+                        </div>
+                        -->
+                        <button style="width: 100%; font-size: 20pt; font-weight: bold; heigth: 100%" type="button" class="btn btn-outline-danger  records-button" onclick="newRecord('task')">Usa i TASK, sono comodi e ti faranno risparmiare tempo</button>
+                    </div>
+                    
+                    
+                </div>
+                <div class="navbar-collapse collapse" id="navbarSupportedContent" style="">
+             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item" onclick="getDashboard()">
+                <a class="nav-link active" aria-current="page">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="table-view.html">Tables</a>
+              </li>
+                 {% for dashboard in active_dashboards %}
+                  <li class="nav-item" onclick="getDashboard('{{ dashboard.id }}')">
+                    <a class="nav-link active" onclick="setColor(this)">{{ dashboard.name }}</a>
+                  </li>
+                {% endfor %}
+                </ul>
+
+            <!--
+                <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            -->
+          </div>
+    
+    
             </div>
-        </div>
 
-        <div class="card mx-auto mb-3" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Dashboard block</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
+    <div id="content_container" class="container" style="height: 100%; width: 100%"></div>
 
-        <div class="card mx-auto mb-3" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Dashboard block</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
 
-        <div class="card mx-auto mb-3" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">Dashboard block</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
+    <script>
+     function getDashboard(dashboardid) {
+                //$("#content_container").load('/loading/');
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    data: {
+                        'size': 'small',
+                        'dashboard_id': dashboardid
+                    },
+                    url: "{% url 'dashboard' %}",
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
 
-      </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</body>
-</html>
+    function support(tableid) {
+        $('#newRecordModal').modal('show');
+        var serialized_data = [];
+        serialized_data.push({name: 'tableid', value: tableid});
+        serialized_data.push({name: 'function', value: 'insert'});
+        serialized_data.push({name: 'http_response', value: true});
+        $.ajax({
+            type: "POST",
+            url: "{% url 'get_record_fields' %}",
+            data: serialized_data,
+            success: function (response) {
+                $("#fullwidth_modal_newrecord").html(response);
+
+            },
+            error: function () {
+                $("#bixdata_recordcard_container").html(response);
+            }
+        });
+    }
+
+    function get_settings() {
+        //$("#content_container").load('/loading/');
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'get_settings' %}",
+            success: function (response) {
+                $("#content_container").html(response);
+                $('[data-toggle="tooltip"]').tooltip();
+            },
+            error: function (response) {
+                $("#content_container").html(response);
+            }
+        });
+    }
+
+    </script>
+
+
+{% endblock %}
