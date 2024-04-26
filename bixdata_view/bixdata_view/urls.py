@@ -165,4 +165,5 @@ urlpatterns = [
     path('save_dashboard_table/', alpha.save_dashboard_table, name ='save_dashboard_table'),
     path('save_columns_width/', alpha.save_columns_width, name='save_columns_width'),
     path('content_records_app/', bixapp_view.get_content_records, name='content_records_app'),
+    path('get_records_table_app/', bixapp_view.get_records_table_render, name='get_records_table_app'),
 ]
