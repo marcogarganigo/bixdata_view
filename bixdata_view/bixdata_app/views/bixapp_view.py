@@ -161,7 +161,7 @@ def get_content_records(request):
     
     
     hv.context['block_search_fields'] = ''
-    return hv.render_template('content/records.html')
+    return hv.render_template('content/records_app.html')
 
 
 @login_required(login_url='/login/')
