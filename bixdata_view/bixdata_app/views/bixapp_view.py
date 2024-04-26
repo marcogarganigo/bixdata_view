@@ -160,7 +160,7 @@ def get_content_records(request):
            context_records_filters['filter_fields'][filter_field_key]=filter_field
     
     
-    hv.context['block_search_fields'] = render_to_string('block/records/records_filters.html',context_records_filters, request)
+    hv.context['block_search_fields'] = ''
     return hv.render_template('content/records.html')
 
 
