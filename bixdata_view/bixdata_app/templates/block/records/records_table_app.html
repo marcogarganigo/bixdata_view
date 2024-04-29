@@ -1,150 +1,134 @@
-<!--
-<div class="card mx-auto mb-3 mt-3" style="max-width: 30rem; max-height: 10rem;" onclick="open_record()">
-    <div class="card-body">
-        <h6 class="card-subtitle mb-2 text-muted" style=" font-size: smaller;">22/04/2024</h6>
-
-        <h5 class="card-title mb-2" style="display: inline-block;">Swissbix SA</h5>
-        <div class="row">
-            <div class="col-6">
-                <p class="card-text mb-0">Luca</p>
-                <p class="card-text mb-0">Attività non fatturabile</p>
-            </div>
-            <div class="col-6">
-                <p class="card-text mb-1 text-right">Riunione</p>
-                <p class="card-text mb-1 text-right">0.45</p>
-            </div>
-        </div>
-    </div>
-</div>
--->
-
-<div id="card-container" style="width: 100%; height: 100%; overflow:scroll; padding: 0">
+<div id="card-container" style="width: 100%; height: 90%; overflow:scroll; padding: 0; position: absolute">
  {% for record in records %}
-<div class="card mx-auto mb-2 mt-2" style="max-width: 30rem; max-height: 10rem; font-size: 9pt" onclick="open_record_collapse()">
+        <div class="card mx-auto mb-2 mt-2" style="width: 90%; max-height: 10rem; font-size: 9pt" onclick="open_record_collapse()">
 
-                    {% for column_value in record %}
-                        {% if forloop.counter0 > 2 %}
-                            {% if column_value.fieldtype == 'linked' %}
-                                <td class="records-linked" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="standard" data-layout="recordcard" style="font-weight: bold !important;">
-                                    <!--
-                                                            <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')"
-                                                                data-fieldtype="{{ column_value.fieldtype }}"
-                                                                class="linked-field popover-linked"
-                                                                data-bs-toggle="popover"
-                                                                data-bs-trigger="hover focus"
-                                                                data-bs-title="Qui non c'è ancora niente ma ci stiamo lavorando"
-                                                                data-bs-content="<img src= width='400px'>" data-bs-container="body"
-                                                                data-bs-html="true"
-                                                                  data-bs-custom-class="popover-custom"
-                                                                style="width: 300px"
-                                                                >{{column_value.value}}</span>
+            {% for column_value in record %}
+                {% if forloop.counter0 > 2 %}
+                    {% if column_value.fieldtype == 'linked' %}
+                        <td class="records-linked" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="standard" data-layout="recordcard" style="font-weight: bold !important;">
+                            <!--
+                                <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')"
+                                    data-fieldtype="{{ column_value.fieldtype }}"
+                                    class="linked-field popover-linked"
+                                    data-bs-toggle="popover"
+                                    data-bs-trigger="hover focus"
+                                    data-bs-title="Qui non c'è ancora niente ma ci stiamo lavorando"
+                                    data-bs-content="<img src= width='400px'>" data-bs-container="body"
+                                    data-bs-html="true"
+                                      data-bs-custom-class="popover-custom"
+                                    style="width: 300px"
+                                    >{{column_value.value}}</span>
 
-                                                            <script>$('.popover-linked').popover();</script>
-                                                            -->
-                                    <span data-layout="modal"
-                                          onclick="event.stopPropagation(); open_record(this,'{{ column_value.link_tableid }}','{{ column_value.link_recordid }}')"
-                                          data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
-                                          data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
-                                          data-linkedtableid="{{ column_value.link_tableid }}"
-                                          data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe|truncatechars:50 }}</span>
-                                    <script>
-                                        /*
-                                        $('.popover-linked').popover({
-                                            content: popoverContent,
-                                            html: true,
-                                            placement: 'right',
-                                            trigger: 'hover focus'
-                                        });
+                                <script>$('.popover-linked').popover();</script>
+                            -->
+                            <span data-layout="modal"
+                                  onclick="event.stopPropagation(); open_record(this,'{{ column_value.link_tableid }}','{{ column_value.link_recordid }}')"
+                                  data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
+                                  data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
+                                  data-linkedtableid="{{ column_value.link_tableid }}"
+                                  data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe|truncatechars:50 }}</span>
+                            <script>
+                                /*
+                                $('.popover-linked').popover({
+                                    content: popoverContent,
+                                    html: true,
+                                    placement: 'right',
+                                    trigger: 'hover focus'
+                                });
 
-                                         */
-                                    </script>
+                                 */
+                            </script>
 
-                                    <style>
-                                        .popover-custom {
-                                            max-width: 500px;
-                                        }
-                                    </style>
-                                </td>
+                            <style>
+                                .popover-custom {
+                                    max-width: 500px;
+                                }
+                            </style>
+                        </td>
 
-                            {% elif column_value.fieldtype == 'Numero' %}
-                                <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                                    data-fieldtype="{{ column_value.fieldtype }}" class="records-number" data-layout="recordcard"
-                                    style="text-align: right;">
+                    {% elif column_value.fieldtype == 'Numero' %}
+                        <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number" data-layout="recordcard"
+                            style="text-align: right;">
+                            {{ column_value.value }}
+                        </td>
+                    {% elif column_value.fieldtype == 'Memo' %}
+                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                            data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
+                            {{ column_value.value|truncatechars:50 }}
+                        </td>
+
+                    {% elif column_value.fieldtype == 'Utente' %}
+                    {% if column_value.value %}
+                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                            <img src="" alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
+                            {{ column_value.value }}
+                    {% else %}
+                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                        {{ column_value.value }}
+                    {% endif %}
+                    {% elif column_value.fieldtypeweb == 'lookup' %}
+                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+
+                     <img src="" width="40px" height="40px" class="" onerror="handleImageError(this)">
+                        {{ column_value.value }}
+                        </td>
+
+                    {% else %}
+                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
+                            {% autoescape off %}
+                                {% if column_value.fieldtypeweb == 'custom_bexiourl' %}
+                                    <a onclick="event.stopPropagation();"
+                                       href="https://office.bexio.com/index.php/kb_order/show/id/{{ column_value.value }}"
+                                       target="blank_">{{ column_value.value }}</a>
+                                {% else %}
                                     {{ column_value.value }}
-                                </td>
-                            {% elif column_value.fieldtype == 'Memo' %}
-                                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                                    data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
-                                    {{ column_value.value|truncatechars:50 }}
-                                </td>
-
-                            {% elif column_value.fieldtype == 'Utente' %}
-                            {% if column_value.value %}
-                                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                                    data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                                    <img src="" alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
-                                    {{ column_value.value }}
-                            {% else %}
-                                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                                    data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                                {{ column_value.value }}
-                            {% endif %}
-                            {% elif column_value.fieldtypeweb == 'lookup' %}
-                                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                                    data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-
-                             <img src="" width="40px" height="40px" class="" onerror="handleImageError(this)">
-                                {{ column_value.value }}
-                                </td>
-
-                            {% else %}
-                                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
-                                    {% autoescape off %}
-                                        {% if column_value.fieldtypeweb == 'custom_bexiourl' %}
-                                            <a onclick="event.stopPropagation();"
-                                               href="https://office.bexio.com/index.php/kb_order/show/id/{{ column_value.value }}"
-                                               target="blank_">{{ column_value.value }}</a>
-                                        {% else %}
-                                            {{ column_value.value }}
-                                        {% endif %}
-                                    {% endautoescape %}
-                                </td>
-                            {% endif %}
-                        {% endif %}
-                        {% endfor %}
-                    </tr>
-</div>
-                    {% endfor %}
-
-</div>
- <div id="record-container" style="width: 100%; height: 100vh; z-index: 10000; display: none; background-color: rgb(255, 255, 255)">
-        <button onclick="open_record_collapse()">
-            <span class="material-symbols-outlined">
-                close
-            </span>
-        </button>
-        <button onclick="edit_fields()" style="float: right">
-            <span class="material-symbols-outlined">
-                edit
-            </span>
-        </button>
-        <div class="container">
-            <br>
-            <input type="text" class="form-control" disabled placeholder="record title">
-            <br>
-            <textarea class="form-control" disabled placeholder="record content"></textarea>
-            <br>
-            <select class="form-select" disabled aria-label="Default select example">
-                <br>
-                <option selected>Open this select menu</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-            </select>
-            <br>
-            <button class="btn btn-primary">Save</button>
+                                {% endif %}
+                            {% endautoescape %}
+                        </td>
+                    {% endif %}
+                {% endif %}
+                {% endfor %}
+                        </tr>
         </div>
+    {% endfor %}
+</div>
+<div id="record-container" style="width: 100%; height: 100vh; z-index: 10000; display: none; background-color: rgb(255, 255, 255)">
+    <button class="btn btn-light" onclick="open_record_collapse()">
+        <span class="material-symbols-outlined">
+            close
+        </span>
+    </button>
+    <button class="btn btn-light" onclick="edit_fields()" style="float: right">
+        <span class="material-symbols-outlined">
+            edit
+        </span>
+    </button>
+    {% if tableid == 'timesheet' %}
+        <button class=" btn btn-secondary" onclick="signatureFunction()" style="float: right">
+                Firma
+        </button>
+    {% endif %}
+    <div class="container">
+        <br>
+        <input type="text" class="form-control" disabled placeholder="record title">
+        <br>
+        <textarea class="form-control" disabled placeholder="record content"></textarea>
+        <br>
+        <select class="form-select" disabled aria-label="Default select example">
+            <br>
+            <option selected>Open this select menu</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+        </select>
+        <br>
+        <button class="btn btn-primary">Save</button>
     </div>
+</div>
 
     <style>
         #record-container {
@@ -164,17 +148,30 @@
     </style>
 
     <script>
-           function open_record_collapse() {
-                $("#record-container").slideToggle();
+        function open_record_collapse() {
+            $("#record-container").slideToggle();
+            $('#record-container').find('input').prop('disabled', true);
+            $('#record-container').find('textarea').prop('disabled', true);
+            $('#record-container').find('select').prop('disabled', true);
+        }
 
-                $("input").prop("disabled", true);
-                $("textarea").prop("disabled", true);
-                $("select").prop("disabled", true);
-           }
+        function edit_fields() {
+            $('#record-container').find('input').prop('disabled', false);
+            $('#record-container').find('textarea').prop('disabled', false);
+            $('#record-container').find('select').prop('disabled', false);
+        }
 
-           function edit_fields() {
-               $("input").prop("disabled", false);
-               $("textarea").prop("disabled", false);
-               $("select").prop("disabled", false);
-           }
+        function signatureFunction() {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'signature_function' %}",
+                success: function (response) {
+                    $('#signatureModalContent').html(response);
+                    $('#signatureModal').modal('show');
+                    createCanvas()
+                },
+                error: function (xhr, status, error) {
+                }
+            });
+        }
     </script>
