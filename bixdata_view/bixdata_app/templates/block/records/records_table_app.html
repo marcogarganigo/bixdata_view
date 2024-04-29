@@ -1,103 +1,112 @@
 {% load static %}
 
-<div id="card-container" style="width: 100%; height: 90%; overflow:scroll; padding: 0; position: absolute">
+<div id="card-container" style="width: 100%; height: 90%; overflow:scroll; position: absolute; background-color: rgb(251 251 251) !important;">
  {% for record in records %}
-        <div class="card mx-auto mb-2 mt-2" style="width: 90%; max-height: 10rem; font-size: 9pt; overflow:scroll" onclick="open_record_collapse()">
+        <div class="card mx-auto mb-3 mt-3 ml-1 mr-1" style="width: 97%; font-size: 10pt; padding: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)" onclick="open_record_collapse(this)">
+                {% for column_value in record %}
+                    {% if forloop.counter0 > 2 %}
+                        {% if column_value.fieldtype == 'linked' %}
+                            <td class="records-linked" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="standard" data-layout="recordcard" style="font-weight: bold !important;">
+                                <!--
+                                    <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')"
+                                        data-fieldtype="{{ column_value.fieldtype }}"
+                                        class="linked-field popover-linked"
+                                        data-bs-toggle="popover"
+                                        data-bs-trigger="hover focus"
+                                        data-bs-title="Qui non c'è ancora niente ma ci stiamo lavorando"
+                                        data-bs-content="<img src= width='400px'>" data-bs-container="body"
+                                        data-bs-html="true"
+                                          data-bs-custom-class="popover-custom"
+                                        style="width: 300px"
+                                        >{{column_value.value}}</span>
 
-            {% for column_value in record %}
-                {% if forloop.counter0 > 2 %}
-                    {% if column_value.fieldtype == 'linked' %}
-                        <td class="records-linked" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="standard" data-layout="recordcard" style="font-weight: bold !important;">
-                            <!--
-                                <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')"
-                                    data-fieldtype="{{ column_value.fieldtype }}"
-                                    class="linked-field popover-linked"
-                                    data-bs-toggle="popover"
-                                    data-bs-trigger="hover focus"
-                                    data-bs-title="Qui non c'è ancora niente ma ci stiamo lavorando"
-                                    data-bs-content="<img src= width='400px'>" data-bs-container="body"
-                                    data-bs-html="true"
-                                      data-bs-custom-class="popover-custom"
-                                    style="width: 300px"
-                                    >{{column_value.value}}</span>
+                                    <script>$('.popover-linked').popover();</script>
+                                -->
+                                <span data-layout="modal"
+                                      onclick="event.stopPropagation(); open_record(this,'{{ column_value.link_tableid }}','{{ column_value.link_recordid }}')"
+                                      data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
+                                      data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
+                                      data-linkedtableid="{{ column_value.link_tableid }}"
+                                      data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe|truncatechars:50 }}</span>
+                                <script>
+                                    /*
+                                    $('.popover-linked').popover({
+                                        content: popoverContent,
+                                        html: true,
+                                        placement: 'right',
+                                        trigger: 'hover focus'
+                                    });
 
-                                <script>$('.popover-linked').popover();</script>
-                            -->
-                            <span data-layout="modal"
-                                  onclick="event.stopPropagation(); open_record(this,'{{ column_value.link_tableid }}','{{ column_value.link_recordid }}')"
-                                  data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
-                                  data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
-                                  data-linkedtableid="{{ column_value.link_tableid }}"
-                                  data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe|truncatechars:50 }}</span>
-                            <script>
-                                /*
-                                $('.popover-linked').popover({
-                                    content: popoverContent,
-                                    html: true,
-                                    placement: 'right',
-                                    trigger: 'hover focus'
-                                });
+                                     */
+                                </script>
 
-                                 */
-                            </script>
+                                <style>
+                                    .popover-custom {
+                                        max-width: 500px;
+                                    }
+                                </style>
+                            </td>
 
-                            <style>
-                                .popover-custom {
-                                    max-width: 500px;
-                                }
-                            </style>
-                        </td>
+                        {% elif column_value.fieldtype == 'Numero' %}
+                            <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-number" data-layout="recordcard"
+                                style="text-align: right;">
+                                {{ column_value.value }}
+                            </td>
+                        {% elif column_value.fieldtype == 'Memo' %}
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
+                                {{ column_value.value|truncatechars:50 }}
+                            </td>
 
-                    {% elif column_value.fieldtype == 'Numero' %}
-                        <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number" data-layout="recordcard"
-                            style="text-align: right;">
+                        {% elif column_value.fieldtype == 'Utente' %}
+                        {% if column_value.value %}
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                                <img src="{% static 'images/users/' %}{{ column_value.code }}.png?v={{ date }}" alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
+                                {{ column_value.value }}
+                        {% else %}
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
                             {{ column_value.value }}
-                        </td>
-                    {% elif column_value.fieldtype == 'Memo' %}
-                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                            data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
-                            {{ column_value.value|truncatechars:50 }}
-                        </td>
+                        {% endif %}
+                        {% elif column_value.fieldtypeweb == 'lookup' %}
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
 
-                    {% elif column_value.fieldtype == 'Utente' %}
-                    {% if column_value.value %}
-                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                            <img src="{% static 'images/users/' %}{{ column_value.code }}.png?v={{ date }}" alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
+                         <img src="{% static 'images/lookup/' %}{{ column_value.code}}.png?v={{ date }}" width="40px" height="40px" class="" onerror="handleImageError(this)">
                             {{ column_value.value }}
-                    {% else %}
-                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                        {{ column_value.value }}
-                    {% endif %}
-                    {% elif column_value.fieldtypeweb == 'lookup' %}
-                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
-                            data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                            </td>
 
-                     <img src="{% static 'images/lookup/' %}{{ column_value.code}}.png?v={{ date }}" width="40px" height="40px" class="" onerror="handleImageError(this)">
-                        {{ column_value.value }}
-                        </td>
-
-                    {% else %}
-                        <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
-                            {% autoescape off %}
-                                {% if column_value.fieldtypeweb == 'custom_bexiourl' %}
-                                    <a onclick="event.stopPropagation();"
-                                       href="https://office.bexio.com/index.php/kb_order/show/id/{{ column_value.value }}"
-                                       target="blank_">{{ column_value.value }}</a>
-                                {% else %}
-                                    {{ column_value.value }}
-                                {% endif %}
-                            {% endautoescape %}
-                        </td>
+                        {% else %}
+                            <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
+                                {% autoescape off %}
+                                    {% if column_value.fieldtypeweb == 'custom_bexiourl' %}
+                                        <a onclick="event.stopPropagation();"
+                                           href="https://office.bexio.com/index.php/kb_order/show/id/{{ column_value.value }}"
+                                           target="blank_">{{ column_value.value }}</a>
+                                    {% else %}
+                                        {{ column_value.value }}
+                                    {% endif %}
+                                {% endautoescape %}
+                            </td>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                {% endfor %}
-                        </tr>
+                    {% endfor %}
+                            </tr>
         </div>
     {% endfor %}
 </div>
+
+<div class="pagination" id="my-pagination" data-currentpage=1>
+    <a href="#" class="first" data-action="first">&laquo;</a>
+    <a href="#" class="previous" data-action="previous">&lsaquo;</a>
+    <input type="text" readonly="readonly" data-max-page="10"/>
+    <a href="#" class="next" data-action="next">&rsaquo;</a>
+    <a href="#" class="last" data-action="last">&raquo;</a>
+</div>
+
+
 <div id="record-container" style="width: 100%; height: 100vh; z-index: 10000; display: none; background-color: rgb(255, 255, 255)">
     <button class="btn btn-light" onclick="open_record_collapse()">
         <span class="material-symbols-outlined">
@@ -150,8 +159,25 @@
     </style>
 
     <script>
-        function open_record_collapse() {
-            $("#record-container").slideToggle();
+        function open_record_collapse(el) {
+
+            $(el).animate({
+              height: "toggle",
+              opacity: "toggle"
+            }, 500);
+
+
+
+            $("#record-container").animate({
+              height: "toggle",
+              opacity: "toggle"
+            }, 500);
+
+            $(el).animate({
+              height: "toggle",
+              opacity: "toggle"
+            }, 500);
+
             $('#record-container').find('input').prop('disabled', true);
             $('#record-container').find('textarea').prop('disabled', true);
             $('#record-container').find('select').prop('disabled', true);

@@ -15,11 +15,6 @@
             }
         });
 
-        if (window.innerWidth <= min_width) {
-            $("#block-record-card-container").css('display', 'none');
-            $("#block-records-search-container").css('width', '100%');
-        }
-
         $("#linked-table-modal").on("hidden.bs.modal", function () {
             $(this).find('#linked-table-modal-content').html("");
         });
@@ -28,95 +23,6 @@
     })
 
 
-    $(function () {
-        $('#calendar-tab a:last').tab('show');
-    });
-
-
-    function searchGantt() {
-        var serialized_data = [];
-        serialized_data.push({
-            name: 'table',
-            value: ''
-        });
-        serialized_data.push({
-            name: 'searchTerm',
-            value: $("#searchTerm").val()
-        });
-
-        $.ajax({
-            type: "POST",
-            url: "{% url 'block_records_gantt' %}",
-            data: serialized_data,
-            success: function (response) {
-                $("#gantt-tab-pane").html(response);
-            },
-            error: function () {
-                $("#gantt-tab-pane").html(response);
-            }
-        });
-    }
-
-    function searchKanban() {
-        var serialized_data = [];
-        serialized_data.push({
-            name: 'tableid',
-            value: '{{tableid}}'
-        });
-        $.ajax({
-            type: "POST",
-            url: "{% url 'block_records_kanban' %}",
-            data: serialized_data,
-            success: function (response) {
-                $("#kanban-tab-pane").html(response);
-            },
-            error: function () {
-                $("#kanban-tab-pane").html(response);
-            }
-        });
-    }
-
-    function searchCalendar() {
-        var serialized_data = [];
-        serialized_data.push(
-            {name: 'tableid', value: '{{tableid}}'}
-        );
-        $.ajax({
-            type: "POST",
-            url: "{% url 'block_records_calendar' %}",
-            data: serialized_data,
-            success: function (response) {
-                $("#calendar-tab-pane").html(response);
-            },
-            error: function (response) {
-                $("#calendar-tab-pane").html(response);
-            }
-        });
-    }
-
-    function searchChart() {
-        var serialized_data = [];
-        serialized_data.push({
-            name: 'table',
-            value: ''
-        });
-        serialized_data.push({
-            name: 'searchTerm',
-            value: $("#searchTerm").val()
-        });
-
-        $.ajax({
-            type: "POST",
-            url: "{% url 'block_records_chart' %}",
-            data: serialized_data,
-            success: function (response) {
-                //$("#chart-tab-pane").html(response);
-            },
-            error: function () {
-                //$("#chart-tab-pane").html(response);
-            }
-        });
-    }
 
 
     function refresh() {
@@ -170,55 +76,6 @@
         });
     }
 
-    function export_excel() {
-        var serialized_data = [];
-        serialized_data.push({
-            name: 'tableid',
-            value: '{{tableid}}'
-        });
-        serialized_data.push({
-            name: 'searchTerm',
-            value: $("#searchTerm").val()
-        });
-        serialized_data.push({
-            name: 'viewid',
-            value: $("#viewid").val()
-        });
-        serialized_data.push({
-            name: 'currentpage',
-            value: $('#my-pagination').data('currentpage')
-        });
-
-        serialized_data.push({
-            name: 'order_field',
-            value: $('#content-table').find('#block_records_table').data('order-field')
-        });
-        serialized_data.push({
-            name: 'order',
-            value: $('#content-table').find('#block_records_table').data('order')
-        });
-
-        $.ajax({
-            type: "POST",
-            url: "{% url 'export_excel' %}",
-            data: serialized_data,
-            xhrFields: {
-                responseType: 'blob' // Set the response type to 'blob'
-            },
-            success: function (response, status, xhr) {
-                const filename = xhr.getResponseHeader('filename')
-                const link = document.createElement('a');
-                link.href = window.URL.createObjectURL(response); // Create a Blob URL
-                link.download = filename;
-                link.click(); // Simulate a click event to trigger the download
-            },
-            error: function () {
-                // Handle error
-            }
-        });
-
-    }
-
     $("#searchTerm").ready(function () {
         $("input").keypress(function () {
             var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -251,102 +108,29 @@
         });
     });
 
-
-    function checkWidth(response) {
-        if (window.innerWidth > min_width) {
-            $("#bixdata_recordcard_container").html(response);
-        } else {
-            $("#record-modal-content").html(response);
-            $("#fullwidth_modal_newrecord").html(response);
-        }
-    }
-
-
-
-
-
-
-
-    function closeCard(vrbl) {
-        $(vrbl).closest('.modal').modal('hide');
-        setTimeout(function () {
-        }, 1000);
-        if (window.innerWidth > min_width) {
-            $(vrbl).closest("#RecordCard").slideToggle(200, function () {
-            });
-        }
-    }
-
-    $('.modal').on('hidden.bs.modal', function (e) {
-        // Remove the content of the component here
-        //$('#RecordCard').html('');
-        $('#bixdata_recordcard_container').html('');
-    })
-
-
-    $('#newRecordModal').on('hidden.bs.modal', function (e) {
-        $("#fullwidth_modal_newrecord").html("");
-    });
-
-
-
-    function closeLinkedTableModal() {
-        $("#linked-table-modal").modal("hide");
-    }
-
-    function open_kanban() {
-        var serialized_data = [];
-        $.ajax({
-            type: "POST",
-            url: controller_url + 'ajax_get_kanban',
-            data: serialized_data,
-            success: function (response) {
-                $("#bixdata_results_container").html(response);
-            },
-            error: function () {
-                $("#bixdata_results_container").html(response);
-            }
-        });
-    }
-
-
-
-
 </script>
 
 <style>
     .filter-column {
         height: 50px;
     }
-
-    {% if layout_setting == 'modal' %}
-        #block-records-search-container {
-            width: 100% !important;
-        }
-    {% endif %}
-
-    {% if tableid == 'deal' %}
-        #block-records-search-container {
-            width: 100% !important
-        }
-    {% endif %}
 </style>
 
 
 <div id="content-records" style="height: 98%">
     <div class="" style="width: 100%; height: 99%; margin-top: 1%">
         <!--Content tables start-->
-        <div id="block-records-search-container" class="col-xl-8 col-md-8 mb-4" style="height: 100%;">
-            <div id="content-table" class="card shadow mb-4" style="height: 100%;"> <!--card-->
-                <div id="content-card" class="card-body" style="height: 100%;"> <!--card-body-->
+        <div id="block-records-search-container" class="" style="height: 100%;">
+            <div id="content-table" class="card mb-4" style="height: 100%; box-shadow:none !important;"> <!--card-->
+                <div id="content-card" class="card-body" style="height: 100%; padding: 5px; background-color: rgb(251 251 251) !important; box-shadow: unset !important;"> <!--card-body-->
                     <!-- Views -->
                     <!-- Views end -->
                     <div id="search">
                         <div class="text-center">
                         <div class="text-center">
                             <div class="row">
-                                <div class="row" style="width: 100%">
-                                    <div>
+                                <div class="row" style="width: 100%; padding-right:0">
+                                    <div style="padding-left: 5px; padding-right: 5px; padding-bottom: 5px; margin: auto">
                                         <select id="viewid" class="form-select" aria-label="Default select example"
                                                 style="width: 20%; float: left" onchange="refresh()">
                                             {% for view in views %}
@@ -359,27 +143,20 @@
                                         </select>
                                         <input class="form-control me-2" type="search"
                                                placeholder="Ricerca ( Ctrl + K )"
-                                               aria-label="Search" style="width: 50%; float: left" id="searchTerm"
+                                               aria-label="Search" style="width: 30%; float: left; margin: 0 !important" id="searchTerm"
                                                autocomplete="off"
                                                onkeydown="if(event.keyCode === 13) { event.preventDefault(); refresh(); }">
                                         <button class="btn btn-outline-danger records-button" type="button"
-                                                style=" float: left" onclick="refresh()">Cerca
+                                                style=" float: left; margin: 0 !important" onclick="refresh()">Cerca
                                         </button>
-                                    </div>
-
-                                </div>
-                                <div class="row" style="justify-content: end">
-                                    <div class="gap-2 d-md-flex"
-                                         style="margin-top: 3px; margin-right: 3px; width: 50%; float: right">
-
-
-                                        <button class="btn btn-outline-danger me-md-2 center-icon-button records-button" style="width: 50%; float: right" type="button" onclick="refresh()">
+                                        <button class="btn btn-outline-danger me-md-2 center-icon-button records-button" style="width: 15%; float: right" type="button" onclick="refresh()">
                                             <span class="material-symbols-outlined">cached</span>
                                         </button>
-                                        <button class="btn btn-outline-danger me-md-2 center-icon-button records-button" type="button" style="width: 50%; float: left" onclick="newRecord('{{tableid}}')">
+                                        <button class="btn btn-outline-danger me-md-2 center-icon-button records-button" type="button" style="width: 15%; float: right" onclick="newRecord('{{tableid}}')">
                                             <span class="material-symbols-outlined">add</span>
                                         </button>
                                     </div>
+
                                 </div>
 
                             </div>

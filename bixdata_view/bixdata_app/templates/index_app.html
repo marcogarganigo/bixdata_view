@@ -103,7 +103,7 @@
                         <ul class="side-nav-second-level">
                             {% for table in favorite_tables %}
                              <li onclick="getContentRecords('{{ table.tableid }}')">
-                                    <a class="side-nav-txt" onclick="setColor(this)">{{ table.description }}</a>
+                                    <a class="side-nav-txt" onclick="toggleCollapse(); setColor(this)">{{ table.description }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
@@ -123,12 +123,14 @@
                         <ul class="side-nav-second-level">
                             {% for dashboard in active_dashboards %}
                                 <li onclick="getDashboard('{{ dashboard.id }}')">
-                                    <a class="side-nav-txt" onclick="setColor(this)">{{ dashboard.name }}</a>
+                                    <a class="side-nav-txt" onclick="toggleCollapse(); setColor(this)">{{ dashboard.name }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
                     </div>
                 </li>
+
+           <br>
 
                 <script>
                     function setColor(el) {
@@ -137,8 +139,14 @@
                             el.classList.remove('sidenavitem-active');
                         });
                         el.classList.add('sidenavitem-active');
-
                     }
+
+                    function closeCollapse(collapseId) {
+                    var collapse = document.getElementById(collapseId);
+                    var collapseInstance = new bootstrap.Collapse(collapse);
+                    collapseInstance.hide();
+                }
+
 
                     var els = document.querySelectorAll('.side-nav-txt');
                     els.forEach(function (el) {
@@ -163,7 +171,7 @@
 
 
 
-    <div id="bixdata_app" class="container-fluid" style="height: 100%; width: 100%">
+    <div id="bixdata_app" class="container-fluid" style="height: 100%; width: 100%; background-color: rgb(251 251 251) !important;">
         <div id="content_container" style="height: 95%; width: 100%; margin: auto"></div>
     </div>
 
