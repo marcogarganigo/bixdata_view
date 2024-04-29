@@ -355,7 +355,7 @@
                                     <input type="hidden" class="hidden-input {{ mandatory }} {{ calcolato }}"
                                            name="{{ field.fieldid }}" value="{{ field.recordid }}">
 
-                                    <p id="autocomplete-paragraph-{{ recordid }}" style="display:none; color: red">la
+                                    <p id="autoc-paragraompleteph-{{ recordid }}" style="display:none; color: red">la
                                         trattativa verrà impostata con un prezzo a progetto</p>
 
                                     <button type="button" class="btn btn-light"
@@ -411,7 +411,7 @@
                                         {% if tableid == 'dealline' %}
                                             update_dealline(this)
 
-                                            if (ui.item.value == 'Consegna e Installazione' || ui.item.value == 'Installazione e configurazione a progetto') {
+                                            if (ui.item.value == 'Consegna e Installazione Singola Stampante Multifunzione' || ui.item.value == 'Installazione e configurazione a progetto') {
                                                 $('#autocomplete-paragraph-{{ recordid }}').css('display', 'block')
                                                 $('#field-expectedhours').addClass('necessary')
                                                 $('[title="expectedhours"]').find('p').addClass('badge bg-danger fs-5 badge-color')
