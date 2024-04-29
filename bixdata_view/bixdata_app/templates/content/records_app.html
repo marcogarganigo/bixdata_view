@@ -122,7 +122,6 @@
     function refresh() {
         var serialized_data = [];
         console.info('referesh:');
-        console.info($('#records_filters_form').serializeArray())
         console.info('refresh2')
         serialized_data.push({
             name: 'tableid',
@@ -137,10 +136,7 @@
             name: 'viewid',
             value: $("#viewid").val()
         });
-        serialized_data.push({
-            name: 'filters',
-            value: convertFormToJSON(serializeForm($('#records_filters_form').find("select,textarea,input")))
-        });
+
         serialized_data.push({
             name: 'currentpage',
             value: $('#my-pagination').data('currentpage')
@@ -155,7 +151,7 @@
             value: $('#content-table').find('#block_records_table').data('order')
         });
 
-        //serialized_data=$('#filters').serializeArray()
+
         //$("#records_table_container").load('/loading/');
         $("#records_table_container").load('/loading/', function () {
             $.ajax({
@@ -314,22 +310,6 @@
     }
 
 
-    $(document).ready(function () {
-        $.ajax({
-            type: "POST",
-            url: "{% url 'get_records_grouped' %}",
-            data: {
-                csrf: '{{ csrf_token }}',
-                tableid: '{{ tableid }}',
-            },
-            success: function (response) {
-                $("#group-tab-pane").html(response);
-            },
-            error: function (response) {
-                $("#group-tab-pane").html(response);
-            }
-        });
-    });
 
 
 </script>
@@ -361,7 +341,6 @@
                 <div id="content-card" class="card-body" style="height: 100%;"> <!--card-body-->
                     <!-- Views -->
                     <!-- Views end -->
-                    <!-- Filters start-->
                     <div id="search">
                         <div class="text-center">
                         <div class="text-center">
@@ -407,54 +386,7 @@
                         </div>
                     </div>
 
-                    <div id="filters" style="display: none;">
-                            <div class="card shadow-sm p-3 mb-5 bg-body rounded"
-                                 style="margin-left: 30px;margin-right: 30px;">
-                                <p class="card-text">
-                                <div class="container text-center">
-                                    <div class="row">
-                                        {{block_search_fields}} <!--error toggle navbar here-->
-                                        <div class="col">
-                                            <button type="button" class="btn btn-outline-secondary"
-                                                    onclick="$('#hiddenCardAF').toggle(100);">Filtri Avanzati
-                                            </button>
-                                            </br>
-                                        </div>
-                                    </div>
-                                </div>
-                                </p>
-                            </div>
-
-                            <div id="hiddenCardAF" style="display: none; margin-top: -40px">
-                                <div class="card shadow-sm p-3 mb-5 bg-body rounded"
-                                     style="margin-left: 30px;margin-right: 30px;">
-                                    <div class="card-body">
-                                        <div class="container text-center">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <label for="birthday">inserisci una data</label>
-                                                    <input type="date" id="birthday" name="birthday">
-                                                </div>
-                                                <div class="col">
-                                                    <div class="input-group mb-3">
-                                                        <label class="input-group-text"
-                                                               for="inputGroupSelect01">Options</label>
-                                                        <select class="form-select" id="inputGroupSelect01">
-                                                            <option selected>Choose...</option>
-                                                            <option value="1">One</option>
-                                                            <option value="2">Two</option>
-                                                            <option value="3">Three</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    <!-- Filters end-->
+              
                     <script>
                         function underConstruction(el) {
                             $.ajax({
