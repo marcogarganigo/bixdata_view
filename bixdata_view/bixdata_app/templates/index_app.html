@@ -180,11 +180,11 @@
             },
             url: "{% url 'dashboard' %}",
             success: function (response) {
-                $("#content-container").html(response);
+                $("#content_container").html(response);
                 $('[data-toggle="tooltip"]').tooltip();
             },
             error: function (response) {
-                $("#content-container").html(response);
+                $("#content_container").html(response);
             }
         });
     }

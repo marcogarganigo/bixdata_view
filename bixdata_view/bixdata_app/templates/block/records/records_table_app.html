@@ -1,6 +1,8 @@
+{% load static %}
+
 <div id="card-container" style="width: 100%; height: 90%; overflow:scroll; padding: 0; position: absolute">
  {% for record in records %}
-        <div class="card mx-auto mb-2 mt-2" style="width: 90%; max-height: 10rem; font-size: 9pt" onclick="open_record_collapse()">
+        <div class="card mx-auto mb-2 mt-2" style="width: 90%; max-height: 10rem; font-size: 9pt; overflow:scroll" onclick="open_record_collapse()">
 
             {% for column_value in record %}
                 {% if forloop.counter0 > 2 %}
@@ -62,7 +64,7 @@
                     {% if column_value.value %}
                         <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                             data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
-                            <img src="" alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
+                            <img src="{% static 'images/users/' %}{{ column_value.code }}.png?v={{ date }}" alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
                             {{ column_value.value }}
                     {% else %}
                         <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
@@ -73,7 +75,7 @@
                         <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                             data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
 
-                     <img src="" width="40px" height="40px" class="" onerror="handleImageError(this)">
+                     <img src="{% static 'images/lookup/' %}{{ column_value.code}}.png?v={{ date }}" width="40px" height="40px" class="" onerror="handleImageError(this)">
                         {{ column_value.value }}
                         </td>
 
