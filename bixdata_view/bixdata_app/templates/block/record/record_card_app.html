@@ -6,9 +6,6 @@
 </style>
 
 <script type="text/javascript">
-    $("#RecordCard").ready(function () {
-        $('[data-bs-toggle="tooltip"]').tooltip()
-    });
 
     $(document).ready(function () {
         setTimeout(function () {
@@ -48,16 +45,6 @@
          });*/
     }
 
-    if (screen.width <= min_width) {
-        if ($("html").attr("data-sidenav-size") == "condensed") {
-            $(".tabs-title").css("display", "none");
-            $(".tabs-icon").css("display", "block");
-        }
-    } else {
-        $(".tabs-title").css("display", "block");
-        $(".tabs-icon").css("display", "none");
-    }
-
     function copyFunc(el, tableid, recordid) {
 
         $(el).find('.mdi').removeClass('mdi-content-copy')
@@ -80,21 +67,6 @@
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 link: link
             },
-        });
-    }
-
-    function duplicateFunc() {
-        var serialized_data = [];
-        $.ajax({
-            type: "POST",
-            url: "{% url 'record_card_duplicate' %}",
-            data: serialized_data,
-            success: function (response) {
-                alert('duplicate')
-            },
-            error: function (response) {
-                alert('duplicate')
-            }
         });
     }
 
@@ -142,14 +114,6 @@
             } else {
             }
         });
-    }
-
-    function backdropHide() {
-        if ($('.modal-backdrop').attr('style') === 'hide') {
-            $('.modal-backdrop').fadeIn(500);
-        } else {
-            $('.modal-backdrop').fadeOut(500);
-        }
     }
 
     function get_timesheet_serviceassets(el) {
@@ -283,27 +247,6 @@
         window.open(url, '_blank');
     }
 
-    function openModalFromCard() {
-
-        $('#block_record_card-{{ recordid }}').remove()
-
-
-        var serialized_data = [];
-        serialized_data.push({name: 'tableid', value: '{{ tableid }}'});
-        serialized_data.push({name: 'recordid', value: '{{ recordid }}'});
-        serialized_data.push({name: 'contextfunction', value: 'edit'});
-
-        $.ajax({
-            type: "POST",
-            url: "{% url 'block_record_card' %}",
-            data: serialized_data,
-            success: function (response) {
-                $('#recordModal').modal('show');
-                $("#record-modal-content").html(response);
-            }
-        });
-    }
-
     function serializeForm(formElements) {
         var formData = [];
         //var formElements = document.getElementById("myForm").elements;
@@ -389,7 +332,7 @@
 
             <div id="card-menu">
                 <button type="button" id="close-button" class="btn-close button-recordcard" onclick="open_record_collapse()"></button>
-            
+
                 <button class="btn" onclick="edit_fields()" style="float: right">
                     <span class="material-symbols-outlined">
                         edit
@@ -412,8 +355,8 @@
                             onclick="signatureFunction()">Firma
                     </button>
 
-                    <div class="modal fade" id="signatureModal" aria-labelledby="signatureModal" aria-hidden="true" data-recordid="{{ recordid }}">
-                        <div class="modal-dialog modal-fullscreen">
+                    <div class="container-fluid fade" id="signatureModal" aria-labelledby="signatureModal" aria-hidden="true" data-recordid="{{ recordid }}">
+                        <div class="modal-dialog modal-sm-12">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="exampleModalLabel">Firma Digitale</h1>
@@ -637,16 +580,6 @@
                     </script>
                 {% endif %}
 
-                <script>
-
-
-                    if ($('#block_record_card-{{ recordid }}').closest('.modal').length == 0) {
-                        $('#open-popup-{{ recordid }}').css('display', 'block');
-                    } else {
-                        $('#open-popup-{{ recordid }}').css('display', 'none');
-                    }
-                </script>
-
                 {% if tableid == 'task' %}
                     <button style="display: none" id="close-task-button-{{ recordid }}" class="btn btn-success"
                             type="button"
@@ -677,10 +610,6 @@
                             onclick="load_fields(this, '{{ tableid }}', '{{ recordid }}', '{{ master_tableid }}', '{{ master_recordid }}')">
 
                         <p class="tabs-title">Campi</p>
-                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
-                              data-bs-title="fields">
-                            text_fields
-                        </span>
 
                     </button>
                     <button class="nav-link" id="linked-tab-{{ recordid }}" data-bs-toggle="tab"
@@ -689,10 +618,6 @@
                             aria-selected="false">
 
                         <p class="tabs-title">Collegati</p>
-                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
-                              data-bs-title="linked">
-                            link
-                        </span>
 
                     </button>
                     <!--
