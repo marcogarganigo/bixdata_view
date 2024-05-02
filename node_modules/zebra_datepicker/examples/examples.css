@@ -1,0 +1,71 @@
+body {
+    font-family: Tahoma, Helvetica, Arial, sans-serif;
+}
+
+h1 small {
+    display: block;
+    font-size: 50%;
+    color: #666;
+    margin-top: 0.2em;
+}
+
+.info {
+    padding: 1em;
+    background: #fafafa;
+}
+
+.syntaxhighlighter {
+    padding: .5em 0;
+}
+
+#container {
+    z-index: 100;
+}
+
+.Zebra_DatePicker .dp_daypicker .myclass {
+    background: #E8E8E8 url('close.png') no-repeat center center;
+    text-indent: -9999px;
+}
+
+.bootstrap .Zebra_DatePicker .dp_daypicker td.myclass_disabled {
+    background: #FFF url('close.png') no-repeat center center;
+    text-indent: -9999px;
+}
+
+.top {
+    display: block;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 33px;
+}
+
+.top a {
+    background: #FFF;
+    position: relative;
+    top: 8px;
+    padding-right: 10px;
+}
+
+blockquote.bg-warning.Zebra_Pin {
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 12px 6px -6px rgba(0, 0, 0, .1);
+    transition: box-shadow .25s linear;
+}
+
+.screenshot {
+    background: url('themes.png');
+    width: 270px;
+    height: 285px;
+    margin: 0 auto;
+}
+
+.screenshot-default {
+    background-position: left -15px;
+}
+
+.screenshot-metallic {
+    background-position: -270px -15px;
+}
+
+.screenshot-bootstrap {
+    background-position: -542px -15px;
+}
