@@ -299,7 +299,7 @@ def get_records_table(request, tableid, master_tableid='', master_recordid='', s
 
 
 @login_required(login_url='/login/')
-def get_record_card(request):
+def get_record_card_app(request):
     tableid = request.POST.get('tableid')
     recordid = request.POST.get('recordid')
     master_tableid = request.POST.get('master_tableid')
@@ -334,7 +334,7 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
     if tableid == 'deal':
         context['recordtab']='linked'
     # returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
-    return render_to_string('block/record/record_card.html', context)
+    return render_to_string('block/record/record_card_app.html', context)
 
 
 # Questa funzione serve per creare il badge
