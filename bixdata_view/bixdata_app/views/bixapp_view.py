@@ -403,6 +403,85 @@ def get_block_record_linked(tableid, recordid):
     record_linked_labels = render_to_string('block/record/record_linked.html', context)
     return record_linked_labels
 
+@login_required(login_url='/login/s')
+def get_block_record_fields_app(request, prefilled_fields=dict()):
+    context = dict()
+    http_response = request.POST.get('http_response')
+    tableid = request.POST.get('tableid')
+    recordid = request.POST.get('recordid')
+    ticketid = request.POST.get('ticketid')
+    recordid_ticket = request.POST.get('recordid_ticket')
+    master_tableid = request.POST.get('master_tableid')
+    master_recordid = request.POST.get('master_recordid')
+    contextfunction = request.POST.get('contextfunction')
+    contextreference = request.POST.get('contextreference')
+    # creator = request.POST.get('creator')
+
+    row = SysUser.objects.filter(bixid=request.user.id).values('id')
+
+    if row:
+        userid = row[0]
+        userid = userid['id']
+        context['userid'] = userid
+
+    record = Record(tableid=tableid, recordid=recordid, userid=userid)
+    record.master_tableid = master_tableid
+    record.master_recordid = master_recordid
+    record.context = contextfunction
+    fields = record.get_fields()
+
+    context['record_fields_labels'] = fields
+    context['contextfunction'] = contextfunction
+    context['contextreference'] = contextreference
+    context['tableid'] = tableid
+    context['recordid'] = recordid
+    context['master_tableid'] = master_tableid
+    context['master_recordid'] = master_recordid
+
+    bixuserid = get_userid(request.user.id)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT value FROM sys_user_settings WHERE setting = 'record_open_layout' AND userid = %s",
+            [bixuserid]
+        )
+        user_setting = cursor.fetchone()
+        user_setting = user_setting[0]
+
+        context['user_setting'] = user_setting
+
+    if tableid == 'timesheet':
+        context['timesheet'] = uuid.uuid4()
+        if contextfunction != 'insert':
+            timesheet_record = Record(tableid='timesheet', recordid=recordid)
+
+            if timesheet_record.fields['validated'] == 'Si':
+                context['edit_block'] = True
+            else:
+                context['edit_block'] = False
+
+            if userid in [53, 2, 47, 50, 3]:
+                context['edit_block'] = False
+        else:
+            context['edit_block'] = False
+
+        context['block_record_fields_timesheet'] = render_to_string('block/record/record_fields_app.html', context,
+                                                                    request=request)
+        context['block_record_fields'] = render_to_string('block/record/custom/record_fields_timesheet_app.html', context,
+                                                          request=request)
+        block_record_fields_container = render_to_string('block/record/record_fields_container_app.html', context,
+                                                         request=request)
+    else:
+        context['block_record_fields'] = render_to_string('block/record/record_fields_app.html', context, request=request)
+        block_record_fields_container = render_to_string('block/record/record_fields_container_app.html', context,
+                                                         request=request)
+
+    if (http_response):
+        return HttpResponse(block_record_fields_container)
+    else:
+        return block_record_fields_container
+
+
 
 
 

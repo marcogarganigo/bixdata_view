@@ -45,6 +45,7 @@ urlpatterns = [
     path('test_lock/', alpha.test_lock, name='test_lock'),
     path('testtest/', alpha.testtest, name='testtest'),
     path('content_records/', bixdata_view.get_content_records, name='content_records'),
+    path('content_report/', bixdata_view.get_content_report, name='content_report'),
     path('chart/', alpha.get_render_content_chart, name='charts_view'),
     path('block_records_table/', bixdata_view.get_records_table_render, name='block_records_table'),
     path('block_records_gantt/', alpha.get_block_records_gantt, name='block_records_gantt'),
@@ -167,4 +168,6 @@ urlpatterns = [
     path('content_records_app/', bixapp_view.get_content_records, name='content_records_app'),
     path('get_records_table_app/', bixapp_view.get_records_table_render, name='get_records_table_app'),
     path('get_record_card_app/', bixapp_view.get_record_card_app, name='get_record_card_app'),
+    path('get_block_record_fields_app/', bixapp_view.get_block_record_fields_app, name='get_block_record_fields_app'),
+    path('report_excel/', bixdata_view.report_excel, name='report_excel'),
 ]

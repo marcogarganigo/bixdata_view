@@ -1,0 +1,367 @@
+<script>
+
+
+    function addNewRow() {
+        // Get reference to the table body
+        var tableBody = document.querySelector('#myTable-{{ timesheet }} tbody');
+
+        // Create a new row
+        var newRow = document.createElement('tr');
+        //add a remove button
+        var remove = document.createElement('i');
+        remove.setAttribute('class', 'mdi mdi-close');
+        remove.setAttribute('onclick', 'removeRow(this)');
+        newRow.appendChild(remove);
+
+
+        // Create three columns for the new row
+        var column1 = document.createElement('td');
+        var column1Input = document.createElement('input');
+        column1Input.setAttribute('type', 'text');
+        column1Input.setAttribute('class', 'form-control');
+        column1Input.setAttribute('placeholder', 'Descrizione');
+        column1.appendChild(column1Input);
+
+        var column2 = document.createElement('td');
+        var column2Input = document.createElement('input');
+        column2Input.setAttribute('type', 'number');
+        column2Input.setAttribute('class', 'form-control');
+        column2Input.setAttribute('placeholder', 'Quantità prevista');
+        column2.appendChild(column2Input);
+
+        var column3 = document.createElement('td');
+        var column3Input = document.createElement('input');
+        column3Input.setAttribute('type', 'number');
+        column3Input.setAttribute('class', 'form-control');
+        column3Input.setAttribute('placeholder', 'Quantità installata');
+        column3.appendChild(column3Input);
+
+        var column4 = document.createElement('td');
+        var column4Input = document.createElement('input');
+        column4Input.setAttribute('type', 'text');
+        column4Input.setAttribute('class', 'form-control');
+        column4Input.setAttribute('placeholder', 'Prodotto');
+        column4Input.setAttribute('id', '{{ recordid }}-autocomplete2');
+        column4.appendChild(column4Input);
+
+
+        var column4HiddenInput = document.createElement('input');
+        column4HiddenInput.setAttribute('type', 'hidden');
+        column4HiddenInput.setAttribute('class', 'hidden-input');
+        column4HiddenInput.setAttribute('name', 'recordidproduct');
+        column4HiddenInput.setAttribute('value', '{{ recordid }}');
+        column4.appendChild(column4HiddenInput);
+
+
+        column1.style.width = '30%';
+        column2.style.width = '20%';
+        column3.style.width = '20%';
+        column4.style.width = '30%';
+
+
+        newRow.appendChild(column1);
+        newRow.appendChild(column2);
+        newRow.appendChild(column3);
+        newRow.appendChild(column4);
+
+
+        tableBody.appendChild(newRow);
+    }
+
+    $(function () {
+        function log(message) {
+            $("<div>").text(message).prependTo("#log");
+            $("#log").scrollTop(0);
+        }
+
+        var autocompleteElement = $('#{{ recordid }}-autocomplete2')
+
+
+        autocompleteElement.autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'get_autocomplete_data' %}",
+                    data: {
+                        'term': request.term,
+                        'tableid': 'timesheetline',
+                        'mastertableid': 'product'
+                    },
+                    success: function (data) {
+                        console.info(data)
+                        response(data.data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            },
+            minLength: 0, // Set minLength to 0 to show autocomplete on focus
+            select: function (event, ui) {
+                // console.log( "Selected: " + ui.item.id );
+
+                $(this).siblings('.hidden-input').val(ui.item.id);
+                {% if tableid == 'dealline' %}
+                    update_dealline(this)
+                {% endif %}
+
+                /*
+                $.ajax({
+                    url: "
+                {% url 'get_badge' %}",
+                                        data: {
+                                            'recordid': ui.item.id,
+                                            'tableid': '
+                {{tableid}}',
+                                        },
+                                        success: function (data) {
+                                            console.info(data)
+                                            response(data.data);
+                                        }
+                                    });
+                                    */
+            }
+        }).focus(function () {
+            // Trigger autocomplete on focus
+            $(this).autocomplete("search", "");
+        });
+
+        // Handle empty input
+        autocompleteElement.on("input", function () {
+            var inputValue = $(this).val();
+            if (inputValue === "") {
+                $(this).val(""); // Imposta il valore predefinito
+                $(this).siblings('.hidden-input').val("");
+
+            }
+        });
+    });
+
+
+    function showOption() {
+        $(this).autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "{% url 'get_autocomplete_data' %}",
+                    data: {
+                        'term': request.term,
+                        'tableid': 'product',
+                        'mastertableid': 'timesheetline'
+                    },
+                    success: function (data) {
+                        console.info(data)
+                        response(data.data);
+                    }
+                });
+            },
+            minLength: 0,
+            select: function (event, ui) {
+                //console.log( "Selected: " + ui.item.id );
+                $(this).siblings('.hidden-input').val(ui.item.id);
+
+            }
+        });
+    }
+
+    function removeRow(button) {
+        // Get reference to the table body
+        var tableBody = document.querySelector('#myTable-{{ timesheet }} tbody');
+
+        // Get reference to the button's parent row
+        var buttonRow = button.closest('tr');
+
+        // Remove the parent row from the table body
+        tableBody.removeChild(buttonRow);
+    }
+
+    function saveRows() {
+        var tableRows = document.querySelectorAll('#myTable-{{ timesheet }} tbody tr');
+        var rowsArray = [];
+
+        // Iterate through each table row
+        tableRows.forEach(function (row) {
+            var rowValues = [];
+            var rowInputs = row.querySelectorAll('input');
+
+            // Iterate through each input field in the row
+            rowInputs.forEach(function (input) {
+                rowValues.push(input.value);
+            });
+
+            // Add the row values to the array
+            rowsArray.push(rowValues);
+        });
+
+        // Print the array to the console
+        console.log(rowsArray);
+    }
+
+
+    function getprojectid() {
+        //pick inpaut value by name
+        var projectid = document.getElementsByName("recordidproject_")[0].value;
+
+        if (projectid != 'None') {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'get_project_id' %}",
+                data: {projectid: projectid},
+                success: function (response) {
+                    $.each(response, function (index, item) {
+                        $.each(item, function (index, item) {
+
+                            //alert(item.quantity)
+
+                            // Get reference to the table body
+                            var tableBody = document.querySelector('#myTable-{{ timesheet }} tbody');
+
+                            // Create a new row
+                            var newRow = document.createElement('tr');
+                            //add a remove button
+                            var remove = document.createElement('i');
+                            remove.setAttribute('class', 'mdi mdi-close');
+                            remove.setAttribute('onclick', 'removeRow(this)');
+                            newRow.appendChild(remove);
+
+
+                            // Create three columns for the new row
+                            var column1 = document.createElement('td');
+                            var column1Input = document.createElement('input');
+                            column1Input.setAttribute('type', 'text');
+                            column1Input.setAttribute('class', 'form-control');
+                            column1Input.setAttribute('placeholder', 'Descrizione');
+                            column1Input.setAttribute('value', item.name);
+                            column1.appendChild(column1Input);
+
+                            var column2 = document.createElement('td');
+                            var column2Input = document.createElement('input');
+                            column2Input.setAttribute('type', 'number');
+                            column2Input.setAttribute('class', 'form-control');
+                            column2Input.setAttribute('placeholder', 'Quantità prevista');
+                            column2Input.setAttribute('value', item.quantity);
+                            column2.appendChild(column2Input);
+
+                            var column3 = document.createElement('td');
+                            var column3Input = document.createElement('input');
+                            column3Input.setAttribute('type', 'number');
+                            column3Input.setAttribute('class', 'form-control');
+                            column3Input.setAttribute('placeholder', 'Quantità installata');
+                            column3.appendChild(column3Input);
+
+                            var column4 = document.createElement('td');
+                            var column4Input = document.createElement('input');
+                            column4Input.setAttribute('type', 'text');
+                            column4Input.setAttribute('class', 'form-control');
+                            column4Input.setAttribute('placeholder', 'Prodotto');
+                            column4.appendChild(column4Input);
+
+                            // Append the columns to the new row
+                            newRow.appendChild(column1);
+                            newRow.appendChild(column2);
+                            newRow.appendChild(column3);
+                            newRow.appendChild(column4);
+
+                            // Append the new row to the table body
+                            tableBody.appendChild(newRow);
+
+                        });
+
+                    });
+
+                },
+                error: function () {
+                    alert('ko')
+                }
+
+            })
+        } else {
+            alert('Nessun progetto associato')
+        }
+    }
+</script>
+
+
+<div class="container">
+    <div class="row">
+        <div>
+            {{ block_record_fields_timesheet }}
+        </div>
+                <!--
+
+        <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary mdi mdi-plus"
+                style="width: auto" onclick="addNewRow(this)"></button>
+        <button id="addRowButton-"{{ timesheet }} type="button" class="btn btn-secondary " style="width: auto"
+                onclick="getprojectid()">recupera materiale progetto
+        </button>
+
+        <table id="myTable-{{ timesheet }}" class="table">
+            <thead>
+            <tr>
+                <th>Descrizione</th>
+                <th>Quantità prevista</th>
+                <th>Quantità installata</th>
+                <th>Prodotto</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        -->
+    </div>
+</div>
+<script>
+
+
+</script>
+
+{% if contextfunction == 'view' %}
+    <style>
+        #save-button-{{ recordid }} {
+            display: none;
+        }
+    </style>
+
+    <script>
+        $("#fields-scroll-container input").attr("disabled", true);
+        $("#fields-scroll-container select").attr("disabled", true);
+        $("#fields-scroll-container textarea").attr("disabled", true);
+        $("save-button-{{ recordid }}").remove();
+    </script>
+
+{% endif %}
+
+
+<style>
+    #myTable-{{ timesheet }} {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    #myTable-{{ timesheet }} thead {
+        width: 100%;
+        display: table;
+    }
+
+    #myTable-{{ timesheet }} tbody {
+        height: 200px; /* Adjust the height as needed */
+        overflow-y: scroll;
+        display: block;
+    }
+
+    #myTable-{{ timesheet }} thead th,
+    #myTable-{{ timesheet }} tbody td {
+        padding: 8px;
+        text-align: left;
+    }
+
+    #myTable-{{ timesheet }} thead th {
+        background-color: #f2f2f2;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    #myTable-{{ timesheet }} tbody td {
+        width: calc(100% / 3); /* Set the width based on the number of columns */
+    }
+</style>

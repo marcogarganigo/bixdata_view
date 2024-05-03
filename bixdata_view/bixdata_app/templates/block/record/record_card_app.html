@@ -7,6 +7,30 @@
 
 <script type="text/javascript">
 
+
+    function load_fields_app(el, tableid, recordid, master_tableid, master_recordid) {
+        console.info('base.js-load_fields')
+        console.info(base_url)
+        $.ajax({
+            type: "POST",
+            url: "/get_block_record_fields_app/",
+            data: {
+                'http_response': 'true',
+                'tableid': tableid,
+                'recordid': recordid,
+                'master_tableid': master_tableid,
+                'master_recordid': master_recordid,
+                'contextfunction': 'edit',
+            },
+            success: function (response) {
+                $(el).closest('.block_record_card').find('.tab-pane-fields').append(response)
+            },
+            error: function (response) {
+                $(el).closest('.block_record_card').find('.tab-pane-fields').append(response)
+            }
+        });
+    }
+
     $(document).ready(function () {
         setTimeout(function () {
             if ($('#field-validated').val() !== 'Si') {
@@ -607,7 +631,7 @@
                             data-bs-target="#fields-tab-pane-{{ recordid }}" type="button" role="tab"
                             aria-controls="fields-tab-pane-{{ recordid }}"
                             aria-selected="true"
-                            onclick="load_fields(this, '{{ tableid }}', '{{ recordid }}', '{{ master_tableid }}', '{{ master_recordid }}')">
+                            onclick="load_fields_app(this, '{{ tableid }}', '{{ recordid }}', '{{ master_tableid }}', '{{ master_recordid }}')">
 
                         <p class="tabs-title">Campi</p>
 

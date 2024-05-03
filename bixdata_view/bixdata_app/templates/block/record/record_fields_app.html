@@ -1,0 +1,510 @@
+{% load define_action %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
+
+
+<style>
+    ul.ui-autocomplete {
+        z-index: 99999;
+    }
+</style>
+
+<script>
+    function toggleCollapse(el) {
+        $(el).next('.div-collapse').slideToggle(200);
+    }
+
+    function serializeForm(formElements) {
+        var formData = [];
+        //var formElements = document.getElementById("myForm").elements;
+        for (var i = 0; i < formElements.length; i++) {
+            var element = formElements[i];
+            if (element.name) {
+                if (element.type === "select-multiple") {
+                    var selectedOptions = [];
+                    for (var j = 0; j < element.options.length; j++) {
+                        if (element.options[j].selected) {
+                            selectedOptions.push(element.options[j].value);
+                        }
+                    }
+                    formData.push({name: element.name, value: selectedOptions});
+                } else if (element.type === "checkbox") {
+                    if (element.checked) {
+                        formData.push({name: element.name, value: element.value});
+                    }
+                } else {
+                    formData.push({name: element.name, value: element.value});
+                }
+            }
+        }
+        return formData;
+    }
+
+
+    function selectAllText(input) {
+        input.setSelectionRange(0, input.value.length);
+    }
+
+    $('#fields_container_{{ tableid }}_{{ recordid }}').find('.select2-input').each(function () {
+        $(this).select2({
+            dropdownParent: $(this).parent()
+        }).addClass('select2-initialized');
+    });
+
+
+    $(document).on('select2:open', function (e) {
+        window.setTimeout(function () {
+            document.querySelector('input.select2-search__field').focus();
+        }, 0);
+    })
+
+
+    function set_checkbox_value(el) {
+        if (el.checked) {
+            $(el).next('input').val('Si');
+        } else {
+            $(el).next('input').val('No');
+        }
+    }
+
+    $(document).ready(function () {
+        tableid = "{{tableid}}"
+        //$('input.datepicker').Zebra_DatePicker();
+        $('.field').change(function () {
+            if (tableid == "dealline") {
+                update_dealline(this)
+            }
+        })
+
+        $('.calcolato').prop("readonly", true);
+        $('.calcolato').css({"background-color": "#f5f5f5"})
+
+    });
+
+
+    function update_dealline(el) {
+        container = $(el).closest('.container ');
+        field_type = $(el).data('type');
+
+        quantity = $(container).find('#field-quantity').val();
+        if (quantity == "") {
+            quantity = 1
+            $(container).find('#field-quantity').val(1);
+        }
+
+        if (field_type == "linkedmaster") {
+
+            recordid = $(el).closest('.field').find('.hidden-input').val()
+
+            var serialized_data = [];
+            serialized_data.push({name: 'tableid', value: 'product'});
+            serialized_data.push({name: 'recordid', value: recordid});
+            $.ajax({
+                type: "POST",
+                url: "{% url 'get_record' %}",
+                data: serialized_data,
+                success: function (response) {
+                    console.info(response)
+                    var product_fields = response
+                    $(container).find('#field-unitprice').val(product_fields.unitprice);
+                    $(container).find('#field-unitexpectedcost').val(product_fields.unitcost);
+                    $(container).find('#field-name').val(product_fields.name);
+                    unitprice = $(container).find('#field-unitprice').val();
+                    unitexpectedcost = $(container).find('#field-unitexpectedcost').val();
+                    lineprice = unitprice * quantity
+                    lineexpectedcost = unitexpectedcost * quantity
+                    $(container).find('#field-price').val(lineprice);
+                    $(container).find('#field-expectedcost').val(lineexpectedcost);
+                    $(container).find('#field-expectedmargin').val(lineprice - lineexpectedcost);
+                },
+                error: function (response) {
+                    console.info(response)
+                }
+            });
+
+        }
+
+        unitprice = $(container).find('#field-unitprice').val();
+        unitexpectedcost = $(container).find('#field-unitexpectedcost').val();
+        lineprice = unitprice * quantity
+        lineexpectedcost = unitexpectedcost * quantity
+        lineexpectedmargin = lineprice - lineexpectedcost
+        $(container).find('#field-price').val(lineprice);
+        $(container).find('#field-expectedcost').val(lineexpectedcost);
+        $(container).find('#field-expectedmargin').val(lineexpectedmargin);
+
+    }
+
+    function update_salesorderline(el) {
+        container = $(el).closest('.container ');
+        field_type = $(el).data('type');
+
+        quantity = $(container).find('#field-quantity').val();
+        if (quantity == "") {
+            quantity = 1
+            $(container).find('#field-quantity').val(1);
+        }
+
+        if (field_type == "linkedmaster") {
+
+            recordid = $(el).closest('.field').find('.hidden-input').val()
+
+            var serialized_data = [];
+            serialized_data.push({name: 'tableid', value: 'product'});
+            serialized_data.push({name: 'recordid', value: recordid});
+            $.ajax({
+                type: "POST",
+                url: "{% url 'get_record' %}",
+                data: serialized_data,
+                success: function (response) {
+                    console.info(response)
+                    var product_fields = response
+                    $(container).find('#field-unitcost').val(product_fields.unitcost);
+                },
+                error: function (response) {
+                    console.info(response)
+                }
+            });
+
+        }
+
+
+
+    }
+
+
+
+
+
+</script>
+
+
+<div class="container fields_container" style="height: 100%" id="fields_container_{{ tableid }}_{{ recordid }}">
+    <form id="form_fields_container" enctype="multipart/form-data">
+
+        {% for label,record_fields  in record_fields_labels.items %}
+            {% if label != 'Dati' %}
+                {% if label != 'Sistema' and label != 'Campi di sistema' or userid == 2 %}
+                    <button class="dropdown-toggle btn btn-secondary dropdown-color"
+                            style="width: 100%; text-align: left;"
+                            type="button" onclick="toggleCollapse(this)">
+                        Campi {{ label }}
+                    </button>
+                {% endif %}
+            {% endif %}
+            {% if label != 'Dati' %}
+                <div class="div-collapse" style="display: none" id="collapse-{{ label }}">
+                <div>
+            {% else %}
+                <div class="div-collapse" id="collapse-{{ label }}">
+                <div>
+            {% endif %}
+        {% for field_key,field in record_fields.items %}
+            {% if field.settings.obbligatorio == 'true' %}
+                {% define 'necessary' as mandatory %}
+                {% define 'badge bg-danger fs-5 badge-color' as tooltip %}
+            {% else %}
+                {% define '' as mandatory %}
+                {% define '' as tooltip %}
+            {% endif %}
+            {% if field.settings.calcolato == 'true' %}
+                {% define 'calcolato' as calcolato %}
+            {% else %}
+                {% define '' as calcolato %}
+            {% endif %}
+
+            {% with fieldname=field.fieldid %}
+                {% with fieldid='field-'|add:field.fieldid %}
+                    <div class="row">
+                        <div class="col-lg-3" style="text-align: left" title="{{ field.fieldid }}">
+                            <p class="{{ tooltip }}">{{ field.description }} </p>
+                        </div>
+                        <div class="col field">
+                            {% if field.fieldtypeid == 'Parola' %}
+                                {% if field.fieldtypewebid == 'checkbox' %}
+                                    <input class="form-check-input mt-0" type="checkbox" value=""
+                                           id="checkbox-{{ recordid }}" aria-label="Checkbox for following text input"
+                                           onchange="set_checkbox_value(this)">
+                                    <input id="input-{{ recordid }}" type="hidden" name="{{ fieldname }}"
+                                           value="{{ field.value }}">
+                                    <script>
+                                        change_checkbox_view()
+
+                                        function change_checkbox_view() {
+                                            if ($('#input-{{ recordid }}').val() == 'Si') {
+                                                $('#input-{{ recordid }}').prev('input').prop('checked', true);
+                                            } else {
+                                                $('#close-task-button-{{ recordid }}').css('display', 'block')
+                                            }
+                                        }
+                                    </script>
+
+                                {% elif field.fieldtypewebid == 'file' %}
+                                    <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                           class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="file"
+                                           value="{{ field.valuecode.0.code }}">
+                                {% elif field.lookuptableid %}
+                                    {% for valuecode in field.valuecode %}
+                                        <div class="input-group mb-2">
+                                            {% if field.fieldtypewebid == 'multiselect' %}
+                                                <select id="{{ fieldid }}" name="{{ fieldname }}"
+                                                        class="select2-input {{ mandatory }} {{ calcolato }}"
+                                                        multiple="multiple">
+                                            {% else %}
+                                                <select id="{{ fieldid }}" name="{{ fieldname }}"
+                                                        class="select2-input {{ mandatory }} {{ calcolato }}">
+                                            {% endif %}
+                                            {% if field.lookupitems %}
+                                                <option value=""></option>
+                                                {% for item in field.lookupitems %}
+                                                    {% if item.itemcode == field.valuecode.0.code %}
+                                                        <option selected
+                                                                value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                                                    {% else %}
+                                                        <option value="{{ item.itemcode }}">{{ item.itemdesc }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                            </select>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                           class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="text"
+                                           value="{{ field.value }}">
+                                {% endif %}
+                            {% endif %}
+
+                            {% if field.fieldtypeid == 'Data' %}
+                                <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                       class="form-control mb-2 datepicker {{ mandatory }} {{ calcolato }}" type="date"
+                                       value="{{ field.valuecode.0.code }}" oninput="validateInput(this)">
+                                <script>
+                                    function validateInput(el) {
+                                        var inputValue = el.value;
+                                        var year = inputValue.split('-')[0];
+                                        if (year.length > 4) {
+                                            alert('Anno non valido');
+                                            el.value = inputValue.slice(0, -1);
+
+                                        }
+                                    }
+                                </script>
+                            {% endif %}
+
+                            {% if field.fieldtypeid == 'Seriale' %}
+                                <p>{{ field.value }}</p>
+                            {% endif %}
+
+                            {% if field.fieldtypeid == 'Numero' %}
+                                <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                       class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="number"
+                                       value="{{ field.value }}">
+                            {% endif %}
+
+                            {% if field.fieldtypeid == 'Memo' %}
+                                {% if fieldname == 'description' %}
+                                    <textarea style="min-height: 250px"
+                                              class="form-control mb-2 {{ mandatory }} {{ calcolato }}"
+                                              id="{{ fieldid }}" name="{{ fieldname }}"
+                                              rows="3">{{ field.value }}</textarea>
+                                {% else %}
+                                    <textarea class="form-control mb-2 {{ mandatory }} {{ calcolato }}"
+                                              id="{{ fieldid }}"
+                                              name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
+                                {% endif %}
+                            {% endif %}
+                            {% if field.fieldtypeid == 'Ora' %}
+                                <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                       class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="time"
+                                       value="{{ field.value }}">
+                            {% endif %}
+                            {% if field.fieldtypeid == 'Utente' %}
+                                <div class="input-group mb-2">
+                                    <select id="{{ fieldid }}" name="{{ fieldname }}"
+                                            class="select2-input {{ mandatory }} {{ calcolato }}">
+                                        <option value=""></option>
+                                        {% for item in field.lookupitems %}
+                                            {% if item.id and item.firstname and item.lastname %}
+                                                <option value="{{ item.id }}" {% if item.id == field.valuecode.0.code %}
+                                                        selected {% endif %}>
+                                                    {{ item.firstname }} {{ item.lastname }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
+                            {% if field.fieldtypeid == 'linkedmaster' %}
+                                <div class="autocomplete-input-container" style="display: flex; align-items: center;">
+                                    <div style="position: relative; width: 100%;">
+                                        <input class="form-select mb-2 {{ mandatory }} {{ calcolato }}"
+                                               id="{{ fieldid }}-{{ recordid }}-autocomplete"
+                                               style="width: calc(90% - 15px);"
+                                               value="{{ field.valuecode.0.value }}" onfocus="selectAllText(this); "
+                                               data-type="linkedmaster">
+                                    </div>
+                                    <input type="hidden" class="hidden-input {{ mandatory }} {{ calcolato }}"
+                                           name="{{ field.fieldid }}" value="{{ field.recordid }}">
+
+                                    <p id="autoc-paragraompleteph-{{ recordid }}" style="display:none; color: red">la
+                                        trattativa verrà impostata con un prezzo a progetto</p>
+                                
+                                </div>
+
+                                <script>
+                                    function clearInput(el, inputId) {
+                                        document.getElementById(inputId).value = '';
+                                        $(el).closest('.field').find('.hidden-input').val("");
+                                    }
+
+                                </script>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% for items in field.valuecode %}
+                        {% if items.value and items.code %}
+                        {% endif %}
+
+                        <script>
+
+                            $(function () {
+                                function log(message) {
+                                    $("<div>").text(message).prependTo("#log");
+                                    $("#log").scrollTop(0);
+                                }
+
+                                $("#{{ fieldid }}-{{ recordid }}-autocomplete").autocomplete({
+                                    source: function (request, response) {
+                                        $.ajax({
+                                            url: "{% url 'get_autocomplete_data' %}",
+                                            data: {
+                                                'term': request.term,
+                                                'tableid': '{{tableid}}',
+                                                'mastertableid': '{{ field.tablelink }}'
+                                            },
+                                            success: function (data) {
+                                                console.info(data)
+                                                response(data.data);
+                                            }
+                                        });
+                                    },
+                                    minLength: 0, // Set minLength to 0 to show autocomplete on focus
+                                    select: function (event, ui) {
+                                        // console.log( "Selected: " + ui.item.id );
+
+                                        $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+                                        {% if tableid == 'dealline' %}
+                                            update_dealline(this)
+
+                                            if (ui.item.value == 'Consegna e Installazione Singola Stampante Multifunzione' || ui.item.value == 'Installazione e configurazione a progetto') {
+                                                $('#autocomplete-paragraph-{{ recordid }}').css('display', 'block')
+                                                $('#field-expectedhours').addClass('necessary')
+                                                $('[title="expectedhours"]').find('p').addClass('badge bg-danger fs-5 badge-color')
+                                            } else {
+                                                $('#autocomplete-paragraph-{{ recordid }}').css('display', 'none')
+                                                $('#field-expectedhours').removeClass('necessary')
+                                                $('[title="expectedhours"]').find('p').removeClass('badge bg-danger fs-5 badge-color')
+                                            }
+                                        {% endif %}
+                                        {% if tableid == 'salesorderline' %}
+                                            update_salesorderline(this)
+                                        {% endif %}
+
+                                        /*
+                                        $.ajax({
+                                            url: "
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        {% url 'get_badge' %}",
+                                            data: {
+                                                'recordid': ui.item.id,
+                                                'tableid': '
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                        {{tableid}}',
+                                            },
+                                            success: function (data) {
+                                                console.info(data)
+                                                response(data.data);
+                                            }
+                                        });
+                                        */
+                                    }
+                                }).focus(function () {
+                                    // Trigger autocomplete on focus
+                                    $(this).autocomplete("search", "");
+                                });
+
+                                // Handle empty input
+                                $("#{{ fieldid }}-{{ recordid }}-autocomplete").on("input", function () {
+                                    var inputValue = $(this).val();
+                                    if (inputValue === "") {
+                                        $(this).val(""); // Imposta il valore predefinito
+                                        $(this).closest('.field').find('.hidden-input').val("");
+                                    }
+                                });
+                            });
+
+
+                            function showOption() {
+                                $(this).autocomplete({
+                                    source: function (request, response) {
+                                        $.ajax({
+                                            url: "{% url 'get_autocomplete_data' %}",
+                                            data: {
+                                                'term': request.term,
+                                                'tableid': '{{tableid}}',
+                                                'mastertableid': '{{ field.tablelink }}'
+                                            },
+                                            success: function (data) {
+                                                console.info(data)
+                                                response(data.data);
+                                            }
+                                        });
+                                    },
+                                    minLength: 0,
+                                    select: function (event, ui) {
+                                        //console.log( "Selected: " + ui.item.id );
+                                        $(this).closest('.field').find('.hidden-input').val(ui.item.id);
+                                    }
+                                });
+                            }
+                        </script>
+
+                    {% endfor %}
+                {% endwith %}
+            {% endwith %}
+        {% endfor %}
+
+        </div>
+        </div>
+            <br></br>
+        {% endfor %}
+    </form>
+</div>
+

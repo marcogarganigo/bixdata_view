@@ -132,6 +132,21 @@
                 });
             }
 
+            function getContentReport() {
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'content_report' %}",
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
+
             function getTestContent(content_page) {
                 var serialized_data = [];
                 serialized_data.push({name: 'content_page', value: content_page});
@@ -849,6 +864,13 @@
                                         {% endfor %}
                                     </ul>
                                 </div>
+                            </li>
+
+                            <li class="side-nav-item">
+                                <a data-bs-toggle="collapse" onclick="getContentReport()" aria-expanded="false" class="side-nav-link">
+                                    <i class="uil-linkedin"></i>
+                                    <span>Report</span>
+                                </a>
                             </li>
 
                             <script>

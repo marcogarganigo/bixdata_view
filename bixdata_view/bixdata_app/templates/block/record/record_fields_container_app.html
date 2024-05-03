@@ -1,0 +1,119 @@
+<div id="universal-container-timesheet" class="record_fields_container" data-tableid="{{ tableid }}" data-recordid="{{ recordid }}" data-contextfunction="{{contextfunction}}" data-master_tableid="{{ master_tableid }}" data-master_recordid="{{master_recordid}}" style="height: 100%">
+    <div id="omni-container-timesheet" style="height: 90%;  margin-bottom:20px;">
+        <div id="fields-scroll-container" style="height: 100%; overflow-y: scroll; overflow-x: hidden">
+            {{ block_record_fields|safe }}
+
+            {% if contextfunction == 'view' %}
+                <style>
+                    #save-button-{{ recordid }} {
+                        display: none;
+                    }
+                </style>
+
+                <script>
+                    $("#fields-scroll-container input").attr("disabled", true);
+                    $("#fields-scroll-container select").attr("disabled", true);
+                    $("#fields-scroll-container textarea").attr("disabled", true);
+                    $("save-button-{{ recordid }}").remove();
+                </script>
+            {% endif %}
+        </div>
+    </div>
+    {% if tableid == 'timesheet' %}
+        {% if edit_block == False %}
+            <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class=" save-button" onclick="save_record(this, '{{ user_setting }}')">Salva</button>
+        {% endif %}
+    {% else %}
+        <button id="save-button-{{ recordid }}" data-recordid="{{ recordid }}" type="button" class=" save-button" onclick="save_record(this, '{{ user_setting }}')">Salva</button>
+    {% endif %}
+</div>
+
+<style>
+    .save-button {
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 10px;
+        width: 30%;
+        height: 40px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+    }
+</style>
+
+<script>
+    function save_recordOLD(el) {
+        console.info('FUN:record_fields_container.html-save_record')
+        let necessaryFields = document.querySelectorAll('.necessary');
+        let hasNecessaryFields = false;
+
+        necessaryFields.forEach(function (field) {
+            if (field.value === null || field.value === "" || field.value === "None") {
+                hasNecessaryFields = true;
+            }
+        });
+
+        if (hasNecessaryFields === true) {
+            swal({
+                title: "Attenzione",
+                text: "Compilare tutti i campi obbligatori",
+                icon: "error",
+                button: "Ok",
+                dangerMode: true
+            });
+
+        } else {
+            closeNewRecordModal(el)
+            //var serialized_array = $(el).closest('.fields_container').find("select,textarea,input").serializeArray();
+            //var serialized_json = convertFormToJSON(serialized_array);
+            serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
+            //set the value of creator in serialized_form
+            serialized_form['creator'] = '{{ userid}}';
+            serialized_json = convertFormToJSON(serialized_form);
+            var post_data = [];
+            post_data.push({name: 'tableid', value: '{{ tableid }}'});
+            post_data.push({name: 'recordid', value: '{{ recordid }}'});
+            post_data.push({name: 'fields', value: serialized_json});
+            contextfunction = '{{contextfunction}}'
+            post_data.push({name: 'contextfunction', value: contextfunction});
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'save_record_fields' %}",
+                data: post_data,
+                success: function (response) {
+                    master_tableid = '{{ master_tableid }}';
+                    if ((contextfunction == 'insert') && (master_tableid == 'None')) {
+                        refresh();
+                    } else {
+                        load_linked('{{ tableid }}-{{ master_recordid }}', '{{ tableid }}', '{{ master_recordid }}', '{{ master_tableid }}')
+                    }
+                    setTimeout(function () {
+                        if ('{{ tableid }}' == 'ticketbixdata') {
+                            alert('Grazie per la segnalazione. La tua segnalazione verrà presa in considerazione al piu presto, nel duemilacredici');
+                        }
+                        var recordid = $(el).attr('data-recordid');
+
+                        //$('#fields_container_' + '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
+                        open_record(window.content, '{{ tableid }}', '{{ recordid }}')
+                        swal({
+                            title: "Salvato!",
+                            text: "Il record è stato salvato",
+                            icon: "success",
+                            timer: 800,
+                            buttons: false,
+                        })
+                        //getContentRecords('{{ tableid }}')
+                        //$("#linked-container-{{ tableid }}").load('/loading/')
+
+                        //alert('test')
+                    });
+
+                },
+                error: function () {
+                    alert('ko')
+                }
+            });
+        }
+    }
+</script>
