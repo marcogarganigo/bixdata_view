@@ -3,26 +3,26 @@
 {% block body %}
 
     <script>
-document.addEventListener("DOMContentLoaded", function() {
-  var fullscreenBtn = $('#fullscreen-btn')[0];
-  $('#fullscreen-btn')[0].click()
-  
-
-  fullscreenBtn.addEventListener('click', function() {
-    var elem = document.documentElement;
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) { /* Firefox */
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { /* IE/Edge */
-      elem.msRequestFullscreen();
-    }
-  });
-});
-
-
+    
+    document.addEventListener("DOMContentLoaded", function() {
+      var fullscreenBtn = $('#fullscreen-btn')[0];
+      $('#fullscreen-btn')[0].click()
+    
+    
+      fullscreenBtn.addEventListener('click', function() {
+        var elem = document.documentElement;
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) { /* Firefox */
+          elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+          elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE/Edge */
+          elem.msRequestFullscreen();
+        }
+      });
+    });
+    
     </script>
 
     <div id="bixdata-app-container" class="col-xs-12 col-xl-4" style="height: 100%; margin: auto">
