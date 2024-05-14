@@ -1320,8 +1320,8 @@ def custom_save_record(request, tableid, recordid):
                     if not isempty(timesheet_linkedrecord['traveltime_decimal']):
                         usedhours=usedhours+timesheet_linkedrecord['traveltime_decimal']
         residualhours=contracthours+previousresidual-usedhours
-        if contracthours+residualhours!=0:
-            progress=(usedhours/(contracthours+residualhours))*100
+        if contracthours+previousresidual!=0:
+            progress=(usedhours/(contracthours+previousresidual))*100
 
         if isempty(servicecontract_record.fields['status']):
             servicecontract_record.fields['status'] = 'In Progress'
