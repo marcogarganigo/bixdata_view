@@ -4049,3 +4049,23 @@ def save_columns_width(request):
             )
 
     return JsonResponse({'success': True})
+
+
+def get_user_worktime(request):
+    userid = get_userid(request.user.id)
+
+    current_date = datetime.date.today().strftime('%Y-%m-%d')
+
+    query = f"SELECT SUM(totaltime_decimal) FROM user_timesheet WHERE user = '{userid}' AND date = '{current_date}'"
+    print(query)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT SUM(totaltime_decimal) FROM user_timesheet WHERE user = '{userid}' AND date = '{current_date}'"
+        )
+        worked = cursor.fetchone()[0]
+
+        if worked is None:
+            worked = 0
+
+
+    return JsonResponse({'worktime': worked})
