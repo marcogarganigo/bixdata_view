@@ -170,4 +170,5 @@ urlpatterns = [
     path('get_record_card_app/', bixapp_view.get_record_card_app, name='get_record_card_app'),
     path('get_block_record_fields_app/', bixapp_view.get_block_record_fields_app, name='get_block_record_fields_app'),
     path('report_excel/', bixdata_view.report_excel, name='report_excel'),
+    path('get_user_worktime/', alpha.get_user_worktime, name='get_user_worktime'),
 ]
