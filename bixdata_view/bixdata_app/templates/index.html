@@ -361,6 +361,11 @@
 
 
             function open_record(el, tableid, recordid, contextfunction = 'edit', target = '') {
+
+                if ($(el).closest('.block-records-table-standard').attr('data-show') == 'modal') {
+                    target = 'modal'
+                }
+
                 console.info('index.html-open_record')
                 window.content = el;
 

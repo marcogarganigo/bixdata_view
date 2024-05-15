@@ -4049,7 +4049,7 @@ def save_columns_width(request):
             )
 
     return JsonResponse({'success': True})
-
+    
 
 def get_user_worktime(request):
     userid = get_userid(request.user.id)

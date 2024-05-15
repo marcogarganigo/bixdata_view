@@ -1,5 +1,10 @@
 <script>
     var res = '{{ size }}';
+
+    $(document).ready(function () {
+        $('.block-records-table-standard').attr('data-show', 'modal')
+        console.info($('.block-records-table-standard'))
+    });
 </script>
 
 <button id="save-order-button" onclick="save_order()" class="btn btn-success" style="float: left">Salva disposizione</button>
