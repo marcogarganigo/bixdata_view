@@ -24,12 +24,6 @@
                     $('#hours-left').text('Hai completato le tue ore di lavoro, ma hai lavorato ' + (worktime_decimal - 8).toFixed(2) + ' ore in più, sei un mostro');
                 }
 
-                if(worktime_decimal < 6) {
-                    $('#angry-davide').show();
-                } else {
-                    $('#happy-davide').show();
-                }
-
 
             }
         });
@@ -44,10 +38,8 @@
         Nuovo
     </button>
 <div class="container" style="width:80%; margin-left: 5%;">
-    <img id="angry-davide" src="{% static 'images/lookup/Rifiutato' %}.png" width="42%" style="float:right; display:none">
-    <img id="happy-davide" src="{% static 'images/lookup/davide-soddisfatto' %}.png" width="50%" style="float:right; display:none">
 
-    <div id="worktime-progress" class="circular-progress" style="float:left">
+    <div id="worktime-progress" class="circular-progress">
         <svg viewBox="0 0 36 36" class="circular-chart">
             <path class="circle-bg"
                 d="M18 2.0845
@@ -68,7 +60,7 @@
 <style>
     .circular-progress {
     position: relative;
-    width: 50%;
+    width: 35%;
     height: 100%;
     margin: auto;
 }
@@ -76,7 +68,7 @@
 .circular-chart {
     display: block;
     margin: 10px auto;
-    max-width: 50%;
+    max-width: 80%;
     max-height: 250px;
 }
 
