@@ -13,10 +13,10 @@ function load_fields(el, tableid, recordid, master_tableid, master_recordid) {
             'contextfunction': 'edit',
         },
         success: function (response) {
-            $(el).closest('.block_record_card').find('.tab-pane-fields').append(response)
+            $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
         },
         error: function (response) {
-            $(el).closest('.block_record_card').find('.tab-pane-fields').append(response)
+            $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
         }
     });
 }

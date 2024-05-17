@@ -162,6 +162,10 @@
          font-size: 11pt; !important;
     }
 
+    .results-table-standard {
+        min-width: 1750px;
+    }
+
     }
 
 

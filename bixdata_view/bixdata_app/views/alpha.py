@@ -1985,7 +1985,7 @@ def stampa_timesheet(request):
 
     with connection.cursor() as cursor:
         cursor.execute(
-            f"SELECT   t.*,c.companyname,c.address,c.city,c.email,u.firstname, u.lastname FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ join sys_user as u on t.user = u.id WHERE t.recordid_='{recordid}'"
+            f"SELECT   t.*,c.companyname,c.address,c.city,c.email, c.phonenumber, u.firstname, u.lastname FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ join sys_user as u on t.user = u.id WHERE t.recordid_='{recordid}'"
         )
         rows = dictfetchall(cursor)
 
@@ -2005,7 +2005,14 @@ def stampa_timesheet(request):
 
         timesheetlines = dictfetchall(cursor)
 
+        for line in timesheetlines:
+            line['note'] = line['note'] or ' \n '
+            line['expectedquantity'] = line['expectedquantity'] or ' \n '
+            line['actualquantity'] = line['actualquantity'] or ' \n '
+
+
     row['timesheetlines'] = timesheetlines
+
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
@@ -3857,7 +3864,7 @@ def save_signature(request):
 
     with connection.cursor() as cursor:
         cursor.execute(
-            f"SELECT   t.*,c.companyname,c.address,c.city,c.email,u.firstname, u.lastname FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ join sys_user as u on t.user = u.id WHERE t.recordid_='{recordid}'"
+            f"SELECT   t.*,c.companyname,c.address,c.city,c.email, c.phonenumber, u.firstname, u.lastname FROM user_timesheet as t join user_company as c on t.recordidcompany_=c.recordid_ join sys_user as u on t.user = u.id WHERE t.recordid_='{recordid}'"
         )
         rows = dictfetchall(cursor)
 
@@ -3877,6 +3884,11 @@ def save_signature(request):
         )
 
         timesheetlines = dictfetchall(cursor)
+
+        for line in timesheetlines:
+            line['note'] = line['note'] or ''
+            line['expectedquantity'] = line['expectedquantity'] or ''
+            line['actualquantity'] = line['actualquantity'] or ''
 
     row['timesheetlines'] = timesheetlines
 

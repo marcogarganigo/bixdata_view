@@ -12,3 +12,7 @@ html[data-sidenav-size=condensed]:not(.authentication-bg) {
 .wrapper {
     min-height: 0px !important;
 }
+
+.results-table-standard, .results-table-linked {
+    min-width: 1500px;
+}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="overflow: scroll">
+<html lang="en" style="overflow: scroll; height: 100%">
 
 
 <head>   
@@ -15,7 +15,7 @@
     </style>
 </head>
 
-<body style="font-family: Calibri">   
+<body style="font-family: Calibri; height: 100%">   
 
 <style>
     .border-bottom {
@@ -54,7 +54,7 @@
     <div style="float:left;width:30%">
         <b>Tel.</b>
         <br>
-        <p>{{ phone }}</p>
+        <p>{{ phonenumber }}</p>
     </div>
 
     <div style="clear:both"></div>
@@ -175,73 +175,87 @@
 <div style="clear:both"></div>
 
 
-<div style="background-color:#e43b2c;width:100%;height:25px;color:white; padding: 2px; margin-top: 2%">
-    Materiale Fornito / Consegnato
-</div>
+<div style="position:fixed; bottom: 0">
 
-<div style="float:left;width:60%; text-align: center">
-    <p class="border-bottom">Descrizione completa</p>
-</div>
-<div style="float:left;width:20%; text-align: center">
-    <p class="border-bottom">Quantità prevista</p>
-</div>
-
-<div style="float:left;width:20%; text-align: center">
-    <p class="border-bottom">Quantità attuale</p>
-</div>
-
-{% for timesheetline in timesheetlines %}
+    <div style="background-color:#e43b2c;width:100%;height:25px;color:white; padding: 2px; margin-top: 2%">
+        Materiale Fornito / Consegnato
+    </div>
 
     <div style="float:left;width:60%; text-align: center">
-        <p class=""> {{ timesheetline.note }}</p>
+        <p class="border-bottom">Descrizione completa</p>
     </div>
     <div style="float:left;width:20%; text-align: center">
-        <p class="">{{ timesheetline.expectedquantity }}</p>
+        <p class="border-bottom">Quantità prevista</p>
     </div>
 
     <div style="float:left;width:20%; text-align: center">
-        <p class=""> {{ timesheetline.actualquantity }}</p>
+        <p class="border-bottom">Quantità attuale</p>
     </div>
 
-    <div class="border-bottom" style=" float: left; width: 100%; "></div>
-{% endfor %}
+    {% for timesheetline in timesheetlines %}
+
+        <div style="float:left;width:60%; text-align: center">
+            <p class=""> {{ timesheetline.note }}</p>
+        </div>
+        <div style="float:left;width:20%; text-align: center">
+            <p class="">{{ timesheetline.expectedquantity }}</p>
+        </div>
+
+        <div style="float:left;width:20%; text-align: center">
+            <p class=""> {{ timesheetline.actualquantity }}</p>
+        </div>
+
+        <div class="border-bottom" style=" float: left; width: 100%; "></div>
+    {% endfor %}
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
 
 
-<div style="clear:both"></div>
+    <div style="clear:both"></div>
 
-<br>
-
-
-<p>Confermiamo di aver ricevuto le prestazioni/materiale indicate sopra. La merce fornita rimarrà proprietà di
-    Swissbix SA fino al saldo della fattura.</p>
+    <br>
 
 
-<br>
+    <p>Confermiamo di aver ricevuto le prestazioni/materiale indicate sopra. La merce fornita rimarrà proprietà di
+        Swissbix SA fino al saldo della fattura.</p>
 
-<div style="float:left;width:50%;">
-    <b>Luogo e Data</b>
+
+    <br>
+
+    <div style="float:left;width:50%;">
+        <b>Luogo e Data</b>
+    </div>
+    <div style="float:left;width:50%; position: relative;">
+        <b>Firma e Timbro</b>
+            <img src="{{ completeSignatureUrl }}" height="50px" width="100px" style=" margin-bottom: -60px; margin-left: -110px">
+    </div>
+
+    <div style="clear:both; margin-top: 40px"></div>
+
+    <br>
+    <br>
+
+    <div class="border-bottom"></div>
+
+    <div style="text-align: center">
+        <p><b>Swissbix SA </b>- Via Baroffio 6, 6900 Lugano - <b>E-mail</b>: support@swissbix.ch -
+            <b>Tel:</b> +41 91 960 22
+            00
+        </p>
+
+    </div>
+
 </div>
-<div style="float:left;width:50%; position: relative;">
-    <b>Firma e Timbro</b>
-        <img src="{{ completeSignatureUrl }}" height="50px" width="100px" style=" margin-bottom: -60px; margin-left: -110px">
-</div>
-
-<div style="clear:both; margin-top: 40px"></div>
-
-<br>
-<br>
-
-<div class="border-bottom"></div>
-
-<div style="text-align: center">
-    <p><b>Swissbix SA </b>- Via Baroffio 6, 6900 Lugano - <b>E-mail</b>: support@swissbix.ch -
-        <b>Tel:</b> +41 91 960 22
-        00
-    </p>
-
-</div>
-
-
 </body>
 
 </html>
