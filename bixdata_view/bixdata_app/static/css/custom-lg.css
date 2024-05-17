@@ -5,9 +5,9 @@
     }
 
     #newRecordModal > .modal-fullscreen {
-        width: 50%;
+        width: 45%;
         margin: 2% auto auto;
-        height: 85%
+        height: 80%
     }
 
     #recordModal > .modal-fullscreen {

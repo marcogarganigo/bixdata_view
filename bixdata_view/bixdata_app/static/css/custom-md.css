@@ -11,27 +11,27 @@
     }
 
     #newRecordModal > .modal-fullscreen {
-        width: 50%;
+        width: 80%;
         margin: 2% auto auto;
         height: 85%
     }
 
     #recordModal > .modal-fullscreen {
-        width: 85%;
+        width: 90%;
         height: 90%;
         margin: 1% auto auto;
     }
 
     #linked-table-modal > .modal-fullscreen {
-        width: 50%;
+        width: 90%;
         margin: 2% auto auto;
-        height: 85%
+        height: 90%
     }
 
     #newLinkedRecordModal > .modal-fullscreen {
-        width: 40%;
+        width: 75%;
         margin: 2% auto auto;
-        height: 75%
+        height: 80%
     }
 
    #content-card {
