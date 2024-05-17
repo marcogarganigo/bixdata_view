@@ -1154,16 +1154,19 @@ def custom_save_record(request, tableid, recordid):
 
 
         #se ho già un service contract lo mantengo
-        if not isempty(servicecontract_record.recordid) and invoiceoption!='Out of contract':
-            if servicecontract_record.fields['type']=='Monte Ore':
-                timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
-                invoicestatus="Service Contract: Monte Ore"
-                productivity='Ricavo diretto'
-            else:
-                if invoicestatus!='Invoiced':
-                    invoicestatus='To Process'
-        else:
-            if invoicestatus!='Invoiced':
+        #if not isempty(servicecontract_record.recordid) and invoiceoption!='Out of contract':
+         #   if servicecontract_record.fields['type']=='Monte Ore':
+          #      timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
+           #     invoicestatus="Service Contract: Monte Ore"
+            #    productivity='Ricavo diretto'
+           # else:
+            #    if invoicestatus!='Invoiced':
+             #       invoicestatus='To Process'
+        #else:
+         #   if invoicestatus!='Invoiced':
+          #      invoicestatus='To Process'
+
+        if invoicestatus!='Invoiced':
                 invoicestatus='To Process'
 
 
@@ -1225,25 +1228,24 @@ def custom_save_record(request, tableid, recordid):
                     productivity='Ricavo indiretto'
 
         #valutazione monte ore
-        if(invoicestatus!="Service Contract: Monte Ore"):
-            if ((invoicestatus=='To Process' or invoicestatus=='Under Warranty' or invoicestatus=='Commercial support') and invoiceoption!='Out of contract'):
-                service_contracts=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","type='Monte Ore'","status='In Progress'"])
-                if service_contracts:
-                    timesheet_record.fields['recordidservicecontract_']=service_contracts[0]['recordid_']
-                    servicecontract_record=Record('servicecontract',service_contracts[0]['recordid_'])
-                    if invoicestatus=='To Process':
-                        invoicestatus='Service Contract: Monte Ore'
-                        productivity='Ricavo diretto'
-                    if invoicestatus=='Under Warranty':
-                        invoicestatus='Under Warranty'
-                        productivity='Senza ricavo'
-                    if invoicestatus=='Commercial support':
-                        invoicestatus='Commercial support'
-                        productivity='Senza ricavo'
-                    timesheet_record.fields['print_type']='Normale'
-                    timesheet_record.fields['print_hourprice']='Monte Ore'
-                    if servicecontract_record.fields['excludetravel']:
-                        timesheet_record.fields['print_travel'] = 'Non scalata dal monte ore e non fatturata'
+        if ((invoicestatus=='To Process' or invoicestatus=='Under Warranty' or invoicestatus=='Commercial support') and invoiceoption!='Out of contract'):
+            service_contracts=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","type='Monte Ore'","status='In Progress'"])
+            if service_contracts:
+                timesheet_record.fields['recordidservicecontract_']=service_contracts[0]['recordid_']
+                servicecontract_record=Record('servicecontract',service_contracts[0]['recordid_'])
+                if invoicestatus=='To Process':
+                    invoicestatus='Service Contract: Monte Ore'
+                    productivity='Ricavo diretto'
+                if invoicestatus=='Under Warranty':
+                    invoicestatus='Under Warranty'
+                    productivity='Senza ricavo'
+                if invoicestatus=='Commercial support':
+                    invoicestatus='Commercial support'
+                    productivity='Senza ricavo'
+                timesheet_record.fields['print_type']='Monte Ore'
+                timesheet_record.fields['print_hourprice']='Scalato dal monte ore'
+                if servicecontract_record.fields['excludetravel']:
+                    timesheet_record.fields['print_travel'] = 'Non scalata dal monte ore e non fatturata'
 
         #da fatturare quando chiusi
         if invoicestatus=='To Process':
