@@ -2008,9 +2008,9 @@ def stampa_timesheet(request):
         timesheetlines = dictfetchall(cursor)
 
         for line in timesheetlines:
-            line['note'] = line['note'] or ' \n '
-            line['expectedquantity'] = line['expectedquantity'] or ' \n '
-            line['actualquantity'] = line['actualquantity'] or ' \n '
+            line['note'] = line['note'] or ''
+            line['expectedquantity'] = line['expectedquantity'] or ''
+            line['actualquantity'] = line['actualquantity'] or ''
 
 
     row['timesheetlines'] = timesheetlines

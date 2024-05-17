@@ -165,7 +165,7 @@
 </div>
 
 <br>
-{{ description }}
+{{ description|linebreaksbr }}
 
 
 
@@ -191,7 +191,7 @@
     {% for timesheetline in timesheetlines %}
 
         <div style="float:left;width:60%; text-align: center; padding:0; margin: 0">
-            <p class=""> {{ timesheetline.note }}</p>
+            <p class=""> {{ timesheetline.note|linebreaksbr }}</p>
         </div>
         <div style="float:left;width:20%; text-align: center; padding:0; margin: 0">
             <p class="">{{ timesheetline.expectedquantity }}</p>
