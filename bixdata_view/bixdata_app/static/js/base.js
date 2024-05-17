@@ -167,6 +167,13 @@ function load_linked(linkedtableid, tableid, masterrecordid, mastertableid, orde
 
 function saveSignature() {
 
+    swal({
+        title: "Generazione file in corso",
+        text: " ",
+        icon: "info",
+        buttons: false,
+    })
+
     var url = window.location.href;
     var urlSplit = url.split('/');
     var firstpart = urlSplit[0] + '//' + urlSplit[2];
@@ -193,6 +200,15 @@ function saveSignature() {
             responseType: 'blob'
         },
         success: function (response, status, xhr) {
+
+            swal({
+                title: "File Generato!",
+                text: "Il file è stato generato e scaricato correttamente",
+                icon: "success",
+                timer: 800,
+                buttons: false,
+            })
+
             const contentType = xhr.getResponseHeader('content-type');
             const blob = new Blob([response], {type: contentType});
 
@@ -210,7 +226,36 @@ function saveSignature() {
 
             window.URL.revokeObjectURL(blobUrl);
             document.body.removeChild(a);
-        }
+        },
+
+        error: function (response, status, xhr) {
+
+            swal({
+                title: "Errore nella generazione del file",
+                text: "sengnalalo ad un tecnico del software al più presto",
+                icon: "error",
+                button: "Ok",
+                dangerMode: true,
+            });
+
+            const contentType = xhr.getResponseHeader('content-type');
+            const blob = new Blob([response], {type: contentType});
+
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const contentDisposition = xhr.getResponseHeader('content-disposition');
+            const filename = contentDisposition.split(';')[1].trim().split('=')[1];
+
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+
+            a.click();
+
+            window.URL.revokeObjectURL(blobUrl);
+            document.body.removeChild(a);
+        },
     })
 }
 

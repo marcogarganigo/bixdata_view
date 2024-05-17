@@ -220,6 +220,13 @@
         var firstpart = urlSplit[0] + '//' + urlSplit[2];
         var completeURL = firstpart + '/static/pdf/'
 
+        swal({
+            title: "Generazione file in corso",
+            text: " ",
+            icon: "info",
+            buttons: false,
+        })
+
 
         $.ajax({
             type: "POST",
@@ -234,6 +241,13 @@
                 responseType: 'blob'
             },
             success: function (response, status, xhr) {
+                swal({
+                    title: "File Generato!",
+                    text: "Il file è stato generato e scaricato correttamente",
+                    icon: "success",
+                    timer: 800,
+                    buttons: false,
+                })
                 const contentType = xhr.getResponseHeader('content-type');
                 const blob = new Blob([response], {type: contentType});
 
@@ -253,7 +267,13 @@
                 document.body.removeChild(a);
             },
             error: function (response) {
-                alert('stampa')
+                swal({
+                    title: "Errore nella generazione del file",
+                    text: "sengnalalo ad un tecnico del software al più presto",
+                    icon: "error",
+                    button: "Ok",
+                    dangerMode: true,
+                });
             }
         });
     }
@@ -403,6 +423,14 @@
     }
 
     function stampaWord(el, format, func) {
+        
+        swal({
+            title: "Generazione file in corso",
+            text: " ",
+            icon: "info",
+            buttons: false,
+        })
+        
         var block_record_card = $(el).closest('.block_record_card')
         var tableid = $(block_record_card).data('tableid')
         var recordid = $(block_record_card).data('recordid')
@@ -430,6 +458,15 @@
                 responseType: 'blob'
             },
             success: function (response, status, xhr) {
+                
+                swal({
+                    title: "File Generato!",
+                    text: "Il file è stato generato e scaricato correttamente",
+                    icon: "success",
+                    timer: 800,
+                    buttons: false,
+                })
+                
                 const contentType = xhr.getResponseHeader('content-type');
                 const blob = new Blob([response], {type: contentType});
 
@@ -447,6 +484,15 @@
 
                 window.URL.revokeObjectURL(blobUrl);
                 document.body.removeChild(a);
+            },
+            error: function (response) {
+                swal({
+                    title: "Errore nella generazione del file",
+                    text: "sengnalalo ad un tecnico del software al più presto",
+                    icon: "error",
+                    button: "Ok",
+                    dangerMode: true,
+                });
             }
         });
     }
