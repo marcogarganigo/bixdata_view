@@ -1,14 +1,26 @@
+<style>
+    .fc-title {
+        font-weight: bold;
+    }
+
+    .fc-view {
+        margin-top: 10px;
+    }
+
+</style>
 
 <script>
-    function loadEvents(viewid) {
+    function selectTypeOfDate(datetype) {
         $.ajax({
             type: "POST",
-            url: "{% url 'get_calendar_events' %}",
+            url: "{% url 'block_records_calendar' %}",
             data: {
-                'viewid': viewid,
+                'datetype': datetype,
+                'viewid': $('#viewid').val(),
+                'tableid': '{{ tableid }}',
             },
             success: function (response) {
-                $('#content_records_calendar').html(response);
+                $('#calendar-section-container').html(response);
             },
             error: function (response) {
             }
@@ -17,11 +29,18 @@
     }
 </script>
 
-<select class="form-select" aria-label="Default select example" onselect="loadEvents(this.value)">
-  {% for field in select_fields %}
-    <option value="{{ field.id }}">{{ field.description }}</option>
-{% endfor %}
-</select>
+<div id="calendar-section-container" style="width: 100%; height: 100%">
+    <select class="form-select" aria-label="Default select example" onchange="selectTypeOfDate(this.value)">
+        {% for field in select_fields %}
+            <option {{ field.selected }} value="{{ field.fieldid }}">{{ field.description }}</option>
+        {% endfor %}
+    </select>
+
+    <div id="content_records_calendar" style="width: 100%; height: 100% !important">
+    <div id="calendar" style="height: 100% !important"></div>
+    </div>
+
+</div>
 
 <script>
     var jsonEvents = [];
@@ -91,7 +110,7 @@
             right: 'month,agendaWeek,agendaDay'
         },
         editable: true,
-        aspectRatio: 2.1    ,
+        aspectRatio: 4.1,
         eventClick: function (event) {
             open_record_calendar(event.recordid);
 
@@ -128,20 +147,11 @@
         });
 
     }
-
-
 </script>
 
 
-<style>
-    .fc-title {
-        font-weight: bold;
-    }
-</style>
 
-<div id="content_records_calendar" style="width: 95%;">
-    <div id="calendar"></div>
-</div>
+
 
 
 

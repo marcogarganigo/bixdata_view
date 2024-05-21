@@ -656,9 +656,8 @@ def get_block_records_kanban(request):
 @login_required(login_url='/login/')
 def get_block_records_calendar(request):
     tableid = request.POST.get('tableid')
-
-    # oc = OfficeCalendar()
-    # events_office = oc.get_calendar_events()
+    viewid = request.POST.get('viewid')
+    datetype = request.POST.get('datetype')
 
     with connection.cursor() as cursor:
         cursor.execute(
@@ -669,14 +668,35 @@ def get_block_records_calendar(request):
     table_obj = Table('task')
     conditions_list = list()
     # questa parte delle condition la sistemo io Alessandro, ma ho bisogno che mi arrivi qua la viewid
-    conditions_list.append("user = '2'")
+    userid = get_userid(request.user.id)
+    conditions_list.append(f"user = {userid}")
     conditions_list.append("( status not like 'Chiuso' OR status is null)")
     conditions_list.append("duedate is not null")
-    #conditions_list.append("recordid_='00000000000000000000000000000774'")
-    #quello che qua viene indicato temporeaneamente come "duedate" deve essere dinamico e preso dal campo selezionato in frontend
-    select_fields=['recordid_','description as description','duedate as date']
+    conditions_list.append("duedate >= CURDATE()")
+
+    if datetype is None:
+        fieldid_date = result[1]['fieldid']
+        datetype = fieldid_date + ' as date'
+    else:
+        fieldid_date = str(datetype)
+        datetype = fieldid_date + ' as date'
+
+    select_fields=['recordid_','description as description', datetype]
     events_bixdata = table_obj.get_records(conditions_list=conditions_list,fields=select_fields)
-    return render(request, 'block/records/records_calendar.html', {'events': events_bixdata, 'select_fields': result})
+
+    # Sostituisci i caratteri di nuova riga con <br> nella descrizione
+    for event in events_bixdata:
+        event['description'] = event['description'].replace('\r', ' ')
+        event['description'] = event['description'].replace('\n', ' ')
+
+    for option in result:
+        if option['fieldid'] == fieldid_date:
+            option['selected'] = 'selected'
+        else:
+            option['selected'] = ''
+
+    return render(request, 'block/records/records_calendar.html', {'events': events_bixdata, 'select_fields': result, 'tableid': tableid})
+
 
 
 # Questa funzione
@@ -4091,11 +4111,3 @@ def get_user_worktime(request):
     return JsonResponse({'worktime': worked})
 
 
-def get_calendar_events(request):
-    viewid = request.POST.get('viewid')
-
-    with connection.cursor() as cursor:
-        cursor.execute(
-            f"SELECT * FROM sys_view WHERE viewid = '{viewid}'"
-        )
-        events = dictfetchall(cursor)
