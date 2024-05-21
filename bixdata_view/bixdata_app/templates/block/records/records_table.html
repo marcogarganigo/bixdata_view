@@ -81,7 +81,9 @@ thead th { position: sticky; top: 0; background-color: white;}
         .linked_container #block_records_table {
             border-collapse: collapse;
             width: 100%;
-            height: 500px !important;
+            height: auto;
+            max-height: 500px !important;
+            overflow:scroll;
         }
     {% endif %}
 </style>

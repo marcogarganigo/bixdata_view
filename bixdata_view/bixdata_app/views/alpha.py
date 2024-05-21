@@ -668,8 +668,14 @@ def get_block_records_calendar(request):
 
     table_obj = Table('task')
     conditions_list = list()
-
-    events_bixdata = table_obj.get_records(conditions_list=conditions_list)
+    # questa parte delle condition la sistemo io Alessandro, ma ho bisogno che mi arrivi qua la viewid
+    conditions_list.append("user = '2'")
+    conditions_list.append("( status not like 'Chiuso' OR status is null)")
+    conditions_list.append("duedate is not null")
+    #conditions_list.append("recordid_='00000000000000000000000000000774'")
+    #quello che qua viene indicato temporeaneamente come "duedate" deve essere dinamico e preso dal campo selezionato in frontend
+    select_fields=['recordid_','description as description','duedate as date']
+    events_bixdata = table_obj.get_records(conditions_list=conditions_list,fields=select_fields)
     return render(request, 'block/records/records_calendar.html', {'events': events_bixdata, 'select_fields': result})
 
 
