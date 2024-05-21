@@ -1,8 +1,25 @@
 
+<script>
+    function loadEvents(viewid) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'get_calendar_events' %}",
+            data: {
+                'viewid': viewid,
+            },
+            success: function (response) {
+                $('#content_records_calendar').html(response);
+            },
+            error: function (response) {
+            }
+        
+        })
+    }
+</script>
 
-<select class="form-select" aria-label="Default select example">
+<select class="form-select" aria-label="Default select example" onselect="loadEvents(this.value)">
   {% for field in select_fields %}
-    <option value="{{ field.description }}">{{ field.description }}</option>
+    <option value="{{ field.id }}">{{ field.description }}</option>
 {% endfor %}
 </select>
 

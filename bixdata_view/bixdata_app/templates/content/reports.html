@@ -22,6 +22,14 @@
 
 <script>
 function exportReportExcel(reportId) {
+
+    swal({
+        title: "Generazione file in corso",
+        text: " ",
+        icon: "info",
+        buttons: false,
+    })
+
     $.ajax({
         url: '/report_excel/',
         type: 'POST',
@@ -32,6 +40,15 @@ function exportReportExcel(reportId) {
             responseType: 'blob'
         },
         success: function(response) {
+
+            swal({
+                title: "File Generato!",
+                text: "Il file è stato generato e scaricato correttamente",
+                icon: "success",
+                timer: 800,
+                buttons: false,
+            })
+
             var blob = new Blob([response], { type: 'text/csv' });
             var url = window.URL.createObjectURL(blob);
             var link = document.createElement('a');
@@ -40,6 +57,15 @@ function exportReportExcel(reportId) {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        },
+        error: function(response) {
+            swal({
+                title: "Errore",
+                text: "Si è verificato un errore durante la generazione del file",
+                icon: "error",
+                timer: 800,
+                buttons: false,
+            })
         }
     });
 }
