@@ -680,7 +680,7 @@ def get_block_records_calendar(request):
         fieldid_date = str(datetype)
         datetype = fieldid_date + ' as date'
 
-    select_fields=['recordid_','description as description', datetype]
+    select_fields=['recordid_','description as description', datetype, 'start as start','end as end']
     events_bixdata = table_obj.get_records(conditions_list=conditions_list,fields=select_fields)
 
     # Sostituisci i caratteri di nuova riga con <br> nella descrizione
