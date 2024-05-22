@@ -672,6 +672,7 @@ def get_block_records_calendar(request):
     conditions_list.append(f"user = {userid}")
     conditions_list.append("( status not like 'Chiuso' OR status is null)")
     conditions_list.append("duedate is not null")
+    #conditions_list.append("id=832 OR id=863")
 
     if datetype is None:
         fieldid_date = result[1]['fieldid']
