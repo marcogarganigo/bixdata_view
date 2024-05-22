@@ -4132,3 +4132,20 @@ def get_user_worktime(request):
     return JsonResponse({'worktime': worked})
 
 
+def update_record_date(request):
+    recordid = request.POST.get('recordid')
+    tableid = request.POST.get('tableid')
+    datetype = request.POST.get('datetype')
+    date = request.POST.get('date')
+
+    date_obj = datetime.datetime.strptime(date, "%a %b %d %Y %H:%M:%S GMT%z (Ora legale dell’Europa centrale)")
+    formatted_date = date_obj.strftime("%Y-%m-%d")
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"UPDATE user_task SET {datetype} = '{formatted_date}' WHERE recordid_ = '{recordid}'"
+        )
+
+    return JsonResponse({'success': True})
+
+

@@ -16,8 +16,8 @@
 
     @media (max-height: 1000px) {
         #content_records_calendar {
-            max-height: 85%;
-            height: 85%
+            max-height: 79%;
+            height: 79%
         }
     }
 
@@ -55,7 +55,7 @@
 </script>
 
 <div id="calendar-section-container" style="width: 100%; height: 100%">
-    <select class="form-select" aria-label="Default select example" onchange="selectTypeOfDate(this.value)">
+    <select id="select-date-type" class="form-select" aria-label="Default select example" onchange="selectTypeOfDate(this.value)" style="width: 10%">
         {% for field in select_fields %}
             <option {{ field.selected }} value="{{ field.fieldid }}">{{ field.description }}</option>
         {% endfor %}
@@ -142,6 +142,8 @@
 
         },
         eventDrop: function (event, delta, revertFunc) {
+            console.info(event.start._d)
+            updateRecordDate(event.recordid, event.start._d)
 
         },
 
@@ -153,25 +155,24 @@
         },
     });
 
-
-    function open_record_calendar(recordid) {
-        var serialized_data = [];
-        serialized_data.push({name: 'tableid', value: 'task'});
-        serialized_data.push({name: 'recordid', value: recordid});
-        serialized_data.push({name: 'contextfunction', value: 'edit'});
+    function updateRecordDate(recordid, date) {
+        datetype = $('#select-date-type').val();
 
         $.ajax({
             type: "POST",
-            url: "{% url 'block_record_card' %}",
-            data: serialized_data,
+            url: "{% url 'update_record_date' %}",
+            data: {
+                'recordid': recordid,
+                'datetype': datetype,
+                'tableid': '{{ tableid }}',
+                'date': date,
+            },
             success: function (response) {
-
-                $('#block-record-card-container').html(response);
             },
             error: function (response) {
             }
-        });
 
+        })
     }
 </script>
 
