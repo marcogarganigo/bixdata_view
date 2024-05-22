@@ -1196,13 +1196,13 @@ def custom_save_record(request, tableid, recordid):
                 invoicestatus='To Process'
 
 
-        # valutazione del tipo di servizio se produttivo o meno TODO    
+        # valutazione del tipo di servizio se produttivo o meno 
         if invoicestatus == 'To Process':
             if service == 'Amministrazione' or service == 'Commerciale' or service == 'Formazione Apprendista' or service == 'Formazione e Test' or service == 'Interno' or service == 'Riunione':
                 invoicestatus = 'Attività non fatturabile'
                 productivity = 'Senza ricavo'
 
-        # valutazione delle option TODO
+        # valutazione delle option 
         if invoicestatus=='To Process':
             if invoiceoption=='Under Warranty' or invoiceoption=='Commercial support' or invoiceoption=='Swisscom incident' or invoiceoption=='Swisscom ServiceNow' or invoiceoption=='To check':
                 invoicestatus=invoiceoption
@@ -1252,7 +1252,28 @@ def custom_save_record(request, tableid, recordid):
                     timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
                     invoicestatus='Service Contract: '+servicecontract_record.fields['type']
                     productivity='Ricavo indiretto'
-
+                    timesheet_record.fields['print_type']='Contratto di servizio'
+                    timesheet_record.fields['print_hourprice']='Compreso nel contratto di servizio'
+                    timesheet_record.fields['print_travel'] = 'Compresa nel contratto di servizio'
+        #valutazione monte ore pbx
+        if ((invoicestatus=='To Process' or invoicestatus=='Under Warranty' or invoicestatus=='Commercial support') and invoiceoption!='Out of contract' and travel_time_decimal == 0):
+            service_contracts=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","type='Monte Ore Remoto PBX'","status='In Progress'"])
+            if service_contracts:
+                timesheet_record.fields['recordidservicecontract_']=service_contracts[0]['recordid_']
+                servicecontract_record=Record('servicecontract',service_contracts[0]['recordid_'])
+                if invoicestatus=='To Process':
+                    invoicestatus='Service Contract: Monte Ore Remoto PBX'
+                    productivity='Ricavo diretto'
+                if invoicestatus=='Under Warranty':
+                    invoicestatus='Under Warranty'
+                    productivity='Senza ricavo'
+                if invoicestatus=='Commercial support':
+                    invoicestatus='Commercial support'
+                    productivity='Senza ricavo'
+                timesheet_record.fields['print_type']='Monte Ore Remoto PBX'
+                timesheet_record.fields['print_hourprice']='Scalato dal monte ore'
+                if servicecontract_record.fields['excludetravel']:
+                    timesheet_record.fields['print_travel'] = 'Non scalata dal monte ore e non fatturata'
         #valutazione monte ore
         if ((invoicestatus=='To Process' or invoicestatus=='Under Warranty' or invoicestatus=='Commercial support') and invoiceoption!='Out of contract'):
             service_contracts=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","type='Monte Ore'","status='In Progress'"])
