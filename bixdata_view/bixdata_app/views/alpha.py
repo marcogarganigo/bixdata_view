@@ -3818,7 +3818,7 @@ def deal_close_lost(request):
         today = today.strftime("%Y-%m-%d")
         deal_record.fields['closedate'] = today
         deal_record.save()
-    return JsonResponse({'success': True})
+    return JsonResponse({'success': True}) 
 
 
 def deal_update_dealstage(request):
