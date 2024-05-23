@@ -78,14 +78,17 @@
             start = "{{ event.date }}"
             end = "{{ event.date }}"
 
-
         {% else %}
+
             allDay = false;
 
             start = "{{ event.start }}"
             end = "{{ event.end }}"
             planneddate = "{{ event.date }}"
 
+            alert('{{ event.start }}')
+            console.info('{{ event.start }}')
+            console.info(start, end, planneddate)
 
 
 
@@ -142,7 +145,7 @@
 
         },
         eventDrop: function (event, delta, revertFunc) {
-            console.info(event.start._d)
+            console.info(event)
             updateRecordDate(event.recordid, event.start._d)
 
         },
@@ -153,6 +156,32 @@
             // Customize event rendering to display only the event title
             element.find('.fc-title').html(event.title);
         },
+
+
+        eventResize: function(event) {
+            if ($('#select-date-type').val() == 'planneddate') {
+
+
+                enddate = event.end._i
+
+                enddate = enddate.map(number => number.toString());
+                if (enddate[3] == '0') {
+                    enddate[3] = '00'
+                }
+                if (enddate[4] == '0') {
+                    enddate[4] = '00'
+                }
+                date = enddate[3] + ':' + enddate[4]
+                enddate = date.toString()
+                console.info(event.recordid)
+                updateEndDate(enddate, event.recordid)
+
+            }
+            else {
+                alert('You can resize only the planned date')
+            }
+
+        }
     });
 
     function updateRecordDate(recordid, date) {
@@ -174,6 +203,24 @@
 
         })
     }
+
+    function updateEndDate(enddate, recordid) {
+        alert('ok')
+        $.ajax({
+            type: "POST",
+            url: "{% url 'update_end_date' %}",
+            data: {
+                'enddate': enddate,
+                'recordid': recordid,
+            },
+            success: function (response) {
+            },
+            error: function (response) {
+            }
+
+        })
+    }
+
 </script>
 
 
