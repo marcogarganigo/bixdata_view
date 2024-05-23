@@ -43,33 +43,33 @@
     }
 
     table {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     .board {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     .task-header {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     /*calendar */
     .small-header .fc-header {
-        font-size: 13px;
+        font-size: 10px;
         width: 10px;
     }
 
     .small-header .fc-header-title h2 {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     .small-header .fc-header-left {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     .small-header .fc-header-right {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     #card-menu .btn {
@@ -86,36 +86,36 @@
     }
 
     .span-pc {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     .tabs-icon {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     #results {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     .btn {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     .nav-link {
-        font-size: 13pt;
+        font-size: 10pt;
 
     #fields-scroll-container {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     ul.ui-autocomplete {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
 
     td, tr {
         padding: 2px !important;
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     #block_record_badge > .card-body {
@@ -136,30 +136,30 @@
     }
 
     #block_record_badge {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     #card-menu > button  {
-       font-size: 13pt; !important;
+       font-size: 10pt; !important;
     }
 
     #card-menu > .dropdown > button {
-        font-size: 13pt;
+        font-size: 10pt;
     }
 
     .save-button {
-        font-size: 13pt; !important;
+        font-size: 10pt; !important;
         scale: 0.7;
     }
 
         /* non usato */
     .records-button {
-         font-size: 13pt; !important;
+         font-size: 10pt; !important;
     }
 
         /* non usato */
     .records-button-secondary {
-         font-size: 13pt; !important;
+         font-size: 10pt; !important;
     }
 
     }

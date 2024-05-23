@@ -172,4 +172,5 @@ urlpatterns = [
     path('report_excel/', bixdata_view.report_excel, name='report_excel'),
     path('get_user_worktime/', alpha.get_user_worktime, name='get_user_worktime'),
     path('update_record_date/', alpha.update_record_date, name='update_record_date'),
+    path('update_end_date/', alpha.update_end_date, name='update_end_date'),
 ]

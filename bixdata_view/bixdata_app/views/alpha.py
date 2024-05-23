@@ -4148,4 +4148,18 @@ def update_record_date(request):
 
     return JsonResponse({'success': True})
 
+def update_end_date(request):
+    enddate = request.POST.get('enddate')
+    recordid = request.POST.get('recordid')
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"UPDATE user_task SET end = '{enddate}' WHERE recordid_ = '{recordid}'"
+        )
+
+    print(enddate)
+    print(recordid)
+
+    return JsonResponse({'success': True})
+
 
