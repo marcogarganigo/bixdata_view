@@ -1581,6 +1581,7 @@ def custom_save_record(request, tableid, recordid):
         #progetto
         if deal_type=='Aggiunta servizi' or deal_type=='Materiale senza attività' or deal_type=='Rinnovo Monte ore':
             deal_record.fields['project']='No'
+            deal_record.fields['project_default_adiutotech']=1019
 
         #ordine materiale
         if deal_type=='Rinnovo Monte ore':
