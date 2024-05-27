@@ -173,4 +173,5 @@ urlpatterns = [
     path('get_user_worktime/', alpha.get_user_worktime, name='get_user_worktime'),
     path('update_record_date/', alpha.update_record_date, name='update_record_date'),
     path('update_end_date/', alpha.update_end_date, name='update_end_date'),
+    path('set_event_allday/', alpha.set_event_allday, name='set_event_allday'),
 ]

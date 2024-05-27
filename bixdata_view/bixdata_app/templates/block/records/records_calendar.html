@@ -86,7 +86,6 @@
             end = "{{ event.end }}"
             planneddate = "{{ event.date }}"
 
-            alert('{{ event.start }}')
             console.info('{{ event.start }}')
             console.info(start, end, planneddate)
 
@@ -96,25 +95,34 @@
             endTimeParts = end.split(":");
 
 
-            startDate = new Date(planneddate);
+            var startDate = new Date(planneddate);
             startDate.setHours(parseInt(startTimeParts[0], 10));
             startDate.setMinutes(parseInt(startTimeParts[1], 10));
 
-            endDate = new Date(planneddate);
+            var offset = startDate.getTimezoneOffset();
+            startDate.setMinutes(startDate.getMinutes() - offset);
+            var formattedStartDate = startDate.toISOString().slice(0, 19);
+
+            var endDate = new Date(planneddate);
             endDate.setHours(parseInt(endTimeParts[0], 10));
             endDate.setMinutes(parseInt(endTimeParts[1], 10));
 
-            //VERIFICARE
-            formattedStartDate = startDate.toISOString().slice(0, 19)
-            formattedEndDate = endDate.toISOString().slice(0, 19)
+            offset = endDate.getTimezoneOffset();
+            endDate.setMinutes(endDate.getMinutes() - offset);
+            var formattedEndDate = endDate.toISOString().slice(0, 19);
+
+
+            console.info(startDate)
+            console.info(formattedStartDate)
+
 
             start = formattedStartDate;
             end = formattedEndDate;
 
 
 
-        {% endif %}
 
+        {% endif %}
 
         jsonEvents.push({
             "title": "{{ event.description }}",
@@ -144,10 +152,21 @@
             open_record(window.content, '{{ tableid }}', event.recordid, 'edit', '');
 
         },
-        eventDrop: function (event, delta, revertFunc) {
-            console.info(event)
-            updateRecordDate(event.recordid, event.start._d)
-
+        eventDrop: function (event, delta, revertFunc, allDay = event.allDay) {
+/*
+            if (allDay == true) {
+                 updateRecordDate(event.recordid, event)
+            }
+            else {
+                 if ($('#select-date-type').val() == 'planneddate') {
+                    updateRecordDate(event.recordid, event)
+                 }
+                 else {
+                    alert('You can resize only the planned date')
+                    revertFunc();
+                }
+            }*/
+            updateRecordDate(event.recordid, event)
         },
 
 
@@ -158,54 +177,113 @@
         },
 
 
-        eventResize: function(event) {
+        eventResize: function(event, delta, revertFunc) {
             if ($('#select-date-type').val() == 'planneddate') {
 
 
                 enddate = event.end._i
 
                 enddate = enddate.map(number => number.toString());
-                if (enddate[3] == '0') {
-                    enddate[3] = '00'
-                }
-                if (enddate[4] == '0') {
-                    enddate[4] = '00'
-                }
+
                 date = enddate[3] + ':' + enddate[4]
+                date = formatHours(date)
                 enddate = date.toString()
-                console.info(event.recordid)
+                console.info(event)
                 updateEndDate(enddate, event.recordid)
 
             }
             else {
                 alert('You can resize only the planned date')
+                revertFunc();
             }
 
         }
     });
 
-    function updateRecordDate(recordid, date) {
+    function updateRecordDate(recordid, event) {
+
         datetype = $('#select-date-type').val();
+        console.info(event)
 
-        $.ajax({
-            type: "POST",
-            url: "{% url 'update_record_date' %}",
-            data: {
-                'recordid': recordid,
-                'datetype': datetype,
-                'tableid': '{{ tableid }}',
-                'date': date,
-            },
-            success: function (response) {
-            },
-            error: function (response) {
+        eventdate = event.start._d
+
+
+
+
+        var date = new Date(eventdate);
+
+        // Estrazione dell'anno, del mese e del giorno
+        var year = date.getFullYear();
+        var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Il mese inizia da 0, quindi aggiungiamo 1
+        var day = date.getDate().toString().padStart(2, '0');
+
+        // Costruzione della data nel formato richiesto (yyyy-mm-dd)
+        var formattedDate = year + "-" + month + "-" + day;
+
+        if (event.allDay == true) {
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'set_event_allday' %}",
+                data: {
+                    'recordid': recordid,
+                    'datetype': datetype,
+                    'tableid': '{{ tableid }}',
+                    'date': formattedDate,
+                },
+                success: function (response) {
+                },
+                error: function (response) {
+                }
+
+            })
+
+        } else {
+
+            start = event.start._i
+            start = start.map(number => number.toString());
+            starthour = start[3] + ':' + start[4]
+            starthour = formatHours(starthour)
+
+            if (event.end == null){
+                event.end = event.start
+
+                event.end._i[3] += 1;
+
             }
+            end = event.end._i
+            end = end.map(number => number.toString());
 
-        })
+            endhour = end[3] + ':' + end[4]
+            endhour = formatHours(endhour)
+
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'update_record_date' %}",
+                data: {
+                    'recordid': recordid,
+                    'datetype': datetype,
+                    'tableid': '{{ tableid }}',
+                    'date': formattedDate,
+                    'starthour': starthour,
+                    'endhour': endhour,
+                    'allDay': event.allDay
+                },
+                success: function (response) {
+                },
+                error: function (response) {
+                }
+
+            })
+        }
+
+
     }
 
     function updateEndDate(enddate, recordid) {
-        alert('ok')
         $.ajax({
             type: "POST",
             url: "{% url 'update_end_date' %}",
@@ -220,6 +298,21 @@
 
         })
     }
+
+    function formatHours(hour) {
+        // Dividere l'ora e i minuti
+        let [hours, minutes] = hour.split(':');
+
+        // Aggiungere zeri iniziali se necessario
+        hours = hours.padStart(2, '0');
+        minutes = minutes.padStart(2, '0');
+
+        // Unire le parti formattate
+        const formattedTime = `${hours}:${minutes}`;
+
+        return formattedTime;
+    }
+
 
 </script>
 
