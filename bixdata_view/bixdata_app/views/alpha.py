@@ -1556,6 +1556,37 @@ def custom_save_record(request, tableid, recordid):
         deal_record.fields['annualprice']=deal_annualprice
         deal_record.fields['annualcost']=deal_annualcost
         deal_record.fields['annualmargin']=deal_annualmargin
+
+        # valutazione step workflow
+        deal_type=deal_record.fields['type']
+        deal_record.fields['techvalidation']='No'
+        deal_record.fields['creditcheck']='Si'
+        deal_record.fields['project']='Si'
+        deal_record.fields['purchaseorder']='Si'
+        # default tech
+        if deal_type=='Printing':
+            deal_record.fields['project_default_adiutotech']=1019
+        if deal_type=='Software' or deal_type=='Hosting':
+            deal_record.fields['project_default_adiutotech']=1011
+        #tech validation
+        if deal_type=='ICT' or deal_type=='PBX':
+            deal_record.fields['techvalidation']='Si'
+
+        #credit check
+        if deal_type=='Rinnovo Monte ore' or deal_type=='Riparazione Lenovo':
+            deal_record.fields['creditcheck']='No'
+        if deal_record.fields['amount']<500:
+            deal_record.fields['creditcheck']='No'
+
+        #progetto
+        if deal_type=='Aggiunta servizi' or deal_type=='Materiale senza attività' or deal_type=='Rinnovo Monte ore':
+            deal_record.fields['project']='No'
+            deal_record.fields['project_default_adiutotech']=1019
+
+        #ordine materiale
+        if deal_type=='Rinnovo Monte ore':
+            deal_record.fields['purchaseorder']='No'
+
         deal_record.save()
     
     return True
