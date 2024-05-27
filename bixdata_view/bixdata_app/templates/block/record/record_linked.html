@@ -54,6 +54,14 @@
         background-color: #e1dfdf !important;
         color: white;
     }
+
+    #block_record_linked {
+        width: 100% !important;
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: column;
+        align-items:center;
+    }
 </style>
 
 <div id="block_record_linked">
@@ -62,7 +70,7 @@
                 data-bs-target="#{{ linked_table.tableid }}" aria-expanded="false"
                 aria-controls="{{ linked_table.tableid }}"
                 data-recordid="{{ recordid }}"
-                style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 100%; margin-top: 10px"
+                style="text-align: left; background-color: whitesmoke; border: white; color: #074048; width: 98%; margin-top: 10px"
                 onclick="toggleCollapse(this); triggerCollapse(this,'{{ linked_table.tableid }}', '{{ linked_table.tableid }}-{{ recordid }}', '{{ linked_table.tableid }}', '{{ recordid }}', '{{ tableid }}')">
             <span style="width: 97%; margin:auto; display: block ">
               {% if linked_table.table_count == 0 %}
@@ -95,8 +103,8 @@
 
 
 
-         <div class="div-collapse" id="collapse-{{ linked_table.tableid }}-{{ recordid }}" style="margin-top: 10px; display: none" data-tableid="{{ linked_table.tableid }}" data-recordid="{{ linked_table.recordid }}">
-            <div class="card card-body">
+         <div class="div-collapse" id="collapse-{{ linked_table.tableid }}-{{ recordid }}" style="margin-top: 10px; padding: 5px !important; display: none; width: 100%" data-tableid="{{ linked_table.tableid }}" data-recordid="{{ linked_table.recordid }}">
+            <div class="card card-body" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); padding: 5px !important;">
                 <button class="btn btn-secondary d-flex justify-content-center align-items-center"
                         onclick="linked_newRecord(this, '{{ linked_table.tableid }}')" style="width: 5%;"><span
                         class="material-symbols-outlined">add</span></button>

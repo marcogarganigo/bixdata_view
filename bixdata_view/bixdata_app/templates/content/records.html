@@ -368,7 +368,7 @@
 
 <style>
     .filter-column {
-        height: 50px;
+        height: 100%;
     }
 
     {% if layout_setting == 'modal' %}
@@ -385,8 +385,8 @@
 </style>
 
 
-<div id="content-records" style="height: 98%">
-    <div class="row" style="width: 100%; height: 99%; margin-top: 1%">
+<div id="content-records" style="height: 100%">
+    <div class="row" style="width: 100%; height: 100%; margin-top: 0.4%">
         <!--Content tables start-->
         <div id="block-records-search-container" class="col-xl-8 col-md-8 mb-4" style="height: 100%;">
             <div id="content-table" class="card shadow mb-4" style="height: 100%;"> <!--card-->
@@ -426,11 +426,11 @@
 
                                 </div>
                                 <div class="col filter-column">
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end"
-                                         style="margin-top: 3px; margin-right: 3px">
+                                    <div class="d-grid gap-2 justify-content-md-end"
+                                         style="margin-top: 3px; margin-right: 3px; display: -webkit-box !important;">
                                         <button class="btn btn-outline-danger me-md-2 center-icon-button records-button"
                                                 type="button" onclick="refresh()"><span
-                                                class="material-symbols-outlined">cached</span></button>
+                                                class="material-symbols-outlined" id="refresh-button">cached</span></button>
                                         <button class="btn btn-outline-danger me-md-2 records-button" type="button" onclick="newRecord('{{tableid}}')">Nuovo </button>
                                         <div class="dropdown">
                                             <button class="btn btn-outline-secondary me md-2 dropdown-toggle records-button-secondary"

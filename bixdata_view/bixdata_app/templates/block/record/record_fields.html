@@ -306,7 +306,7 @@
 
                             {% if field.fieldtypeid == 'Memo' %}
                                 {% if fieldname == 'description' %}
-                                    <textarea style="min-height: 250px"
+                                    <textarea
                                               class="form-control mb-2 {{ mandatory }} {{ calcolato }}"
                                               id="{{ fieldid }}" name="{{ fieldname }}"
                                               rows="3">{{ field.value }}</textarea>

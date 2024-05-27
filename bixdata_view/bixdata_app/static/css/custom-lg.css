@@ -28,4 +28,18 @@
         height: 75%
     }
 
+    .field textarea {
+        min-height: 200px !important;
+    }
+
+    .save-button {
+        margin-bottom: 2% !important;
+    }
+
+    .results-table-linked #results-body #results-row {
+        line-height: 24px !important;
+    }
+
+
+
 }

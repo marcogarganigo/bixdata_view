@@ -1,4 +1,4 @@
-<div id="block_record_badge" class="card shadow-shadow-sm" style="height: 100%; width: 100%;  background-color: #074048 ">
+<div id="block_record_badge" class="card shadow-shadow-sm" style="height: 100%; width: 100%;  background-color: #074048">
     <div class="card-body">
         <div class="row row-cols-3 row-cols-md-2 row-cols-sm-1">
             {% for key, field in fields.items %}
@@ -6,7 +6,7 @@
                     <div class="col">
                         <div class="row">
                             <div class="col-lg-12" style="margin-bottom: 1%; color: white">
-                                <b>{{ field.description }}:</b> {{ field.value }}
+                                <b>{{ field.description }}:</b> {{ field.value|safe|truncatechars:100 }}
                             </div>
                             <div class="col"></div>
                         </div>
