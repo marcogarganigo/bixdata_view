@@ -1196,7 +1196,7 @@ def custom_save_record(request, tableid, recordid):
                 invoicestatus='To Process'
 
 
-        # valutazione del tipo di servizio se produttivo o meno
+        # valutazione del tipo di servizio se produttivo o meno 
         if invoicestatus == 'To Process':
             if service == 'Amministrazione' or service == 'Commerciale' or service == 'Formazione Apprendista' or service == 'Formazione e Test' or service == 'Interno' or service == 'Riunione':
                 invoicestatus = 'Attività non fatturabile'
@@ -1429,7 +1429,7 @@ def custom_save_record(request, tableid, recordid):
         project_record.save()
         if not isempty(deal_record.recordid):
             custom_save_record(request, tableid='deal', recordid=deal_record.recordid)
-
+        
 
 
     # ---DEALLINE
@@ -1545,7 +1545,7 @@ def custom_save_record(request, tableid, recordid):
         deal_expectedmargin=deal_price-deal_expectedcost
         if deal_actualcost==0:
             deal_actualmargin= deal_expectedmargin
-
+        
         deal_record.fields['amount']=round(deal_price, 2)
         deal_record.fields['expectedcost']=round(deal_expectedcost, 2)
         deal_record.fields['expectedmargin']= round(deal_expectedmargin, 2)
@@ -1588,7 +1588,7 @@ def custom_save_record(request, tableid, recordid):
             deal_record.fields['purchaseorder']='No'
 
         deal_record.save()
-
+    
     return True
 
 
@@ -1838,7 +1838,7 @@ def admin_page(request):
             "SELECT * FROM sys_dashboard"
         )
         dashboards = dictfetchall(cursor)
-
+        
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT * FROM sys_dashboard_block"
@@ -3849,7 +3849,7 @@ def deal_close_lost(request):
         today = today.strftime("%Y-%m-%d")
         deal_record.fields['closedate'] = today
         deal_record.save()
-    return JsonResponse({'success': True})
+    return JsonResponse({'success': True}) 
 
 
 def deal_update_dealstage(request):
@@ -4116,7 +4116,7 @@ def save_dashboard_table(request):
 
     return JsonResponse({'success': True})
 
-
+    
 def save_columns_width(request):
     tableid = request.POST.get('tableid')
     width = request.POST.get('widths')
@@ -4141,7 +4141,7 @@ def save_columns_width(request):
             )
 
     return JsonResponse({'success': True})
-
+    
 
 def get_user_worktime(request):
     userid = get_userid(request.user.id)
@@ -4168,23 +4168,14 @@ def update_record_date(request):
     tableid = request.POST.get('tableid')
     datetype = request.POST.get('datetype')
     date = request.POST.get('date')
-    endhour = request.POST.get('endhour')
-    starthour = request.POST.get('starthour')
-    allDay = request.POST.get('allDay')
 
-    if datetype == 'planneddate' and endhour and starthour:
+    date_obj = datetime.datetime.strptime(date, "%a %b %d %Y %H:%M:%S GMT%z (Ora legale dell’Europa centrale)")
+    formatted_date = date_obj.strftime("%Y-%m-%d")
 
-        with connection.cursor() as cursor:
-            cursor.execute(
-                f"UPDATE user_task SET {datetype} = '{date}', start = '{starthour}', end = '{endhour}' WHERE recordid_ = '{recordid}'"
-
-            )
-
-    else:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                f"UPDATE user_task SET {datetype} = '{date}' WHERE recordid_ = '{recordid}'"
-            )
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"UPDATE user_task SET {datetype} = '{formatted_date}' WHERE recordid_ = '{recordid}'"
+        )
 
     return JsonResponse({'success': True})
 
@@ -4199,19 +4190,6 @@ def update_end_date(request):
 
     print(enddate)
     print(recordid)
-
-    return JsonResponse({'success': True})
-
-def set_event_allday(request):
-    recordid = request.POST.get('recordid')
-    tableid = request.POST.get('tableid')
-    datetype = request.POST.get('datetype')
-    date = request.POST.get('date')
-
-    with connection.cursor() as cursor:
-        cursor.execute(
-            f"UPDATE user_task SET {datetype} = '{date}',  start = NULL, end = NULL WHERE recordid_ = '{recordid}'"
-        )
 
     return JsonResponse({'success': True})
 
