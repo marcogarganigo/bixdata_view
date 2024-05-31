@@ -153,20 +153,17 @@
 
         },
         eventDrop: function (event, delta, revertFunc, allDay = event.allDay) {
-/*
-            if (allDay == true) {
-                 updateRecordDate(event.recordid, event)
+
+            if ($('#select-date-type').val() != 'planneddate') {
+                updateRecordDate(event.recordid, event)
+            }
+            else if ($('#select-date-type').val() == 'planneddate') {
+                updateRecordDate(event.recordid, event)
             }
             else {
-                 if ($('#select-date-type').val() == 'planneddate') {
-                    updateRecordDate(event.recordid, event)
-                 }
-                 else {
-                    alert('You can resize only the planned date')
-                    revertFunc();
-                }
-            }*/
-            updateRecordDate(event.recordid, event)
+                alert('You can move only the planned date')
+                revertFunc();
+            }
         },
 
 
