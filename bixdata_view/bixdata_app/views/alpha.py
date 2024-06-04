@@ -4168,14 +4168,23 @@ def update_record_date(request):
     tableid = request.POST.get('tableid')
     datetype = request.POST.get('datetype')
     date = request.POST.get('date')
+    endhour = request.POST.get('endhour')
+    starthour = request.POST.get('starthour')
+    allDay = request.POST.get('allDay')
 
-    date_obj = datetime.datetime.strptime(date, "%a %b %d %Y %H:%M:%S GMT%z (Ora legale dell’Europa centrale)")
-    formatted_date = date_obj.strftime("%Y-%m-%d")
+    if datetype == 'planneddate' and endhour and starthour:
 
-    with connection.cursor() as cursor:
-        cursor.execute(
-            f"UPDATE user_task SET {datetype} = '{formatted_date}' WHERE recordid_ = '{recordid}'"
-        )
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"UPDATE user_task SET {datetype} = '{date}', start = '{starthour}', end = '{endhour}' WHERE recordid_ = '{recordid}'"
+
+            )
+
+    else:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"UPDATE user_task SET {datetype} = '{date}' WHERE recordid_ = '{recordid}'"
+            )
 
     return JsonResponse({'success': True})
 
@@ -4190,6 +4199,19 @@ def update_end_date(request):
 
     print(enddate)
     print(recordid)
+
+    return JsonResponse({'success': True})
+
+def set_event_allday(request):
+    recordid = request.POST.get('recordid')
+    tableid = request.POST.get('tableid')
+    datetype = request.POST.get('datetype')
+    date = request.POST.get('date')
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"UPDATE user_task SET {datetype} = '{date}',  start = NULL, end = NULL WHERE recordid_ = '{recordid}'"
+        )
 
     return JsonResponse({'success': True})
 
