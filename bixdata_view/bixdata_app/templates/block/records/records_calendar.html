@@ -72,72 +72,78 @@
 
     {% for event in events %}
 
-        {% if event.start is None and event.end is None%}
-            allDay = true;
+        {%  if event.date is not None and event.date != '' %}
 
-            start = "{{ event.date }}"
-            end = "{{ event.date }}"
+              console.info('{{ event.date }}')
 
-        {% elif event.start == '' and event.end == ''%}
-            allDay = true;
-        
-            start = "{{ event.date }}"
-            end = "{{ event.date }}"
+            {% if event.start is None and event.end is None %}
+                allDay = true;
 
-        {% else %}
+                start = "{{ event.date }}"
+                end = "{{ event.date }}"
 
-            allDay = false;
+            {% elif event.start == '' and event.end == ''%}
+                allDay = true;
 
-            start = "{{ event.start }}"
-            end = "{{ event.end }}"
-            planneddate = "{{ event.date }}"
+                start = "{{ event.date }}"
+                end = "{{ event.date }}"
 
-            console.info('{{ event.start }}')
-            console.info(start, end, planneddate)
+            {% else %}
 
+                allDay = false;
 
+                start = "{{ event.start }}"
+                end = "{{ event.end }}"
+                planneddate = "{{ event.date }}"
 
-            startTimeParts = start.split(":");
-            endTimeParts = end.split(":");
-
-
-            var startDate = new Date(planneddate);
-            startDate.setHours(parseInt(startTimeParts[0], 10));
-            startDate.setMinutes(parseInt(startTimeParts[1], 10));
-
-            var offset = startDate.getTimezoneOffset();
-            startDate.setMinutes(startDate.getMinutes() - offset);
-            var formattedStartDate = startDate.toISOString().slice(0, 19);
-
-            var endDate = new Date(planneddate);
-            endDate.setHours(parseInt(endTimeParts[0], 10));
-            endDate.setMinutes(parseInt(endTimeParts[1], 10));
-
-            offset = endDate.getTimezoneOffset();
-            endDate.setMinutes(endDate.getMinutes() - offset);
-            var formattedEndDate = endDate.toISOString().slice(0, 19);
-
-
-            console.info(startDate)
-            console.info(formattedStartDate)
-
-
-            start = formattedStartDate;
-            end = formattedEndDate;
+                console.info('{{ event.start }}')
+                console.info(start, end, planneddate)
 
 
 
+                startTimeParts = start.split(":");
+                endTimeParts = end.split(":");
+
+
+                var startDate = new Date(planneddate);
+                startDate.setHours(parseInt(startTimeParts[0], 10));
+                startDate.setMinutes(parseInt(startTimeParts[1], 10));
+
+                var offset = startDate.getTimezoneOffset();
+                startDate.setMinutes(startDate.getMinutes() - offset);
+                var formattedStartDate = startDate.toISOString().slice(0, 19);
+
+                var endDate = new Date(planneddate);
+                endDate.setHours(parseInt(endTimeParts[0], 10));
+                endDate.setMinutes(parseInt(endTimeParts[1], 10));
+
+                offset = endDate.getTimezoneOffset();
+                endDate.setMinutes(endDate.getMinutes() - offset);
+                var formattedEndDate = endDate.toISOString().slice(0, 19);
+
+
+                console.info(startDate)
+                console.info(formattedStartDate)
+
+
+                start = formattedStartDate;
+                end = formattedEndDate;
+
+
+
+
+            {% endif %}
+
+            jsonEvents.push({
+                "title": "{{ event.description }}",
+                "start": start,
+                "end": end,
+                "allDay": allDay,
+                "recordid": "{{ event.recordid_ }}",
+                //"calendarid": "{{ event.o365_idcalendar }}"
+            });
 
         {% endif %}
-
-        jsonEvents.push({
-            "title": "{{ event.description }}",
-            "start": start,
-            "end": end,
-            "allDay": allDay,
-            "recordid": "{{ event.recordid_ }}",
-            //"calendarid": "{{ event.o365_idcalendar }}"
-        });
 
     {% endfor %}
 
