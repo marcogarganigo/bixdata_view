@@ -28,7 +28,7 @@
         height: 75%
     }
 
-    .field textarea {
+    .field > textarea {
         min-height: 200px !important;
     }
 

@@ -172,7 +172,7 @@
         min-width: 1750px;
     }
 
-     .field textarea {
+     .field > textarea {
         min-height: 100px !important;
     }
 
