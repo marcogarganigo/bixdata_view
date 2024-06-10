@@ -72,7 +72,7 @@
 
     {% for event in events %}
 
-        {% if (event.start is None and event.end is None) or (event.start == '' and event.end == '') %}
+        {% if not event.start and not event.end %}
             allDay = true;
 
             start = "{{ event.date }}"
