@@ -622,13 +622,18 @@ def get_block_records_kanban(request):
         'searchTerm': '',
     }
 
-    response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
+    response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records_kanban", data=post)
+    #response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
     response_dict = json.loads(response.text)
     groups = response_dict['groups']
     return_groups = []
     for key, group in groups.items():
         return_group = dict()
         return_group['description'] = group['description']
+        # da implementare il total
+        return_group['totals']=list()
+        return_group['totals'].append({'totalname':'totale 1','totalvalue':100})
+        return_group['totals'].append({'totalname':'totale 2','totalvalue':200})
         return_group_records = []
         return_record = dict()
         return_record['recordid'] = '123456789'
