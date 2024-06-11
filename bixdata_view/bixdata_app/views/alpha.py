@@ -614,7 +614,7 @@ def get_block_records_gantt(request):
 
 # Questa funzione serve per buildare il kanban e ritornarlo in una pagina html (per ora non in utilizzo)
 @login_required(login_url='/login/')
-def get_block_records_kanban(request):
+def get_block_records_kanbanBAK(request):
     context = dict()
     tableid = request.POST.get('tableid')
     post = {
@@ -656,6 +656,45 @@ def get_block_records_kanban(request):
     records_table = render_to_string(
         'block/records/records_kanban.html', context, request=request)
     return HttpResponse(records_table)
+
+
+# Questa funzione serve per buildare il kanban e ritornarlo in una pagina html (per ora non in utilizzo)
+@login_required(login_url='/login/')
+def get_block_records_kanban(request):
+    db=DatabaseHelper()
+    context = dict()
+    tableid = request.POST.get('tableid')
+    # record risultati
+    
+
+    # valori di raggruppamento (da rendere poi dinamico)
+    sql = f"SELECT * FROM sys_lookup_table_item WHERE lookuptableid='dealstage_deal' order by itemorder asc"
+    groups = db.sql_query(sql)
+
+    #totali per ogni gruppo
+
+    #organizzazione valori di ritorno
+    return_groups = []
+    for group in groups:
+        return_group = dict()
+        dealstage=group['itemcode']
+        return_group['description'] = group['itemdesc']
+        # da implementare il total
+        return_group['totals']=list()
+        return_group['totals'].append({'totalname':'totale 1','totalvalue':100})
+        return_group['totals'].append({'totalname':'totale 2','totalvalue':200})
+        sql = f"SELECT recordid_ as recordid, reference as title, closedate as date, '' as tag, dealuser1 as user, amount as field1  FROM user_{tableid}  WHERE dealstage='{dealstage}' AND deleted_='n' ORDER BY closedate desc"
+        records = db.sql_query(sql)
+        return_group['records'] = records
+        return_groups.append(return_group)
+
+    context = {
+        'groups': return_groups,
+        'tableid': tableid,
+    }
+    records_table = render_to_string('block/records/records_kanban.html', context, request=request)
+    return HttpResponse(records_table)
+
 
 
 @login_required(login_url='/login/')
@@ -4065,7 +4104,7 @@ def get_company_card(request, phonenumber):
         return index(request, content)
 
 
-def get_3cx_card(request, phonenumber):
+def get_3cx_card(request, phonenumber, callername):
     userid = request.user.id
     with connection.cursor() as cursor:
         cursor.execute(
