@@ -163,7 +163,7 @@
          font-size: 10pt; !important;
     }
 
-    .field textarea {
+    .field > textarea {
         min-height: 150px !important;
     }
 
