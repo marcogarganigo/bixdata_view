@@ -47,6 +47,16 @@ class FieldSettings:
         'label': {
             'type': 'parola',
             'value': ''
+        },
+        'total_sum': {
+            'options': ['true', 'false'],
+            'type': 'select',
+            'value': 'false'
+        },
+        'total_avg': {
+            'options': ['true', 'false'],
+            'type': 'select',
+            'value': 'false'
         }
     }
 

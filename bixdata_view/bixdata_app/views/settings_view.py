@@ -225,7 +225,10 @@ def settings_table_fields_settings_block(request):
     userid = int(request.POST.get('userid'))
     fieldsettings_obj=FieldSettings(tableid=tableid,fieldid=fieldid,userid=userid)
     helperview_obj = HelperView(request)
+
     helperview_obj.context['fieldsettings']=fieldsettings_obj.get_settings()
+    #helperview_obj.context['fieldsettings'] = fieldsettings
+
     return helperview_obj.render_template('admin_settings/settings_table_fields_settings_block.html')
 
 def settings_table_fields_settings_fields_save(request):

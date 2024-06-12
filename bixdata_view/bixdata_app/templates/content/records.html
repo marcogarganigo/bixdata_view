@@ -88,10 +88,38 @@
 
     function searchKanban() {
         var serialized_data = [];
+
         serialized_data.push({
             name: 'tableid',
             value: '{{tableid}}'
         });
+
+        serialized_data.push({
+            name: 'searchTerm',
+            value: $("#searchTerm").val()
+        });
+        serialized_data.push({
+            name: 'viewid',
+            value: $("#viewid").val()
+        });
+        serialized_data.push({
+            name: 'filters',
+            value: convertFormToJSON(serializeForm($('#records_filters_form').find("select,textarea,input")))
+        });
+        serialized_data.push({
+            name: 'currentpage',
+            value: $('#my-pagination').data('currentpage')
+        });
+
+        serialized_data.push({
+            name: 'order_field',
+            value: $('#content-table').find('#block_records_table').data('order-field')
+        });
+        serialized_data.push({
+            name: 'order',
+            value: $('#content-table').find('#block_records_table').data('order')
+        });
+
         $.ajax({
             type: "POST",
             url: "{% url 'block_records_kanban' %}",

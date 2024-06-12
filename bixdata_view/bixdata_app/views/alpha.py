@@ -664,6 +664,12 @@ def get_block_records_kanban(request):
     db=DatabaseHelper()
     context = dict()
     tableid = request.POST.get('tableid')
+    searchTerm = request.POST.get('searchTerm')
+    viewid = request.POST.get('viewid')
+    filters = request.POST.get('filters')
+    currentpage = request.POST.get('currentpage')
+    order_field = request.POST.get('order_field')
+    order = request.POST.get('order')
     # record risultati
     
 
@@ -678,7 +684,7 @@ def get_block_records_kanban(request):
     for group in groups:
         return_group = dict()
         dealstage=group['itemcode']
-        return_group['description'] = group['itemdesc']
+        return_group['description'] = group['itemdesc'] 
         # da implementare il total
         return_group['totals']=list()
         return_group['totals'].append({'totalname':'totale 1','totalvalue':100})
@@ -686,6 +692,10 @@ def get_block_records_kanban(request):
         sql = f"SELECT recordid_ as recordid, reference as title, closedate as date, '' as tag, dealuser1 as user, amount as field1  FROM user_{tableid}  WHERE dealstage='{dealstage}' AND deleted_='n' ORDER BY closedate desc"
         records = db.sql_query(sql)
         return_group['records'] = records
+        sql_totals=f"SELECT ROUND(SUM(amount)) as totalamount, ROUND(SUM(expectedmargin)) as totalmargin FROM user_deal WHERE dealstage='{dealstage}' AND deleted_='n'"
+        totals=db.sql_query_row(sql_totals)
+        return_group['totalamount'] = totals['totalamount']
+        return_group['totalmargin'] = totals['totalmargin']
         return_groups.append(return_group)
 
     context = {
