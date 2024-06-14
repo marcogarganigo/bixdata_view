@@ -670,12 +670,35 @@ def get_block_records_kanban(request):
     currentpage = request.POST.get('currentpage')
     order_field = request.POST.get('order_field')
     order = request.POST.get('order')
+    fieldid = request.POST.get('fieldid')
     # record risultati
-    
 
     # valori di raggruppamento (da rendere poi dinamico)
-    sql = f"SELECT * FROM sys_lookup_table_item WHERE lookuptableid='dealstage_deal' order by itemorder asc"
+    if fieldid == '':
+        sql = f"SELECT * FROM sys_lookup_table_item WHERE lookuptableid='dealstage_deal' order by itemorder asc"
+
+    else:
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"SELECT lookuptableid FROM sys_field WHERE fieldid = '{fieldid}' and tableid = '{tableid}'"
+            )
+            lookuptableid = dictfetchall(cursor)
+            lookuptableid = lookuptableid[0]['lookuptableid']
+
+        sql = f"SELECT * FROM sys_lookup_table_item WHERE lookuptableid='{lookuptableid}' order by itemorder asc"
+
     groups = db.sql_query(sql)
+
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT sys_field.fieldid FROM sys_field JOIN sys_user_field_order ON sys_field.id = sys_user_field_order.fieldid WHERE sys_user_field_order.typepreference = 'kanban_fields'"
+        )
+        fieldids = dictfetchall(cursor)
+        fieldids = [field['fieldid'] for field in fieldids]
+
+        fields_str = ', '.join(fieldids)
 
     #totali per ogni gruppo
 
@@ -697,10 +720,22 @@ def get_block_records_kanban(request):
         return_group['totalamount'] = totals['totalamount']
         return_group['totalmargin'] = totals['totalmargin']
         return_groups.append(return_group)
+    
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT fieldid FROM sys_field WHERE (fieldtypeid = 'Utente' or fieldtypeid = 'Parola') and (lookuptableid is not NULL and lookuptableid != '') and tableid = '{tableid}'"
+        )
+        group_fields = dictfetchall(cursor)
+
+    for group_field in group_fields:
+        if group_field['fieldid'] == fieldid:
+            group_field['selected'] = True
+
 
     context = {
         'groups': return_groups,
         'tableid': tableid,
+        'group_fields': group_fields
     }
     records_table = render_to_string('block/records/records_kanban.html', context, request=request)
     return HttpResponse(records_table)

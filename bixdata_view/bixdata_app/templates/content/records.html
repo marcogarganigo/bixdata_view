@@ -86,7 +86,7 @@
         });
     }
 
-    function searchKanban() {
+    function searchKanban(fieldid = '') {
         var serialized_data = [];
 
         serialized_data.push({
@@ -119,6 +119,11 @@
             name: 'order',
             value: $('#content-table').find('#block_records_table').data('order')
         });
+        serialized_data.push({
+            name: 'fieldid',
+            value: fieldid
+        });
+
 
         $.ajax({
             type: "POST",

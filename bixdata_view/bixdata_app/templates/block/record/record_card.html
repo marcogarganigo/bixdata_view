@@ -511,6 +511,10 @@
                         onclick="closeCard(this)"></button>
                 {{ tableid }}
 
+                {% if userid == 11 or userid == 15 %}
+                    {{ recordid }}
+                {% endif %}
+
                 <button type="button" class="btn btn button-recordcard" data-bs-toggle="tooltip"
                         data-bs-placement="bottom" data-bs-title="elimina" style="color: red"
                         onclick="deleteFunc(this)"><i

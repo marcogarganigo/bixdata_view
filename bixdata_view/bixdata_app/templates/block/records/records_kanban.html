@@ -10,6 +10,14 @@
 
     <div class="container-fluid kanban-container" style="height: 100%;width: 100%;">
 
+        <select class="form-select form-select-sm" id="kanban-group-select" onchange="searchKanban(this.value)">
+            {% for field in group_fields %}
+                <option {% if field.selected == 'true' %} selected {% endif %} value="{{ field.fieldid }}">{{ field.fieldid }}</option>
+            {% endfor %}
+
+
+        </select>
+
 
         <div class="row" style="height: 100%;width: 100%;">
             <div class="col-12" style="height: 100%;width: 100%;">
