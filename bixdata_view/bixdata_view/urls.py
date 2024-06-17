@@ -174,4 +174,6 @@ urlpatterns = [
     path('update_record_date/', alpha.update_record_date, name='update_record_date'),
     path('update_end_date/', alpha.update_end_date, name='update_end_date'),
     path('set_event_allday/', alpha.set_event_allday, name='set_event_allday'),
+    path('settings_table_kanbanfields/', settings_view.settings_table_kanbanfields, name='settings_table_kanbanfields'),
+    path('settings_table_kanbanfields_save/', settings_view.settings_table_kanbanfields_save, name='settings_table_kanbanfields_save'),
 ]

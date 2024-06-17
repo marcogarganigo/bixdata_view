@@ -173,6 +173,34 @@
         });
     }
 
+    function setKanbanFields() {
+
+        var tableid = $('#table_settings_menu').attr('data-tableid');
+        var userid = $('#user_username').attr('data-userid');
+
+        //$('#user_username').attr('data-fields_type', fields_type);
+
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'settings_table_kanbanfields' %}",
+            data: {tableid: tableid, userid: userid},
+            success: function (response) {
+                $("#settings_col4").css('display', 'block');
+
+                $("#settings_table_fields_settings").load('/loading/')
+
+                setTimeout(function () {
+                    $("#settings_table_fields_settings").html(response);
+                }, 150);
+
+            },
+            error: function () {
+            }
+        });
+
+    }
+
     function setColorTableButton(el) {
         var els = document.querySelectorAll('.table-button');
         els.forEach(function (el) {

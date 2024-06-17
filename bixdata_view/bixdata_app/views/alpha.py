@@ -712,7 +712,25 @@ def get_block_records_kanban(request):
         return_group['totals']=list()
         return_group['totals'].append({'totalname':'totale 1','totalvalue':100})
         return_group['totals'].append({'totalname':'totale 2','totalvalue':200})
-        sql = f"SELECT recordid_ as recordid, reference as title, closedate as date, '' as tag, dealuser1 as user, amount as field1  FROM user_{tableid}  WHERE dealstage='{dealstage}' AND deleted_='n' ORDER BY closedate desc"
+
+        sql = f"SELECT value, settingid FROM sys_user_table_settings WHERE tableid='{tableid}' AND settingid LIKE 'kanban_%'"
+        kanban_settings = db.sql_query(sql)
+
+        #separate settingids from values
+        settings = []
+        for setting in kanban_settings:
+            set = setting['settingid'].split('_')
+            setting['settingid'] = set[1]
+            settings.append(setting)
+
+        #now create a list of strings with values + 'AS' + settingid
+        settings_str = ''
+        for setting in settings:
+            settings_str += f"{setting['value']} AS {setting['settingid']}"
+            settings_str += ', '
+        settings_str = settings_str[:-2]
+
+        sql = f"SELECT recordid_ as recordid, {settings_str} FROM user_{tableid}  WHERE dealstage='{dealstage}' AND deleted_='n' ORDER BY closedate desc"
         records = db.sql_query(sql)
         return_group['records'] = records
         sql_totals=f"SELECT ROUND(SUM(amount)) as totalamount, ROUND(SUM(expectedmargin)) as totalmargin FROM user_deal WHERE dealstage='{dealstage}' AND deleted_='n'"
