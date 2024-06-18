@@ -1,0 +1,147 @@
+<div id="container_settings" style="height: 95%; overflow: unset; margin-left: 5%">
+    <br>
+    <br>
+    <div id="settings_block_usertables_settings" class="drag-elements-container" style="height: 100%; overflow: unset; width: 100%">
+
+            {% for key, value in fields.items  %}
+                  {% if key == 'Data' or key == 'Utente' or key == 'Parola' %}
+                      {% if key == 'Data' %}
+                          <p>Data</p>
+                      {% elif key == 'Utente' %}
+                          <p>Venditore</p>
+                      {% elif key == 'Parola' %}
+                          <p>Titolo</p>
+                      {% endif %}
+                      <select name="select-{{ key }}" id="select-{{ key }}" class="select2-input" style="margin-bottom: 3% !important">
+                         {% for fields in value %}
+                             {% if selected_fields.kanban_date == fields.fieldid or selected_fields.kanban_title == fields.fieldid or  selected_fields.kanban_user == fields.fieldid  %}
+                                 <option selected value="{{ fields.fieldid }}">{{ fields.description }}</option>
+                             {% else %}
+                                 <option value="{{ fields.fieldid }}">{{ fields.description }}</option>
+                             {% endif %}
+                         {% endfor %}
+                      </select>
+                  {% endif %}
+              {% endfor %}
+
+
+            <h3>4 fields</h3>
+            <br>
+            <select class="select2-input 4fields-select" name="field1">
+                {% for key, value in fields.items %}
+                    {% for fields in value %}
+                        {% if selected_fields.kanban_field1 == fields.fieldid %}
+                            <option selected value="{{ fields.fieldid }}">{{ fields.description }}</option>
+                        {% else %}
+                            <option value="{{ fields.fieldid }}">{{ fields.description }}</option>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </select>
+
+            <br>
+            <br>
+
+             <select class="select2-input 4fields-select" name="field2">
+                {% for key, value in fields.items %}
+                    {% for fields in value %}
+                        {% if selected_fields.kanban_field2 == fields.fieldid %}
+                            <option selected value="{{ fields.fieldid }}">{{ fields.description }}</option>
+                        {% else %}
+                            <option value="{{ fields.fieldid }}">{{ fields.description }}</option>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </select>
+
+            <br>
+            <br>
+
+            <select class="select2-input 4fields-select" name="field3">
+                {% for key, value in fields.items %}
+                    {% for fields in value %}
+                        {% if selected_fields.kanban_field3 == fields.fieldid %}
+                            <option selected value="{{ fields.fieldid }}">{{ fields.description }}</option>
+                        {% else %}
+                            <option value="{{ fields.fieldid }}">{{ fields.description }}</option>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </select>
+
+            <br>
+            <br>
+
+            <select class="select2-input 4fields-select" name="field4">
+                {% for key, value in fields.items %}
+                    {% for fields in value %}
+                        {% if selected_fields.kanban_field4 == fields.fieldid %}
+                            <option selected value="{{ fields.fieldid }}">{{ fields.description }}</option>
+                        {% else %}
+                            <option value="{{ fields.fieldid }}">{{ fields.description }}</option>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </select>
+
+            <br>
+            <br>
+
+            <button class="btn btn-primary" id="save-settings-button" onclick="setKanbanFieldsSave()">Salva</button>
+    </div>
+
+
+</div>
+
+<script>
+
+    function setKanbanFieldsSave() {
+        serialized_data = []
+
+        serialized_data.push({name: 'title', value:  $('#select-Parola').val()});
+        serialized_data.push({name: 'date', value:  $('#select-Data').val()});
+        serialized_data.push({name: 'user', value:  $('#select-Utente').val()});
+        serialized_data.push({name: 'tableid', value: $('#table_settings_menu').attr('data-tableid')});
+        serialized_data.push({name: 'userid', value: $('#user_username').attr('data-userid')});
+
+        $('.4fields-select').each(function() {
+            serialized_data.push({name: $(this).attr('name'), value: $(this).val()});
+        });
+
+        $.ajax({
+            url: '/settings_table_kanbanfields_save/',
+            type: 'POST',
+            data: serialized_data,
+            success: function (data) {
+                swal({
+                    title: "Report inviato!",
+                    text: "Il report è stato inviato correttamente.",
+                    icon: "success",
+                    timer: 800,
+                    buttons: false,
+                })
+            },
+            error: function (data) {
+                console.log(data);
+            }
+
+        })
+    }
+
+        function toggleCollapse(el) {
+        $(el).next('.div-collapse').slideToggle(200);
+    }
+
+        $('#settings_block_usertables_settings').find('.select2-input').each(function () {
+        $(this).select2({
+            dropdownParent: $(this).parent()
+        }).addClass('select2-initialized');
+    });
+
+
+    $(document).on('select2:open', function (e) {
+        window.setTimeout(function () {
+            document.querySelector('input.select2-search__field').focus();
+        }, 0);
+    });
+</script>
