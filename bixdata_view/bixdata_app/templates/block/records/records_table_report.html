@@ -1,0 +1,549 @@
+{% load static %}
+
+
+<style>
+    #block_records_table {
+        height: 100%;
+        width: 100%;
+    }
+
+    #results-table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+
+    #results-row {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+
+    #results-body {
+        overflow: auto;
+        max-height: 1000px; calc(100% - 40px);
+        height: 100%;
+        width: 100%;
+    }
+
+    #results-body td {
+        padding: 0.3%;
+    }
+
+thead th { position: sticky; top: 0; background-color: white;}
+
+
+    @media screen and (max-width: 1400px) {
+        #pagination-container {
+            height: 80%;
+        }
+    }
+
+    @media screen and (min-width: 1400px) {
+        #pagination-container {
+            height: 90%;
+        }
+    }
+
+    @media screen and (min-width: 3400px) {
+        #pagination-container {
+            height: 93%;
+        }
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .pagination a {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 0 5px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+
+    .records-standard {
+        cursor: context-menu;
+    }
+
+    .linked-field:hover {
+        cursor: pointer;
+    }
+
+    .linked-field {
+        color: #000000;
+
+    }
+
+    {% if table_type == 'linked' %}
+        .linked_container #block_records_table {
+            border-collapse: collapse;
+            width: 100%;
+            height: auto;
+            max-height: 500px !important;
+            overflow:scroll;
+        }
+    {% endif %}
+</style>
+
+<script>
+
+    $(document).ready(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+
+    $(function () {
+        $('#my-pagination').jqPagination({
+            current_page: {{currentpage}},
+            max_page: 10,
+            paged: function (page) {
+                $('#my-pagination').data('currentpage', page);
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'pagination' %}",
+                    data: {
+                        'page': page,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        refresh();
+                    },
+                    error: function (response) {
+                        refresh()
+                    }
+                });
+            }
+        });
+    });
+
+
+
+    function activeRow(el, id) {
+
+        var row = document.getElementById(id);
+        var els = document.querySelectorAll('.clicked');
+        els.forEach(function (e) {
+            e.classList.remove('clicked');
+            e.style.border = '0px';
+        });
+        el.classList.add('clicked');
+        if (el.classList.contains('clicked')) {
+            el.style.border = '2px solid black';
+        } else {
+        }
+    }
+
+    function modalShow() {
+        //$("#recordModal").load('/loading/');
+        $("results-row").click(function () {
+            if (screen.width <= min_width) {
+                $("#recordModal").modal("show");
+            }
+        });
+    }
+
+    function popoverContent() {
+        var responseblock = 'response block';
+        $.ajax({
+            method: "POST",
+            async: false,
+            url: "{% url 'get_block_record_badge' %}",
+            data: {
+                'http_response': 'true',
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'tableid': $(this).data("linkedtableid"),
+                'recordid': $(this).data("linkedrecordid"),
+            },
+            success: function (response) {
+                responseblock = response;
+            },
+            error: function (response) {
+                $(el).closest('.block_record_card').find('.tab-pane-fields').html(response)
+                responseblock = 'error';
+            }
+        });
+        console.info(responseblock)
+        return responseblock;
+    }
+
+    function sort(el) {
+        $(el).closest('#block_records_table').attr('data-order-field', $(el).text().trim())
+
+
+        if ($(el).find('i').hasClass('mdi-arrow-down-thin')) {
+            $(el).find('i').removeClass('mdi-arrow-down-thin')
+            $(el).find('i').removeClass('mdi')
+            $('#block_records_table').attr('data-order', 'desc')
+        } else {
+            $(el).find('i').removeClass('mdi-arrow-up-thin')
+            $(el).find('i').removeClass('mdi')
+            $(el).closest('#block_records_table').attr('data-order', 'asc')
+        }
+        linkedtableid = $(el).closest('.div-collapse').attr('data-tableid')
+        tableid=$(el).closest('.div-collapse').attr('data-tableid')
+        masterrecordid=$(el).closest('.block_record_card').attr('data-recordid')
+        mastertableid= $(el).closest('.block_record_card').attr('data-tableid')
+
+
+        linkedtableid = linkedtableid + '-' + masterrecordid
+
+
+        if ($(el).closest('#block_records_table').attr('data-type') == 'linked') {
+            order = $(el).closest('#block_records_table').attr('data-order')
+            order_field = $(el).closest('#block_records_table').attr('data-order-field')
+            load_linked(linkedtableid, tableid, masterrecordid, mastertableid, order, order_field)
+        } else {
+            refresh()
+        }
+    }
+
+</script>
+
+
+
+
+<div data-order="" data-order-field="" id="block_records_table" style="width: 100%;" data-type="{{ table_type }}" class="block-records-table-{{ table_type }}">
+    <div class="col s12 m6 l6" id="pagination-container">
+        <div id="scrollable-container" style="max-height: 100%; overflow-y: auto;">
+            <table id="results-table" class="results-table-{{ table_type }}">
+                <thead id="results-head">
+                    <tr id="results-row">
+                        {% for column in columns %}
+                            {% if column.desc != 'recordid_' and column.desc != 'recordstatus_' and column.desc != 'recordcss_' %}
+                                {% if column.fieldtypeid == 'Numero' %}
+                                    {% if column.desc == order_field %}
+                                        <th onclick="sort(this)" style="text-align: right" title="{{ column.desc }}">{{ column.desc }} <i class="{{ icon }}"></i></th>
+                                    {% else %}
+                                        <th onclick="sort(this)" style="text-align: right" title="{{ column.desc }}">{{ column.desc }} <i class=""></i></th>
+                                    {% endif %}
+                                {% else %}
+                                    {% if column.desc == order_field %}
+                                        <th onclick="sort(this)"title="{{ column.desc }}">{{ column.desc }} <i class="{{ icon }}"></i></th>
+                                    {% else %}
+                                        <th onclick="sort(this)" title="{{ column.desc }}">{{ column.desc }} <i class=""></i></th>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </thead id="results-head">
+            <div id="input-container" style="position: relative; z-index: 100"></div>
+                <tbody id="results-body">
+                    {% for record in records %}
+                        {% if record.2 %}
+                            <tr style="{{ record.2.value }};" id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
+                        {% else %}
+                            <tr id="results-row" onclick="activeRow(this, '{{ column_value.link_tableid }}')">
+                        {% endif %}
+                    {% for column_value in record %}
+                        {% if forloop.counter0 > 2 %}
+                            {% if column_value.fieldtype == 'linked' %}
+                                <td class="records-linked" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="standard" data-layout="recordcard" style="font-weight: bold !important;">
+                                    <!--
+                                                            <span onclick="event.stopPropagation(); open_record(this,'{{column_value.link_tableid}}','{{column_value.link_recordid}}')"
+                                                                data-fieldtype="{{ column_value.fieldtype }}"
+                                                                class="linked-field popover-linked"
+                                                                data-bs-toggle="popover"
+                                                                data-bs-trigger="hover focus"
+                                                                data-bs-title="Qui non c'è ancora niente ma ci stiamo lavorando"
+                                                                data-bs-content="<img src={% static 'images/mauro&lorenzo.jpg' %} width='400px'>" data-bs-container="body"
+                                                                data-bs-html="true"
+                                                                  data-bs-custom-class="popover-custom"
+                                                                style="width: 300px"
+                                                                >{{column_value.value}}</span>
+
+                                                            <script>$('.popover-linked').popover();</script>
+                                                            -->
+                                    <span data-layout="modal"
+                                          onclick="event.stopPropagation(); open_record(this,'{{ column_value.link_tableid }}','{{ column_value.link_recordid }}')"
+                                          data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
+                                          data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
+                                          data-linkedtableid="{{ column_value.link_tableid }}"
+                                          data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe|truncatechars:50 }}</span>
+                                    <script>
+                                        /*
+                                        $('.popover-linked').popover({
+                                            content: popoverContent,
+                                            html: true,
+                                            placement: 'right',
+                                            trigger: 'hover focus'
+                                        });
+
+                                         */
+                                    </script>
+
+                                    <style>
+                                        .popover-custom {
+                                            max-width: 500px;
+                                        }
+                                    </style>
+                                </td>
+
+                            {% elif column_value.fieldtype == 'Numero' %}
+                                <td onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                    data-fieldtype="{{ column_value.fieldtype }}" class="records-number" data-layout="recordcard"
+                                    style="text-align: right;">
+                                    {{ column_value.value }}
+                                </td>
+                            {% elif column_value.fieldtype == 'Memo' %}
+                                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                    data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
+                                    {{ column_value.value|truncatechars:50 }}
+                                </td>
+
+                            {% elif column_value.fieldtype == 'Utente' %}
+                            {% if column_value.value %}
+                                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                    data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                                    <img src="{% static 'images/users/' %}{{ column_value.code }}.png?v={{ date }}" alt="{{ column_value.code }}" width="32px" height="32px" class="rounded-circle">
+                                    {{ column_value.value }}
+                            {% else %}
+                                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                    data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+                                {{ column_value.value }}
+                            {% endif %}
+                            {% elif column_value.fieldtypeweb == 'lookup' %}
+                                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
+                                    data-fieldtype="{{ column_value.fieldtype }}" class="records-number">
+
+                             <img src="{% static 'images/lookup/' %}{{ column_value.code}}.png?v={{ date }}" width="40px" height="40px" class="" onerror="handleImageError(this)">
+                                {{ column_value.value }}
+                                </td>
+
+                            {% else %}
+                                <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')" data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
+                                    {% autoescape off %}
+                                        {% if column_value.fieldtypeweb == 'custom_bexiourl' %}
+                                            <a onclick="event.stopPropagation();"
+                                               href="https://office.bexio.com/index.php/kb_order/show/id/{{ column_value.value }}"
+                                               target="blank_">{{ column_value.value }}</a>
+                                        {% else %}
+                                            {{ column_value.value }}
+                                        {% endif %}
+                                    {% endautoescape %}
+                                </td>
+                            {% endif %}
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% for report in reports %}
+        {{ report.description }}: {{ report.value }}
+    {% endfor %}
+    <div class="pagination" id="my-pagination" data-currentpage=1>
+        <a href="#" class="first" data-action="first">&laquo;</a>
+        <a href="#" class="previous" data-action="previous">&lsaquo;</a>
+        <input type="text" readonly="readonly" data-max-page="10"/>
+        <a href="#" class="next" data-action="next">&rsaquo;</a>
+        <a href="#" class="last" data-action="last">&raquo;</a>
+    </div>
+
+</div>
+
+{% if table_type != 'linked' %}
+
+
+    <style>
+        [data-table-col] {
+            --rng-h: 1px;
+            --rng-thumb-bgc: transparent;
+            --rng-thumb-h: var(--th, 6rem);
+            --rng-thumb-ico: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M15.5 8l-4.5 4.5v-3.5h-6v3.5l-4.5-4.5 4.5-4.5v3.5h6v-3.5l4.5 4.5z"></path></svg>');
+            --rng-thumb-w: 2rem;
+
+            background: transparent;
+            box-sizing: border-box;
+            font-family: inherit;
+            height: 1px;
+            margin: 0;
+            outline: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+        [data-table-col]::-webkit-slider-thumb {
+            background-color: transparent;
+            background-position: 50% 50%;
+            background-repeat: no-repeat;
+            background-size: 20%;
+            border: 0;
+            height: 42px;
+            cursor: ew-resize;
+            width: var(--rng-thumb-w);
+        }
+        [data-table-col]:focus-visible::-webkit-slider-thumb {
+            --rng-thumb-bgc: rgb(0, 0, 0, 0.1);
+            background-image: var(--rng-thumb-ico);
+            outline: 2px solid rgb(0, 0, 0, 0.8);
+        }
+        [data-table-col]::-webkit-slider-runnable-track {
+            background: transparent;
+            height: var(--rng-h);
+        }
+        [data-table-col],
+        [data-table-col]::-webkit-slider-runnable-track,
+        [data-table-col]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+
+        .block-records-table-standard th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+            border: 1px solid darkgrey;
+        }
+    </style>
+
+
+
+
+    <script>
+
+        if($('.block-records-table-standard').closest('.grid-elements').length == 0) {
+
+
+
+            var resizeTimer;
+
+            function resizeTable(table, selector = 'thead tr th', minWidth = 5) {
+
+                if (!table) return;
+                const cols = table.querySelectorAll(selector);
+                const parent = table.parentNode;
+                const tableWidth = table.offsetWidth;
+                let value = 0;
+
+                widths = '{{ column_width }}'
+
+                if (widths.length != 0) {
+                    widths = widths.split(',')
+                } else {
+                    widths = undefined
+                }
+
+                parent.dataset.tableParent = '';
+                parent.style.setProperty(`--th`, `${table.offsetHeight}px`);
+
+                cols.forEach((col, index) => {
+                    let colWidth;
+                    if (typeof widths !== 'undefined') {
+                        colWidth = parseInt(widths[index]);
+                    } else {
+                        colWidth = parseInt(100 / (tableWidth / col.offsetWidth));
+                    }
+
+                    col.style.width = `calc(1% * var(--c${index}))`;
+                    table.style.setProperty(`--c${index}`, colWidth);
+
+                    if (index > 0) {
+                        const input = document.createElement('input');
+                        input.dataset.tableCol = index;
+                        input.setAttribute('aria-hidden', true);
+                        input.type = 'range';
+                        input.value = value;
+                        inputcontainer = document.getElementById('input-container')
+
+                        inputcontainer.appendChild(input);
+
+
+                        input.addEventListener('input', () => {
+                            if (input.value < minWidth) input.value = minWidth;
+                            if (input.value > 100 - minWidth) input.value = 100 - minWidth;
+
+                            const next = input.nextElementSibling;
+                            const prev = input.previousElementSibling;
+
+                            if (next?.nodeName === 'INPUT' && (input.valueAsNumber > (next.valueAsNumber - minWidth))) {
+                                input.value = next.valueAsNumber - minWidth;
+                                return;
+                            }
+                            if (prev?.nodeName === 'INPUT' && (input.valueAsNumber < (prev.valueAsNumber + minWidth))) {
+                                input.value = prev.valueAsNumber + minWidth;
+                                return;
+                            }
+
+                            table.style.setProperty(`--c${index - 1}`, prev?.nodeName === 'INPUT' ? input.valueAsNumber - prev.valueAsNumber : input.valueAsNumber);
+                            table.style.setProperty(`--c${index}`, next?.nodeName === 'INPUT' ? next.valueAsNumber - input.valueAsNumber : 100 - input.valueAsNumber);
+
+
+                            clearTimeout(resizeTimer);
+                            resizeTimer = setTimeout(save_columns_width, 1000);
+                        });
+                    }
+                    value += colWidth;
+                });
+
+            }
+
+
+              var table = document.querySelector('table');
+              resizeTable(table);
+
+              var widths = []
+
+              for (var i = 0; i < table.querySelectorAll('thead tr th').length; i++) {
+                  widths.push(parseInt(table.style.getPropertyValue(`--c${i}`)))
+              }
+              console.log(widths)
+
+              window.addEventListener('resize', function() {
+                  clearTimeout(resizeTimer);
+                  resizeTimer = setTimeout(save_columns_width, 2000);
+              });
+
+            function save_columns_width() {
+                 var widths = ''
+
+                  for (var i = 0; i < table.querySelectorAll('thead tr th').length; i++) {
+                        widths += parseInt(table.style.getPropertyValue(`--c${i}`)) + ','
+                  }
+
+                  widths = widths.slice(0, -1);
+                  console.log(widths)
+
+                  $.ajax({
+                      type: "POST",
+                      crossDomain: true,
+                      url: "{% url 'save_columns_width' %}",
+                      data: {
+                          'widths': widths,
+                          'tableid': '{{ tableid }}',
+                          'csrfmiddlewaretoken': '{{ csrf_token }}'
+                      },
+                      success: function (response) {
+                          console.log(response)
+                      },
+                      error: function (response) {
+                          console.log(response)
+                      }
+                });
+            }
+
+            table.addEventListener('resize', save_columns_width);
+        } else {
+            const thElements = document.querySelectorAll('.block-records-table-standard th');
+
+            thElements.forEach(th => {
+                th.style.border = '0px';
+            });
+        }
+
+    </script>
+
+
+{% endif %}

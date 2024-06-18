@@ -48,6 +48,7 @@ urlpatterns = [
     path('content_report/', bixdata_view.get_content_report, name='content_report'),
     path('chart/', alpha.get_render_content_chart, name='charts_view'),
     path('block_records_table/', bixdata_view.get_records_table_render, name='block_records_table'),
+    path('block_records_table_report/', bixdata_view.get_records_table_report_render, name='block_records_table_report'),
     path('block_records_gantt/', alpha.get_block_records_gantt, name='block_records_gantt'),
     path('block_records_kanban/', alpha.get_block_records_kanban, name='block_records_kanban'),
     path('block_records_calendar/', alpha.get_block_records_calendar, name='block_records_calendar'),
@@ -176,4 +177,5 @@ urlpatterns = [
     path('set_event_allday/', alpha.set_event_allday, name='set_event_allday'),
     path('settings_table_kanbanfields/', settings_view.settings_table_kanbanfields, name='settings_table_kanbanfields'),
     path('settings_table_kanbanfields_save/', settings_view.settings_table_kanbanfields_save, name='settings_table_kanbanfields_save'),
+
 ]
