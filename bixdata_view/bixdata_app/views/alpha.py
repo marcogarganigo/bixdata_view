@@ -1630,7 +1630,9 @@ def custom_save_record(request, tableid, recordid):
         project_record=Record('project',recordid)
         completed=project_record.fields['completed']
         deal_record=Record('deal',project_record.fields['recordiddeal_'])
+        expectedhours=project_record.fields['expectedhours']
         usedhours=0
+        residualhours=0
         fixedpricehours=0
         servicecontracthours=0
         bankhours=0
@@ -1644,12 +1646,16 @@ def custom_save_record(request, tableid, recordid):
                 bankhours=bankhours+timesheet_record_dict['totaltime_decimal']
             if timesheet_record_dict['invoicestatus']=='Invoiced':
                 invoicedhours=invoicedhours+timesheet_record_dict['totaltime_decimal']
+        if expectedhours:
+            residualhours=expectedhours-usedhours
         project_record.fields['usedhours']=usedhours
+        project_record.fields['residualhours']=residualhours
         deal_record.fields['usedhours']=usedhours
         deal_record.fields['fixedpricehours']=fixedpricehours
         deal_record.fields['servicecontracthours']=servicecontracthours
         deal_record.fields['bankhours']=bankhours
         deal_record.fields['invoicedhours']=invoicedhours
+        deal_record.fields['residualhours']=residualhours
         
         deal_record.fields['projectcompleted']=completed
         deal_record.save()
