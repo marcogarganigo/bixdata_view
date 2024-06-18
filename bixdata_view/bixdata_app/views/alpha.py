@@ -1557,7 +1557,7 @@ def custom_save_record(request, tableid, recordid):
         salesorderline_record = Record('salesorderline', recordid)
         salesorder_record=Record('salesorder',salesorderline_record.fields['recordidsalesorder_'])
         servicecontract_table=Table('servicecontract')
-        servicecontract_record=servicecontract_table.get_record_by_condition([f"recordidsalesorder_='{salesorder_record.fields['recordid_']}'"])
+        servicecontract_record=servicecontract_table.get_record_by_condition([f"recordidsalesorderline_='{recordid}'"])
         salesorderline_record.fields['repetitiontype']=salesorder_record.fields['repetitiontype']
         salesorderline_record.fields['bexio_repetition_type']=salesorder_record.fields['bexio_repetition_type']
         salesorderline_record.fields['bexio_repetition_interval']=salesorder_record.fields['bexio_repetition_interval']
