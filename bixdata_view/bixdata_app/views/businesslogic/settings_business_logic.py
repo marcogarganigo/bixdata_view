@@ -54,7 +54,7 @@ class SettingsBusinessLogic:
         subquery = SysUserFieldOrder.objects.filter(fieldid=OuterRef('id')).filter(typepreference=fields_type).values('fieldorder')[:1]
         fields=SysField.objects.annotate(order=Subquery(subquery)).filter(tableid=tableid).order_by('order').values('id','fieldid','tableid','order','description')
         
-        sql1=f"SELECT sys_field.id,sys_field.fieldid,sys_field.tableid,sys_user_field_order.fieldorder,description,sys_field.label FROM sys_field LEFT JOIN sys_user_field_order ON sys_field.id=sys_user_field_order.fieldid WHERE sys_field.tableid='{tableid}' AND  sys_user_field_order.userid={userid} AND sys_user_field_order.typepreference='{fields_type}' ORDER BY sys_field.label, sys_user_field_order.fieldorder"
+        sql1=f"SELECT sys_field.id,sys_field.fieldid,sys_field.tableid,sys_user_field_order.fieldorder,description,sys_field.label FROM sys_field LEFT JOIN sys_user_field_order ON sys_field.id=sys_user_field_order.fieldid WHERE sys_field.tableid='{tableid}' AND  sys_user_field_order.userid={userid} AND sys_user_field_order.typepreference='{fields_type}' ORDER BY sys_user_field_order.fieldorder"
         fields1=dbh.sql_query(sql1)
         
         sql2=f"""
@@ -68,7 +68,7 @@ class SettingsBusinessLogic:
         WHERE
         tableid='{tableid}' AND userid={userid} AND typepreference='{fields_type}'
         )
-        ORDER BY sys_field.label, sys_field.fieldid
+        ORDER BY sys_field.fieldid
         """
         fields2=dbh.sql_query(sql2)
         
