@@ -26,6 +26,7 @@ from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
 from ..logic_helper import *
 from .database_helper import *
+from .record import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -75,6 +76,13 @@ class Table:
             cursor.execute(sql)
             records = self.helper.dictfetchall(cursor)
         return records
+    
+    def get_record_by_condition(self,conditions_list=list()):
+        records=self.get_records('','',conditions_list)
+        if(records):
+            recordid=records[0]['recordid_']
+            return Record(self.tableid,recordid)
+        return None
     
     def get_records_kanban(self,viewid='',searchTerm='', conditions_list=list()):
         records=self.get_records(viewid,searchTerm,conditions_list)

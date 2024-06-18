@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponse
 from bixdata_app.models import *
 from .businesslogic.models.database_helper import *
+from datetime import datetime
 
 # Questa funzione blocca l'accesso a bixdata da firefox
 def firefox_check(view_func):
@@ -68,6 +69,59 @@ class HelperView:
         else:
             userid=None    
         return userid 
+    
+
+    from datetime import datetime
+
+    def get_last_occurrence(input_date):
+        # Get the current date
+        current_date = datetime.now()
+
+        # Parse the input date
+        input_date = datetime.strptime(input_date, '%Y-%m-%d')
+        input_month = input_date.month
+        input_day = input_date.day
+
+        # Initialize the year to the current year
+        year = current_date.year
+
+        # Loop backwards year by year until we find the last occurrence
+        while True:
+            candidate_date = datetime(year, input_month, input_day)
+
+            # Check if this date is before the current date
+            if candidate_date <= current_date:
+                return candidate_date.strftime('%Y-%m-%d')
+
+            # Decrement the year
+            year -= 1
+
+
+    def get_occurrences_count(input_date):
+        # Get the current date
+        current_date = datetime.now()
+
+        # Parse the input date
+        input_date = datetime.strptime(input_date, '%Y-%m-%d')
+        input_month = input_date.month
+        input_day = input_date.day
+
+        # Initialize the year to the year of the input date
+        start_year = input_date.year
+        end_year = current_date.year
+
+        # Initialize the occurrence count
+        occurrence_count = 0
+
+        # Loop through the years and count occurrences
+        for year in range(start_year, end_year + 1):
+            candidate_date = datetime(year, input_month, input_day)
+
+            # Check if this date is before or equal to the current date
+            if candidate_date <= current_date:
+                occurrence_count += 1
+
+        return occurrence_count
     
     
     

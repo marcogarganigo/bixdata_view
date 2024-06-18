@@ -59,6 +59,7 @@ from docxcompose.composer import Composer
 import qrcode
 
 from .businesslogic.models.record import *
+from .businesslogic.models.table import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -1428,30 +1429,132 @@ def custom_save_record(request, tableid, recordid):
     if tableid=='salesorder':
         salesorder_record=Record('salesorder',recordid)
         deal_record=Record('deal',salesorder_record.fields['recordiddeal_'])
-        totalcost=0
+        salesorder_record.fields['totalcost']=0
+        salesorder_record.fields['totalmargin']=0
+        salesorder_record.fields['totalnetyearly']=0
+        salesorder_record.fields['totalcostyearly']=0
+        salesorder_record.fields['expectedmarginyearly']=0
+        salesorder_record.fields['annual_actual_cost']=0
+        salesorder_record.fields['totalmarginyearly']=0
+        salesorder_record.fields['total_price']=0
+        salesorder_record.fields['total_cost']=0
+        salesorder_record.fields['total_margin']=0
+        salesorder_record.fields['total_actual_cost']=0
+        salesorder_record.fields['total_actual_margin']=0
+        salesorder_record.fields['annual_contract_hours']=0
+        salesorder_record.fields['annual_actual_hours']=0
+        salesorder_record.fields['total_contract_hours']=0
+        salesorder_record.fields['total_actual_hours']=0
+
         salesorderline_linkedrecords = salesorder_record.get_linkedrecords(linkedtable='salesorderline')
         for salesorderline_record_dict in salesorderline_linkedrecords:
-            if not isempty(salesorderline_record_dict['cost']):
-                totalcost=totalcost+salesorderline_record_dict['cost']
-        salesorder_record.fields['totalcostyearly']=totalcost*salesorder_record.fields['multiplier']
-        salesorder_record.fields['totalmargin']=salesorder_record.fields['totalnet']-totalcost
-        salesorder_record.fields['totalmarginyearly']=salesorder_record.fields['totalmargin']*salesorder_record.fields['multiplier']
+            if salesorderline_record_dict['status']=='In Progress':
+                if not isempty(salesorderline_record_dict['cost']):
+                    salesorder_record.fields['totalcost']=salesorder_record.fields['totalcost']+salesorderline_record_dict['cost']
+                if not isempty(salesorderline_record_dict['margin']):
+                    salesorder_record.fields['totalmargin']=salesorder_record.fields['totalmargin']+salesorderline_record_dict['margin']    
+                if not isempty(salesorderline_record_dict['total_net_yearly']):
+                    salesorder_record.fields['totalnetyearly']=salesorder_record.fields['totalnetyearly']+salesorderline_record_dict['total_net_yearly']
+                if not isempty(salesorderline_record_dict['annual_cost']):
+                    salesorder_record.fields['totalcostyearly']=salesorder_record.fields['totalcostyearly']+salesorderline_record_dict['annual_cost']
+                if not isempty(salesorderline_record_dict['marginyearly']):
+                    salesorder_record.fields['expectedmarginyearly']=salesorder_record.fields['expectedmarginyearly']+salesorderline_record_dict['marginyearly']
+                if not isempty(salesorderline_record_dict['annual_actual_cost']):
+                    salesorder_record.fields['annual_actual_cost']=salesorder_record.fields['annual_actual_cost']+salesorderline_record_dict['annual_actual_cost']
+                if not isempty(salesorderline_record_dict['annual_actual_margin']):
+                    salesorder_record.fields['totalmarginyearly']=salesorder_record.fields['totalmarginyearly']+salesorderline_record_dict['annual_actual_margin']
+                if not isempty(salesorderline_record_dict['total_price']):
+                    salesorder_record.fields['total_price']=salesorder_record.fields['total_price']+salesorderline_record_dict['total_price']
+                if not isempty(salesorderline_record_dict['total_cost']):
+                    salesorder_record.fields['total_cost']=salesorder_record.fields['total_cost']+salesorderline_record_dict['total_cost']
+                if not isempty(salesorderline_record_dict['total_margin']):
+                    salesorder_record.fields['total_margin']=salesorder_record.fields['total_margin']+salesorderline_record_dict['total_margin']
+                if not isempty(salesorderline_record_dict['total_actual_cost']):
+                    salesorder_record.fields['total_actual_cost']=salesorder_record.fields['total_actual_cost']+salesorderline_record_dict['total_actual_cost']
+                if not isempty(salesorderline_record_dict['total_actual_margin']):
+                    salesorder_record.fields['total_actual_margin']=salesorder_record.fields['total_actual_margin']+salesorderline_record_dict['total_actual_margin']
+                if not isempty(salesorderline_record_dict['annual_contract_hours']):
+                    salesorder_record.fields['annual_contract_hours']=salesorder_record.fields['annual_contract_hours']+salesorderline_record_dict['annual_contract_hours']
+                if not isempty(salesorderline_record_dict['annual_actual_hours']):
+                    salesorder_record.fields['annual_actual_hours']=salesorder_record.fields['annual_actual_hours']+salesorderline_record_dict['annual_actual_hours']
+                if not isempty(salesorderline_record_dict['total_contract_hours']):
+                    salesorder_record.fields['total_contract_hours']=salesorder_record.fields['total_contract_hours']+salesorderline_record_dict['total_contract_hours']
+                if not isempty(salesorderline_record_dict['total_actual_hours']):
+                    salesorder_record.fields['total_actual_hours']=salesorder_record.fields['total_actual_hours']+salesorderline_record_dict['total_actual_hours']
+
         if not isempty(deal_record.recordid):
             salesorder_record.fields['expectedmarginyearly']=deal_record.fields['annualmargin']
         salesorder_record.save()
 
     # ---SALES ORDER LINE
     if tableid=='salesorderline':
+        dbh=DatabaseHelper()
         salesorderline_record = Record('salesorderline', recordid)
         salesorder_record=Record('salesorder',salesorderline_record.fields['recordidsalesorder_'])
+        servicecontract_table=Table('servicecontract')
+        servicecontract_record=servicecontract_table.get_record_by_condition([f"recordidsalesorder_='{salesorder_record.fields['recordid_']}'"])
+        salesorderline_record.fields['repetitiontype']=salesorder_record.fields['repetitiontype']
+        salesorderline_record.fields['bexio_repetition_type']=salesorder_record.fields['bexio_repetition_type']
+        salesorderline_record.fields['bexio_repetition_interval']=salesorder_record.fields['bexio_repetition_interval']
+        salesorderline_record.fields['recordidcompany_']=salesorder_record.fields['recordidcompany_']
+        salesorderline_record.fields['bexio_orderno']=salesorder_record.fields['documentnr']
+        accountid=salesorderline_record.fields['bexio_account_id']
+        account_table=Table('bexio_account')
+        account_record=account_table.get_record_by_condition([f"account_id='{accountid}'"])
+        if account_record:
+            salesorderline_record.fields['account_no']=account_record.fields['account_no']
+            salesorderline_record.fields['account']=account_record.fields['name']
+            salesorderline_record.fields['servicecontract_type']=account_record.fields['servicecontract_type']
+            salesorderline_record.fields['servicecontract_service']=account_record.fields['servicecontract_service']
+            salesorderline_record.fields['sector']=account_record.fields['sector']
+
         unitcost=salesorderline_record.fields['unitcost']
+        if not unitcost:
+            unitcost=0
         quantity=salesorderline_record.fields['quantity']
+        if not quantity:
+            quantity=0
+        
         linecost=unitcost*quantity
+        
         salesorderline_record.fields['cost']=linecost
         salesorderline_record.fields['margin']=salesorderline_record.fields['price']-linecost
+        # calcolo annuali
         multiplier=salesorder_record.fields['multiplier']
         salesorderline_record.fields['total_net_yearly']=salesorderline_record.fields['price']*multiplier
+        salesorderline_record.fields['annual_cost']=salesorderline_record.fields['cost']*multiplier
+        salesorderline_record.fields['annual_actual_cost']=salesorderline_record.fields['annual_cost']
         salesorderline_record.fields['marginyearly']=salesorderline_record.fields['margin']*multiplier
+        salesorderline_record.fields['annual_actual_margin']=salesorderline_record.fields['marginyearly']
+
+        repetitionstartdate=salesorder_record.fields['repetitionstartdate']
+        lastoccurence=HelperView.get_last_occurrence(repetitionstartdate.strftime('%Y-%m-%d'))
+        occurrencescount=HelperView.get_occurrences_count(repetitionstartdate.strftime('%Y-%m-%d'))
+        # calcolo totali
+        salesorderline_record.fields['total_price']=salesorderline_record.fields['total_net_yearly']*occurrencescount
+        salesorderline_record.fields['total_cost']=salesorderline_record.fields['annual_cost']*occurrencescount
+        salesorderline_record.fields['total_margin']=salesorderline_record.fields['total_price']-salesorderline_record.fields['total_cost']
+
+        # calcolo su contratti con ore comprese
+        if salesorderline_record.fields['servicecontract_type']:
+            
+            salesorderline_record.fields['annual_contract_hours']=salesorderline_record.fields['total_net_yearly']/60
+            salesorderline_record.fields['total_contract_hours']=salesorderline_record.fields['annual_contract_hours']*occurrencescount
+            usedhours=servicecontract_record.fields['usedhours']
+            if not usedhours:
+                usedhours=0
+            salesorderline_record.fields['total_actual_hours']=usedhours
+            result_row=dbh.sql_query_row(f"select sum(totaltime_decimal) as annualusedhours FROM user_timesheet WHERE recordidservicecontract_='{servicecontract_record.recordid}' and deleted_='N' AND date>='{lastoccurence}'")
+            if result_row:
+                annualusedhours=result_row['annualusedhours']
+                if not annualusedhours:
+                    annualusedhours=0
+            salesorderline_record.fields['annual_actual_hours']=annualusedhours
+            salesorderline_record.fields['annual_actual_cost']=annualusedhours*60
+            salesorderline_record.fields['annual_actual_margin']=salesorderline_record.fields['total_net_yearly']-salesorderline_record.fields['annual_actual_cost']
+            salesorderline_record.fields['total_actual_cost']=usedhours*60
+            salesorderline_record.fields['total_actual_margin']=salesorderline_record.fields['total_price']-salesorderline_record.fields['total_actual_cost']
+            
         salesorderline_record.save()
         if not isempty(salesorder_record.recordid):
             custom_save_record(request, tableid='salesorder', recordid=salesorder_record.recordid)
