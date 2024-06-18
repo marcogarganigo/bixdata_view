@@ -53,20 +53,11 @@
                                     </div>
                                 {% endfor %}
                             </div>
-                        
-                        
-                            <div class="totals-container">
-                                {% if group.totalamount is None %}
-                                <p>Totale importo: 0</p>
-                                {% else %}
-                                <p>Totale importo: {{ group.totalamount }}</p>
-                                {% endif %}
 
-                                {% if group.totalmargin is None %}
-                                <p>Totale margine previsto: 0</p>
-                                {% else %}
+
+                            <div class="totals-container">
+                                <p>Totale importo: {{ group.totalamount }}</p>
                                 <p>Totale margine previsto: {{ group.totalmargin }}</p>
-                                {% endif %}
                             </div>
                         </div>
 

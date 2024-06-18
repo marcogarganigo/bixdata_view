@@ -736,8 +736,10 @@ def get_block_records_kanban(request):
         return_group['records'] = records
         sql_totals=f"SELECT ROUND(SUM(amount)) as totalamount, ROUND(SUM(expectedmargin)) as totalmargin FROM user_deal WHERE dealstage='{dealstage}' AND deleted_='n'"
         totals=db.sql_query_row(sql_totals)
-        return_group['totalamount'] = totals['totalamount']
-        return_group['totalmargin'] = totals['totalmargin']
+        return_group['totalamount'] = "{:,.2f}".format(totals['totalamount']).replace(",", "'") if totals[
+                                                                                                       'totalamount'] is not None else "0.00"
+        return_group['totalmargin'] = "{:,.2f}".format(totals['totalmargin']).replace(",", "'") if totals[
+                                                                                                       'totalmargin'] is not None else "0.00"
         return_groups.append(return_group)
     
     with connection.cursor() as cursor:
