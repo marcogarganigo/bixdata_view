@@ -880,9 +880,8 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
     context['userid'] = userid
     context['user_table_settings'] = get_user_table_settings(userid, tableid)
     # TODO: recuperare i dati dal table settings generico
-    context['recordtab'] = 'fields'
-    if tableid == 'deal':
-        context['recordtab'] = 'linked'
+    table_settings=get_user_table_settings(1, tableid)
+    context['recordtab'] = table_settings['default_recordtab']
     # returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
     return render_to_string('block/record/record_card.html', context)
 
