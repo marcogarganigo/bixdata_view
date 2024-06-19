@@ -1,0 +1,32 @@
+<script>
+    function execute_script() {
+        var tableid = $('#tableid').val();
+        var condition = $('#condition').val();
+
+        $.ajax({
+            url: '/execute_script/',
+            type: 'POST',
+            data: {
+                tableid: tableid,
+                condition: condition
+            },
+            success: function(data) {
+                alert('done');
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred: ' + error);
+            }
+        });
+    }
+</script>
+
+<select id="tableid">
+    {% for table in tables%}
+        <option value="{{ table.id }}">{{ table.description }}</option>
+    {% endfor %}
+</select>
+
+<input id="condition" placeholder="Query condition">
+
+<button onclick="execute_script()">Avvia</button>
+

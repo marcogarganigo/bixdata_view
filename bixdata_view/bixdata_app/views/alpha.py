@@ -4448,3 +4448,37 @@ def set_event_allday(request):
     return JsonResponse({'success': True})
 
 
+def get_script(request):
+
+    sql="SELECT * FROM sys_table"
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        tables = dictfetchall(cursor)
+
+    context = {}
+    context['tables'] = tables
+
+    return render(request, 'other/script_page.html', context)
+
+
+def execute_script(request):
+
+   tableid = request.POST.get('tableid')
+   condition = request.POST.get('condition')
+
+   recordids = []
+
+   sql= f"SELECT * FROM user_{tableid} WHERE {condition}"
+   with connection.cursor() as cursor:
+        cursor.execute(sql)
+        records = dictfetchall(cursor)
+
+   for record in records:
+      recordids.append(record['recordid_'])
+
+   for recordid in recordids:
+        save_record_fields(request)
+
+   return True
+
+

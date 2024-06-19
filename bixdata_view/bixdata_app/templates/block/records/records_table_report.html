@@ -266,7 +266,7 @@ thead th { position: sticky; top: 0; background-color: white;}
                                           data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
                                           data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
                                           data-linkedtableid="{{ column_value.link_tableid }}"
-                                          data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe|truncatechars:50 }}</span>
+                                          data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe }}</span>
                                     <script>
                                         /*
                                         $('.popover-linked').popover({
@@ -295,7 +295,7 @@ thead th { position: sticky; top: 0; background-color: white;}
                             {% elif column_value.fieldtype == 'Memo' %}
                                 <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                                     data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
-                                    {{ column_value.value|truncatechars:50 }}
+                                    {{ column_value.value }}
                                 </td>
 
                             {% elif column_value.fieldtype == 'Utente' %}
@@ -400,13 +400,7 @@ thead th { position: sticky; top: 0; background-color: white;}
         }
 
 
-        .block-records-table-standard th {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 200px;
-            border: 1px solid darkgrey;
-        }
+
     </style>
 
 
@@ -414,134 +408,7 @@ thead th { position: sticky; top: 0; background-color: white;}
 
     <script>
 
-        if($('.block-records-table-standard').closest('.grid-elements').length == 0) {
 
-
-
-            var resizeTimer;
-
-            function resizeTable(table, selector = 'thead tr th', minWidth = 5) {
-
-                if (!table) return;
-                const cols = table.querySelectorAll(selector);
-                const parent = table.parentNode;
-                const tableWidth = table.offsetWidth;
-                let value = 0;
-
-                widths = '{{ column_width }}'
-
-                if (widths.length != 0) {
-                    widths = widths.split(',')
-                } else {
-                    widths = undefined
-                }
-
-                parent.dataset.tableParent = '';
-                parent.style.setProperty(`--th`, `${table.offsetHeight}px`);
-
-                cols.forEach((col, index) => {
-                    let colWidth;
-                    if (typeof widths !== 'undefined') {
-                        colWidth = parseInt(widths[index]);
-                    } else {
-                        colWidth = parseInt(100 / (tableWidth / col.offsetWidth));
-                    }
-
-                    col.style.width = `calc(1% * var(--c${index}))`;
-                    table.style.setProperty(`--c${index}`, colWidth);
-
-                    if (index > 0) {
-                        const input = document.createElement('input');
-                        input.dataset.tableCol = index;
-                        input.setAttribute('aria-hidden', true);
-                        input.type = 'range';
-                        input.value = value;
-                        inputcontainer = document.getElementById('input-container')
-
-                        inputcontainer.appendChild(input);
-
-
-                        input.addEventListener('input', () => {
-                            if (input.value < minWidth) input.value = minWidth;
-                            if (input.value > 100 - minWidth) input.value = 100 - minWidth;
-
-                            const next = input.nextElementSibling;
-                            const prev = input.previousElementSibling;
-
-                            if (next?.nodeName === 'INPUT' && (input.valueAsNumber > (next.valueAsNumber - minWidth))) {
-                                input.value = next.valueAsNumber - minWidth;
-                                return;
-                            }
-                            if (prev?.nodeName === 'INPUT' && (input.valueAsNumber < (prev.valueAsNumber + minWidth))) {
-                                input.value = prev.valueAsNumber + minWidth;
-                                return;
-                            }
-
-                            table.style.setProperty(`--c${index - 1}`, prev?.nodeName === 'INPUT' ? input.valueAsNumber - prev.valueAsNumber : input.valueAsNumber);
-                            table.style.setProperty(`--c${index}`, next?.nodeName === 'INPUT' ? next.valueAsNumber - input.valueAsNumber : 100 - input.valueAsNumber);
-
-
-                            clearTimeout(resizeTimer);
-                            resizeTimer = setTimeout(save_columns_width, 1000);
-                        });
-                    }
-                    value += colWidth;
-                });
-
-            }
-
-
-              var table = document.querySelector('table');
-              resizeTable(table);
-
-              var widths = []
-
-              for (var i = 0; i < table.querySelectorAll('thead tr th').length; i++) {
-                  widths.push(parseInt(table.style.getPropertyValue(`--c${i}`)))
-              }
-              console.log(widths)
-
-              window.addEventListener('resize', function() {
-                  clearTimeout(resizeTimer);
-                  resizeTimer = setTimeout(save_columns_width, 2000);
-              });
-
-            function save_columns_width() {
-                 var widths = ''
-
-                  for (var i = 0; i < table.querySelectorAll('thead tr th').length; i++) {
-                        widths += parseInt(table.style.getPropertyValue(`--c${i}`)) + ','
-                  }
-
-                  widths = widths.slice(0, -1);
-                  console.log(widths)
-
-                  $.ajax({
-                      type: "POST",
-                      crossDomain: true,
-                      url: "{% url 'save_columns_width' %}",
-                      data: {
-                          'widths': widths,
-                          'tableid': '{{ tableid }}',
-                          'csrfmiddlewaretoken': '{{ csrf_token }}'
-                      },
-                      success: function (response) {
-                          console.log(response)
-                      },
-                      error: function (response) {
-                          console.log(response)
-                      }
-                });
-            }
-
-            table.addEventListener('resize', save_columns_width);
-        } else {
-            const thElements = document.querySelectorAll('.block-records-table-standard th');
-
-            thElements.forEach(th => {
-                th.style.border = '0px';
-            });
-        }
 
     </script>
 
