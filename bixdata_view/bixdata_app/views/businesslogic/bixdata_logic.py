@@ -29,7 +29,7 @@ from django.db.models import OuterRef, Subquery
 class BixdataLogic:
     
 
-    @classmethod    
+    @classmethod
     def get_menu_tables(cls,userid):
         userid=1
         subquery = SysUserTableOrder.objects.filter(tableid=OuterRef('id'),userid=userid).values('tableorder')[:1]
