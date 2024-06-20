@@ -158,16 +158,6 @@
         scale: 0.7;
     }
 
-        /* non usato */
-    .records-button {
-         font-size: 9pt; !important;
-    }
-
-        /* non usato */
-    .records-button-secondary {
-         font-size: 9pt; !important;
-    }
-
     .results-table-standard {
         min-width: 1750px;
     }
@@ -200,9 +190,11 @@
         line-height: 20px !important;
     }
 
+
+    /*
     #refresh-button {
         font-size: 18px !important;
     }
-
+    */
 
 }

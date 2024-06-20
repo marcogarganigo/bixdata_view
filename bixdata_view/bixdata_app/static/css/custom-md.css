@@ -153,16 +153,6 @@
         scale: 0.7;
     }
 
-        /* non usato */
-    .records-button {
-         font-size: 10pt; !important;
-    }
-
-        /* non usato */
-    .records-button-secondary {
-         font-size: 10pt; !important;
-    }
-
     .field > textarea {
         min-height: 150px !important;
     }

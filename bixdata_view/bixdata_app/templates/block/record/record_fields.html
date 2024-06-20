@@ -341,14 +341,14 @@
                             {% if field.fieldtypeid == 'linkedmaster' %}
                                 <div class="autocomplete-input-container" style="display: flex; align-items: center;">
                                     <div style="position: relative; width: 100%;">
-                                        <input class="form-select mb-2 {{ mandatory }} {{ calcolato }}"
-                                               id="{{ fieldid }}-{{ recordid }}-autocomplete"
+                                        <input class="form-select mb-2 {{ mandatory }} {{ calcolato }}" id="{{ tableid }}-{{ fieldid }}-{{ recordid }}-autocomplete"
                                                style="width: calc(90% - 15px);"
                                                value="{{ field.valuecode.0.value }}" onfocus="selectAllText(this); "
                                                data-type="linkedmaster">
 
                                         <button class="btn" type="button"
-                                                onclick="clearInput(this,'{{ fieldid }}-{{ recordid }}-autocomplete')"
+
+                                                onclick="clearInput(this,'{{ tableid }}-{{ fieldid }}-{{ recordid }}-autocomplete')"
                                                 style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">
                                             <span class="material-symbols-outlined">clear</span>
                                         </button>
@@ -391,7 +391,7 @@
                                     $("#log").scrollTop(0);
                                 }
 
-                                $("#{{ fieldid }}-{{ recordid }}-autocomplete").autocomplete({
+                                $("#{{ tableid }}-{{ fieldid }}-{{ recordid }}-autocomplete").autocomplete({
                                     source: function (request, response) {
                                         $.ajax({
                                             url: "{% url 'get_autocomplete_data' %}",
@@ -476,7 +476,7 @@
                                 });
 
                                 // Handle empty input
-                                $("#{{ fieldid }}-{{ recordid }}-autocomplete").on("input", function () {
+                                $("#{{ tableid }}-{{ fieldid }}-{{ recordid }}-autocomplete").on("input", function () {
                                     var inputValue = $(this).val();
                                     if (inputValue === "") {
                                         $(this).val(""); // Imposta il valore predefinito
