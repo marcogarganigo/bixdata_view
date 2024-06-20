@@ -17,15 +17,9 @@ html[data-sidenav-size=condensed]:not(.authentication-bg) {
     min-width: 1500px;
 }
 
-.records-button {
-    font-size: 60% !important
-}
 
-.records-button-secondary {
-    font-size: 60% !important
-}
 
 .material-symbols-outlined {
-    font-size: 60% !important
+    font-size: 100% !important
 }
 

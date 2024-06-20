@@ -708,7 +708,7 @@ def get_block_records_kanban(request):
     for group in groups:
         return_group = dict()
         dealstage=group['itemcode']
-        return_group['description'] = group['itemdesc'] 
+        return_group['description'] = group['itemdesc']
         # da implementare il total
         return_group['totals']=list()
         return_group['totals'].append({'totalname':'totale 1','totalvalue':100})
@@ -1177,8 +1177,8 @@ def save_record_fields(request):
                     first_name = row[0]
                     last_name = row[1]
 
-                    companyname = 'N/A'
-                    projectname = 'N/A'
+                    companyname = ''
+                    projectname = ''
 
                     if fields_dict['recordidcompany_'] != 'None':
                         with connection.cursor() as cursor:
@@ -2159,7 +2159,7 @@ def get_record_path(request, tableid, recordid):
     if tableid == 'timesheet':
         content = get_block_timesheetinvoice(recordid, userid)
     elif tableid == 'task':
-        content = get_block_task(recordid, userid)
+        content = get_block_task(request, recordid, userid)
     elif tableid == 'ticket':
         content = insert_timesheet(request, recordid, userid)
     return index(request, content)

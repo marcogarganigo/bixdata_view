@@ -165,4 +165,12 @@
         line-height: 30px !important;
     }
 
+    .records-button {
+        font-size: 80% !important
+    }
+
+    .records-button-secondary {
+        font-size: 80% !important
+    }
+
 }
