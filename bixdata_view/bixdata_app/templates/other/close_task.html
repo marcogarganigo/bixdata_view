@@ -1,5 +1,56 @@
-{{ username }} ha chiuso un task
-<br>
-{{ description }}
-<br>
-Azienda: {{ company }}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col" style="width: 100px"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="margin: 0; padding: 0; width: 200px">
+                <b>{{ companyname }}</b>
+                <p style="margin: 0;">Da: {{ username }}</p>
+                <p>{{ description|truncatechars:50 }}</p>
+                <a href="http://bixcrm01:8000/get_record_path/task/{{ recordid }}" class="description" style="margin: 0">Apri in Bixdata</a>
+            </td>
+            <td style="width: 100px">
+                <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20">
+                {{ duedate }}
+                <br>
+                {% if planneddate != None %}
+                    <img alt="Pianificato" src="https://cdn-icons-png.flaticon.com/512/1322/1322186.png" width="20">
+                    {{ planneddate }}
+                {% else %}
+                    <img alt="Non Pianificato" src="https://cdn-icons-png.flaticon.com/512/4407/4407014.png" width="20">
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+<style>
+  table {
+    border-collapse: collapse;
+    width: 1000px;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  thead, th {
+      background-color: #eeae6b;
+      font-size: 15pt;
+  }
+
+  td {
+      padding: 15px;
+  }
+
+  .description:hover {
+    cursor: pointer;
+  }
+</style>

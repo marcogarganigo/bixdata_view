@@ -461,7 +461,7 @@ def get_records_table_report(request, tableid, master_tableid='', master_recordi
 
         records[records_index] = record
 
-    records_table = bix_render_to_string('block/records/records_table.html', context, request)
+    records_table = bix_render_to_string('block/records/records_table_report.html', context, request)
     return records_table
 
 
