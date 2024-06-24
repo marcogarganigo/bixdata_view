@@ -512,7 +512,10 @@
                 {{ tableid }}
 
                 {% if userid == 11 or userid == 15 %}
-                    {{ recordid }}
+                    <button onclick="$('#recordid-text').show()">recordid</button>
+                    
+                    <span style="display:none" id="recordid-text">{{ recordid }}</span>
+
                 {% endif %}
 
                 <button type="button" class="btn btn button-recordcard" data-bs-toggle="tooltip"
