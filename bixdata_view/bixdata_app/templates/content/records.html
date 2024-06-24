@@ -239,7 +239,11 @@
     }
 
 
-    function refresh() {
+    function refresh(fieldid = '') {
+
+        var activeTab = document.querySelector("#myTabContent .tab-pane.show.active");
+
+
         var serialized_data = [];
         console.info('referesh:');
         console.info($('#records_filters_form').serializeArray())
@@ -275,20 +279,40 @@
             value: $('#content-table').find('#block_records_table').data('order')
         });
 
+        if (activeTab.id == 'kanban-tab-pane') {
+
+            serialized_data.push({
+                name: 'fieldid',
+                value: fieldid
+            });
+
+            container = '#kanban-tab-pane'
+            funcname = 'block_records_kanban'
+        } else if (activeTab.id == 'calendar-tab-pane') {
+            container = '#calendar-tab-pane'
+            funcname = 'block_records_calendar'
+        } else if (activeTab.id == 'records_table_container') {
+            container = '#records_table_container'
+            funcname = 'block_records_table'
+        } else if (activeTab.id == 'report-tab-pane') {
+            container = '#report-tab-pane'
+            funcname = 'block_records_table_report'
+        }
+
         //serialized_data=$('#filters').serializeArray()
         //$("#records_table_container").load('/loading/');
-        $("#records_table_container").load('/loading/', function () {
+        $(container).load('/loading/', function () {
             $.ajax({
                 type: "POST",
-                url: "{% url 'block_records_table' %}",
+                url: "/" + funcname + "/",
                 data: serialized_data,
                 success: function (response) {
 
-                    $("#records_table_container").html(response);
+                    $(container).html(response);
                 },
                 error: function (response) {
 
-                    $("#records_table_container").html(response);
+                    $(container).html(response);
                 }
             });
         });

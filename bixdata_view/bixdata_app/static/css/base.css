@@ -17,9 +17,3 @@ html[data-sidenav-size=condensed]:not(.authentication-bg) {
     min-width: 1500px;
 }
 
-
-
-.material-symbols-outlined {
-    font-size: 100% !important
-}
-
