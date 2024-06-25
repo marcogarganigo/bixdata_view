@@ -375,6 +375,11 @@
         window.open(url, '_blank');
     }
 
+    function open_bexio() {
+        var url = 'https://office.bexio.com/index.php/kb_order/show/id/' + '{{ id_bexio }}';
+        window.open(url, '_blank');
+    }
+
     function openModalFromCard() {
 
         $('#block_record_card-{{ recordid }}').remove()
@@ -621,7 +626,9 @@
                         {% elif tableid == 'servicecontract' %}
                             <li><a class="dropdown-item" onclick="rinnova_contratto()">Rinnova</a></li>
                         {% elif tableid == 'ticket' %}
-                            <li><a class="dropdown-item" onclick="open_freshdesk()">Apri in freshdesk</a></li>
+                            <li><a class="dropdown-item" onclick="open_freshdesk()">Apri in Freshdesk</a></li>
+                        {% elif tableid == 'salesorder' %}
+                            <li><a class="dropdown-item" onclick="open_bexio()">Apri in Bexio</a></li>
                         {% elif tableid == 'timetracking' %}
                             <li><a class="dropdown-item" onclick="newTimesheet('{{ recordid }}')">Nuovo Timesheet</a></li>
                         {% endif %}

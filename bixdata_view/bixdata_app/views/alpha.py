@@ -877,6 +877,11 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
     if tableid == 'deal':
         deal_record = Record(tableid='deal', recordid=recordid)
         context['dealstatus'] = deal_record.fields['dealstatus']
+    if tableid == 'salesorder':
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT id_bexio FROM user_salesorder WHERE recordid_={recordid}")
+            id_bexio = cursor.fetchone()[0]
+            context['id_bexio'] = id_bexio
     context['userid'] = userid
     context['user_table_settings'] = get_user_table_settings(userid, tableid)
     # TODO: recuperare i dati dal table settings generico
