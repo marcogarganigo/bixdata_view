@@ -130,6 +130,16 @@
 
     }
 
+     document.querySelectorAll('.dropdown-select-filter .dropdown-item').forEach(function(item) {
+        item.addEventListener('click', function(event) {
+            event.preventDefault();
+            console.log('Hai cliccato su:', event.target.textContent);
+
+            $(this).closest('.dropdown-select-filter').next('.filter-selected-input').val(event.target.textContent);
+
+        });
+    });
+
 
 </script>
 
@@ -148,13 +158,15 @@
                                 {{ filter_field.description }}
                                 <i class="mdi mdi-dots-vertical btn" id="parolaDropdown" data-bs-toggle="dropdown"
                                    aria-expanded="false"></i>
-                                <div class="dropdown">
+                                <div class="dropdown-select-filter dropdown">
                                     <ul class="dropdown-menu" aria-labelledby="parolaDropdown">
                                         <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
                                         <li><a class="dropdown-item" href="#">Nessun valore</a></li>
                                         <li><a class="dropdown-item" href="#">Diverso da</a></li>
                                     </ul>
                                 </div>
+
+                                <input class="filter-selected-input" type="hidden">
 
                                 {% if filter_field.fieldtypewebid == 'checkbox' %}
                                     <input class="form-check-input mt-0" type="checkbox" value=""
@@ -181,7 +193,7 @@
                                     {% if filter_field.lookuptableid %}
                                         {% for valuecode in filter_field.valuecode %}
                                             <div class="input-group mb-2">
-                                                <select id="{{ fieldid }}-filters" name="{{ fieldname }}"
+                                                <select id="{{ fieldid }}-filters" name="{{ fieldname }}--val1"
                                                         class="select2-input {{ mandatory }} {{ calcolato }}"
                                                         multiple="multiple">
                                                     {% if filter_field.lookupitems %}
@@ -194,7 +206,7 @@
                                             </div>
                                         {% endfor %}
                                     {% else %}
-                                        <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                        <input id="{{ fieldid }}" name="{{ fieldname }}--val1"
                                                class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="text"
                                                value="">
                                     {% endif %}
@@ -205,7 +217,7 @@
                                 {{ filter_field.description }}
                                 <i class="mdi mdi-dots-vertical btn" id="dataDropdown" data-bs-toggle="dropdown"
                                    aria-expanded="false"></i>
-                                <div class="dropdown">
+                                <div class="dropdown-select-filter dropdown">
                                     <ul class="dropdown-menu" aria-labelledby="dataDropdown">
                                         <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
                                         <li><a class="dropdown-item" href="#">Nessun valore</a></li>
@@ -216,9 +228,13 @@
                                         <li><a class="dropdown-item" href="#">Questo mese</a></li>
                                     </ul>
                                 </div>
+
+                                <input class="filter-selected-input" type="hidden">
+
+
                                 <div class="d-flex">
                                     <div class="flex-grow-1">
-                                        <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                        <input id="{{ fieldid }}" name="{{ fieldname }}--val1"
                                                class="form-control datepicker {{ mandatory }} {{ calcolato }}"
                                                type="date"
                                                value="{{ filter_field.valuecode.0.code }}"
@@ -226,7 +242,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <input id="{{ fieldid }}-2" name="{{ fieldname }}-2"
+                                    <input id="{{ fieldid }}-2" name="{{ fieldname }}--val2"
                                            class="form-control datepicker {{ mandatory }} {{ calcolato }}" type="date"
                                            value="{{ filter_field.valuecode.0.code }}" oninput="validateInput(this)">
                                 </div>
@@ -250,7 +266,7 @@
                                 <i class="mdi mdi-dots-vertical btn" id="serialeDropdown"
                                    data-bs-toggle="dropdown"
                                    aria-expanded="false"></i>
-                                <div class="dropdown">
+                                <div class="dropdown-select-filter dropdown">
                                     <ul class="dropdown-menu" aria-labelledby="serialeDropdown">
                                         <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
                                         <li><a class="dropdown-item" href="#">Nessun valore</a></li>
@@ -258,23 +274,27 @@
                                         <li><a class="dropdown-item" href="#">Utente corrente</a></li>
                                     </ul>
                                 </div>
+
+                                <input class="filter-selected-input" type="hidden">
+
+
                                 <p>{{ filter_field.value }}</p>
                             {% endif %}
                             {% if filter_field.fieldtypeid == 'Numero' %}
                                 {{ filter_field.description }}
                                 <i class="mdi mdi-dots-vertical btn" id="numeroDropdown" data-bs-toggle="dropdown"
                                    aria-expanded="false"></i>
-                                <div class="dropdown">
+                                <div class="dropdown-select-filter dropdown">
                                     <ul class="dropdown-menu" aria-labelledby="numeroDropdown">
                                         <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
                                         <li><a class="dropdown-item" href="#">Nessun valore</a></li>
                                         <li><a class="dropdown-item" href="#">Diverso da</a></li>
                                     </ul>
                                 </div>
-                                <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                <input id="{{ fieldid }}" name="{{ fieldname }}--val1"
                                        class="form-control {{ mandatory }} {{ calcolato }}" type="number"
                                        value="">
-                                <input id="{{ fieldid }}-2" name="{{ fieldname }}-2"
+                                <input id="{{ fieldid }}-2" name="{{ fieldname }}--val2"
                                        class="form-control {{ mandatory }} {{ calcolato }}" type="number"
                                        value="">
                             {% endif %}
@@ -282,50 +302,60 @@
                                 {{ filter_field.description }}
                                 <i class="mdi mdi-dots-vertical btn" id="memoDropdown" data-bs-toggle="dropdown"
                                    aria-expanded="false"></i>
-                                <div class="dropdown">
+                                <div class="dropdown-select-filter dropdown">
                                     <ul class="dropdown-menu" aria-labelledby="memoDropdown">
                                         <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
                                         <li><a class="dropdown-item" href="#">Nessun valore</a></li>
                                         <li><a class="dropdown-item" href="#">Diverso da</a></li>
                                     </ul>
                                 </div>
+
+                                <input class="filter-selected-input" type="hidden">
+
+
                                 {% if fieldname == 'description' %}
                                     {{ filter_field.description }}
                                     <i class="mdi mdi-dots-vertical btn" id="descriptionDropdown"
                                        data-bs-toggle="dropdown"
                                        aria-expanded="false"></i>
-                                    <div class="dropdown">
+                                    <div class="dropdown-select-filter dropdown">
                                         <ul class="dropdown-menu" aria-labelledby="descriptionDropdown">
                                             <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
                                             <li><a class="dropdown-item" href="#">Nessun valore</a></li>
                                             <li><a class="dropdown-item" href="#">Diverso da</a></li>
                                         </ul>
                                     </div>
+
+                                    <input class="filter-selected-input" type="hidden">
+
                                     <textarea style="min-height: 250px"
                                               class="form-control mb-2 {{ mandatory }} {{ calcolato }}"
-                                              id="{{ fieldid }}" name="{{ fieldname }}"
+                                              id="{{ fieldid }}" name="{{ fieldname }}--val1"
                                               rows="3">{{ filter_field.value }}</textarea>
                                 {% else %}
                                     <textarea class="form-control mb-2 {{ mandatory }} {{ calcolato }}"
                                               id="{{ fieldid }}"
-                                              name="{{ fieldname }}" rows="3">{{ filter_field.value }}</textarea>
+                                              name="{{ fieldname }}--val1" rows="3">{{ filter_field.value }}</textarea>
                                 {% endif %}
                             {% endif %}
                             {% if filter_field.fieldtypeid == 'Ora' %}
                                 {{ filter_field.description }}
                                 <i class="mdi mdi-dots-vertical btn" id="oraDropdown" data-bs-toggle="dropdown"
                                    aria-expanded="false"></i>
-                                <div class="dropdown">
+                                <div class="dropdown-select-filter dropdown">
                                     <ul class="dropdown-menu" aria-labelledby="oraDropdown">
                                         <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
                                         <li><a class="dropdown-item" href="#">Nessun valore</a></li>
                                         <li><a class="dropdown-item" href="#">Diverso da</a></li>
                                     </ul>
                                 </div>
-                                <input id="{{ fieldid }}" name="{{ fieldname }}"
+
+                                <input class="filter-selected-input" type="hidden">
+
+                                <input id="{{ fieldid }}" name="{{ fieldname }}--val1"
                                        class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="time"
                                        value="">
-                                <input id="{{ fieldid }}-3" name="{{ fieldname }}"
+                                <input id="{{ fieldid }}-3" name="{{ fieldname }}--val1"
                                        class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="time"
                                        value="">
                             {% endif %}
@@ -334,7 +364,7 @@
                                 <i class="mdi mdi-dots-vertical btn" id="utenteDropdown"
                                    data-bs-toggle="dropdown"
                                    aria-expanded="false"></i>
-                                <div class="dropdown">
+                                <div class="dropdown-select-filter dropdown">
                                     <ul class="dropdown-menu" aria-labelledby="utenteDropdown">
                                         <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
                                         <li><a class="dropdown-item" href="#">Nessun valore</a></li>
@@ -342,10 +372,13 @@
                                         <li><a class="dropdown-item" href="#">Utente corrente</a></li>
                                     </ul>
                                 </div>
+
+                                <input class="filter-selected-input" type="hidden">
+
                                 <div class="row">
                                     <div class="col-md-10">
                                         <div class="input-group mb-2">
-                                            <select id="{{ fieldid }}-filters" name="{{ fieldname }}"
+                                            <select id="{{ fieldid }}-filters" name="{{ fieldname }}--val1"
                                                     class="select2-input {{ mandatory }} {{ calcolato }}">
                                                 <option id="" value=""></option>
                                                 {% for items in filter_field.lookupitems %}
@@ -365,13 +398,16 @@
                                 {{ filter_field.description }}
                                 <i class="mdi mdi-dots-vertical btn" id="linkedmasterDropdown" data-bs-toggle="dropdown"
                                    aria-expanded="false"></i>
-                                <div class="dropdown">
+                                <div class="dropdown-select-filter dropdown">
                                     <ul class="dropdown-menu" aria-labelledby="linkedmasterDropdown">
                                         <li><a class="dropdown-item" href="#">Almeno un valore</a></li>
                                         <li><a class="dropdown-item" href="#">Nessun valore</a></li>
                                         <li><a class="dropdown-item" href="#">Diverso da</a></li>
                                     </ul>
                                 </div>
+
+                                <input class="filter-selected-input" type="hidden">
+
                                 <div class="autocomplete-input-container" style="display: flex; align-items: center;">
                                     <div style="position: relative; width: 100%;">
                                         <input class="form-select mb-2 {{ mandatory }} {{ calcolato }}"
