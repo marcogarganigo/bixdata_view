@@ -49,7 +49,6 @@
                 'userid': $('#user_username').attr('data-userid'),
                 'tableid': $('#table_settings_menu').attr('data-tableid'),
                 'field': field
-
             },
             url: "{% url 'settings_table_fields_settings_fields_save' %}",
             success: function (response) {

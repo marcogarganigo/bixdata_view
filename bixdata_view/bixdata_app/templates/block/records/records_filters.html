@@ -144,7 +144,7 @@
 </script>
 
 
-<div class="container filters_container" style="height: 100%" id="filters_container_{{ tableid }}_{{ recordid }}">
+<div class="container filters_container" style="height: 100%; width:100%" id="filters_container_{{ tableid }}_{{ recordid }}">
     <form id="records_filters_form">
         {{ filter_field.description }} <br/>
         <div class="row">
@@ -166,7 +166,7 @@
                                     </ul>
                                 </div>
 
-                                <input class="filter-selected-input" type="hidden">
+                                <input name="{{ fieldname }}-input" class="filter-selected-input" type="hidden">
 
                                 {% if filter_field.fieldtypewebid == 'checkbox' %}
                                     <input class="form-check-input mt-0" type="checkbox" value=""
@@ -229,7 +229,7 @@
                                     </ul>
                                 </div>
 
-                                <input class="filter-selected-input" type="hidden">
+                                <input name="{{ fieldname }}-input" class="filter-selected-input" type="hidden">
 
 
                                 <div class="d-flex">
@@ -275,7 +275,7 @@
                                     </ul>
                                 </div>
 
-                                <input class="filter-selected-input" type="hidden">
+                                <input name="{{ fieldname }}-input" class="filter-selected-input" type="hidden">
 
 
                                 <p>{{ filter_field.value }}</p>
@@ -310,7 +310,7 @@
                                     </ul>
                                 </div>
 
-                                <input class="filter-selected-input" type="hidden">
+                                <input name="{{ fieldname }}-input" class="filter-selected-input" type="hidden">
 
 
                                 {% if fieldname == 'description' %}
@@ -326,7 +326,7 @@
                                         </ul>
                                     </div>
 
-                                    <input class="filter-selected-input" type="hidden">
+                                    <input name="{{ fieldname }}-input" class="filter-selected-input" type="hidden">
 
                                     <textarea style="min-height: 250px"
                                               class="form-control mb-2 {{ mandatory }} {{ calcolato }}"
@@ -350,7 +350,7 @@
                                     </ul>
                                 </div>
 
-                                <input class="filter-selected-input" type="hidden">
+                                <input name="{{ fieldname }}-input" class="filter-selected-input" type="hidden">
 
                                 <input id="{{ fieldid }}" name="{{ fieldname }}--val1"
                                        class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="time"
@@ -373,7 +373,7 @@
                                     </ul>
                                 </div>
 
-                                <input class="filter-selected-input" type="hidden">
+                                <input name="{{ fieldname }}-input" class="filter-selected-input" type="hidden">
 
                                 <div class="row">
                                     <div class="col-md-10">
@@ -406,7 +406,7 @@
                                     </ul>
                                 </div>
 
-                                <input class="filter-selected-input" type="hidden">
+                                <input name="{{ fieldname }}-input" class="filter-selected-input" type="hidden">
 
                                 <div class="autocomplete-input-container" style="display: flex; align-items: center;">
                                     <div style="position: relative; width: 100%;">

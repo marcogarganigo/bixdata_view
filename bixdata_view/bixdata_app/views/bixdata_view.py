@@ -176,6 +176,19 @@ def get_records_table_render(request):
     order_field = request.POST.get('order_field')
     order = request.POST.get('order')
     currentpage = request.POST.get('currentpage')
+
+    grouped_filters = {}
+
+    # Group data by field name prefix (e.g., recordidcompany_, recordidproject_, etc.)
+    for key, value in filters_dict.items():
+        field_name, suffix = key.split("-", 1) if "-" in key else (key, "")
+        field_prefix = field_name.split("_", 1)[0] + "_"
+
+        if field_prefix not in grouped_filters:
+            grouped_filters[field_prefix] = {}
+
+        grouped_filters[field_prefix][field_name + suffix] = value
+
     if (currentpage == ''):
         currentpage = 1
     render = get_records_table(request, tableid, master_tableid, master_recordid, searchTerm, viewid, currentpage,
