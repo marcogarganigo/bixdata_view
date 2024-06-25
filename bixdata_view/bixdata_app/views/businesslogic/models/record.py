@@ -75,7 +75,10 @@ class Record:
         return dict()
     
     def get_linkedrecords(self,linkedtable):
-        records=self.db_helper.sql_query(f"SELECT * FROM user_{linkedtable} WHERE recordid{self.tableid}_='{self.recordid}' AND deleted_='N' ")
+        if linkedtable=='salesorderline':
+            records=self.db_helper.sql_query(f"SELECT * FROM user_{linkedtable} WHERE recordid{self.tableid}_='{self.recordid}' AND deleted_='N' AND status='In Progress' ")
+        else:
+            records=self.db_helper.sql_query(f"SELECT * FROM user_{linkedtable} WHERE recordid{self.tableid}_='{self.recordid}' AND deleted_='N' ")
         return records   
     
     def get_fields(self):
