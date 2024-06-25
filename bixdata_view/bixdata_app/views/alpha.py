@@ -1455,6 +1455,7 @@ def custom_save_record(request, tableid, recordid):
     if tableid == 'servicecontract':
         servicecontract_table = Table(tableid='servicecontract')
         servicecontract_record = Record('servicecontract', recordid)
+        salesorderline_record=Record('salesorderline', servicecontract_record.fields['recordidsalesorderline_'])
 
         # recupero campi
         contracthours = servicecontract_record.fields['contracthours']
@@ -1488,6 +1489,9 @@ def custom_save_record(request, tableid, recordid):
         servicecontract_record.fields['residualhours'] = residualhours
         servicecontract_record.fields['progress'] = progress
         servicecontract_record.save()
+
+        if not isempty(salesorderline_record.recordid):
+            custom_save_record(request, tableid='salesorderline', recordid=salesorderline_record.recordid)
 
     # ---SALES ORDER
     if tableid=='salesorder':
