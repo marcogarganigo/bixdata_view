@@ -319,6 +319,17 @@
     }
 
     function export_excel() {
+
+        //get the active tab
+        activeTab = document.querySelector("#myTabContent .tab-pane.show.active");
+
+        tableType = ''
+
+        if (activeTab.id == 'report-tab-pane')
+        {
+            tableType = 'report'
+        }
+
         var serialized_data = [];
         serialized_data.push({
             name: 'tableid',
@@ -344,6 +355,10 @@
         serialized_data.push({
             name: 'order',
             value: $('#content-table').find('#block_records_table').data('order')
+        });
+        serialized_data.push({
+            name: 'tableType',
+            value: tableType
         });
 
         $.ajax({
