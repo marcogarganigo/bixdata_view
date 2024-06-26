@@ -21,6 +21,7 @@ import json
 import datetime
 from django.contrib.auth.decorators import login_required
 import time
+from datetime import timedelta
 
 import pdfkit
 
@@ -55,6 +56,8 @@ from docx.oxml import OxmlElement
 from docx.enum.section import WD_SECTION
 from docx.enum.style import WD_STYLE_TYPE
 from docxcompose.composer import Composer
+
+
 
 import qrcode
 
@@ -1587,11 +1590,16 @@ def custom_save_record(request, tableid, recordid):
         quantity=salesorderline_record.fields['quantity']
         if not quantity:
             quantity=0
+        if salesorderline_record.fields['servicecontract_type']:  
+            unitcost=60
+            quantity=salesorderline_record.fields['price']/110
         
         linecost=unitcost*quantity
         
         salesorderline_record.fields['cost']=linecost
         salesorderline_record.fields['margin']=salesorderline_record.fields['price']-linecost
+        
+
         # calcolo annuali
         multiplier=salesorder_record.fields['multiplier']
         salesorderline_record.fields['total_net_yearly']=salesorderline_record.fields['price']*multiplier
@@ -1600,24 +1608,32 @@ def custom_save_record(request, tableid, recordid):
         salesorderline_record.fields['marginyearly']=salesorderline_record.fields['margin']*multiplier
         salesorderline_record.fields['annual_actual_margin']=salesorderline_record.fields['marginyearly']
 
+        
+        # calcolo totali
         repetitionstartdate=salesorder_record.fields['repetitionstartdate']
         lastoccurence=HelperView.get_last_occurrence(repetitionstartdate.strftime('%Y-%m-%d'))
         occurrencescount=HelperView.get_occurrences_count(repetitionstartdate.strftime('%Y-%m-%d'))
-        # calcolo totali
-        salesorderline_record.fields['total_price']=salesorderline_record.fields['total_net_yearly']*occurrencescount
-        salesorderline_record.fields['total_cost']=salesorderline_record.fields['annual_cost']*occurrencescount
+        repetitioncount=HelperView.get_repetition_count(repetitionstartdate.strftime('%Y-%m-%d'),12/multiplier)
+
+        salesorderline_record.fields['total_price']=salesorderline_record.fields['price']*repetitioncount
+        salesorderline_record.fields['total_cost']=salesorderline_record.fields['cost']*repetitioncount
         salesorderline_record.fields['total_margin']=salesorderline_record.fields['total_price']-salesorderline_record.fields['total_cost']
 
         # calcolo su contratti con ore comprese
         if salesorderline_record.fields['servicecontract_type']:
             
-            salesorderline_record.fields['annual_contract_hours']=salesorderline_record.fields['total_net_yearly']/60
-            salesorderline_record.fields['total_contract_hours']=salesorderline_record.fields['annual_contract_hours']*occurrencescount
+
+            salesorderline_record.fields['contracthours']=salesorderline_record.fields['price']/110
+            salesorderline_record.fields['annual_contract_hours']=salesorderline_record.fields['total_net_yearly']/110
+            salesorderline_record.fields['total_contract_hours']=salesorderline_record.fields['contracthours']*repetitioncount
             usedhours=servicecontract_record.fields['usedhours']
             if not usedhours:
                 usedhours=0
             salesorderline_record.fields['total_actual_hours']=usedhours
-            result_row=dbh.sql_query_row(f"select sum(totaltime_decimal) as annualusedhours FROM user_timesheet WHERE recordidservicecontract_='{servicecontract_record.recordid}' and deleted_='N' AND date>='{lastoccurence}'")
+
+            today = datetime.datetime.now()
+            twelve_months_ago = today - timedelta(days=365)  # Approximate (not considering leap years)
+            result_row=dbh.sql_query_row(f"select sum(totaltime_decimal) as annualusedhours FROM user_timesheet WHERE recordidservicecontract_='{servicecontract_record.recordid}' and deleted_='N' AND date>='{twelve_months_ago.strftime('%Y-%m-%d')}'")
             if result_row:
                 annualusedhours=result_row['annualusedhours']
                 if not annualusedhours:

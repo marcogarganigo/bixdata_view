@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from bixdata_app.models import *
 from .businesslogic.models.database_helper import *
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 # Questa funzione blocca l'accesso a bixdata da firefox
 def firefox_check(view_func):
@@ -122,6 +123,23 @@ class HelperView:
                 occurrence_count += 1
 
         return occurrence_count
+    
+    def get_repetition_count(data_inizio, intervallo_mesi):
+        # Converti la data di inizio da stringa a oggetto datetime
+        data_inizio = datetime.strptime(data_inizio, '%Y-%m-%d')
+        
+        # Ottieni la data di oggi
+        oggi = datetime.today()
+        
+        # Calcola la differenza in mesi tra oggi e la data di inizio
+        delta_anni = oggi.year - data_inizio.year
+        delta_mesi = oggi.month - data_inizio.month
+        delta_totale_mesi = delta_anni * 12 + delta_mesi
+        
+        # Calcola quante volte si è ripetuto l'evento
+        ripetizioni = delta_totale_mesi // intervallo_mesi + 1
+        
+        return ripetizioni
     
     
     
