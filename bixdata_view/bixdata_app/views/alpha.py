@@ -1589,21 +1589,24 @@ def custom_save_record(request, tableid, recordid):
             unitcost=0
         quantity=salesorderline_record.fields['quantity']
         if not quantity:
-            quantity=0
-        if salesorderline_record.fields['servicecontract_type']:  
-            unitcost=60
-            quantity=salesorderline_record.fields['price']/110
+            quantity=0            
         
-        linecost=unitcost*quantity
-        
+        linecost=unitcost * quantity
         salesorderline_record.fields['cost']=linecost
-        salesorderline_record.fields['margin']=salesorderline_record.fields['price']-linecost
+
+        if salesorderline_record.fields['servicecontract_type']:
+            salesorderline_record.fields['contracthours']=(salesorderline_record.fields['price']-linecost)/110
+            linecost=linecost+salesorderline_record.fields['contracthours']*60
+            salesorderline_record.fields['potential_cost']=linecost
+            salesorderline_record.fields['margin']=salesorderline_record.fields['price']-linecost
+            
+            
         
 
         # calcolo annuali
         multiplier=salesorder_record.fields['multiplier']
         salesorderline_record.fields['total_net_yearly']=salesorderline_record.fields['price']*multiplier
-        salesorderline_record.fields['annual_cost']=salesorderline_record.fields['cost']*multiplier
+        salesorderline_record.fields['annual_cost']=linecost*multiplier
         salesorderline_record.fields['annual_actual_cost']=salesorderline_record.fields['annual_cost']
         salesorderline_record.fields['marginyearly']=salesorderline_record.fields['margin']*multiplier
         salesorderline_record.fields['annual_actual_margin']=salesorderline_record.fields['marginyearly']
@@ -1616,14 +1619,12 @@ def custom_save_record(request, tableid, recordid):
         repetitioncount=HelperView.get_repetition_count(repetitionstartdate.strftime('%Y-%m-%d'),12/multiplier)
 
         salesorderline_record.fields['total_price']=salesorderline_record.fields['price']*repetitioncount
-        salesorderline_record.fields['total_cost']=salesorderline_record.fields['cost']*repetitioncount
+        salesorderline_record.fields['total_cost']=linecost*repetitioncount
         salesorderline_record.fields['total_margin']=salesorderline_record.fields['total_price']-salesorderline_record.fields['total_cost']
 
         # calcolo su contratti con ore comprese
         if salesorderline_record.fields['servicecontract_type']:
-            
 
-            salesorderline_record.fields['contracthours']=salesorderline_record.fields['price']/110
             salesorderline_record.fields['annual_contract_hours']=salesorderline_record.fields['total_net_yearly']/110
             salesorderline_record.fields['total_contract_hours']=salesorderline_record.fields['contracthours']*repetitioncount
             usedhours=servicecontract_record.fields['usedhours']
