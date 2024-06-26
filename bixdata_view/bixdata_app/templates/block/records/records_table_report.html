@@ -266,7 +266,7 @@ thead th { position: sticky; top: 0; background-color: white;}
                                           data-fieldtype="{{ column_value.fieldtype }}" class="linked-field popover-linked"
                                           data-bs-toggle="popover" style="width: 300px" data-bs-custom-class="popover-custom"
                                           data-linkedtableid="{{ column_value.link_tableid }}"
-                                          data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe|truncatechars:50 }}</span>
+                                          data-linkedrecordid="{{ column_value.link_recordid }}">{{ column_value.value|safe }}</span>
                                     <script>
                                         /*
                                         $('.popover-linked').popover({
@@ -295,7 +295,7 @@ thead th { position: sticky; top: 0; background-color: white;}
                             {% elif column_value.fieldtype == 'Memo' %}
                                 <td data-layout="recordcard" onclick="open_record(this,'{{ tableid }}','{{ record.0.value }}')"
                                     data-fieldtype="{{ column_value.fieldtype }}" class="records-standard">
-                                    {{ column_value.value|truncatechars:50 }}
+                                    {{ column_value.value }}
                                 </td>
 
                             {% elif column_value.fieldtype == 'Utente' %}
