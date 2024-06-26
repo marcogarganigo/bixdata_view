@@ -2511,6 +2511,7 @@ def export_excel(request):
         order_field = request.POST.get('order_field')
         order = request.POST.get('order')
         currentpage = 0
+        table_type = request.POST.get('tableType')
 
         post = {
             'tableid': tableid,
@@ -2524,7 +2525,11 @@ def export_excel(request):
             'userid': request.user.id
         }
 
-        response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
+        if table_type == 'report':
+            response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records_report", data=post)
+        else:
+            response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
+            
         response.raise_for_status()
         response_dict = response.json()
 
@@ -2744,7 +2749,7 @@ def check_task_status(recordid):
                 description = user[0]['description']
 
                 message = render_to_string('other/close_task.html',
-                                           {'username': username, 'company': company, 'description': description})
+                                           {'username': username, 'company': company, 'description': description, 'recordid': recordid})
                 send_email(
                     emails=[email],
                     subject='Task chiuso',

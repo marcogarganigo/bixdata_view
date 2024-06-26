@@ -5,6 +5,25 @@
 <link href="https://cdn.jsdelivr.net/npm/jquery-ui/dist/themes/base/jquery-ui.min.css" rel="stylesheet">
 
 
+<style>
+    .select2-input {
+        width: 100% !important;
+    }
+
+    .input-group {
+        margin-right: 0 !important
+    }
+
+    .select2 {
+        width: 100% !important
+    }
+
+    .col-md-10 {
+        padding: 0;
+    }
+
+</style>
+
 <script>
     function toggleCollapse(el) {
         $(el).next('.div-collapse').slideToggle(200);
@@ -417,32 +436,14 @@
                                                onfocus="selectAllText(this); "
                                                data-type="linkedmaster">
 
-                                        <button class="btn"
-                                                onclick="clearInput(this,'{{ fieldid }}-{{ recordid }}-autocomplete')"
-                                                style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">
-                                            <span class="material-symbols-outlined">clear</span>
-                                        </button>
                                     </div>
 
                                     <input type="hidden" class="hidden-input {{ mandatory }} {{ calcolato }}"
                                            name="{{ filter_field.fieldid }}" value="{{ filter_field.recordid }}">
-
-                                    <button class="btn btn-light"
-                                            onclick="newRecord('{{ filter_field.tablelink }}', 'yes')"
-                                            name="add"
-                                            style="width: auto">
-                                        <span class="material-symbols-outlined">add</span>
-                                    </button>
+                                
 
                                 </div>
 
-                                <script>
-                                    function clearInput(el, inputId) {
-                                        document.getElementById(inputId).value = '';
-                                        $(el).closest('.field').find('.hidden-input').val("");
-                                    }
-
-                                </script>
                             {% endif %}
                             {% for items in filter_field.valuecode %}
                                 {% if items.value and items.code %}
