@@ -1897,6 +1897,18 @@ def custom_save_record(request, tableid, recordid):
 
         deal_record.save()
     
+
+    # ---userlog Attività e Note
+    if tableid == 'user_log':
+        userlog_record=Record('user_log',recordid)
+        salespush_record=Record('salespush',userlog_record.fields['recordidsalespush_'])
+        reminder=userlog_record.fields['reminder']
+        description=userlog_record.fields['description']
+        salespush_record.fields['recalldate']=reminder.strftime("%Y-%m-%d")
+        salespush_record.fields['lastupdate']=description
+        salespush_record.save()
+        userlog_record.save()
+
     return True
 
 
