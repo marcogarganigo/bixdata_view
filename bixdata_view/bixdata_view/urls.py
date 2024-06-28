@@ -179,5 +179,6 @@ urlpatterns = [
     path('settings_table_kanbanfields_save/', settings_view.settings_table_kanbanfields_save, name='settings_table_kanbanfields_save'),
     path('get_script/', alpha.get_script, name='get_script'),
     path('execute_script/', alpha.execute_script, name='execute_script'),
+    path('close_salespush/', alpha.close_salespush, name='close_salespush'),
 
 ]

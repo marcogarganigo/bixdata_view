@@ -863,7 +863,21 @@ def request_block_record_card(request):
 
 # Questa funzione serve per creare la record card e ritorna la card come stringa
 def get_block_record_card(request, tableid, recordid, userid, master_tableid='', master_recordid=''):
+
     context = dict()
+
+    if tableid == 'salespush':
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT status FROM user_salespush WHERE recordid_={recordid}")
+            status = cursor.fetchone()[0]
+            if status == 'Chiuso':
+                display = 'none'
+            else:
+                display = 'block'
+
+            context['display'] = display
+
+
     context['block_record_badge'] = get_block_record_badge(tableid, recordid)
     context['block_record_linked'] = get_block_record_linked(tableid, recordid)
     context['block_record_fields'] = ""
@@ -1213,6 +1227,42 @@ def save_record_fields(request):
                 # return render(request, 'other/new_task.html', fields_dict)
 
                 send_email(emails=[email], subject='Nuovo task assegnato', html_message=message)
+
+    elif tableid == 'salespush':
+
+        creator = str(creator)
+
+        if fields_dict['assignedto'] != creator:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT email FROM v_users WHERE sys_user_id = %s", [fields_dict['assignedto']])
+                row = cursor.fetchone()
+
+                email = row[0]
+
+                cursor.execute("SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s",
+                               [creator])
+                row = cursor.fetchone()
+                first_name = row[0]
+                last_name = row[1]
+
+                if fields_dict['recordidcompany_'] != 'None':
+                    with connection.cursor() as cursor:
+                        cursor.execute("SELECT companyname FROM user_company WHERE recordid_ = %s",
+                                       [fields_dict['recordidcompany_']])
+                        row = cursor.fetchone()
+                        companyname = row[0]
+
+                    fields_dict['company'] = companyname
+                fields_dict['description'] = fields_dict['description']
+                fields_dict['username'] = first_name + ' ' + last_name
+                fields_dict['recordid'] = response_dict['recordid']
+
+                message = render_to_string('other/new_salespush.html', fields_dict)
+
+                # return render(request, 'other/new_task.html', fields_dict)
+
+                send_email(emails=['marco.garganigo@swissbix.ch'], subject='Nuovo push commerciale', html_message=message)
+
 
     for field_name, uploaded_files in request.FILES.items():
         fs = FileSystemStorage(location='attachments')
@@ -4513,5 +4563,16 @@ def execute_script(request):
         save_record_fields(request)
 
    return True
+
+
+def close_salespush(request):
+    recordid = request.POST.get('recordid')
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"UPDATE user_salespush SET status = 'Chiuso' WHERE recordid_ = '{recordid}'"
+        )
+
+    return JsonResponse({'success': True})
 
 

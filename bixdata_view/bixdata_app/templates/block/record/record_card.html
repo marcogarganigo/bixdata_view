@@ -702,7 +702,7 @@
 
                                         },
                                         error: function () {
-                                            // Handle error if needed
+
                                         }
                                     });
                                 } else {
@@ -844,6 +844,34 @@
                             onclick="$('#input-{{ recordid }}').val('Si'); change_checkbox_view(); $('#save-button-{{ recordid }}').click()">
                         Chiudi task
                     </button>
+                {% endif %}
+
+                {% if tableid == 'salespush' %}
+                    <button id="close-salespush-button-{{ recordid }}" class="btn btn-success" type="button" onclick="closeSalespush()" style="display: {{ display }}">
+                        Chiudi push
+                    </button>
+
+                    <script>
+                    function closeSalespush() {
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'close_salespush' %}",
+                            data: {
+                                'recordid': '{{ recordid }}'
+                            },
+                            success: function (response) {
+                                //reload card
+                                $('#block_record_card-{{ recordid }}').load('/loading/');
+                                open_record(window.content, '{{ tableid }}', '{{ recordid }}')
+
+
+                            },
+                            error: function (response) {
+                                alert('error')
+                            }
+                        });
+                    }
+                    </script>
                 {% endif %}
 
                 {% if tableid == 'timesheet' %}

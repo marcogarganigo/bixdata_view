@@ -111,7 +111,7 @@
                 <div id="linked-container-{{ linked_table.tableid }}-{{ recordid }}" class="linked_container"></div>
             </div>
         </div>
-        {% if tableid == 'deal' and forloop.first %}
+        {% if tableid == 'deal' or tableid == 'salespush' and forloop.first %}
             <script>
             $(document).ready(function(){
                 $('#label-{{ linked_table.tableid }}-{{ recordid }}').click()

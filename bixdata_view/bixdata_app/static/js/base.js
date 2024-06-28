@@ -1,4 +1,5 @@
 function load_fields(el, tableid, recordid, master_tableid, master_recordid) {
+    alert(master_tableid)
     console.info('base.js-load_fields')
     console.info(base_url)
     $.ajax({
@@ -71,7 +72,7 @@ function save_record(el, setting) {
         $(el).closest('.modal').modal("hide");
         $.ajax({
             type: "POST",
-            url: "/save_record_fields/",
+            url: "/save_record_fields/", 
             data: formData,
             processData: false,
             contentType: false,
