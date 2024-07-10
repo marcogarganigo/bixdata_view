@@ -10,14 +10,6 @@
         $('[data-bs-toggle="tooltip"]').tooltip()
     });
 
-    $(document).ready(function () {
-        setTimeout(function () {
-            if ($('#field-validated').val() !== 'Si') {
-                $('#validate-button').show();
-            }
-        }, 350);
-    });
-
 
     function closeModal() {
         $("#recordModal").modal("hide");
@@ -875,9 +867,9 @@
                 {% endif %}
 
                 {% if tableid == 'timesheet' %}
-                    {% if userid == 3 or userid == 9 or userid == 11 %}
+                    {% if userid == 3 or userid == 9 or userid == 11 or userid == 15 %}
                         <button onclick="validate_timesheet()"
-                                type="button" id="validate-button" style="display: none"
+                                type="button" id="validate-button" style="display: {{ display }}"
                                 class="btn btn-outline-success">Valida
                         </button>
                     {% endif %}

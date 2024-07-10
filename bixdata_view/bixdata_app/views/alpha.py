@@ -878,6 +878,17 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
             context['display'] = display
 
 
+    if tableid == 'timesheet':
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT validated FROM user_timesheet WHERE recordid_={recordid}")
+            validated = cursor.fetchone()[0]
+            if validated == 'Si':
+                display = 'none'
+            else:
+                display = 'block'
+
+            context['display'] = display
+
     context['block_record_badge'] = get_block_record_badge(tableid, recordid)
     context['block_record_linked'] = get_block_record_linked(tableid, recordid)
     context['block_record_fields'] = ""

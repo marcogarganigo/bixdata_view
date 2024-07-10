@@ -1,5 +1,4 @@
 function load_fields(el, tableid, recordid, master_tableid, master_recordid) {
-    alert(master_tableid)
     console.info('base.js-load_fields')
     console.info(base_url)
     $.ajax({
