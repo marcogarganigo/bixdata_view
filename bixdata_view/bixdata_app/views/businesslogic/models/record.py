@@ -99,6 +99,17 @@ class Record:
 
         response_dict = json.loads(response.text)
 
+        #TODO generalizzare con le impostazioni per data di default ad oggi
+        if self.tableid=='salespush':
+            if  response_dict['Dati']['recalldate']['valuecode'][0]['code'] == '':
+                response_dict['Dati']['recalldate']['valuecode'][0]['value']=datetime.datetime.now().strftime("%Y-%m-%d")
+                response_dict['Dati']['recalldate']['valuecode'][0]['code']=datetime.datetime.now().strftime("%Y-%m-%d")
+
+        if self.tableid=='salespush':
+            if  response_dict['Dati']['lastcalldate']['valuecode'][0]['code'] == '':
+                response_dict['Dati']['lastcalldate']['valuecode'][0]['value']=datetime.datetime.now().strftime("%Y-%m-%d")
+                response_dict['Dati']['lastcalldate']['valuecode'][0]['code']=datetime.datetime.now().strftime("%Y-%m-%d")
+ 
        # if (ticketid):
         #    response_dict['Dati']['_recordidticket']['valuecode'][0]['value'] = ticketid
          #   response_dict['Dati']['_recordidticket']['valuecode'][0]['code'] = recordid_ticket
