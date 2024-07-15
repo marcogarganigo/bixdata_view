@@ -1923,7 +1923,7 @@ def custom_save_record(request, tableid, recordid):
     if tableid == 'contact':
         contact_record=Record('contact',recordid)
         company_record=Record('company',contact_record.fields['recordidcompany_'])
-        contact_record.fields['reference']='-'
+        contact_record.fields['reference']=''
         
         if not isempty(contact_record.fields['name']):
             contact_record.fields['reference']=contact_record.fields['reference']+" "+contact_record.fields['name']
