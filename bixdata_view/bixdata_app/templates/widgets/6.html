@@ -2,36 +2,33 @@
 
 <script>
 
-
     function getUserSold() {
         $.ajax({
             url: "{% url 'get_user_sold' %}",
             type: 'POST',
             success: function (data) {
-                var worktime_decimal = data.worktime;
-                var percentage = worktime_decimal * 12.5;
+                var sold = data.sold;
+                var target = 100000;
+                var percentage = (sold / target) * 100;
                 var dashArrayValue = percentage + ', 100';
 
                 // Update the circular progress bar
                 $('.circle').attr('stroke-dasharray', dashArrayValue);
                 $('.percentage').text(percentage.toFixed(2) + '%');
 
-                if (worktime_decimal < 8) {
-                    $('#hours-left').text('Ti mancano ancora ' + (8 - worktime_decimal).toFixed(2) + ' ore');
-                } else if (worktime_decimal == 8) {
-                    $('#hours-left').text('Hai completato le tue ore di lavoro, ben fatto');
+                if (sold < target) {
+                    $('#hours-left').text('Questo mese ti mancano ' + (target - sold).toFixed(2) + ' per raggiungere il target');
                 } else {
-                    $('#hours-left').text('Hai completato le tue ore di lavoro, ma hai lavorato ' + (worktime_decimal - 8).toFixed(2) + ' ore in più, sei un mostro');
+                    $('#hours-left').text('Bravo! Hai raggiunto il target prefissato per questo mese');
                 }
-
-
             }
         });
     }
 
     $(document).ready(function () {
-        getUserWorktime();
+        getUserSold();
     });
+
 
 </script>
     <button class="btn btn-outline-danger" onclick="newRecord('timesheet')" style="float:right">

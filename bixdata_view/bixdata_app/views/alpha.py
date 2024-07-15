@@ -4495,11 +4495,11 @@ def get_user_worktime(request):
 
     current_date = datetime.date.today().strftime('%Y-%m-%d')
 
-    query = f"SELECT SUM(totaltime_decimal) FROM user_timesheet WHERE user = '{userid}' AND date = '{current_date}'"
+    query = f"SELECT SUM(totaltime_decimal) FROM user_timesheet WHERE user = '{userid}' AND date = '{current_date}' AND deleted_ = 'N'"
     print(query)
     with connection.cursor() as cursor:
         cursor.execute(
-            f"SELECT SUM(totaltime_decimal) FROM user_timesheet WHERE user = '{userid}' AND date = '{current_date}'"
+            f"SELECT SUM(totaltime_decimal) FROM user_timesheet WHERE user = '{userid}' AND date = '{current_date}' AND deleted_ = 'N'"
         )
         worked = cursor.fetchone()[0]
 
@@ -4606,5 +4606,23 @@ def close_salespush(request):
         )
 
     return JsonResponse({'success': True})
+
+
+def get_user_sold(request):
+
+    userid = get_userid(request.user.id)
+
+
+    query = f"SELECT ROUND(SUM(d.effectivemargin)) FROM user_deal AS d WHERE d.dealuser1 = '{userid}' AND d.closedate >= DATE_FORMAT(CURDATE(), '%Y-%m-01') AND d.closedate <= CURDATE() AND d.deleted_ = 'N'"
+
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        sold = cursor.fetchone()[0]
+
+        if sold is None:
+            sold = 0
+
+    return JsonResponse({'sold': sold})
+
 
 
