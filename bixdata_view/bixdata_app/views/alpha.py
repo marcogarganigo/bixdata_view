@@ -1929,8 +1929,8 @@ def custom_save_record(request, tableid, recordid):
             contact_record.fields['reference']=contact_record.fields['reference']+" "+contact_record.fields['name']
         if not isempty(contact_record.fields['surname']):
             contact_record.fields['reference']=contact_record.fields['reference']+" "+contact_record.fields['surname']
-        if not isempty(company_record.recordid):
-            contact_record.fields['reference']=contact_record.fields['name']+" "+contact_record.fields['surname']+" - "+company_record.fields['companyname']
+        #if not isempty(company_record.recordid):
+         #   contact_record.fields['reference']=contact_record.fields['name']+" "+contact_record.fields['surname']+" - "+company_record.fields['companyname']
         contact_record.save()          
 
     return True
