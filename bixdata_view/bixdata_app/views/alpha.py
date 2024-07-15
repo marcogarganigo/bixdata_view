@@ -1272,7 +1272,7 @@ def save_record_fields(request):
 
                 # return render(request, 'other/new_task.html', fields_dict)
 
-                send_email(emails=['marco.garganigo@swissbix.ch'], subject='Nuovo push commerciale', html_message=message)
+                send_email(emails=[email], subject='Nuovo push commerciale', html_message=message)
 
 
     for field_name, uploaded_files in request.FILES.items():
