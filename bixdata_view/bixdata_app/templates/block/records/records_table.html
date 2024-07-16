@@ -479,8 +479,7 @@ thead th { position: sticky; top: 0; background-color: white;}
 
                             table.style.setProperty(`--c${index - 1}`, prev?.nodeName === 'INPUT' ? input.valueAsNumber - prev.valueAsNumber : input.valueAsNumber);
                             table.style.setProperty(`--c${index}`, next?.nodeName === 'INPUT' ? next.valueAsNumber - input.valueAsNumber : 100 - input.valueAsNumber);
-
-
+                            
                             clearTimeout(resizeTimer);
                             resizeTimer = setTimeout(save_columns_width, 1000);
                         });
