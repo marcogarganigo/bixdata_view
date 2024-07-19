@@ -35,14 +35,14 @@
 
 
 
-{% if items != '' %}
+{% if record.0.lookuptableid != '' %}
     <h3>lookup items</h3>
     <div id="lookup-items-container">
 
         {% for item in items  %}
             <div class="lookupitem">
-                <input type="text" id="item-{{ item.itemcode }}" name="item-{{ item.itemcode }}" value="{{ item.itemdesc }}" class="form-control lookup-items" data-itemcode="{{ item.itemcode }}">
-                <button onclick="$('#item-{{ item.itemcode }}').css('background-color', '#f19292'); $('#item-{{ item.itemcode }}').attr('data-status', 'deleted')">delete</button>
+                <input type="text" id="item-{{ forloop.counter }}" name="item-{{ forloop.counter }}" value="{{ item.itemdesc }}" class="form-control lookup-items" data-itemcode="{{ item.itemcode }}">
+                <button onclick="$('#item-{{ forloop.counter }}').css('background-color', '#f19292'); $('#item-{{ forloop.counter }}').attr('data-status', 'deleted')">delete</button>
             </div>
 
         {% endfor %}
