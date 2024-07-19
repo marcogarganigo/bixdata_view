@@ -1,4 +1,15 @@
 <div id="settings-fields-container">
+
+{% for fields in record %}
+
+    <label for="field-description">Descrizione</label>
+    <input id="field-description" name="field-description" type="text" name="" value="{{ fields.description }}" class="form-control">
+
+    <label for="field-label">Label</label>
+    <input id="field-label" name="field-label" type="text" name="" value="{{ fields.label }}" class="form-control">
+
+{% endfor %}
+
 {% for setting, val in fieldsettings.items %}
     {% if val.type == 'select' %}
         <label for="{{ setting }}">{{ setting }}</label>
@@ -18,12 +29,47 @@
 {% endfor %}
 </div>
 
+
+<br>
+<br>
+
+
+
+{% if items != '' %}
+    <h3>lookup items</h3>
+    <div id="lookup-items-container">
+
+        {% for item in items  %}
+            <div class="lookupitem">
+                <input type="text" id="item-{{ item.itemcode }}" name="item-{{ item.itemcode }}" value="{{ item.itemdesc }}" class="form-control lookup-items" data-itemcode="{{ item.itemcode }}">
+                <button onclick="$('#item-{{ item.itemcode }}').css('background-color', '#f19292'); $('#item-{{ item.itemcode }}').attr('data-status', 'deleted')">delete</button>
+            </div>
+
+        {% endfor %}
+
+    <br>
+    <button class="btn btn-primary" onclick="addNewField('lookup-items-container')">aggiungi</button>
+
+    </div>
+    <br>
+    <br>
+{% endif %}
+
+
+
+
+
 <button type="button" onclick="saveTableSettingsSettingsFields()" class="btn btn-primary">Save Settings</button>
 <style>
     .setting-value {
         width: 200px;
         height: 50px;
     }
+
+    .lookup-items {
+        width: 50%;
+    }
+
 </style>
 
 
@@ -31,8 +77,52 @@
        function saveTableSettingsSettingsFields() {
 
         var serialized_data = []
+        newItems = []
 
            var field = $('#selected-fieldid').val()
+
+         field_description = $('#field-description').val()
+         field_label = $('#field-label').val()
+
+
+        if ($('#lookup-items-container').length > 0) {
+                var idElements = $('.id-input-element');
+                var descriptionElements = $('.description-input-element');
+
+                var pairedArray = [];
+
+                idElements.each(function(index) {
+                    if (this.value != '') {
+                        if (index < descriptionElements.length) {
+                            var idValue = $(this).val();
+                            var descriptionValue = $(descriptionElements[index]).val();
+                            pairedArray.push({'id': idValue, 'description': descriptionValue});
+                        }
+                    }
+                });
+
+                newItems = pairedArray
+
+                if ($('.lookup-items').length > 0) {
+                    currentItems = []
+                    deletedItems = []
+                    $('.lookup-items').each(function () {
+                        if ($(this).attr('data-status') == 'deleted') {
+                            deletedItems.push({'itemdesc': $(this).val(), 'itemcode': $(this).attr('data-itemcode')})
+                        } else {
+                            currentItems.push({'itemdesc': $(this).val(), 'itemcode': $(this).attr('data-itemcode')})
+                        }
+
+                    })
+
+                    currentItems = JSON.stringify(currentItems)
+                    deletedItems = JSON.stringify(deletedItems)
+                }
+
+        }
+
+
+
 
         $('#settings-fields-container').find('.setting-value').each(function () {
             var value = $(this).val();
@@ -41,6 +131,9 @@
         });
         settings = JSON.stringify(serialized_data);
 
+        newItems = JSON.stringify(newItems)
+
+
         console.info(serialized_data)
         $.ajax({
             type: "POST",
@@ -48,7 +141,12 @@
                 'settings': settings,
                 'userid': $('#user_username').attr('data-userid'),
                 'tableid': $('#table_settings_menu').attr('data-tableid'),
-                'field': field
+                'field': field,
+                'field_description': field_description,
+                'field_label': field_label,
+                'newItems': newItems,
+                'currentItems': currentItems,
+                'deletedItems': deletedItems
             },
             url: "{% url 'settings_table_fields_settings_fields_save' %}",
             success: function (response) {

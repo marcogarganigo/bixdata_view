@@ -288,7 +288,28 @@ def settings_table_fields_settings_block(request):
     fieldsettings_obj = FieldSettings(tableid=tableid, fieldid=fieldid, userid=userid)
     helperview_obj = HelperView(request)
 
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM sys_field WHERE tableid = '{tableid}' AND fieldid = '{fieldid}'"
+        )
+        record = dictfetchall(cursor)
+
+        if record[0]['lookuptableid'] != '':
+            cursor.execute(
+                f"SELECT * FROM sys_lookup_table_item WHERE lookuptableid = '{record[0]['lookuptableid']}'"
+            )
+            items = dictfetchall(cursor)
+
     helperview_obj.context['fieldsettings'] = fieldsettings_obj.get_settings()
+    helperview_obj.context['record'] = record
+    if items:
+        helperview_obj.context['items'] = items
+    else:
+        helperview_obj.context['items'] = ''
+
+
+
+
     # helperview_obj.context['fieldsettings'] = fieldsettings
 
     return helperview_obj.render_template('admin_settings/settings_table_fields_settings_block.html')
@@ -303,6 +324,47 @@ def settings_table_fields_settings_fields_save(request):
     userid = request.POST.get('userid')
     tableid = request.POST.get('tableid')
     field = request.POST.get('field')
+    field_description = request.POST.get('field_description')
+    field_label = request.POST.get('field_label')
+
+    new_items = request.POST.get('newItems')
+    new_items = json.loads(new_items)
+
+    current_items = request.POST.get('currentItems')
+    current_items = json.loads(current_items)
+
+    deleted_items = request.POST.get('deletedItems')
+    deleted_items = json.loads(deleted_items)
+
+
+    lookuptableid = field + '_' + tableid
+
+
+
+    for item in deleted_items:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"DELETE FROM sys_lookup_table_item WHERE lookuptableid = '{lookuptableid}' AND itemcode = '{item['itemcode']}'",
+            )
+
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"UPDATE sys_field SET description = '{field_description}', label = '{field_label}' WHERE tableid = '{tableid}' AND fieldid = '{field}'",
+        )
+
+
+    for item in new_items:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"INSERT INTO sys_lookup_table_item (lookuptableid, itemcode, itemdesc) VALUES ('{lookuptableid}', '{item['id']}', '{item['description']}')",
+            )
+
+    for item in current_items:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"UPDATE sys_lookup_table_item SET itemdesc = '{item['itemdesc']}' WHERE lookuptableid = '{lookuptableid}' AND itemcode = '{item['itemcode']}'",
+            )
 
     fieldsettings_obj = FieldSettings(tableid=tableid, fieldid=field, userid=userid)
     # esempio fieldsettings_obj.settings['obbligatorio']['value']=True
@@ -334,6 +396,7 @@ def settings_table_fields_new_field(request):
     fielddescription = data['fielddescription']
     fieldtype = data['fieldtype']
 
+
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT * FROM sys_field WHERE tableid= %s AND fieldid= %s", [tableid, fieldid]
@@ -345,7 +408,7 @@ def settings_table_fields_new_field(request):
             if fieldtype == 'Categoria':
                 cursor.execute(
                     "INSERT INTO sys_field (tableid, fieldid, description, lookuptableid, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                    [tableid, fieldid, fielddescription, fieldid + '_' +  tableid, fieldtype, 255, 'Dati']
+                    [tableid, fieldid, fielddescription, fieldid + '_' +  tableid, 'Parola', 255, 'Dati']
                 )
 
             elif fieldtype in ['Data', 'Numero', 'Parola', 'Memo']:

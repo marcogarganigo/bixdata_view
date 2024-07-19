@@ -71,14 +71,14 @@
         if (fieldtype == 'Linked') {
             $('#linked-container-newfield').show();
         } else if (fieldtype == 'Categoria') {
-             $('#fields_table_settings').html(' <button class="btn btn-primary" onclick="addNewField()">aggiungi</button>');
+            $('#fields_table_settings').html('<button class="btn btn-primary" onclick="addNewField(\'fields_table_settings\')">aggiungi</button>');
         } else {
             $('#linked-container-newfield').hide();
         }
     }
 
-    function addNewField() {
-      const container = document.getElementById('fields_table_settings');
+    function addNewField(containername) {
+      const container = document.getElementById(containername);
 
       const inputContainer = document.createElement('div');
       inputContainer.style.display = 'flex';
