@@ -11,9 +11,12 @@
         <div class="col-md-3">
             <label for="new-field-type" class="form-label">Select</label>
             <select class="form-select" id="new-field-type" onchange="newFieldLinkedTable(this.value)">
-                <option value="parola">Parola</option>
-                <option value="numero">Numero</option>
-                <option value="linked">Linked</option>
+                <option value="Parola">Parola</option>
+                <option value="Numero">Numero</option>
+                <option value="Linked">Linked</option>
+                <option value="Data">Data</option>
+                <option value="Memo">Nota</option>
+                <option value="Categoria">Categoria</option>
             </select>
         </div>
         <div class="col-md-3">
@@ -65,12 +68,55 @@
     }
 
     function newFieldLinkedTable(fieldtype) {
-        if (fieldtype == 'linked') {
+        if (fieldtype == 'Linked') {
             $('#linked-container-newfield').show();
+        } else if (fieldtype == 'Categoria') {
+             $('#fields_table_settings').html(' <button class="btn btn-primary" onclick="addNewField()">aggiungi</button>');
         } else {
             $('#linked-container-newfield').hide();
         }
     }
+
+    function addNewField() {
+      const container = document.getElementById('fields_table_settings');
+
+      const inputContainer = document.createElement('div');
+      inputContainer.style.display = 'flex';
+      inputContainer.style.gap = '10px';
+
+
+      const input1 = document.createElement('input');
+      input1.classList.add('id-input-element');
+      input1.placeholder = 'ID';
+
+      const input2 = document.createElement('input');
+      input2.classList.add('description-input-element');
+      input2.placeholder = 'Description';
+
+      inputContainer.appendChild(input1);
+      inputContainer.appendChild(input2);
+
+      container.appendChild(inputContainer);
+    }
+
+
+
+
+    function loadCategoryFields() {
+        $.ajax({
+            type: "POST",
+            data: {
+                'tableid': $('#table_settings_menu').data('tableid')
+            },
+            url: "{% url 'load_category_fields' %}",
+            success: function (response) {
+                $('#fields_table_settings').html(response);
+            },
+            error: function () {
+            }
+        })
+    }
+
 
     function settingsFieldsSettings(fieldid) {
         tableid = $('#table_settings_menu').data('tableid');
@@ -100,6 +146,21 @@
             'userid': $('#user_username').data('userid')
         }
 
+        if (serialized_data['fieldid'] == '' || serialized_data['fielddescription'] == '') {
+
+            swal({
+                title: "Attenzione!",
+                text: "compilare tutti i campi",
+                icon: "warning",
+                timer: 1200,
+                buttons: false,
+            })
+
+            return;
+        }
+
+
+
         if ($('#new-field-type').val() == 'linked') {
             serialized_data['linkedtable'] = $('#field-linked-table').val();
 
@@ -110,7 +171,24 @@
                 }
             });
             serialized_data['linkedtablefields'] = linkedTableFields;
-        }
+
+            } else if ($('#new-field-type').val() == 'Categoria') {
+                var idElements = $('.id-input-element');
+                var descriptionElements = $('.description-input-element');
+
+                var pairedArray = [];
+
+                idElements.each(function(index) {
+                    if (index < descriptionElements.length) {
+                        var idValue = $(this).val();
+                        var descriptionValue = $(descriptionElements[index]).val();
+                        pairedArray.push({'id': idValue, 'description': descriptionValue});
+                    }
+                });
+                serialized_data['valuesArray'] = pairedArray
+
+            }
+
 
         console.info(serialized_data);
 
@@ -123,7 +201,13 @@
             },
             url: "{% url 'settings_table_fields_new_field' %}",
             success: function (response) {
-                $('#fields_table_settings').html(response);
+                    swal({
+                        title: "Salvato!",
+                        text: "Il record è stato salvato",
+                        icon: "success",
+                        timer: 800,
+                        buttons: false,
+                    })
             },
             error: function () {
             }

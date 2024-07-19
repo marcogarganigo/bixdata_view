@@ -334,4 +334,66 @@ def settings_table_fields_new_field(request):
     fielddescription = data['fielddescription']
     fieldtype = data['fieldtype']
 
-    return HttpResponse({'success': True})
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM sys_field WHERE tableid= %s AND fieldid= %s", [tableid, fieldid]
+        )
+        row = cursor.fetchone()
+
+        if row is None:
+
+            if fieldtype == 'Categoria':
+                cursor.execute(
+                    "INSERT INTO sys_field (tableid, fieldid, description, lookuptableid, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    [tableid, fieldid, fielddescription, fieldid + '_' +  tableid, fieldtype, 255, 'Dati']
+                )
+
+            elif fieldtype in ['Data', 'Numero', 'Parola', 'Memo']:
+                cursor.execute(
+                    "INSERT INTO sys_field (tableid, fieldid, description, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s)",
+                    [tableid, fieldid, fielddescription, fieldtype, 255, 'Dati']
+                )
+
+            sql=f"ALTER TABLE user_{tableid} ADD COLUMN {fieldid} VARCHAR(255) NULL"
+
+            cursor.execute(sql)
+
+            if fieldtype == 'Categoria':
+
+                cursor.execute(
+                    "INSERT INTO sys_lookup_table (description, tableid, itemtype, codelen, desclen) VALUES (%s, %s, %s, %s, %s)",
+                    [fieldid, fieldid + '_' + tableid, 'Carattere', 255, 255]
+                )
+
+                values = data['valuesArray']
+
+                for value in values:
+                    id = value['id']
+                    description = value['description']
+
+                    cursor.execute(
+                        "INSERT INTO sys_lookup_table_item (lookuptableid, itemcode, itemdesc) VALUES (%s, %s, %s)",
+                        [fieldid + '_' + tableid, description, description]
+                    )
+
+
+
+
+
+
+    return JsonResponse({'success': True})
+
+def load_category_fields(request):
+    tableid = request.POST.get('tableid')
+
+    sql= f"SELECT * FROM sys_lookup_table_item WHERE tableid LIKE %'{tableid}'%"
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM sys_lookup_table_item WHERE lookuptableid LIKE '%{tableid}%'"
+        )
+        fields = dictfetchall(cursor)
+
+    hv = HelperView(request)
+    hv.context['fields'] = fields
+    return hv.render_template('admin_settings/category_fields.html')

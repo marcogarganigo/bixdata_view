@@ -181,5 +181,6 @@ urlpatterns = [
     path('execute_script/', alpha.execute_script, name='execute_script'),
     path('close_salespush/', alpha.close_salespush, name='close_salespush'),
     path('get_user_sold/', alpha.get_user_sold, name='get_user_sold'),
+    path('load_category_fields/', settings_view.load_category_fields, name='load_category_fields'),
 
 ]
