@@ -2274,6 +2274,8 @@ def get_record_path(request, tableid, recordid):
         content = get_block_task(request, recordid, userid)
     elif tableid == 'ticket':
         content = insert_timesheet(request, recordid, userid)
+    else:
+        content = get_block_record_card(request, tableid, recordid, userid)
     return index(request, content)
 
 

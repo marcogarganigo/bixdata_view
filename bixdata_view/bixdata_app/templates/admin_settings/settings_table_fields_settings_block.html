@@ -38,17 +38,26 @@
 {% if record.0.lookuptableid != '' %}
     <h3>lookup items</h3>
     <div id="lookup-items-container">
+        <button class="btn btn-secondary" onclick="addNewField('new-items-container')">aggiungi</button>
+    <button type="button" onclick="saveTableSettingsSettingsFields()" class="btn btn-primary">Save Settings</button>
+
+
+        <br>
+        <br>
+
 
         {% for item in items  %}
             <div class="lookupitem">
                 <input type="text" id="item-{{ forloop.counter }}" name="item-{{ forloop.counter }}" value="{{ item.itemdesc }}" class="form-control lookup-items" data-itemcode="{{ item.itemcode }}">
-                <button onclick="$('#item-{{ forloop.counter }}').css('background-color', '#f19292'); $('#item-{{ forloop.counter }}').attr('data-status', 'deleted')">delete</button>
+                <button class="btn btn-danger" onclick="$('#item-{{ forloop.counter }}').css('background-color', '#f19292'); $('#item-{{ forloop.counter }}').attr('data-status', 'deleted')">
+                    <span class="material-symbols-outlined">delete</span></button>
             </div>
+            <div id="new-items-container"></div>
+
 
         {% endfor %}
 
     <br>
-    <button class="btn btn-primary" onclick="addNewField('lookup-items-container')">aggiungi</button>
 
     </div>
     <br>
@@ -59,7 +68,6 @@
 
 
 
-<button type="button" onclick="saveTableSettingsSettingsFields()" class="btn btn-primary">Save Settings</button>
 <style>
     .setting-value {
         width: 200px;
@@ -70,6 +78,16 @@
         width: 50%;
     }
 
+    .lookupitem {
+    display: flex;
+    align-items: center;
+}
+
+.lookupitem .form-control {
+    flex: 1;
+    margin-right: 10px; /* Adjust the spacing between input and button if needed */
+}
+
 </style>
 
 
@@ -78,6 +96,9 @@
 
         var serialized_data = []
         newItems = []
+        currentItems = []
+        deletedItems = []
+
 
            var field = $('#selected-fieldid').val()
 
@@ -104,8 +125,6 @@
                 newItems = pairedArray
 
                 if ($('.lookup-items').length > 0) {
-                    currentItems = []
-                    deletedItems = []
                     $('.lookup-items').each(function () {
                         if ($(this).attr('data-status') == 'deleted') {
                             deletedItems.push({'itemdesc': $(this).val(), 'itemcode': $(this).attr('data-itemcode')})
@@ -115,8 +134,7 @@
 
                     })
 
-                    currentItems = JSON.stringify(currentItems)
-                    deletedItems = JSON.stringify(deletedItems)
+
                 }
 
         }
@@ -132,6 +150,8 @@
         settings = JSON.stringify(serialized_data);
 
         newItems = JSON.stringify(newItems)
+        currentItems = JSON.stringify(currentItems)
+        deletedItems = JSON.stringify(deletedItems)
 
 
         console.info(serialized_data)

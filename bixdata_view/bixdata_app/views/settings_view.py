@@ -401,43 +401,89 @@ def settings_table_fields_new_field(request):
         cursor.execute(
             "SELECT * FROM sys_field WHERE tableid= %s AND fieldid= %s", [tableid, fieldid]
         )
-        row = cursor.fetchone()
+        row = dictfetchall(cursor)
 
-        if row is None:
+        if not row:
 
-            if fieldtype == 'Categoria':
-                cursor.execute(
-                    "INSERT INTO sys_field (tableid, fieldid, description, lookuptableid, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                    [tableid, fieldid, fielddescription, fieldid + '_' +  tableid, 'Parola', 255, 'Dati']
-                )
+            if fieldtype != 'Linked':
 
-            elif fieldtype in ['Data', 'Numero', 'Parola', 'Memo']:
-                cursor.execute(
-                    "INSERT INTO sys_field (tableid, fieldid, description, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s)",
-                    [tableid, fieldid, fielddescription, fieldtype, 255, 'Dati']
-                )
+                if fieldtype == 'Categoria':
+                    cursor.execute(
+                        "INSERT INTO sys_field (tableid, fieldid, description, lookuptableid, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                        [tableid, fieldid, fielddescription, fieldid + '_' +  tableid, 'Parola', 255, 'Dati']
+                    )
 
-            sql=f"ALTER TABLE user_{tableid} ADD COLUMN {fieldid} VARCHAR(255) NULL"
+                elif fieldtype in ['Data', 'Numero', 'Parola', 'Memo']:
+                    cursor.execute(
+                        "INSERT INTO sys_field (tableid, fieldid, description, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s)",
+                        [tableid, fieldid, fielddescription, fieldtype, 255, 'Dati']
+                    )
 
-            cursor.execute(sql)
+                sql=f"ALTER TABLE user_{tableid} ADD COLUMN {fieldid} VARCHAR(255) NULL"
 
-            if fieldtype == 'Categoria':
+                cursor.execute(sql)
 
-                cursor.execute(
-                    "INSERT INTO sys_lookup_table (description, tableid, itemtype, codelen, desclen) VALUES (%s, %s, %s, %s, %s)",
-                    [fieldid, fieldid + '_' + tableid, 'Carattere', 255, 255]
-                )
-
-                values = data['valuesArray']
-
-                for value in values:
-                    id = value['id']
-                    description = value['description']
+                if fieldtype == 'Categoria':
 
                     cursor.execute(
-                        "INSERT INTO sys_lookup_table_item (lookuptableid, itemcode, itemdesc) VALUES (%s, %s, %s)",
-                        [fieldid + '_' + tableid, description, description]
+                        "INSERT INTO sys_lookup_table (description, tableid, itemtype, codelen, desclen) VALUES (%s, %s, %s, %s, %s)",
+                        [fieldid, fieldid + '_' + tableid, 'Carattere', 255, 255]
                     )
+
+                    values = data['valuesArray']
+
+                    for value in values:
+                        id = value['id']
+                        description = value['description']
+
+                        cursor.execute(
+                            "INSERT INTO sys_lookup_table_item (lookuptableid, itemcode, itemdesc) VALUES (%s, %s, %s)",
+                            [fieldid + '_' + tableid, description, description]
+                        )
+
+            else:
+
+                linkedtableid = data['linkedtable']
+                newcolumn = 'recordid' + linkedtableid + '_'
+                newcolumn2 = '_recordid' + linkedtableid
+
+                fieldid2 = 'recordid' + tableid + '_'
+
+                fields = data['linkedtablefields']
+                keyfieldlink = ''
+
+                for field in fields:
+                    keyfieldlink += field + ','
+
+                keyfieldlink = keyfieldlink[:-1]
+
+                sql = f"ALTER TABLE user_{tableid} ADD COLUMN {newcolumn} VARCHAR(255) NULL"
+
+                sql2 = f"INSERT INTO sys_field (tableid, fieldid, description, fieldtypeid, length, label, keyfieldlink, tablelink) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                params2 = [tableid, newcolumn, fielddescription, 'Parola', 255, linkedtableid, keyfieldlink,
+                           linkedtableid]
+
+                sql3 = f"INSERT INTO sys_field (tableid, fieldid, description, fieldtypeid, length, label, keyfieldlink, tablelink) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                params3 = [linkedtableid, fieldid2, fielddescription, 'Parola', 255, tableid, keyfieldlink, tableid]
+
+                sql4 = f"INSERT INTO sys_table_link (tableid, tablelinkid) VALUES (%s, %s)"
+                params4 = [linkedtableid, tableid]
+
+                sql5 = f"ALTER TABLE user_{tableid} ADD COLUMN {newcolumn2} VARCHAR(255) NULL"
+
+                sql6 = f"INSERT INTO sys_field (tableid, fieldid, description, fieldtypeid, length, label, keyfieldlink, tablelink) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                params6 = [tableid, newcolumn2, fielddescription, 'Parola', 255, 'Dati', keyfieldlink, linkedtableid]
+
+                with connection.cursor() as cursor:
+                    cursor.execute(sql)  # Execute the first SQL command
+                    cursor.execute(sql2, params2)  # Execute the second SQL command with parameters
+                    cursor.execute(sql3, params3)  # Execute the third SQL command with parameters
+                    cursor.execute(sql4, params4)  # Execute the fourth SQL command
+                    cursor.execute(sql5)  # Execute the fifth SQL command
+                    cursor.execute(sql6, params6)  # Execute the sixth SQL command with parameters
+
+
+
 
 
 

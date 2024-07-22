@@ -83,6 +83,10 @@
       const inputContainer = document.createElement('div');
       inputContainer.style.display = 'flex';
       inputContainer.style.gap = '10px';
+      inputContainer.style.marginTop = '2%';
+
+
+      const inputBr = document.createElement('br');
 
 
       const input1 = document.createElement('input');
@@ -95,6 +99,7 @@
 
       inputContainer.appendChild(input1);
       inputContainer.appendChild(input2);
+
 
       container.appendChild(inputContainer);
     }
@@ -156,12 +161,11 @@
                 buttons: false,
             })
 
-            return;
         }
 
 
 
-        if ($('#new-field-type').val() == 'linked') {
+        if ($('#new-field-type').val() == 'Linked') {
             serialized_data['linkedtable'] = $('#field-linked-table').val();
 
             var linkedTableFields = []
