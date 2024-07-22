@@ -1915,7 +1915,8 @@ def custom_save_record(request, tableid, recordid):
         salespush_record=Record('salespush',userlog_record.fields['recordidsalespush_'])
         reminder=userlog_record.fields['reminder']
         description=userlog_record.fields['description']
-        salespush_record.fields['recalldate']=reminder.strftime("%Y-%m-%d")
+        if reminder:
+            salespush_record.fields['recalldate']=reminder.strftime("%Y-%m-%d")
         salespush_record.fields['lastupdate']=description
         salespush_record.save()
         userlog_record.save()
