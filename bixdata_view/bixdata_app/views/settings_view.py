@@ -126,6 +126,32 @@ def settings_table_tablefields(request):
         hv.context['fields'] = ''
     return hv.render_template('admin_settings/settings_table_column_search_results.html')
 
+def settings_table_linkedtables(request):
+    tableid = request.POST.get('tableid')
+    userid = request.POST.get('userid')
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM sys_table_link LEFT JOIN sys_user_order ON sys_table_link.tableid=sys_user_order.tableid AND sys_table_link.tablelinkid=sys_user_order.fieldid WHERE sys_table_link.tableid='{tableid}' ORDER BY sys_user_order.fieldorder ASC"
+        )
+        linked_tables = dictfetchall(cursor)
+
+        orderNull = []
+        orderNotNull = []
+
+        for linked in linked_tables:
+            if linked['fieldorder'] == None:
+                orderNull.append(linked)
+            else:
+                orderNotNull.append(linked)
+
+        linked_tables = orderNotNull
+        linked_tables += orderNull
+
+    hv = HelperView(request)
+    hv.context['linkeds'] = linked_tables
+    return hv.render_template('admin_settings/settings_table_linkedtables.html')
+
 
 def settings_table_tablefields_save(request):
     tableid = request.POST.get('tableid')
@@ -170,6 +196,35 @@ def settings_table_tablefields_save(request):
             cursor.execute(
                 "DELETE FROM sys_user_column_width WHERE userid=%s AND tableid=%s",
                 [userid, tableid])
+
+    return HttpResponse({'success': True})
+
+
+def settings_table_linkedtables_save(request):
+    tableid = request.POST.get('tableid')
+    userid = request.POST.get('userid')
+
+
+    fields = request.POST.get('orderArray')
+    fields = json.loads(fields)
+    order = 0
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "DELETE FROM sys_user_order WHERE userid=%s AND tableid=%s AND typepreference='keylabel'",
+            [userid, tableid])
+
+
+
+    for fieldid in fields:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                  INSERT INTO sys_user_order (userid, tableid, fieldid, fieldorder, typepreference)
+                  VALUES (%s, %s, %s, %s, %s)
+              """, [userid, tableid, fieldid, order, 'keylabel'])
+
+            order += 1
+
 
     return HttpResponse({'success': True})
 
@@ -506,3 +561,45 @@ def load_category_fields(request):
     hv = HelperView(request)
     hv.context['fields'] = fields
     return hv.render_template('admin_settings/category_fields.html')
+
+
+def settings_table_newtable(request):
+    return render(request, 'admin_settings/newtable.html')
+
+
+def save_newtable(request):
+    tableid = request.POST.get('tableid')
+    description = request.POST.get('description')
+
+
+
+    with connection.cursor() as cursor:
+
+        cursor.execute(
+            f"SELECT * FROM sys_table WHERE id='{tableid}'",
+        )
+        table = dictfetchall(cursor)
+
+        if not table:
+
+            cursor.execute(
+                f"INSERT INTO sys_table (id, description, workspace) VALUES ('{tableid}', '{description}', 'ALTRO')"
+
+            )
+
+            cursor.execute(
+                f"CREATE TABLE user_{tableid} ( recordid_ CHAR(32) PRIMARY KEY, creatorid_ INT(11) NOT NULL, creation_ DATETIME NOT NULL, lastupdaterid_ INT(11), lastupdate_ DATETIME, totpages_ INT(11), firstpagefilename_ VARCHAR(255), recordstatus_ VARCHAR(255), deleted_ CHAR(1) DEFAULT 'N', id INT(11) ) CHARACTER SET utf8 COLLATE utf8_general_ci"
+            )
+
+            cursor.execute(
+                f"INSERT INTO sys_field (tableid, fieldid, fieldtypeid, label) VALUES ('{tableid}', 'id', 'Seriale', 'Sistema')"
+            )
+
+
+            cursor.execute(
+                f"INSERT INTO sys_view (name, userid, tableid, query_conditions) VALUES ('Tutti', 1, '{tableid}', 'true')"
+            )
+
+
+
+    return JsonResponse({'success': True})

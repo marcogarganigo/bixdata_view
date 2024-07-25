@@ -35,7 +35,7 @@
 
 
 
-{% if record.0.lookuptableid != '' %}
+{% if record.0.lookuptableid != None %}
     <h3>lookup items</h3>
     <div id="lookup-items-container">
         <button class="btn btn-secondary" onclick="addNewField('new-items-container')">aggiungi</button>
@@ -52,10 +52,11 @@
                 <button class="btn btn-danger" onclick="$('#item-{{ forloop.counter }}').css('background-color', '#f19292'); $('#item-{{ forloop.counter }}').attr('data-status', 'deleted')">
                     <span class="material-symbols-outlined">delete</span></button>
             </div>
-            <div id="new-items-container"></div>
+
 
 
         {% endfor %}
+         <div id="new-items-container"></div>
 
     <br>
 

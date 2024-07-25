@@ -1,57 +1,113 @@
-<h3>Questo task è stato chiuso</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col" style="width: 100px"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="margin: 0; padding: 0; width: 200px">
-                <b>{{ companyname }}</b>
-                <p style="margin: 0;">Da: {{ username }}</p>
-                <p>{{ description|truncatechars:50 }}</p>
-                <a href="http://bixcrm01:8000/get_record_path/task/{{ recordid }}" class="description" style="margin: 0">Apri in Bixdata</a>
-            </td>
-            <td style="width: 100px">
-                <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20">
-                {{ duedate }}
-                <br>
-                {% if planneddate != None %}
-                    <img alt="Pianificato" src="https://cdn-icons-png.flaticon.com/512/1322/1322186.png" width="20">
-                    {{ planneddate }}
-                {% else %}
-                    <img alt="Non Pianificato" src="https://cdn-icons-png.flaticon.com/512/4407/4407014.png" width="20">
-                {% endif %}
-            </td>
-        </tr>
-    </tbody>
-</table>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
 
 
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 0;
+        background-color: #5590cc;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
 
-<style>
-  table {
-    border-collapse: collapse;
-    width: 1000px;
-  }
+    .email-container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border: 1px solid #dddddd;
+    }
 
-  th {
-    text-align: left;
-  }
+    h3 {
+      color: #333333;
+    }
 
-  thead, th {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    thead th {
       background-color: #eeae6b;
       font-size: 15pt;
-  }
+      color: #ffffff;
+    }
 
-  td {
-      padding: 15px;
-  }
+    .description {
+      color: #ffffff;
+      text-decoration: none;
+    }
 
-  .description:hover {
-    cursor: pointer;
-  }
-</style>
+
+    .icon {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+
+    .task-info {
+      padding: 10px 0;
+    }
+
+    .due-date, .planned-date {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .email-container {
+        padding: 10px;
+      }
+
+      th, td {
+        padding: 5px;
+      }
+
+      h3 {
+        font-size: 18px;
+      }
+
+      thead th {
+        font-size: 12pt;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <h3>Questo task è stato chiuso</h3>
+      <p>Da: {{ username }}</p>
+    <div class="task-info">
+      <p><strong>{{ companyname }}</strong></p>
+      <p>{{ description }}</p>
+        <div class="due-date">
+          <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20" class="icon">
+          <span>{{ duedate }}</span>
+    </div>
+      <p><a href="http://bixcrm01:8000/get_record_path/task/{{ recordid }}" class="description button">Apri in Bixdata</a></p>
+    </div>
+  </div>
+</body>
+</html>

@@ -182,5 +182,9 @@ urlpatterns = [
     path('close_salespush/', alpha.close_salespush, name='close_salespush'),
     path('get_user_sold/', alpha.get_user_sold, name='get_user_sold'),
     path('load_category_fields/', settings_view.load_category_fields, name='load_category_fields'),
+    path('settings_table_linkedtables/', settings_view.settings_table_linkedtables, name='settings_table_linkedtables'),
+    path('settings_table_linkedtables_save/', settings_view.settings_table_linkedtables_save, name='settings_table_linkedtables_save'),
+    path('settings_table_newtable/', settings_view.settings_table_newtable, name='settings_table_newtable'),
+    path('save_newtable/', settings_view.save_newtable, name='save_newtable'),
 
 ]

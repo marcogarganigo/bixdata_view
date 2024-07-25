@@ -1235,9 +1235,14 @@ def save_record_fields(request):
 
                 message = render_to_string('other/new_task.html', fields_dict)
 
+                score = ''
+
+                if companyname != '':
+                    score = ' - '
+
                 # return render(request, 'other/new_task.html', fields_dict)
 
-                send_email(emails=[email], subject='Nuovo task assegnato', html_message=message)
+                send_email(emails=[email], subject='Nuovo task assegnato da ' + fields_dict['username'] + score + companyname, html_message=message)
 
     elif tableid == 'salespush':
 
@@ -2269,7 +2274,7 @@ def new_chart_block(request):
 def get_record_path(request, tableid, recordid):
     userid = request.user.id
     if tableid == 'timesheet':
-        content = get_block_timesheetinvoice(recordid, userid)
+        content = get_block_timesheetinvoice(request, recordid, userid)
     elif tableid == 'task':
         content = get_block_task(request, recordid, userid)
     elif tableid == 'ticket':
@@ -2841,7 +2846,7 @@ def check_task_status(recordid):
                                            {'username': username, 'company': company, 'description': description, 'recordid': recordid})
                 send_email(
                     emails=[email],
-                    subject='Task chiuso',
+                    subject='Task chiuso da ' + user,
                     html_message=message
                 )
 

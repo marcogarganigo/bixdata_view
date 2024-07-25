@@ -1,0 +1,41 @@
+<div id="container_settings" style="height: 95%; overflow: scroll">
+    <button class="btn btn-primary" id="save-settings-button" onclick="setLinkedOrderSave()">Salva</button>
+
+    <div id="settings_block_usertables_settings" class="drag-elements-container">
+        <div class="drag-item">
+            {% for linked in linkeds %}
+                <div data-order="{{ forloop.counter0 }}" class="drag-item2">
+                    {% if linked.fieldorder != null %}
+                        <input class="form-check-input mt-0 checkbox" type="checkbox" checked value="" aria-label="Checkbox for following text input">
+                    {% else %}
+                        <input class="form-check-input mt-0 checkbox" type="checkbox" value="" aria-label="Checkbox for following text input" >
+                    {% endif %}
+                    <div>
+                        <span>{{linked.tablelinkid}}</span>
+                    </div>
+                    <div>
+                        <span class="settings_block_usertables_fieldid" data-fieldid="{{ linked.tablelinkid }}"> {{linked.tablelinkid}}  </span>
+                    </div>
+                    <!--<button class="btn btn-secondary" onclick="settingsTableColumnSearchResultsOptions('{{ field.id }}')">Impostazioni</button>-->
+                </div>
+            {% endfor %}
+            </input class="form-check-input">
+        </div>
+    </div>
+</div>
+
+<script>
+
+    (function() {
+        var drake = dragula([document.querySelector('.drag-elements-container')], {
+            moves: function (el, container, handle) {
+                return !handle.classList.contains('drag-item2');
+            }
+        });
+
+        dragula([].slice.apply(document.querySelectorAll('.drag-item')), {
+            direction: 'vertical'
+        });
+    })();
+
+</script>

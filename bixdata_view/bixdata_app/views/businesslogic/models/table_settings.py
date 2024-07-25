@@ -1,6 +1,7 @@
 from django.contrib.sessions.models import Session
 from bixdata_app.models import *
 import os
+from bixdata_app.views.beta import *
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
@@ -25,6 +26,7 @@ from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
 from ..logic_helper import *
 from .database_helper import *
+
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -250,8 +252,9 @@ class TableSettings:
             'value': 'salva'
         },
         'default_viewid': {
-            'type': 'parola',
-            'value': '0'
+            'type': 'select',
+            'options': ['0'],
+            'value': 'true'
         },
         'default_recordstab': {
             'type': 'parola',
@@ -309,6 +312,17 @@ class TableSettings:
             for row in rows:
                 if setting_id == row['settingid']:
                     setting_info['value'] = row['value']
+
+                    if row['settingid'] == 'default_viewid':
+                        with connection.cursor() as cursor:
+                            cursor.execute(f"SELECT id FROM sys_view WHERE tableid='{self.tableid}'")
+                            view_options = dictfetchall(cursor)
+
+                            if view_options:
+                                for option in view_options:
+                                    setting_info['options'].append(str(option['id']))
+                            else:
+                                setting_info['value'] = '0'
 
         return settings_copy
 

@@ -1,0 +1,35 @@
+<h3>Nuova tabella</h3>
+
+
+<input id="table-tableid" type="text" class="form-control" placeholder="Tableid" aria-label="Example text with button addon" aria-describedby="button-addon1">
+<input id="table-description" type="text" class="form-control" placeholder="Description" aria-label="Example text with button addon" aria-describedby="button-addon1">
+
+<br>
+
+
+<button class="btn btn-primary" type="button" onclick="saveNewTable()">Crea</button>
+
+
+<script>
+    function saveNewTable() {
+        $.ajax({
+            url: "{% url 'save_newtable' %}",
+            type: 'POST',
+            data: {
+                'tableid': $('#table-tableid').val(),
+                'description': $('#table-description').val(),
+            },
+            success: function (data) {
+                swal({
+                        title: "Salvato!",
+                        text: "Il record è stato salvato",
+                        icon: "success",
+                        timer: 800,
+                        buttons: false,
+                });
+            }
+        });
+    }
+</script>
+
+

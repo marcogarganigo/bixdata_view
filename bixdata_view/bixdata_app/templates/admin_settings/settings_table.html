@@ -44,6 +44,22 @@
         });
     }
 
+    function newTable() {
+
+        $('.secondary-level').html('')
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'settings_table_newtable' %}",
+            success: function (response) {
+                $("#settings_table_usertables").load('/loading/')
+                setTimeout(function () {
+                    $("#settings_table_usertables").html(response);
+                }, 150);
+            }
+        });
+    }
+
     function saveTableSettings(el) {
 
         updateOrder();
@@ -122,6 +138,31 @@
         });
     }
 
+    function setLinkedOrder() {
+
+        var tableid = $('#table_settings_menu').attr('data-tableid');
+        var userid = $('#user_username').attr('data-userid');
+
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'settings_table_linkedtables' %}",
+            data: {tableid: tableid, userid: userid},
+            success: function (response) {
+                $("#settings_col4").css('display', 'block');
+
+                $("#settings_table_fields_settings").load('/loading/')
+
+                setTimeout(function () {
+                    $("#settings_table_fields_settings").html(response);
+                }, 150);
+
+            },
+            error: function () {
+            }
+        });
+    }
+
     function setFieldsOrderSave() {
         updateOrder()
         var orderArray = []
@@ -158,6 +199,49 @@
                 'tableid': tableid,
                 'fields_type': fields_type,
                 'master_tableid': master_tableid
+            },
+            success: function (response) {
+                swal({
+                    title: "Impostazioni salvate",
+                    text: "Le impostazioni sono state salvate correttamente",
+                    icon: "success",
+                    timer: 800,
+                    buttons: false,
+                })
+            },
+            error: function () {
+            }
+        });
+    }
+
+    function setLinkedOrderSave() {
+        updateOrder()
+        var orderArray = []
+
+
+
+        var userid = $('#user_username').attr('data-userid');
+        var tableid = $('#table_settings_menu').attr('data-tableid');
+
+        $('#settings_block_usertables_settings').find('.drag-item2').each(function () {
+            if ($(this).find('.checkbox').is(':checked')) {
+                var fieldid = $(this).find('.settings_block_usertables_fieldid').attr('data-fieldid');
+                orderArray.push(fieldid);
+            }
+        });
+
+
+
+        orderArray = JSON.stringify(orderArray);
+        console.info(orderArray)
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'settings_table_linkedtables_save' %}",
+            data: {
+                'orderArray': orderArray,
+                'userid': userid,
+                'tableid': tableid,
             },
             success: function (response) {
                 swal({
@@ -312,6 +396,9 @@
             <br>
         {% endfor %}
         <input type="text" hidden="true" disabled id="user_username" value="">
+    <br>
+        <button class="btn btn-primary" onclick="newTable()">Nuova tabella</button>
+
     </div>
     <div id="settings_table_usertables" style="width: 20%;float: left; height: 100%">
 
@@ -323,10 +410,10 @@
 
         <input type="hidden" id="selected-field-block">
 
-    <div id="settings_table_fields_settings" class="secondary-level third-level" style="width: 20%; height: 90%; float: left">
+    <div id="settings_table_fields_settings" class="secondary-level third-level" style="width: 15%; height: 90%; float: left">
     </div>
 
-    <div id="fields_table_settings" class="secondary-level third-level" style="width: 10%; height: 90%; float: left; margin-left: 1%">
+    <div id="fields_table_settings" class="secondary-level third-level" style="width: 10%; height: 90%; float: left; margin-left: 1%; overflow:scroll">
 
     </div>
 </div>

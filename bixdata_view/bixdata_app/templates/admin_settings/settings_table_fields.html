@@ -135,7 +135,10 @@
             },
             url: "{% url 'settings_table_fields_settings_block' %}",
             success: function (response) {
-                $('#fields_table_settings').html(response);
+                $('#fields_table_settings').load('/loading/');
+                setTimeout(function () {
+                    $("#fields_table_settings").html(response);
+                }, 150);
             },
             error: function () {
             }
