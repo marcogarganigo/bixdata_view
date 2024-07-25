@@ -253,7 +253,7 @@ class TableSettings:
         },
         'default_viewid': {
             'type': 'select',
-            'options': ['0'],
+            'options': [],
             'value': 'true'
         },
         'default_recordstab': {
@@ -315,12 +315,18 @@ class TableSettings:
 
                     if row['settingid'] == 'default_viewid':
                         with connection.cursor() as cursor:
-                            cursor.execute(f"SELECT id FROM sys_view WHERE tableid='{self.tableid}'")
+                            cursor.execute(f"SELECT * FROM sys_view WHERE tableid='{self.tableid}'")
                             view_options = dictfetchall(cursor)
+
+                            # Inizializza 'options' come una lista di dizionari in 'setting_info'
+                            setting_info['options'] = []
 
                             if view_options:
                                 for option in view_options:
-                                    setting_info['options'].append(str(option['id']))
+                                    setting_info['options'].append({
+                                        'name': str(option['name']),
+                                        'id': str(option['id'])
+                                    })
                             else:
                                 setting_info['value'] = '0'
 

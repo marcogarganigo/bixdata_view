@@ -3,13 +3,24 @@
         {% if val.type == 'select' %}
             <label for="{{ setting }}">{{ setting }}</label>
             <select name="{{ setting }}" class="form-select setting-value">
-                {% for option in val.options %}
-                    {% if option == val.value %}
-                        <option selected value="{{ option }}">{{ option }}</option>
-                    {% else %}
-                        <option value="{{ option }}">{{ option }}</option>
-                    {% endif %}
-                {% endfor %}
+                {% if setting == 'default_viewid' %}
+                	{% for option in val.options %}
+                        {% if option.id == val.value %}
+                            <option selected value="{{ option.id }}">{{ option.name }}</option>
+                        {% else %}
+                            <option value="{{ option.id }}">{{ option.name }}</option>
+                        {% endif %}
+                	{% endfor %}
+
+                {% else %}
+                    {% for option in val.options %}
+                        {% if option == val.value %}
+                            <option selected value="{{ option }}">{{ option }}</option>
+                        {% else %}
+                            <option value="{{ option }}">{{ option }}</option>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
             </select>
         {% else %}
             <label for="{{ setting }}">{{ setting }}</label>

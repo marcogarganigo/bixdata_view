@@ -2847,7 +2847,7 @@ def check_task_status(recordid):
                                            {'username': username, 'company': company, 'description': description, 'recordid': recordid})
                 send_email(
                     emails=[email],
-                    subject='Task chiuso da ' + user,
+                    subject='Task chiuso da ' + username,
                     html_message=message
                 )
 
