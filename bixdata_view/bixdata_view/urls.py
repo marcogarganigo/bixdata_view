@@ -186,5 +186,6 @@ urlpatterns = [
     path('settings_table_linkedtables_save/', settings_view.settings_table_linkedtables_save, name='settings_table_linkedtables_save'),
     path('settings_table_newtable/', settings_view.settings_table_newtable, name='settings_table_newtable'),
     path('save_newtable/', settings_view.save_newtable, name='save_newtable'),
+    path('task_functions/', alpha.task_functions, name='task_functions'),
 
 ]

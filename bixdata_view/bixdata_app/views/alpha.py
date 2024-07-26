@@ -4637,4 +4637,31 @@ def get_user_sold(request):
     return JsonResponse({'sold': sold})
 
 
+def task_functions(request):
+    func = request.POST.get('func')
+    recordid = request.POST.get('recordid')
+    tableid = request.POST.get('tableid')
+
+    if func == 'plannedtoday':
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"UPDATE user_task SET planneddate = CURDATE() WHERE recordid_ = '{recordid}'"
+            )
+
+    elif func == 'plannedtomorrow':
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"UPDATE user_task SET planneddate = DATE_ADD(CURDATE(), INTERVAL 1 DAY) WHERE recordid_ = '{recordid}'"
+            )
+
+    elif func == 'weekpostpone':
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"UPDATE user_task SET planneddate = NULL, duedate = CURDATE() + INTERVAL 7 DAY WHERE recordid_ = '{recordid}'"
+            )
+
+
+    return True
+
+
 
