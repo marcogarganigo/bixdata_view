@@ -494,6 +494,26 @@
         });
     }
 
+    function stampaProject() {
+         $.ajax({
+            type: "POST",
+            url: "{% url 'stampa_project' %}",
+
+            success: function (response, status, xhr) {
+                $('#bixdata2').html(response);
+            },
+            error: function (response) {
+                swal({
+                    title: "Errore nella generazione del file",
+                    text: "sengnalalo ad un tecnico del software al più presto",
+                    icon: "error",
+                    button: "Ok",
+                    dangerMode: true,
+                });
+            }
+        });
+    }
+
 
     function taskFunctions(func) {
         $.ajax({
@@ -581,6 +601,11 @@
                                 Stampa in pdf
                             </a></li>
                         {% endif %}
+                        {% if tableid == 'project' %}
+                             <li><a class="dropdown-item" onclick="stampaProject()">
+                                 Stampa  project boh
+                            </a></li>
+                        {% endif %} 
                     </ul>
                 </div>
 

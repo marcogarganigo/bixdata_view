@@ -742,7 +742,7 @@ def get_block_records_kanban(request):
         return_group['totalamount'] = "{:,.2f}".format(totals['totalamount']).replace(",", "'") if totals['totalamount'] is not None else "0.00"
         return_group['totalmargin'] = "{:,.2f}".format(totals['totalmargin']).replace(",", "'") if totals['totalmargin'] is not None else "0.00"
         return_groups.append(return_group)
-    
+
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT fieldid FROM sys_field WHERE (fieldtypeid = 'Utente' or fieldtypeid = 'Parola') and (lookuptableid is not NULL and lookuptableid != '') and tableid = '{tableid}'"
@@ -1379,7 +1379,7 @@ def custom_save_record(request, tableid, recordid):
                 invoicestatus='To Process'
 
 
-        # valutazione del tipo di servizio se produttivo o meno 
+        # valutazione del tipo di servizio se produttivo o meno
         if invoicestatus == 'To Process':
             if service == 'Amministrazione' or service == 'Commerciale' or service == 'Formazione Apprendista' or service == 'Formazione e Test' or service == 'Interno' or service == 'Riunione':
                 invoicestatus = 'Attività non fatturabile'
@@ -1594,7 +1594,7 @@ def custom_save_record(request, tableid, recordid):
                 if not isempty(salesorderline_record_dict['cost']):
                     salesorder_record.fields['totalcost']=salesorder_record.fields['totalcost']+salesorderline_record_dict['cost']
                 if not isempty(salesorderline_record_dict['margin']):
-                    salesorder_record.fields['totalmargin']=salesorder_record.fields['totalmargin']+salesorderline_record_dict['margin']    
+                    salesorder_record.fields['totalmargin']=salesorder_record.fields['totalmargin']+salesorderline_record_dict['margin']
                 if not isempty(salesorderline_record_dict['total_net_yearly']):
                     salesorder_record.fields['totalnetyearly']=salesorder_record.fields['totalnetyearly']+salesorderline_record_dict['total_net_yearly']
                 if not isempty(salesorderline_record_dict['annual_cost']):
@@ -1655,8 +1655,8 @@ def custom_save_record(request, tableid, recordid):
             unitcost=0
         quantity=salesorderline_record.fields['quantity']
         if not quantity:
-            quantity=0            
-        
+            quantity=0
+
         linecost=unitcost * quantity
         salesorderline_record.fields['cost']=linecost
 
@@ -1665,9 +1665,9 @@ def custom_save_record(request, tableid, recordid):
             linecost=linecost+salesorderline_record.fields['contracthours']*60
             salesorderline_record.fields['potential_cost']=linecost
             salesorderline_record.fields['margin']=salesorderline_record.fields['price']-linecost
-            
-            
-        
+
+
+
 
         # calcolo annuali
         multiplier=salesorder_record.fields['multiplier']
@@ -1677,7 +1677,7 @@ def custom_save_record(request, tableid, recordid):
         salesorderline_record.fields['marginyearly']=salesorderline_record.fields['margin']*multiplier
         salesorderline_record.fields['annual_actual_margin']=salesorderline_record.fields['marginyearly']
 
-        
+
         # calcolo totali
         repetitionstartdate=salesorder_record.fields['repetitionstartdate']
         lastoccurence=HelperView.get_last_occurrence(repetitionstartdate.strftime('%Y-%m-%d'))
@@ -1710,7 +1710,7 @@ def custom_save_record(request, tableid, recordid):
             salesorderline_record.fields['annual_actual_margin']=salesorderline_record.fields['total_net_yearly']-salesorderline_record.fields['annual_actual_cost']
             salesorderline_record.fields['total_actual_cost']=usedhours*60
             salesorderline_record.fields['total_actual_margin']=salesorderline_record.fields['total_price']-salesorderline_record.fields['total_actual_cost']
-            
+
         salesorderline_record.save()
         if not isempty(salesorder_record.recordid):
             custom_save_record(request, tableid='salesorder', recordid=salesorder_record.recordid)
@@ -1747,13 +1747,13 @@ def custom_save_record(request, tableid, recordid):
         deal_record.fields['bankhours']=bankhours
         deal_record.fields['invoicedhours']=invoicedhours
         deal_record.fields['residualhours']=residualhours
-        
+
         deal_record.fields['projectcompleted']=completed
         deal_record.save()
         project_record.save()
         if not isempty(deal_record.recordid):
             custom_save_record(request, tableid='deal', recordid=deal_record.recordid)
-        
+
 
 
     # ---DEALLINE
@@ -1869,7 +1869,7 @@ def custom_save_record(request, tableid, recordid):
         deal_expectedmargin=deal_price-deal_expectedcost
         if deal_actualcost==0:
             deal_actualmargin= deal_expectedmargin
-        
+
         deal_record.fields['amount']=round(deal_price, 2)
         deal_record.fields['expectedcost']=round(deal_expectedcost, 2)
         deal_record.fields['expectedmargin']= round(deal_expectedmargin, 2)
@@ -1912,7 +1912,7 @@ def custom_save_record(request, tableid, recordid):
             deal_record.fields['purchaseorder']='No'
 
         deal_record.save()
-    
+
 
     # ---userlog Attività e Note
     if tableid == 'user_log':
@@ -1930,14 +1930,14 @@ def custom_save_record(request, tableid, recordid):
         contact_record=Record('contact',recordid)
         company_record=Record('company',contact_record.fields['recordidcompany_'])
         contact_record.fields['reference']=''
-        
+
         if not isempty(contact_record.fields['name']):
             contact_record.fields['reference']=contact_record.fields['reference']+" "+contact_record.fields['name']
         if not isempty(contact_record.fields['surname']):
             contact_record.fields['reference']=contact_record.fields['reference']+" "+contact_record.fields['surname']
         #if not isempty(company_record.recordid):
          #   contact_record.fields['reference']=contact_record.fields['name']+" "+contact_record.fields['surname']+" - "+company_record.fields['companyname']
-        contact_record.save()          
+        contact_record.save()
 
     return True
 
@@ -2188,7 +2188,7 @@ def admin_page(request):
             "SELECT * FROM sys_dashboard"
         )
         dashboards = dictfetchall(cursor)
-        
+
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT * FROM sys_dashboard_block"
@@ -2624,7 +2624,7 @@ def export_excel(request):
             response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records_report", data=post)
         else:
             response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records", data=post)
-            
+
         response.raise_for_status()
         response_dict = response.json()
 
@@ -4209,7 +4209,7 @@ def deal_close_lost(request):
         today = today.strftime("%Y-%m-%d")
         deal_record.fields['closedate'] = today
         deal_record.save()
-    return JsonResponse({'success': True}) 
+    return JsonResponse({'success': True})
 
 
 def deal_update_dealstage(request):
@@ -4475,7 +4475,7 @@ def save_dashboard_table(request):
 
     return JsonResponse({'success': True})
 
-    
+
 def save_columns_width(request):
     tableid = request.POST.get('tableid')
     width = request.POST.get('widths')
@@ -4500,7 +4500,7 @@ def save_columns_width(request):
             )
 
     return JsonResponse({'success': True})
-    
+
 
 def get_user_worktime(request):
     userid = get_userid(request.user.id)
@@ -4662,6 +4662,38 @@ def task_functions(request):
 
 
     return True
+
+
+def stampa_project(request):
+
+        path = os.path.dirname(os.path.abspath(__file__))
+        path = path.rsplit('views', 1)[0]
+        filename_with_path = path + '\\static\\pdf\\' + 'project.pdf'
+
+        uid = uuid.uuid4().hex
+
+
+
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
+
+        config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+        content = render_to_string('pdf/project.html')
+
+        pdfkit.from_string(content, filename_with_path, configuration=config)
+        """
+        try:
+            with open(filename_with_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type="application/pdf")
+                response['Content-Disposition'] = f'inline; filename=project.pdf'
+
+            return response
+
+        finally:
+            os.remove(filename_with_path)
+        """
+        return render(request, 'pdf/project.html')
+
 
 
 
