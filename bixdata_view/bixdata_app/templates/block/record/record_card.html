@@ -498,6 +498,9 @@
          $.ajax({
             type: "POST",
             url: "{% url 'stampa_project' %}",
+             data: {
+                 'recordid': '{{ recordid}}'
+             },
 
             success: function (response, status, xhr) {
                 //open response in blank page

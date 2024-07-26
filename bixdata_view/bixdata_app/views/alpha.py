@@ -4666,11 +4666,14 @@ def task_functions(request):
 
 def stampa_project(request):
 
+        recordid = request.POST.get('recordid')
         path = os.path.dirname(os.path.abspath(__file__))
         path = path.rsplit('views', 1)[0]
         filename_with_path = path + '\\static\\pdf\\' + 'project.pdf'
 
         uid = uuid.uuid4().hex
+
+        context = {}
 
 
 
@@ -4678,7 +4681,7 @@ def stampa_project(request):
         wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
 
         config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-        content = render_to_string('pdf/project.html')
+        content = render_to_string('pdf/project.html', context)
 
         pdfkit.from_string(content, filename_with_path, configuration=config)
         """
