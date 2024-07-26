@@ -84,6 +84,7 @@
 <br>
 <br>
 
+
 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
     <div class="progress-bar" style="width: 75%"></div>
   </div>
@@ -116,60 +117,20 @@
         </div> <!-- cd-timeline-content -->
     </div> <!-- cd-timeline-block -->
 
-    <div class="cd-timeline-block">
-        <div class="cd-timeline-img cd-movie">
-        </div> <!-- cd-timeline-img -->
+    {% for timesheet in timesheets %}
+        <div class="cd-timeline-block">
+            <div class="cd-timeline-img cd-movie">
+            </div> <!-- cd-timeline-img -->
 
-        <div class="cd-timeline-content">
-            <h2>Title of section 2</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde?</p>
-            <span class="cd-date">Jan 18</span>
-        </div> <!-- cd-timeline-content -->
-    </div> <!-- cd-timeline-block -->
+            <div class="cd-timeline-content">
+                <h2>Title of section 2</h2>
+                <p>{{ timesheet.description }}</p>
+                <span class="cd-date">{{ timesheet.date }}</span>
+            </div> <!-- cd-timeline-content -->
+        </div> <!-- cd-timeline-block -->
+    {% endfor %}
 
-    <div class="cd-timeline-block">
-        <div class="cd-timeline-img cd-picture">
-        </div> <!-- cd-timeline-img -->
 
-        <div class="cd-timeline-content">
-            <h2>Title of section 3</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, obcaecati, quisquam id molestias eaque asperiores voluptatibus cupiditate error assumenda delectus odit similique earum voluptatem doloremque dolorem ipsam quae rerum quis. Odit, itaque, deserunt corporis vero ipsum nisi eius odio natus ullam provident pariatur temporibus quia eos repellat consequuntur perferendis enim amet quae quasi repudiandae sed quod veniam dolore possimus rem voluptatum eveniet eligendi quis fugiat aliquam sunt similique aut adipisci.</p>
-            <span class="cd-date">Jan 24</span>
-        </div> <!-- cd-timeline-content -->
-    </div> <!-- cd-timeline-block -->
-
-    <div class="cd-timeline-block">
-        <div class="cd-timeline-img cd-location">
-        </div> <!-- cd-timeline-img -->
-
-        <div class="cd-timeline-content">
-            <h2>Title of section 4</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde? Iste voluptatibus minus veritatis qui ut.</p>
-            <span class="cd-date">Feb 14</span>
-        </div> <!-- cd-timeline-content -->
-    </div> <!-- cd-timeline-block -->
-
-    <div class="cd-timeline-block">
-        <div class="cd-timeline-img cd-location">
-        </div>
-
-        <div class="cd-timeline-content">
-            <h2>Title of section 5</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum.</p>
-            <span class="cd-date">Feb 18</span>
-        </div> <!-- cd-timeline-content -->
-    </div> <!-- cd-timeline-block -->
-
-    <div class="cd-timeline-block">
-        <div class="cd-timeline-img cd-movie">
-        </div> <!-- cd-timeline-img -->
-
-        <div class="cd-timeline-content">
-            <h2>Final Section</h2>
-            <p>This is the content of the last section</p>
-            <span class="cd-date">Feb 26</span>
-        </div> <!-- cd-timeline-content -->
-    </div> <!-- cd-timeline-block -->
 </section> <!-- cd-timeline -->
 
 <style>
@@ -498,33 +459,18 @@ Main components
         #step4 { background-color: #FFA07A; }
         #step4::after { border-left-color: #FFA07A; }
         #step5 { background-color: #98D8C8; }
+        #step5::after { border-left-color: #98D8C8; }
+        #step6 { background-color: #FF6B6B; }
+        #step6::after { border-left-color: #FF6B6B; }
     </style>
 
     <div class="diagram">
-        <div id="step1" class="step">
-            <div class="step-icon">💡</div>
-            <div class="step-title">IDEA</div>
-            <div class="step-description">Sed elementum quam justo non vehicula est hendrerit a integer fermentum</div>
-        </div>
-        <div id="step2" class="step">
-            <div class="step-icon">🎯</div>
-            <div class="step-title">ASPIRATION</div>
-            <div class="step-description">Suspendisse quis at justo pharetra blandit vel eu mauris aenean feugiat tempor velit quis</div>
-        </div>
-        <div id="step3" class="step">
-            <div class="step-icon">📊</div>
-            <div class="step-title">MARKET</div>
-            <div class="step-description">Nam ut velit vehicula tristique odio a aliquam dui phasellus porta lacus sodales tortor</div>
-        </div>
-        <div id="step4" class="step">
-            <div class="step-icon">⚙️</div>
-            <div class="step-title">PROCESS</div>
-            <div class="step-description">Cras in sapien lacinia consectetur sapien id nisi sed vehicula molestie massa sed</div>
-        </div>
-        <div id="step5" class="step">
-            <div class="step-icon">💰</div>
-            <div class="step-title">INCOME</div>
-            <div class="step-description">Morbi aliquet sollicit fringilla vivamus eu libero id risus ultrices ege nec vel mi cras in turpis</div>
-        </div>
+        {% for milestone in milestones %}
+             <div id="step{{ forloop.counter }}" class="step">
+                <!--<div class="step-icon">💡</div>-->
+                <div class="step-title">{{ milestone.title }}</div>
+                <div class="step-description">Sed elementum quam justo non vehicula est hendrerit a integer fermentum</div>
+            </div>
+        {% endfor %}
     </div>
 

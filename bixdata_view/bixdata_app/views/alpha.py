@@ -4705,7 +4705,7 @@ def stampa_project(request):
         finally:
             os.remove(filename_with_path)
         """
-        return render(request, 'pdf/project.html')
+        return render(request, 'pdf/project.html', context)
 
 
 
