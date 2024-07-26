@@ -1,6 +1,3 @@
-<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css /> -->
-<link rel="stylesheet" href="timeline.css">
-
 <section id="cd-timeline" class="cd-container">
     <div class="cd-timeline-block">
         <div class="cd-timeline-img cd-picture">
@@ -64,7 +61,7 @@
 
     <div class="cd-timeline-block">
         <div class="cd-timeline-img cd-location">
-        </div>
+        </div> 
 
         <div class="cd-timeline-content">
             <h2>Title of section 5</h2>
@@ -83,10 +80,10 @@
             <span class="cd-date">Feb 26</span>
         </div> <!-- cd-timeline-content -->
     </div> <!-- cd-timeline-block -->
-</section> <!-- cd-timeline -->
+</section> <!-- cd-timeline --> 
 
 <style>
-
+    
 html, body {
     background-color: #222C32;
     height: 100%;
@@ -108,9 +105,9 @@ html, body {
   clear: both;
 }
 
-/* --------------------------------
+/* -------------------------------- 
 
-Main components
+Main components 
 
 -------------------------------- */
 
@@ -130,7 +127,7 @@ Main components
   width: 4px;
   background: #fa0e36;
 }
-@media only screen and (min-width: 1170px) {
+@media only screen and (min-width: 200px) {
   #cd-timeline {
     margin-top: 3em;
     margin-bottom: 3em;
@@ -156,7 +153,7 @@ Main components
 .cd-timeline-block:last-child {
   margin-bottom: 0;
 }
-@media only screen and (min-width: 1170px) {
+@media only screen and (min-width: 200px) {
   .cd-timeline-block {
     margin: 4em 0;
   }
@@ -180,7 +177,7 @@ Main components
 .cd-timeline-img {
   background: #fa0e36;
 }
-@media only screen and (min-width: 1170px) {
+@media only screen and (min-width: 200px) {
   .cd-timeline-img {
     width: 30px;
     height: 30px;
@@ -210,15 +207,15 @@ Main components
     i {
       margin-right: 5px;
     }
-    .timeline-content-info-title, .timeline-content-info-date {
+    .timeline-content-info-title, .timeline-content-info-date {  
       width: calc(50% - 2px);
       display: inline-block;
     }
-    @media (max-width: 500px) {
-      .timeline-content-info-title, .timeline-content-info-date {
+    @media (max-width: 200px) {
+      .timeline-content-info-title, .timeline-content-info-date {  
         display: block;
         width:100%;
-      }
+      } 
     }
   }
   .content-skills {
@@ -274,7 +271,7 @@ Main components
   border-right: 7px solid #333C42;
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 200px) {
   .cd-timeline-content h2 {
     font-size: 20px;
     font-size: 1.25rem;
@@ -288,7 +285,7 @@ Main components
     font-size: 0.875rem;
   }
 }
-@media only screen and (min-width: 1170px) {
+@media only screen and (min-width: 200px) {
   .cd-timeline-content {
     color: white;
     margin-left: 0;
@@ -330,3 +327,102 @@ Main components
   }
 }
 </style>
+
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .diagram {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1500px;
+            gap: 20px;
+        }
+        .step {
+            flex: 1 1 150px;
+            max-width: 200px;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .step:hover {
+            transform: scale(1.05);
+        }
+        .step::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 15px solid;
+            z-index: 1;
+        }
+        .step:last-child::after {
+            display: none;
+        }
+        .step-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .step-description {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+        #step1 { background-color: #FF6B6B; }
+        #step1::after { border-left-color: #FF6B6B; }
+        #step2 { background-color: #4ECDC4; }
+        #step2::after { border-left-color: #4ECDC4; }
+        #step3 { background-color: #45B7D1; }
+        #step3::after { border-left-color: #45B7D1; }
+        #step4 { background-color: #FFA07A; }
+        #step4::after { border-left-color: #FFA07A; }
+        #step5 { background-color: #98D8C8; }
+    </style>
+
+    <div class="diagram">
+        <div id="step1" class="step">
+            <div class="step-icon">💡</div>
+            <div class="step-title">IDEA</div>
+            <div class="step-description">Sed elementum quam justo non vehicula est hendrerit a integer fermentum</div>
+        </div>
+        <div id="step2" class="step">
+            <div class="step-icon">🎯</div>
+            <div class="step-title">ASPIRATION</div>
+            <div class="step-description">Suspendisse quis at justo pharetra blandit vel eu mauris aenean feugiat tempor velit quis</div>
+        </div>
+        <div id="step3" class="step">
+            <div class="step-icon">📊</div>
+            <div class="step-title">MARKET</div>
+            <div class="step-description">Nam ut velit vehicula tristique odio a aliquam dui phasellus porta lacus sodales tortor</div>
+        </div>
+        <div id="step4" class="step">
+            <div class="step-icon">⚙️</div>
+            <div class="step-title">PROCESS</div>
+            <div class="step-description">Cras in sapien lacinia consectetur sapien id nisi sed vehicula molestie massa sed</div>
+        </div>
+        <div id="step5" class="step">
+            <div class="step-icon">💰</div>
+            <div class="step-title">INCOME</div>
+            <div class="step-description">Morbi aliquet sollicit fringilla vivamus eu libero id risus ultrices ege nec vel mi cras in turpis</div>
+        </div>
+    </div>
+
