@@ -39,7 +39,7 @@ class Table:
         self.context=''
         self.helper=LogicHelper()
     
-    def get_records(self,viewid='',searchTerm='', conditions_list=list(),fields=None,offset=0,limit=None):
+    def get_records(self,viewid='',searchTerm='', conditions_list=list(),fields=None,offset=0,limit=None,orderby='recordid_ desc'):
         """Ottieni elenco record in base ai parametri di ricerca
 
         Args:
@@ -64,7 +64,7 @@ class Table:
             conditions=conditions+f" AND {condition}"   
             
         with connection.cursor() as cursor:
-            sql=f"SELECT {select_fields} from user_{self.tableid} where {conditions}"
+            sql=f"SELECT {select_fields} from user_{self.tableid} where {conditions} ORDER BY {orderby}"
             cursor.execute(sql)
             records = self.helper.dictfetchall(cursor)
         return records

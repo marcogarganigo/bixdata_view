@@ -4674,8 +4674,18 @@ def stampa_project(request):
         uid = uuid.uuid4().hex
 
         context = {}
+        
+        table_timesheet = Table('timesheet')
+        conditions_list = list()
+        conditions_list.append(f"recordidproject_ = {recordid}")
+        conditions_list.append(f"deleted_='N'")
+        context['timesheets'] = table_timesheet.get_records(conditions_list=conditions_list,orderby='date desc')
 
-
+        table_projectmilestone = Table('projectmilestone')
+        conditions_list = list()
+        conditions_list.append(f"recordidproject_ = {recordid}")
+        conditions_list.append(f"deleted_='N'")
+        context['milestones'] = table_projectmilestone.get_records(conditions_list=conditions_list,orderby='expecteddate desc')
 
         script_dir = os.path.dirname(os.path.abspath(__file__))
         wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
