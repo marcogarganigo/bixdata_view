@@ -4741,8 +4741,21 @@ def stampa_project(request):
         wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
 
 
+        record_deal=Record('deal',record_project.fields['recordiddeal_'])
+        context['redditivita']=dict()
+        context['redditivita']['labels']=['Importo trattativa','Margine Previsto','Margine effettivo']
+        context['redditivita']['values']=[record_deal.fields['amount'],record_deal.fields['expectedmargin'],record_deal.fields['effectivemargin']]
+        context['redditivita']['importo']=record_deal.fields['amount']
+        context['redditivita']['margineprevisto']=record_deal.fields['expectedmargin']
+        context['redditivita']['margineffettivo']=record_deal.fields['effectivemargin']
 
-
+        righedettaglio=list()
+        table_dealline = Table('dealline')
+        conditions_list = list()
+        conditions_list.append(f"recordidproject_ = {recordid}")
+        conditions_list.append(f"deleted_='N'")
+        righedettaglio = table_dealline.get_records(conditions_list=conditions_list,orderby='recordid_ desc')
+        context['righedettaglio']=righedettaglio
         """
         try:
             with open(filename_with_path, 'rb') as fh:
