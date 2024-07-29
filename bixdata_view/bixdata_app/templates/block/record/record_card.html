@@ -494,19 +494,20 @@
         });
     }
 
-    function stampaProject() {
+    function stampaProject(type) {
          $.ajax({
             type: "POST",
             url: "{% url 'stampa_project' %}",
              data: {
-                 'recordid': '{{ recordid}}'
+                 'recordid': '{{ recordid}}',
+                 'type': type,
              },
 
             success: function (response, status, xhr) {
                 //open response in blank page
                 var win = window.open('', '_blank');
                 win.document.write(response);
-                
+
             },
             error: function (response) {
                 swal({
@@ -608,8 +609,11 @@
                             </a></li>
                         {% endif %}
                         {% if tableid == 'project' %}
-                             <li><a class="dropdown-item" onclick="stampaProject()">
-                                 Stampa  project boh
+                             <li><a class="dropdown-item" onclick="stampaProject('customer')">
+                                 Stampa  per cliente
+                            </a></li>
+                            <li><a class="dropdown-item" onclick="stampaProject('swissbix')">
+                                 Stampa  per swissbix
                             </a></li>
                         {% endif %} 
                     </ul>

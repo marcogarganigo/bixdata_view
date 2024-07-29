@@ -1127,7 +1127,6 @@ def save_record_fields(request):
     recordid = request.POST.get('recordid')
     contextfunction = request.POST.get('contextfunction')
     creator = userid = get_userid(request.user.id)
-
     post_dict = request.POST.dict()
     post_repr = repr(post_dict)
     post_repr = post_repr.replace("'", "")
@@ -4667,6 +4666,7 @@ def task_functions(request):
 def stampa_project(request):
         dbh = DatabaseHelper()
         recordid = request.POST.get('recordid')
+        type = request.POST.get('type')
         users=dict()
         rows=dbh.sql_query("SELECT * FROM sys_user WHERE firstname is not null and lastname is not null")
         for row in rows:
@@ -4680,6 +4680,8 @@ def stampa_project(request):
          
         context = {}
         
+        context['type'] = type
+         
         record_project=Record('project',recordid)
         record_company=Record('company',record_project.fields['recordidcompany_'])
         context['nomeprogetto']=record_project.fields['projectname']
