@@ -4665,28 +4665,71 @@ def task_functions(request):
 
 
 def stampa_project(request):
-
+        dbh = DatabaseHelper()
         recordid = request.POST.get('recordid')
+        users=dict()
+        rows=dbh.sql_query("SELECT * FROM sys_user WHERE firstname is not null and lastname is not null")
+        for row in rows:
+            users[int(row['id'])]=row['firstname']+" "+row['lastname']
+        
         path = os.path.dirname(os.path.abspath(__file__))
         path = path.rsplit('views', 1)[0]
         filename_with_path = path + '\\static\\pdf\\' + 'project.pdf'
 
         uid = uuid.uuid4().hex
-
+         
         context = {}
         
+        record_project=Record('project',recordid)
+        record_company=Record('company',record_project.fields['recordidcompany_'])
+        context['nomeprogetto']=record_project.fields['projectname']
+        context['nomeazienda']=record_company.fields['companyname']
+        context['responsabile']=users[int(record_project.fields['assignedto'])]
+
+        technicians=list()
+        sql=f"""
+            SELECT distinct user,COUNT(*) AS counter 
+            FROM user_timesheet WHERE deleted_='N' AND recordidproject_='{recordid}' 
+            GROUP BY USER
+            ORDER BY counter desc
+        """
+        rows=dbh.sql_query(sql)
+        for row in rows:
+            technicians.append(users[int(row['user'])])
+        context['tecnici']=technicians
+        context['datainizio']=record_project.fields['startdate']
+        context['datafineprevista']=record_project.fields['targetenddate']
+        context['datafineeffettiva']=''
+        context['descrizione']= record_project.fields['publicdescription'].replace('\n', '<br/>')
+        context['note']=record_project.fields['publicnote'].replace('\n', '<br/>')
         table_timesheet = Table('timesheet')
         conditions_list = list()
         conditions_list.append(f"recordidproject_ = {recordid}")
         conditions_list.append(f"deleted_='N'")
-        context['timesheets'] = table_timesheet.get_records(conditions_list=conditions_list,orderby='date desc')
+        timesheets = table_timesheet.get_records(conditions_list=conditions_list,orderby='date asc')
+        context['timesheets']=list()
+        for timesheet in timesheets:
+            timesheet['user']=users[int(timesheet['user'])]
+            context['timesheets'].append(timesheet)
 
         table_projectmilestone = Table('projectmilestone')
         conditions_list = list()
         conditions_list.append(f"recordidproject_ = {recordid}")
         conditions_list.append(f"deleted_='N'")
-        context['milestones'] = table_projectmilestone.get_records(conditions_list=conditions_list,orderby='expecteddate desc')
+        milestones = table_projectmilestone.get_records(conditions_list=conditions_list,orderby='expecteddate asc')
+        context['milestones']=milestones
 
+        milestones_tasks=dict()
+        table_tasks=Table('task')
+        for milestone in milestones:
+            milestone_recordid=milestone['recordid_']
+            milestones_tasks[milestone_recordid]=dict()
+            milestones_tasks[milestone_recordid]['titolo']=milestone['title']
+            milestones_tasks[milestone_recordid]['descrizione']=milestone['note']
+            conditions_list = list()
+            conditions_list.append(f"recordidprojectmilestone_ = {milestone['recordid_']}")
+            milestones_tasks[milestone_recordid]['tasks']=table_tasks.get_records(conditions_list=conditions_list,orderby='recordid_ asc')
+        context['milestones_tasks']=milestones_tasks
         script_dir = os.path.dirname(os.path.abspath(__file__))
         wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
 
