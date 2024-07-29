@@ -1197,7 +1197,7 @@ def save_record_fields(request):
 
         creator = str(creator)
 
-        if fields_dict['user'] != creator:
+        if fields_dict['user'] != fields_dict['creator']:
             with connection.cursor() as cursor:
                 cursor.execute("SELECT email FROM v_users WHERE sys_user_id = %s", [fields_dict['user']])
                 row = cursor.fetchone()
