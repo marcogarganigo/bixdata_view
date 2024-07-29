@@ -4756,6 +4756,34 @@ def stampa_project(request):
         conditions_list.append(f"deleted_='N'")
         righedettaglio = table_dealline.get_records(conditions_list=conditions_list,orderby='recordid_ desc')
         context['righedettaglio']=righedettaglio
+
+        sql=f"SELECT SUM(totaltime_decimal) as totaltime_decimal,service FROM user_timesheet WHERE deleted_='N' AND recordidproject_='{recordid}' GROUP BY service"
+        rows= dbh.sql_query(sql)
+        values=list()
+        labels=list()
+        for row in rows:
+            values.append(row['totaltime_decimal'])
+            labels.append(row['service'])
+        if None in labels:
+            labels = ['Non assegnato' if v is None else v for v in labels]
+        context['ore_servizio']=dict()
+        context['ore_servizio']['labels']=labels
+        context['ore_servizio']['values']=values
+
+
+        sql=f"SELECT SUM(totaltime_decimal) as totaltime_decimal,invoiceoption FROM user_timesheet WHERE deleted_='N' AND recordidproject_='{recordid}' GROUP BY invoiceoption"
+        rows= dbh.sql_query(sql)
+        values=list()
+        labels=list()
+        for row in rows:
+            values.append(row['totaltime_decimal'])
+            labels.append(row['invoiceoption'])
+        if None in labels:
+            labels = ['Non assegnato' if v is None else v for v in labels]
+        context['ore_opzioni']=dict()
+        context['ore_opzioni']['labels']=labels
+        context['ore_opzioni']['values']=values
+
         """
         try:
             with open(filename_with_path, 'rb') as fh:
