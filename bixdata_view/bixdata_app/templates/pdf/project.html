@@ -350,9 +350,9 @@ h4{
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='green' stroke-linecap='round' stroke-linejoin='round' stroke-width='5' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
 }
 .task{
+  display: block;
   height: 30px;
   width: 30px;
-  display: inline;
   border: 1px solid rgb(0, 119, 255);
 }
 </style>
@@ -403,10 +403,17 @@ h4{
 <h4>Dettaglio fasi</h4>
 {% for key,milestone_tasks in milestones_tasks.items %}
   <b>{{milestone_tasks.titolo}}</b>
-  {{milestone_tasks.descrizione}}<br/>
-  {% for task in milestone_tasks.tasks %}
-    <span class="task checked"></span>{{task.description}}
-  {% endfor %}
+  {{milestone_tasks.descrizione}}<br/><br/>
+  
+  <table>
+    {% for task in milestone_tasks.tasks %}
+      <tr>
+        <td style="width: 20px;"><span class="task checked"></span></td><td>{{task.description}}</td>
+      </tr>
+    {% endfor %}
+
+  </table>
+  <br/>
 
 {% endfor %}
 
