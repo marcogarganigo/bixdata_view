@@ -340,6 +340,10 @@ h4{
   text-transform: uppercase;
   margin-top: 50px;
 }
+h5{
+  color:#e43b2c;
+  margin-top: 30px;
+}
 
 .progress, .progress-stacked{
   height: 30px;
@@ -400,7 +404,7 @@ h4{
 </div>
 <br/><br/>
 
-<h4>Dettaglio fasi</h4>
+<h5>Dettaglio fasi</h5>
 {% for key,milestone_tasks in milestones_tasks.items %}
   <b>{{milestone_tasks.titolo}}</b>
   {{milestone_tasks.descrizione}}<br/><br/>
@@ -418,7 +422,7 @@ h4{
 {% endfor %}
 
 <!-- STATO COMPLETAMENTO DEL PROGETTO -->
-<b>Stato di completamento del progetto</b>
+<h5>Stato di completamento del progetto</h5>
 <br/>
 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
  <div class="progress-bar" style="width: 75%"></div>
