@@ -489,6 +489,44 @@ h5{
 
 
 
+<table class="table">
+  <thead>
+    <tr>
+        {% for label in redditivita.labels %}
+            <th scope="col">{{ label }}</th>
+        {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for value in redditivita.values %}
+      	<td>{{ value }}</td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+
+<br>
+<br>
+
+<table class="table">
+  <thead>
+    <tr>         
+        <th scope="col">Nome</th>
+        <th scope="col">Quantità</th>
+        <th scope="col">Prezzo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for riga in righedettaglio %}
+      	<td>{{ riga.name }}</td>
+      	<td>{{ riga.quantity }}</td>
+      	<td>{{ riga.price }}</td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
   
 
 
@@ -504,10 +542,10 @@ h5{
       new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          labels: {{ redditivita.labels|safe }},
           datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            label: '',
+            data: {{ redditivita.values|safe }},
             borderWidth: 1
           }]
         },
