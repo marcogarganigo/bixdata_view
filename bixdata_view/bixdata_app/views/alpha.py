@@ -4712,6 +4712,11 @@ def stampa_project(request):
             timesheet['user']=users[int(timesheet['user'])]
             context['timesheets'].append(timesheet)
 
+            first_name, last_name = timesheet['user'].split(' ', 1)
+            profile_pic = f"{first_name}.{last_name}"
+            profile_pic = profile_pic.lower()
+            timesheet['profile_pic'] = profile_pic
+
         table_projectmilestone = Table('projectmilestone')
         conditions_list = list()
         conditions_list.append(f"recordidproject_ = {recordid}")
@@ -4733,10 +4738,9 @@ def stampa_project(request):
         script_dir = os.path.dirname(os.path.abspath(__file__))
         wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
 
-        config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-        content = render_to_string('pdf/project.html', context)
 
-        pdfkit.from_string(content, filename_with_path, configuration=config)
+
+
         """
         try:
             with open(filename_with_path, 'rb') as fh:
