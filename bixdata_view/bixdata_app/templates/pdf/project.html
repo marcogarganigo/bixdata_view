@@ -357,7 +357,22 @@ h5{
   display: block;
   height: 30px;
   width: 30px;
-  border: 1px solid rgb(0, 119, 255);
+  border: 1px solid black;
+}
+
+.milestone_legend{
+  display: block;
+  height: 30px;
+  width: 30px;
+}
+.milestone_legend_completed{
+  background-color: 4ECDC4;
+}
+.milestone_legend_progress{
+  background-color: 45B7D1;
+}
+.milestone_legend_notstarted{
+  background-color: FFA07A;
 }
 </style>
 
@@ -393,6 +408,19 @@ h5{
 <!-- FASI DEL PROGETTO --------------------------------------------------------------------------------------------------------------------------------------------------------------->
 <h4>Fasi del progetto</h4>
 <br/>
+<i>Legenda</i>
+<table>
+    <tr>
+      <td style="width: 20px;"><span class="milestone_legend milestone_legend_completed"></span></td><td>Completato</td>
+    </tr>
+    <tr>
+      <td style="width: 20px;"><span class="milestone_legend milestone_legend_progress"></span></td><td>In lavorazione</td>
+    </tr>
+    <tr>
+      <td style="width: 20px;"><span class="milestone_legend milestone_legend_notstarted"></span></td><td>Non iniziato</td>
+    </tr>
+</table>
+<br/>
 <div class="diagram">
   {% for milestone in milestones %}
        <div id="step{{ forloop.counter }}" class="step">
@@ -407,7 +435,7 @@ h5{
 <h5>Dettaglio fasi</h5>
 {% for key,milestone_tasks in milestones_tasks.items %}
   <b>{{milestone_tasks.titolo}}</b>
-  {{milestone_tasks.descrizione}}<br/><br/>
+  <i>{{milestone_tasks.descrizione}}</i><br/><br/>
   
   <table>
     {% for task in milestone_tasks.tasks %}
