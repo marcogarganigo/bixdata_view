@@ -511,7 +511,7 @@ h5{
 
 <table class="table">
   <thead>
-    <tr>         
+    <tr>
         <th scope="col">Nome</th>
         <th scope="col">Quantità</th>
         <th scope="col">Prezzo</th>
@@ -533,7 +533,8 @@ h5{
     <div class="chart-container" style="width: 50%; margin: auto">
       <canvas id="myChart"></canvas>
       <canvas id="myPieChart"></canvas>
-  
+      <canvas id="myPieChart2"></canvas>
+
     </div>
   
     <script>
@@ -564,10 +565,56 @@ h5{
       new Chart(ctx2, {
         type: 'pie', // Changed from 'bar' to 'pie'
         data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          labels: {{ ore_servizio.labels|safe }},
           datasets: [{
             label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            data: {{ ore_servizio.values|safe }},
+            borderWidth: 1,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            tooltip: {
+              callbacks: {
+                label: function(tooltipItem) {
+                  return tooltipItem.label + ': ' + tooltipItem.raw;
+                }
+              }
+            }
+          }
+        }
+      });
+
+       var ctx3 = document.getElementById('myPieChart2').getContext('2d');
+
+      new Chart(ctx3, {
+        type: 'pie', // Changed from 'bar' to 'pie'
+        data: {
+          labels: {{ ore_opzioni.labels|safe }},
+          datasets: [{
+            label: '# of Votes',
+            data: {{ ore_opzioni.values|safe }},
             borderWidth: 1,
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
