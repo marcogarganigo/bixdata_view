@@ -443,7 +443,12 @@ h5{
   <table>
     {% for task in milestone_tasks.tasks %}
       <tr>
-        <td style="width: 20px;"><span class="task checked"></span></td><td>{{task.description}}</td>
+        {% if task.completed == 'Si' %}
+          <td style="width: 20px;"><span class="task checked"></span></td><td>{{task.description}}</td>
+        {% else %}
+          <td style="width: 20px;"><span class="task"></span></td><td>{{task.description}}</td>
+        {% endif %}
+        
       </tr>
     {% endfor %}
 
@@ -487,6 +492,8 @@ h5{
 <br/>
 <br/>
 
+
+{% if type == 'swissbix' %}
 <h3>ANALISI INTERNA SWISSBIX</h3>
 
 <h3>Righe di dettaglio</h3>
@@ -658,7 +665,6 @@ h5{
   
   </script>
 
-{% if type == 'swissbix' %}
 	<h1>swissbix</h1>
 {% endif %}
 
