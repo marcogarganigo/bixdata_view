@@ -4740,7 +4740,7 @@ def stampa_project(request):
         context['milestones_tasks']=milestones_tasks
         script_dir = os.path.dirname(os.path.abspath(__file__))
         wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
-
+ 
 
         record_deal=Record('deal',record_project.fields['recordiddeal_'])
         context['redditivita']=dict()
