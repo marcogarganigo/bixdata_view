@@ -483,32 +483,13 @@ h5{
     {% endfor %}
 </section> 
 
+<br/>
+<br/>
+<br/>
 
+<h3>ANALISI INTERNA SWISSBIX</h3>
 
-<b>ANALISI INTERNA SWISSBIX</b>
-
-
-
-<table class="table">
-  <thead>
-    <tr>
-        {% for label in redditivita.labels %}
-            <th scope="col">{{ label }}</th>
-        {% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      {% for value in redditivita.values %}
-      	<td>{{ value }}</td>
-      {% endfor %}
-    </tr>
-  </tbody>
-</table>
-
-<br>
-<br>
-
+<h3>Righe di dettaglio</h3>
 <table class="table">
   <thead>
     <tr>
@@ -527,8 +508,26 @@ h5{
     </tr>
   </tbody>
 </table>
-  
 
+<h3>REDDITIVITA'</h3>
+<table class="table">
+  <thead>
+    <tr>
+        {% for label in redditivita.labels %}
+            <th scope="col">{{ label }}</th>
+        {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for value in redditivita.values %}
+      	<td>{{ value }}</td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+
+<br>
 
     <div class="chart-container" style="width: 50%; margin: auto">
       <canvas id="myChart"></canvas>
@@ -559,7 +558,7 @@ h5{
         }
       });
   
-  
+  <h4>Ore per servizio</h4>
       var ctx2 = document.getElementById('myPieChart').getContext('2d');
   
       new Chart(ctx2, {
@@ -606,7 +605,9 @@ h5{
         }
       });
 
-       var ctx3 = document.getElementById('myPieChart2').getContext('2d');
+
+      <h4>Ore per opzione di fatturazione</h4>
+var ctx3 = document.getElementById('myPieChart2').getContext('2d');
 
       new Chart(ctx3, {
         type: 'pie', // Changed from 'bar' to 'pie'
