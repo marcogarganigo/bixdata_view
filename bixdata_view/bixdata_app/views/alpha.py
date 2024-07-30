@@ -4733,6 +4733,7 @@ def stampa_project(request):
             milestones_tasks[milestone_recordid]=dict()
             milestones_tasks[milestone_recordid]['titolo']=milestone['title']
             milestones_tasks[milestone_recordid]['descrizione']=milestone['note']
+            milestones_tasks[milestone_recordid]['stato']=milestone['stato']
             conditions_list = list()
             conditions_list.append(f"recordidprojectmilestone_ = {milestone['recordid_']}")
             milestones_tasks[milestone_recordid]['tasks']=table_tasks.get_records(conditions_list=conditions_list,orderby='recordid_ asc')
