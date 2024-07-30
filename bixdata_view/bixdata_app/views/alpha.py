@@ -997,6 +997,12 @@ def get_block_record_fields(request, prefilled_fields=dict()):
     record.context = contextfunction
     fields = record.get_fields()
 
+    
+
+    for field in fields['Dati']:
+        if field['fieldtypewebid'] == 'html':
+            field['unique_id'] == uuid.uuid4()
+
     context['record_fields_labels'] = fields
     context['contextfunction'] = contextfunction
     context['contextreference'] = contextreference

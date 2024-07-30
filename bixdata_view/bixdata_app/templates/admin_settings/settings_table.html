@@ -387,7 +387,7 @@
 
 </script>
 
-<div id="settings_table" style="height: 100%;">
+<div id="settings_table" style="height: 100%; width: 100%">
     <div id="settings_table_users" style="width: 20%;float: left;">
         Utenti <br/>
         {% for user in users %}
@@ -417,6 +417,99 @@
 
     </div>
 </div>
+<style>
+  @media (min-width: 1920px) {
+            #settings_table {
+                height: 100vh;
+                flex-direction: row;
+            }
+            #settings_table_users,
+            #settings_table_usertables,
+            #table_settings_menu,
+            #settings_table_fields_settings,
+            #fields_table_settings {
+                padding: 20px;
+                width: 15%
+            }
+        }
+
+        @media (min-width: 1440px) {
+            #settings_table {
+                flex-direction: row;
+            }
+            #settings_table_users,
+            #settings_table_usertables,
+            #table_settings_menu,
+            #settings_table_fields_settings,
+            #fields_table_settings {
+                padding: 15px;
+                width: 15%
+            }
+            #settings_table_users {
+                width: 22%;
+            }
+            #settings_table_usertables {
+                width: 22%;
+            }
+            #table_settings_menu {
+                width: 17%;
+            }
+            #settings_table_fields_settings {
+                width: 17%;
+            }
+            #fields_table_settings {
+                width: 15%;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            #settings_table {
+                flex-direction: row;
+            }
+            #settings_table_users,
+            #settings_table_usertables,
+            #table_settings_menu,
+            #settings_table_fields_settings,
+            #fields_table_settings {
+                padding: 10px;
+                width: 15%;
+            }
+            #settings_table_users {
+                width: 25%;
+            }
+            #settings_table_usertables {
+                width: 25%;
+            }
+            #table_settings_menu {
+                width: 20%;
+            }
+            #settings_table_fields_settings {
+                width: 20%;
+            }
+            #fields_table_settings {
+                width: 15%;
+            }
+        }
+
+        @media (max-width: 1199px) {
+            #settings_table {
+                flex-direction: column;
+                height: auto;
+            }
+            #settings_table_users,
+            #settings_table_usertables,
+            #table_settings_menu,
+            #settings_table_fields_settings,
+            #fields_table_settings {
+                width: 100%;
+                height: auto;
+                margin-left: 0;
+            }
+            #fields_table_settings {
+                overflow: auto;
+            }
+        }
+    </style>
 
 
 

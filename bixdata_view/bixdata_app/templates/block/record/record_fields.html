@@ -235,6 +235,7 @@
                                         }
                                     </script>
 
+
                                 {% elif field.fieldtypewebid == 'file' %}
 
                                     <input id="{{ fieldid }}" name="{{ fieldname }}"
@@ -300,7 +301,52 @@
                             {% endif %}
 
                             {% if field.fieldtypeid == 'Memo' %}
-                                {% if fieldname == 'description' %}
+
+                                {% if field.fieldtypewebid == 'html' %}
+                                    
+                                                
+
+                                                <!-- Inclusione degli stili di Toast UI Editor -->
+                                                <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+                                                <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+
+                                                <style>
+                                                    #editor-{{field.unique_id}} { max-width: 800px; margin: 0 auto; }
+                                                </style>
+                                                <div id="editor-{{field.unique_id}}"></div>
+
+                                                <!-- Inclusione dello script di Toast UI Editor -->
+
+                                                <script>
+                                                    const Editor{{ field.unique_id }} = toastui.Editor;
+
+                                                    const editor{{ field.unique_id }} = new Editor{{ field.unique_id }} ({
+                                                        el: document.querySelector('#editor-{{ field.unique_id }}'),
+                                                        height: '200px',
+                                                        initialEditType: 'wysiwyg',
+                                                        previewStyle: 'vertical',
+                                                        toolbarItems: [
+                                                            ['heading', 'bold', 'italic', 'strike'],
+                                                            ['hr', 'quote'],
+                                                            ['ul', 'ol', 'task', 'indent', 'outdent'],
+                                                            ['table', 'image', 'link'],
+                                                            ['code', 'codeblock'],
+                                                            ['scrollSync'],
+                                                        ],
+                                                        initialValue: `BY DAY: Alt-Rock Ninja Cowgirl at Veridian Dynamics.
+
+                                            BY NIGHT: I write code and code rights for penalcoders.example.org, an awesome non-profit that will totally take your money at that link. My kids are cuter than yours.
+
+                                            FOR FUN: C+ Jokes, Segway Roller Derby, NYT Sat. Crosswords (in Sharpie!), Ostrich Grooming.
+
+                                            "If you see scary things, look for the helpers-you'll always see people helping."-Fred Rogers`
+                                                    });
+                                                </script>
+                                {% else %}
+
+
+                                    {% if fieldname == 'description' %}
                                     <textarea
                                               class="form-control mb-2 {{ mandatory }} {{ calcolato }}"
                                               id="{{ fieldid }}" name="{{ fieldname }}"
@@ -310,6 +356,7 @@
                                               id="{{ fieldid }}"
                                               name="{{ fieldname }}" rows="3">{{ field.value }}</textarea>
                                 {% endif %}
+                                    {% endif %}
                             {% endif %}
                             {% if field.fieldtypeid == 'Ora' %}
                                 <input id="{{ fieldid }}" name="{{ fieldname }}"
