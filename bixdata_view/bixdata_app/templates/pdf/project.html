@@ -419,13 +419,14 @@ h5{
   <h3>{{nomeprogetto}}</h3>
 </div>
 <br/>
-<div style="background-color: #f1f1f1;border-radius: 10px;padding: 10px;width: 50%;">
-  <div><b>Responsabile di progetto:</b> {{responsabile}}</div>
+<div style="background-color: #fafafa;border-radius: 10px;padding: 10px;width: 50%;border:1px solid #dedede">
+  <div><b style="margin-right: 10px;">Responsabile di progetto:</b><img src="{% static 'images/users/' %}{{responsabile}}.png" alt="{{responsabile}}" width="32px" height="32px" class="rounded-circle"> {{responsabile}}</div>
   <br/>
-  <b>Tecnici coinvolti:</b><br/>
+  <div style="margin-bottom: 10px;"><b>Tecnici coinvolti:</b></div>
     {% for tecnico in tecnici %}
-      - {{tecnico}}
-      <br/>
+    <div style="margin-bottom: 10px;">
+      <img src="{% static 'images/users/' %}{{tecnico}}.png" alt="{{tecnico}}" width="32px" height="32px" class="rounded-circle"> {{tecnico}}
+    </div>
     {% endfor %}
   <br/>
   <div><b>Data inizio:</b> {{datainizio|date:"d/m/Y"}}</div>
