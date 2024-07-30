@@ -338,13 +338,19 @@ h1{
   color:#e43b2c;
 }
 h4{
-  color:#e43b2c;
   text-transform: uppercase;
   margin-top: 50px;
+  background-color: #e43b2c;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
 }
 h5{
-  color:#e43b2c;
+  color: #e43b2c;
   margin-top: 30px;
+  border-bottom: 2px solid #e43b2c;
+  text-transform: uppercase;
+  margin-bottom: 20px;
 }
 
 .progress, .progress-stacked{
@@ -376,6 +382,27 @@ h5{
 .milestone_legend_notstarted{
   background-color: #FFA07A;
 }
+
+.milestone_title{
+  width: 50%;
+  padding: 5px;
+  color: white;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.milestone_title_completed{
+  background-color: #4ecdc4;
+}
+
+.milestone_title_progress{
+  background-color: #45B7D1;
+}
+
+.milestone_title_notstarted{
+  background-color: #FFA07A;
+}
 </style>
 
 
@@ -386,23 +413,27 @@ h5{
 
 </div>
 <div style="text-align: center;">
-  <h1>ANALISI DI PROGETTO</h1>
+  <h1>STATO AVANZAMENTO PROGETTO</h1>
   <br/>
   <h3><b>{{nomeazienda}}</b></h3>
   <h3>{{nomeprogetto}}</h3>
 </div>
 <br/>
-<div><b>Responsabile di progetto:</b> {{responsabile}}</div>
-<br/>
-<b>Tecnici coinvolti:</b>
-  {% for tecnico in tecnici %}
-    - {{tecnico}}
-    <br/>
-  {% endfor %}
-<br/>
-<div><b>Data inizio:</b> {{datainizio|date:"d/m/Y"}}</div>
-<br/>
-<div><b>Data fine prevista:</b> {{datafineprevista|date:"d/m/Y"}}</div>
+<div style="background-color: #fafafa;border-radius: 10px;padding: 10px;width: 50%;border:1px solid #dedede">
+  <div><b style="margin-right: 10px;">Responsabile di progetto:</b><img src="{% static 'images/users/' %}{{responsabile}}.png" alt="{{responsabile}}" width="32px" height="32px" class="rounded-circle"> {{responsabile}}</div>
+  <br/>
+  <div style="margin-bottom: 10px;"><b>Tecnici coinvolti:</b></div>
+    {% for tecnico in tecnici %}
+    <div style="margin-bottom: 10px;">
+      <img src="{% static 'images/users/' %}{{tecnico}}.png" alt="{{tecnico}}" width="32px" height="32px" class="rounded-circle"> {{tecnico}}
+    </div>
+    {% endfor %}
+  <br/>
+  <div><b>Data inizio:</b> {{datainizio|date:"d/m/Y"}}</div>
+  <br/>
+  <div><b>Data fine prevista:</b> {{datafineprevista|date:"d/m/Y"}}</div>
+</div>
+
 
 <h4>Descrizione</h4>
 <div>
@@ -429,21 +460,36 @@ h5{
        <div id="step{{ forloop.counter }}" class="step">
           <!--<div class="step-icon">💡</div>-->
           <div class="step-title">{{ milestone.title }}</div>
-          <div class="step-description">Sed elementum quam justo non vehicula est hendrerit a integer fermentum</div>
+          <div class="step-description">{{ milestone.note }}</div>
       </div>
   {% endfor %}
 </div>
 <br/><br/>
 
+<!-- DETTAGLIO FASI------------------------------------------------------------------->
 <h5>Dettaglio fasi</h5>
 {% for key,milestone_tasks in milestones_tasks.items %}
-  <b>{{milestone_tasks.titolo}}</b>
+  {% if milestone_tasks.stato == 'Completato' %}
+    <div class="milestone_title milestone_title_completed">{{milestone_tasks.titolo}}</div>
+  {% endif %}
+  {% if milestone_tasks.stato == 'In corso' %}
+    <div class="milestone_title milestone_title_progress">{{milestone_tasks.titolo}}</div>
+  {% endif %}
+  {% if milestone_tasks.stato == 'Non iniziato' %}
+    <div class="milestone_title milestone_title_notstarted">{{milestone_tasks.titolo}}</div>
+  {% endif %}
+
   <i>{{milestone_tasks.descrizione}}</i><br/>
   
   <table>
     {% for task in milestone_tasks.tasks %}
       <tr>
-        <td style="width: 20px;"><span class="task checked"></span></td><td>{{task.description}}</td>
+        {% if task.completed == 'Si' %}
+          <td style="width: 20px;"><span class="task checked"></span></td><td>{{task.description}}</td>
+        {% else %}
+          <td style="width: 20px;"><span class="task"></span></td><td>{{task.description}}</td>
+        {% endif %}
+        
       </tr>
     {% endfor %}
 
@@ -452,7 +498,7 @@ h5{
 
 {% endfor %}
 
-<!-- STATO COMPLETAMENTO DEL PROGETTO -->
+<!-- STATO COMPLETAMENTO DEL PROGETTO -------------------------------------------->
 <h5>Stato di completamento del progetto</h5>
 <br/>
 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
@@ -483,12 +529,35 @@ h5{
     {% endfor %}
 </section> 
 
+<br/>
+<br/>
+<br/>
 
 
-<b>ANALISI INTERNA SWISSBIX</b>
+{% if type == 'swissbix' %}
+<h3>ANALISI INTERNA SWISSBIX</h3>
 
+<h3>Righe di dettaglio</h3>
+<table class="table">
+  <thead>
+    <tr>
+        <th scope="col">Nome</th>
+        <th scope="col">Quantità</th>
+        <th scope="col">Prezzo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for riga in righedettaglio %}
+      	<td>{{ riga.name }}</td>
+      	<td>{{ riga.quantity }}</td>
+      	<td>{{ riga.price }}</td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
 
-
+<h3>REDDITIVITA'</h3>
 <table class="table">
   <thead>
     <tr>
@@ -509,24 +578,7 @@ h5{
 <br>
 <br>
 
-<table class="table">
-  <thead>
-    <tr>
-        <th scope="col">Nome</th>
-        <th scope="col">Quantità</th>
-        <th scope="col">Prezzo</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      {% for riga in righedettaglio %}
-      	<td>{{ riga.name }}</td>
-      	<td>{{ riga.quantity }}</td>
-      	<td>{{ riga.price }}</td>
-      {% endfor %}
-    </tr>
-  </tbody>
-</table>
+
   
 
 
@@ -654,7 +706,6 @@ h5{
   
   </script>
 
-{% if type == 'swissbix' %}
 	<h1>swissbix</h1>
 {% endif %}
 

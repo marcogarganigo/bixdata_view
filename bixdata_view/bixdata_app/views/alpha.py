@@ -4739,13 +4739,14 @@ def stampa_project(request):
             milestones_tasks[milestone_recordid]=dict()
             milestones_tasks[milestone_recordid]['titolo']=milestone['title']
             milestones_tasks[milestone_recordid]['descrizione']=milestone['note']
+            milestones_tasks[milestone_recordid]['stato']=milestone['stato']
             conditions_list = list()
             conditions_list.append(f"recordidprojectmilestone_ = {milestone['recordid_']}")
             milestones_tasks[milestone_recordid]['tasks']=table_tasks.get_records(conditions_list=conditions_list,orderby='recordid_ asc')
         context['milestones_tasks']=milestones_tasks
         script_dir = os.path.dirname(os.path.abspath(__file__))
         wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
-
+ 
 
         record_deal=Record('deal',record_project.fields['recordiddeal_'])
         context['redditivita']=dict()
