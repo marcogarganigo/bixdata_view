@@ -303,8 +303,8 @@
                             {% if field.fieldtypeid == 'Memo' %}
 
                                 {% if field.fieldtypewebid == 'html' %}
-                                    
-                                                
+
+
 
                                                 <!-- Inclusione degli stili di Toast UI Editor -->
                                                 <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
@@ -314,7 +314,7 @@
                                                 <style>
                                                     #editor-{{field.unique_id}} { max-width: 800px; margin: 0 auto; }
                                                 </style>
-                                                <div id="editor-{{field.unique_id}}"></div>
+                                                <div class="textarea-editor" id="editor-{{field.unique_id}}"></div>
 
                                                 <!-- Inclusione dello script di Toast UI Editor -->
 
@@ -334,13 +334,7 @@
                                                             ['code', 'codeblock'],
                                                             ['scrollSync'],
                                                         ],
-                                                        initialValue: `BY DAY: Alt-Rock Ninja Cowgirl at Veridian Dynamics.
-
-                                            BY NIGHT: I write code and code rights for penalcoders.example.org, an awesome non-profit that will totally take your money at that link. My kids are cuter than yours.
-
-                                            FOR FUN: C+ Jokes, Segway Roller Derby, NYT Sat. Crosswords (in Sharpie!), Ostrich Grooming.
-
-                                            "If you see scary things, look for the helpers-you'll always see people helping."-Fred Rogers`
+                                                        initialValue: "{{ field.value|safe }}",
                                                     });
                                                 </script>
                                 {% else %}

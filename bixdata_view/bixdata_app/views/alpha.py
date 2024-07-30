@@ -999,9 +999,9 @@ def get_block_record_fields(request, prefilled_fields=dict()):
 
     
 
-    for field in fields['Dati']:
-        if field['fieldtypewebid'] == 'html':
-            field['unique_id'] == uuid.uuid4()
+    for key, value in fields['Dati'].items():
+            if value['fieldtypewebid'] == 'html':
+                value['unique_id'] = str(uuid.uuid4().hex)
 
     context['record_fields_labels'] = fields
     context['contextfunction'] = contextfunction

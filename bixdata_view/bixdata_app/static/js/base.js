@@ -55,7 +55,7 @@ function save_record(el, setting) {
             timer: 1200,
             buttons: false,
         })
-        serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
+        serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input, .textarea-editor"));
         serialized_json = convertFormToJSON(serialized_form);
         var post_data = [];
         post_data.push({name: 'tableid', value: tableid});
