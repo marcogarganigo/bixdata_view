@@ -55,17 +55,50 @@ function save_record(el, setting) {
             timer: 1200,
             buttons: false,
         })
-        serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input, .textarea-editor"));
-        serialized_json = convertFormToJSON(serialized_form);
-        var post_data = [];
-        post_data.push({name: 'tableid', value: tableid});
-        post_data.push({name: 'recordid', value: recordid});
-        post_data.push({name: 'fields', value: serialized_json});
-        post_data.push({name: 'contextfunction', value: contextfunction});
-        var formData = new FormData($(el).closest('#universal-container-timesheet').find("#form_fields_container")[0]);
-        formData.append('tableid', tableid);
-        formData.append('recordid', recordid);
-        formData.append('contextfunction', contextfunction);
+        serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
+
+
+
+            console.info(serialized_form)
+            //console.log(serialized_form)
+            serialized_json = convertFormToJSON(serialized_form);
+            console.info(serialized_json)
+            var post_data = [];
+            post_data.push({name: 'tableid', value: tableid});
+            post_data.push({name: 'recordid', value: recordid});
+            post_data.push({name: 'fields', value: serialized_json});
+            post_data.push({name: 'contextfunction', value: contextfunction});
+            // Initialize FormData object from the form element
+            var formData = new FormData($(el).closest('#universal-container-timesheet').find("#form_fields_container")[0]);
+
+            // Append static data
+            formData.append('tableid', tableid);
+            formData.append('recordid', recordid);
+            formData.append('contextfunction', contextfunction);
+
+            // Check if there are any textarea-editor elements
+            if ($('.textarea-editor').length > 0) {
+
+                // Iterate over each textarea-editor element
+                $('.textarea-editor').each(function () {
+                    // Get the HTML content from the second .ProseMirror element
+                    var valuea = $(this).find('.ProseMirror:eq(1)').html();
+
+                    // Ensure valuea is a valid string
+                    if (valuea !== null && valuea !== undefined) {
+                        valuea = valuea.toString();
+
+                        // Get the name of the field
+                        var fieldname = $(this).attr('data-name');
+
+                        // Append the field name and value to FormData
+                        formData.append(fieldname, valuea);
+                    }
+                });
+            }
+
+            console.info(formData)
+
 
         closeNewRecordModal(el)
         $(el).closest('.modal').modal("hide");

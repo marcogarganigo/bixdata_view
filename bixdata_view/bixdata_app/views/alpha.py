@@ -1198,7 +1198,7 @@ def save_record_fields(request):
         send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'],
                    subject='Supporto bixdata', html_message=message)
 
-    elif tableid == 'task':
+    elif tableid == 'task' and contextfunction == 'insert':
 
         creator = str(creator)
 
