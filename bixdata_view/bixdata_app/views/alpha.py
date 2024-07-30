@@ -4664,6 +4664,11 @@ def task_functions(request):
             cursor.execute(
                 f"UPDATE user_task SET planneddate = NULL, duedate = CURDATE() + INTERVAL 7 DAY WHERE recordid_ = '{recordid}'"
             )
+    elif func == 'monthpostpone':
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"UPDATE user_task SET planneddate = NULL, duedate = CURDATE() + INTERVAL 1 MONTH WHERE recordid_ = '{recordid}'"
+            )
 
 
     return True
