@@ -532,8 +532,18 @@
                 'tableid': '{{ tableid }}',
             },
             success: function (response) {
-                
+                swal({
+                    text: "Task aggiornato",
+                    icon: "success",
+                    timer: 1000,
+                    buttons: false,
+                });
+
+                $('#block_record_card-{{ recordid }}').load('/loading/');
+
+                open_record(window.content, '{{ tableid }}', '{{ recordid }}')
             },
+
             error: function (xhr, status, error) {
             }
         });

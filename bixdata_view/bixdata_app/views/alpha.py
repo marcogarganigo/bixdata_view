@@ -4671,7 +4671,7 @@ def task_functions(request):
             )
 
 
-    return True
+    return JsonResponse({'success': True})
 
 
 def stampa_project(request):

@@ -59,10 +59,10 @@ function save_record(el, setting) {
 
 
 
-            console.info(serialized_form)
+            //console.info(serialized_form)
             //console.log(serialized_form)
             serialized_json = convertFormToJSON(serialized_form);
-            console.info(serialized_json)
+            //console.info(serialized_json)
             var post_data = [];
             post_data.push({name: 'tableid', value: tableid});
             post_data.push({name: 'recordid', value: recordid});
@@ -75,6 +75,14 @@ function save_record(el, setting) {
             formData.append('tableid', tableid);
             formData.append('recordid', recordid);
             formData.append('contextfunction', contextfunction);
+
+
+
+
+            $('.textarea-editor').each(function () {
+                var Uieditor = $(this).attr('data-editorid');
+                Uieditor = Uieditor.toastui.getInstance();
+            })
 
             // Check if there are any textarea-editor elements
             if ($('.textarea-editor').length > 0) {
@@ -97,7 +105,7 @@ function save_record(el, setting) {
                 });
             }
 
-            console.info(formData)
+            //console.info(formData)
 
 
         closeNewRecordModal(el)

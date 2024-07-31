@@ -1,4 +1,4 @@
-{% load define_action %}
+    {% load define_action %}
 
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
@@ -83,6 +83,9 @@
         $('.calcolato').css({"background-color": "#f5f5f5"})
 
     });
+
+
+
 
 
     function update_dealline(el) {
@@ -295,9 +298,28 @@
                             {% endif %}
 
                             {% if field.fieldtypeid == 'Numero' %}
-                                <input id="{{ fieldid }}" name="{{ fieldname }}"
+
+                                {% if fieldid == 'field-earning_percentage' %}
+                                     <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                       class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="number"
+                                       value="{{ field.value }}" onchange="changePrice(this)">
+
+                                    <script>
+                                        function changePrice(el) {
+                                            var unitprice = $(el).closest('.fields_container').find('#field-unitexpectedcost').val();
+                                            var percentage = el.value
+                                            unitprice = parseFloat(unitprice)
+                                            var price =  (unitprice * percentage / 100) + unitprice
+                                            $(el).closest('.fields_container').find('#field-price').val(price);
+                                            $(el).closest('.fields_container').find('#field-unitprice').val(price);
+                                        }
+                                    </script>
+
+                                {% else %}
+                                    <input id="{{ fieldid }}" name="{{ fieldname }}"
                                        class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="number"
                                        value="{{ field.value }}">
+                                {% endif %}
                             {% endif %}
 
                             {% if field.fieldtypeid == 'Memo' %}
@@ -312,6 +334,8 @@
                                                 <style>
                                                     #editor-{{field.unique_id}} { max-width: 800px; margin: 0 auto; }
                                                 </style>
+
+
                                                 <div class="textarea-editor" data-name="{{ fieldname }}" data-editorid="editor{{ field.unique_id }}" id="editor-{{field.unique_id}}"></div>
 
                                                 <!-- Inclusione dello script di Toast UI Editor -->
@@ -332,7 +356,7 @@
                                                             ['code', 'codeblock'],
                                                             ['scrollSync'],
                                                         ],
-                                                        initialValue: "{{ field.value|safe }}",
+                                                        initialValue: `{{ field.value|safe }}`,
                                                     });
                                                 </script>
                                 {% else %}
@@ -379,7 +403,7 @@
                                                value="{{ field.valuecode.0.value }}" onfocus="selectAllText(this); "
                                                data-type="linkedmaster">
 
-                                        <button class="btn" type="button"
+                                        <button class="btn" type="button" tabindex="-1"
 
                                                 onclick="clearInput(this,'{{ tableid }}-{{ fieldid }}-{{ recordid }}-autocomplete')"
                                                 style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">
@@ -395,11 +419,12 @@
                                     <button type="button" class="btn btn-light"
                                             onclick="newRecord('{{ field.tablelink }}', 'yes')"
                                             name="add"
+                                            tabindex="-1"
                                             style="width: auto">
                                         <span class="material-symbols-outlined">add</span>
                                     </button>
 
-                                    <button type="button" class="btn bnt light" data-fieldtype="linked" data-layout="modal" data-linkedtableid="{{ field.tablelink }}" data-linkedrecordid="{{ field.recordid }}" onclick="open_record(this, '{{ field.tablelink }}', '{{ field.recordid }}')">apri</button>
+                                    <button type="button" class="btn bnt light" data-fieldtype="linked" data-layout="modal" tabindex="-1" data-linkedtableid="{{ field.tablelink }}" data-linkedrecordid="{{ field.recordid }}" onclick="open_record(this, '{{ field.tablelink }}', '{{ field.recordid }}')">apri</button>
                                 </div>
 
                                 <script>
