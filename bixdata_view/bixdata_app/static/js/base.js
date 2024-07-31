@@ -76,14 +76,6 @@ function save_record(el, setting) {
             formData.append('recordid', recordid);
             formData.append('contextfunction', contextfunction);
 
-
-
-
-            $('.textarea-editor').each(function () {
-                var Uieditor = $(this).attr('data-editorid');
-                Uieditor = Uieditor.toastui.getInstance();
-            })
-
             // Check if there are any textarea-editor elements
             if ($('.textarea-editor').length > 0) {
 

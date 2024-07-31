@@ -343,9 +343,10 @@
                                                 <script>
                                                     const Editor{{ field.unique_id }} = toastui.Editor;
 
+
                                                     const editor{{ field.unique_id }} = new Editor{{ field.unique_id }} ({
                                                         el: document.querySelector('#editor-{{ field.unique_id }}'),
-                                                        height: '200px',
+                                                        height: '500px',
                                                         initialEditType: 'wysiwyg',
                                                         previewStyle: 'vertical',
                                                         toolbarItems: [
@@ -358,6 +359,12 @@
                                                         ],
                                                         initialValue: `{{ field.value|safe }}`,
                                                     });
+
+
+                                                    function getEditor() {
+                                                        return Editor{{ field.unique_id }};
+                                                    }
+
                                                 </script>
                                 {% else %}
 
