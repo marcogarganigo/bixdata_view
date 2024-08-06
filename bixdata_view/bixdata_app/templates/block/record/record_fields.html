@@ -45,18 +45,6 @@
 
 
 
-    function changePrice(el) {
-        var $container = $(el).closest('.fields_container');
-
-        var expectedCost = parseFloat($container.find('#field-unitexpectedcost').val()) || 0;
-        var unitPrice = parseFloat($container.find('#field-unitprice').val()) || 0;
-        var percentage = parseFloat($container.find('#field-earning_percentage').val()) || 0;
-
-        var price = expectedCost * (1 + percentage / 100);
-
-        $container.find('#field-unitprice').val(price.toFixed(1));
-    }
-
 
 
 
@@ -315,19 +303,10 @@
 
                             {% if field.fieldtypeid == 'Numero' %}
 
-                                {% if fieldid == 'field-earning_percentage' or fieldid == 'field-unitexpectedcost' or fieldid == 'field-unitprice' %}
-
-
-                                     <input id="{{ fieldid }}" name="{{ fieldname }}"
-                                       class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="number"
-                                       value="{{ field.value }}" onchange="changePrice(this)">
-
-
-                                {% else %}
                                     <input id="{{ fieldid }}" name="{{ fieldname }}"
                                        class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="number"
                                        value="{{ field.value }}">
-                                {% endif %}
+             
 
                             {% endif %}
 
