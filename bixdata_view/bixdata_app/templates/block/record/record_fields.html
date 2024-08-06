@@ -1,4 +1,4 @@
-{% load define_action %}
+    {% load define_action %}
 
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-ui/dist/jquery-ui.min.js"></script>
@@ -44,6 +44,22 @@
     }
 
 
+
+    function changePrice(el) {
+        var $container = $(el).closest('.fields_container');
+
+        var expectedCost = parseFloat($container.find('#field-unitexpectedcost').val()) || 0;
+        var unitPrice = parseFloat($container.find('#field-unitprice').val()) || 0;
+        var percentage = parseFloat($container.find('#field-earning_percentage').val()) || 0;
+
+        var price = expectedCost * (1 + percentage / 100);
+
+        $container.find('#field-unitprice').val(price.toFixed(1));
+    }
+
+
+
+
     function selectAllText(input) {
         input.setSelectionRange(0, input.value.length);
     }
@@ -83,6 +99,9 @@
         $('.calcolato').css({"background-color": "#f5f5f5"})
 
     });
+
+
+
 
 
     function update_dealline(el) {
@@ -295,9 +314,21 @@
                             {% endif %}
 
                             {% if field.fieldtypeid == 'Numero' %}
-                                <input id="{{ fieldid }}" name="{{ fieldname }}"
+
+                                {% if fieldid == 'field-earning_percentage' or fieldid == 'field-unitexpectedcost' or fieldid == 'field-unitprice' %}
+
+
+                                     <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                       class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="number"
+                                       value="{{ field.value }}" onchange="changePrice(this)">
+
+
+                                {% else %}
+                                    <input id="{{ fieldid }}" name="{{ fieldname }}"
                                        class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="number"
                                        value="{{ field.value }}">
+                                {% endif %}
+
                             {% endif %}
 
                             {% if field.fieldtypeid == 'Memo' %}
@@ -312,6 +343,8 @@
                                                 <style>
                                                     #editor-{{field.unique_id}} { max-width: 800px; margin: 0 auto; }
                                                 </style>
+
+
                                                 <div class="textarea-editor" data-name="{{ fieldname }}" data-editorid="editor{{ field.unique_id }}" id="editor-{{field.unique_id}}"></div>
 
                                                 <!-- Inclusione dello script di Toast UI Editor -->
@@ -319,9 +352,10 @@
                                                 <script>
                                                     const Editor{{ field.unique_id }} = toastui.Editor;
 
+
                                                     const editor{{ field.unique_id }} = new Editor{{ field.unique_id }} ({
                                                         el: document.querySelector('#editor-{{ field.unique_id }}'),
-                                                        height: '200px',
+                                                        height: '500px',
                                                         initialEditType: 'wysiwyg',
                                                         previewStyle: 'vertical',
                                                         toolbarItems: [
@@ -332,8 +366,14 @@
                                                             ['code', 'codeblock'],
                                                             ['scrollSync'],
                                                         ],
-                                                        initialValue: "{{ field.value|safe }}",
+                                                        initialValue: `{{ field.value|safe }}`,
                                                     });
+
+
+                                                    function getEditor() {
+                                                        return Editor{{ field.unique_id }};
+                                                    }
+
                                                 </script>
                                 {% else %}
 
@@ -379,7 +419,7 @@
                                                value="{{ field.valuecode.0.value }}" onfocus="selectAllText(this); "
                                                data-type="linkedmaster">
 
-                                        <button class="btn" type="button"
+                                        <button class="btn" type="button" tabindex="-1"
 
                                                 onclick="clearInput(this,'{{ tableid }}-{{ fieldid }}-{{ recordid }}-autocomplete')"
                                                 style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px;">
@@ -395,11 +435,12 @@
                                     <button type="button" class="btn btn-light"
                                             onclick="newRecord('{{ field.tablelink }}', 'yes')"
                                             name="add"
+                                            tabindex="-1"
                                             style="width: auto">
                                         <span class="material-symbols-outlined">add</span>
                                     </button>
 
-                                    <button type="button" class="btn bnt light" data-fieldtype="linked" data-layout="modal" data-linkedtableid="{{ field.tablelink }}" data-linkedrecordid="{{ field.recordid }}" onclick="open_record(this, '{{ field.tablelink }}', '{{ field.recordid }}')">apri</button>
+                                    <button type="button" class="btn bnt light" data-fieldtype="linked" data-layout="modal" tabindex="-1" data-linkedtableid="{{ field.tablelink }}" data-linkedrecordid="{{ field.recordid }}" onclick="open_record(this, '{{ field.tablelink }}', '{{ field.recordid }}')">apri</button>
                                 </div>
 
                                 <script>
