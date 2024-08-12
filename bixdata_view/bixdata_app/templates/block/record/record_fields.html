@@ -90,7 +90,17 @@
 
 
 
+    function changePrice(el) {
+        var $container = $(el).closest('.fields_container');
 
+        var expectedCost = parseFloat($container.find('#field-unitexpectedcost').val()) || 0;
+        var unitPrice = parseFloat($container.find('#field-unitprice').val()) || 0;
+        var percentage = parseFloat($container.find('#field-earning_percentage').val()) || 0;
+
+        var price = expectedCost * (1 + percentage / 100);
+
+        $container.find('#field-unitprice').val(price.toFixed(1));
+    }
 
     function update_dealline(el) {
         container = $(el).closest('.container ');
