@@ -132,7 +132,7 @@
                 </td>
                 <td style="margin: 0; padding: 0; width: 200px">
                     <b>{{ task.companyname }}</b>
-                    <a href="http://bixcrm01:8000/get_record_path/task/'{{ task.recordid_ }}'" class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</a>
+                    <a href="http://bixcrm01:8000/get_record_path/task/{{ task.recordid_ }}" class="description" style="margin: 0;">{{ task.description|truncatechars:50 }}</a>
                     <p style="margin: 0;">Assegnato a: {{ task.username }}</p>
                 </td>
                <td style="width: 100px">

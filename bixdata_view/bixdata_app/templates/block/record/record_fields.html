@@ -97,10 +97,19 @@
         var unitPrice = parseFloat($container.find('#field-unitprice').val()) || 0;
         var percentage = parseFloat($container.find('#field-earning_percentage').val()) || 0;
 
-        var price = expectedCost * (1 + percentage / 100);
+        if (el.name == 'unitprice') {
+            var percentage = ((unitPrice - expectedCost) / expectedCost) * 100;
 
-        $container.find('#field-unitprice').val(price.toFixed(1));
-    }
+            $container.find('#field-earning_percentage').val(percentage.toFixed(1));
+        }
+        else if (el.name = 'earning_percentage') {
+            var unitPrice = expectedCost * (1 + percentage / 100);
+
+            $container.find('#field-unitprice').val(unitPrice.toFixed(1));
+
+        }
+        }
+
 
     function update_dealline(el) {
         container = $(el).closest('.container ');
@@ -313,9 +322,19 @@
 
                             {% if field.fieldtypeid == 'Numero' %}
 
+                                {% if fieldid == 'field-earning_percentage' or fieldid == 'field-unitexpectedcost' or fieldid == 'field-unitprice' %}
+
+
+                                     <input id="{{ fieldid }}" name="{{ fieldname }}"
+                                       class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="number"
+                                       value="{{ field.value }}" onchange="changePrice(this)">
+
+
+                                {% else %}
                                     <input id="{{ fieldid }}" name="{{ fieldname }}"
                                        class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="number"
                                        value="{{ field.value }}">
+                                {% endif %}
              
 
                             {% endif %}

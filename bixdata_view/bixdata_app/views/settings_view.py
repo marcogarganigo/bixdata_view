@@ -592,7 +592,7 @@ def save_newtable(request):
             )
 
             cursor.execute(
-                f"INSERT INTO sys_field (tableid, fieldid, fieldtypeid, label) VALUES ('{tableid}', 'id', 'Seriale', 'Sistema')"
+                f"INSERT INTO sys_field (tableid, fieldid, fieldtypeid, label, description) VALUES ('{tableid}', 'id', 'Seriale', 'Sistema', 'ID')"
             )
 
 
