@@ -168,6 +168,7 @@
 
 
 
+
         if ($('#new-field-type').val() == 'Linked') {
             serialized_data['linkedtable'] = $('#field-linked-table').val();
 
@@ -215,6 +216,8 @@
                         timer: 800,
                         buttons: false,
                     })
+                fieldsSettingsSettings()
+
             },
             error: function () {
             }

@@ -153,10 +153,11 @@ def get_content_records(request):
     context_records_filters = dict()
     context_records_filters['filter_fields'] = dict()
 
-    for filter_fields_label_key, filter_fields_label in filter_fields.items():
-        if filter_fields_label:
-            for filter_field_key, filter_field in filter_fields_label.items():
-                context_records_filters['filter_fields'][filter_field_key] = filter_field
+    if filter_fields:
+        for filter_fields_label_key, filter_fields_label in filter_fields.items():
+            if filter_fields_label:
+                for filter_field_key, filter_field in filter_fields_label.items():
+                    context_records_filters['filter_fields'][filter_field_key] = filter_field
 
     hv.context['block_search_fields'] = render_to_string('block/records/records_filters.html', context_records_filters,
                                                          request)
