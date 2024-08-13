@@ -170,15 +170,25 @@
 
 
         if ($('#new-field-type').val() == 'Linked') {
-            serialized_data['linkedtable'] = $('#field-linked-table').val();
+            
+            const checkboxes = document.querySelectorAll('#fields_table_settings .checkbox');
 
-            var linkedTableFields = []
-            $('.linked-table-fields').each(function () {
-                if ($(this).siblings('.checkbox').is(':checked')) {
-                    linkedTableFields.push($(this).data('fieldid'));
-                }
-            });
-            serialized_data['linkedtablefields'] = linkedTableFields;
+            const isChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+
+            if (!isChecked) {
+                alert('Per favore, seleziona almeno una casella.');
+            } else {
+
+                serialized_data['linkedtable'] = $('#field-linked-table').val();
+
+                var linkedTableFields = []
+                $('.linked-table-fields').each(function () {
+                    if ($(this).siblings('.checkbox').is(':checked')) {
+                        linkedTableFields.push($(this).data('fieldid'));
+                    }
+                });
+                serialized_data['linkedtablefields'] = linkedTableFields;
+            }
 
             } else if ($('#new-field-type').val() == 'Categoria') {
                 var idElements = $('.id-input-element');

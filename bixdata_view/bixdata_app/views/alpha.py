@@ -4810,5 +4810,15 @@ def stampa_project(request):
         return render(request, 'pdf/project.html', context)
 
 
+def get_ticket_feedback(request):
+    response = requests.post("http://localhost/phppage/get_tickets.php?password=d5FH?q!v1%3EC-2Qu1%3E0_B")
+    
+    response = json.loads(response.text)
+    
+    return JsonResponse(response)
+
+    
+
+
 
 

@@ -120,6 +120,11 @@ def settings_table_tablefields(request):
     hv = HelperView(request)
     bl = SettingsBusinessLogic()
     hv.context['fields'] = bl.get_search_column_results(userid, tableid, fields_type)
+
+    for field in hv.context['fields']:
+        if field['fieldid'][-1] == '_':
+            hv.context['fields'].remove(field)
+
     hv.context['fields_type'] = fields_type
     if fields_type == 'linked_columns':
         hv.context['linked_columns'] = list(SysTableLink.objects.filter(tablelinkid=tableid).values())
@@ -332,6 +337,11 @@ def settings_table_fields(request):
     hv = HelperView(request)
     hv.context['fields'] = list(SysField.objects.filter(tableid=tableid).values())
     hv.context['tables'] = list(SysTable.objects.values())
+
+    for field in hv.context['fields']:
+        if field['fieldid'][-1] == '_':
+            hv.context['fields'].remove(field)
+
     return hv.render_template('admin_settings/settings_table_fields.html')
 
 
@@ -595,9 +605,38 @@ def save_newtable(request):
                 f"INSERT INTO sys_field (tableid, fieldid, fieldtypeid, label, description) VALUES ('{tableid}', 'id', 'Seriale', 'Sistema', 'ID')"
             )
 
+            cursor.execute(
+                f"SELECT id from sys_field WHERE tableid='{tableid}' AND fieldid='id'"
+            )
+
+            fieldid = dictfetchall(cursor)[0]['id']
+
+            cursor.execute(
+                f"INSERT INTO sys_user_field_order (userid, tableid, fieldid, fieldorder, typepreference ) VALUES (1, '{tableid}', '{fieldid}', 0, 'search_results_fields')"
+            )
+
+            cursor.execute(
+                f"INSERT INTO sys_user_field_order (userid, tableid, fieldid, fieldorder, typepreference ) VALUES (1, '{tableid}', '{fieldid}', 0, 'insert_fields')"
+            )
+
+            cursor.execute(
+                f"INSERT INTO sys_user_field_order (userid, tableid, fieldid, fieldorder, typepreference ) VALUES (1, '{tableid}', '{fieldid}', 0, 'search_fields')"
+            )
+
 
             cursor.execute(
                 f"INSERT INTO sys_view (name, userid, tableid, query_conditions) VALUES ('Tutti', 1, '{tableid}', 'true')"
+            )
+
+            cursor.execute(
+                f"SELECT id from sys_view WHERE tableid='{tableid}' AND name='Tutti'"
+            )
+            viewid = dictfetchall(cursor)[0]['id']
+
+
+
+            cursor.execute(
+                f"INSERT INTO sys_user_table_settings (userid, tableid , settingid, value) VALUES (1, '{tableid}', 'default_viewid', 'viewid')"
             )
 
 

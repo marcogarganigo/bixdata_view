@@ -188,5 +188,6 @@ urlpatterns = [
     path('save_newtable/', settings_view.save_newtable, name='save_newtable'),
     path('task_functions/', alpha.task_functions, name='task_functions'),
     path('stampa_project/', alpha.stampa_project, name='stampa_project'),
+    path('get_ticket_feedback/', alpha.get_ticket_feedback, name='get_ticket_feedback'),
 
 ]
