@@ -25,6 +25,7 @@ from bs4 import BeautifulSoup
 from django.db.models import OuterRef, Subquery
 from ..logic_helper import *
 from .database_helper import *
+from ...helpers.helperdb import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 
@@ -62,7 +63,9 @@ class Record:
                 counter+=1
             sql=sql+f" WHERE recordid_='{self.recordid}'"   
         else:
-            sql=""
+            sql=f"SELECT MAX(recordid_) as max_recordid FROM user_{self.tableid}"
+            result=Helperdb.sql_query_row(sql)
+            max_recordid=result['max_recordid']
         self.db_helper.sql_execute(sql)
     
     def set_field(self,field_key,field_value): 

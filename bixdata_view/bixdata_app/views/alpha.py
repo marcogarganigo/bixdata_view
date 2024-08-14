@@ -4811,7 +4811,7 @@ def stampa_project(request):
 
 
 def get_ticket_feedback(request):
-    response = requests.post("http://localhost/phppage/get_tickets.php?password=d5FH?q!v1%3EC-2Qu1%3E0_B")
+    response = requests.post("https://www.swissbix.ch/ticketfeedback/get_tickets.php?password=d5FH?q!v1%3EC-2Qu1%3E0_B")
     
     response = json.loads(response.text)
     
