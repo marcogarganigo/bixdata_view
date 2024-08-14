@@ -4822,9 +4822,12 @@ def get_ticket_feedback(request):
     
     response = json.loads(response.text)
     
+    ##--- esempio di inserimento
     new_record=Record(tableid='ticketfeedback')
     new_record.fields['ticketid']=123
     new_record.save()
+     ##--- esempio di inserimento
+     
     return JsonResponse(response, safe=False)
 
     
