@@ -59,12 +59,15 @@ from docxcompose.composer import Composer
 from .helpers.helperdb import *
 
 
+
 import qrcode
 
 from .businesslogic.models.record import *
 from .businesslogic.models.table import *
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
+freshdesk_apikey = os.environ.get('FRESHDESK_APIKEY')
+get_tickets_password = os.environ.get('GET_TICKETS_PASSWORD')
 
 
 # Questa funzione ritorna la pagina test_autocomplete.html
@@ -4812,7 +4815,7 @@ def stampa_project(request):
 
 def get_ticket_feedback(request):
 
-    url = "https://www.swissbix.ch/ticketfeedback/get_tickets.php?password=d5FH?q!v1%3EC-2Qu1%3E0_B"
+    url = f"https://www.swissbix.ch/ticketfeedback/get_tickets.php?password={get_tickets_password}"
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
