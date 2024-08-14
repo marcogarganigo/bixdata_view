@@ -56,7 +56,7 @@ from docx.oxml import OxmlElement
 from docx.enum.section import WD_SECTION
 from docx.enum.style import WD_STYLE_TYPE
 from docxcompose.composer import Composer
-
+from .helpers.helperdb import *
 
 
 import qrcode
@@ -4821,12 +4821,19 @@ def get_ticket_feedback(request):
     response = requests.get(url, headers=headers)
     
     response = json.loads(response.text)
-    
-    ##--- esempio di inserimento
-    new_record=Record(tableid='ticketfeedback')
-    new_record.fields['ticketid']=123
-    new_record.save()
-     ##--- esempio di inserimento
+    for feedback in response:
+        field = Helperdb.sql_query_row(f"select * from user_ticketfeedback WHERE ticketid='{feedback['ticketid']}'")
+        if not field:
+            new_record = Record(tableid='ticketfeedback')
+            new_record.fields['ticketid'] = feedback['ticketid']
+            new_record.fields['level'] = feedback['level']
+
+            new_record.save()
+        else:
+            field['level'] = feedback['level']
+            field.save()
+
+
      
     return JsonResponse(response, safe=False)
 

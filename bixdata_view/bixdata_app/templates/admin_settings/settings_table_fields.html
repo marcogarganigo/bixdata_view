@@ -12,6 +12,7 @@
             <label for="new-field-type" class="form-label">Select</label>
             <select class="form-select" id="new-field-type" onchange="newFieldLinkedTable(this.value)">
                 <option value="Parola">Parola</option>
+                <option value="Utente">Utente</option>
                 <option value="Numero">Numero</option>
                 <option value="Linked">Linked</option>
                 <option value="Data">Data</option>
@@ -170,7 +171,7 @@
 
 
         if ($('#new-field-type').val() == 'Linked') {
-            
+
             const checkboxes = document.querySelectorAll('#fields_table_settings .checkbox');
 
             const isChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);

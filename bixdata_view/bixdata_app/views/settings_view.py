@@ -478,7 +478,7 @@ def settings_table_fields_new_field(request):
                         [tableid, fieldid, fielddescription, fieldid + '_' +  tableid, 'Parola', 255, 'Dati']
                     )
 
-                elif fieldtype in ['Data', 'Numero', 'Parola', 'Memo']:
+                elif fieldtype in ['Data', 'Numero', 'Parola', 'Memo', 'Utente']:
                     cursor.execute(
                         "INSERT INTO sys_field (tableid, fieldid, description, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s)",
                         [tableid, fieldid, fielddescription, fieldtype, 255, 'Dati']
@@ -636,7 +636,11 @@ def save_newtable(request):
 
 
             cursor.execute(
-                f"INSERT INTO sys_user_table_settings (userid, tableid , settingid, value) VALUES (1, '{tableid}', 'default_viewid', 'viewid')"
+                f"INSERT INTO sys_user_table_settings (userid, tableid , settingid, value) VALUES (1, '{tableid}', 'default_viewid', '{viewid}')"
+            )
+
+            cursor.execute(
+                f"INSERT INTO sys_user_table_settings (userid, tableid , settingid, value) VALUES (1, '{tableid}', 'default_recordtab', 'Fields')"
             )
 
 
