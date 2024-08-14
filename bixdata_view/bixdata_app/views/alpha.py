@@ -4811,11 +4811,21 @@ def stampa_project(request):
 
 
 def get_ticket_feedback(request):
-    response = requests.post("https://www.swissbix.ch/ticketfeedback/get_tickets.php?password=d5FH?q!v1%3EC-2Qu1%3E0_B")
+
+    url = "https://www.swissbix.ch/ticketfeedback/get_tickets.php?password=d5FH?q!v1%3EC-2Qu1%3E0_B"
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+    }
+
+    response = requests.get(url, headers=headers)
     
     response = json.loads(response.text)
     
-    return JsonResponse(response)
+    new_record=Record(tableid='ticketfeedback')
+    new_record.fields['ticketid']=123
+    new_record.save()
+    return JsonResponse(response, safe=False)
 
     
 

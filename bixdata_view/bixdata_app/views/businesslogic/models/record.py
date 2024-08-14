@@ -61,12 +61,22 @@ class Record:
                 else:
                     sql=sql+f" {key}=null "
                 counter+=1
-            sql=sql+f" WHERE recordid_='{self.recordid}'"   
+            sql=sql+f" WHERE recordid_='{self.recordid}'"  
+            self.db_helper.sql_execute(sql) 
         else:
-            sql=f"SELECT MAX(recordid_) as max_recordid FROM user_{self.tableid}"
-            result=Helperdb.sql_query_row(sql)
+            sqlmax=f"SELECT MAX(recordid_) as max_recordid FROM user_{self.tableid}"
+            result=Helperdb.sql_query_row(sqlmax)
             max_recordid=result['max_recordid']
-        self.db_helper.sql_execute(sql)
+            if max_recordid is None:
+                next_recordid = '00000000000000000000000000000001'
+            else:
+                next_recordid = str(int(max_recordid) + 1).zfill(32)
+            current_datetime=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sqlinsert=f"INSERT INTO user_{self.tableid} (recordid_,creatorid_,creation_) VALUES ('{next_recordid}',{self.userid},'{current_datetime}') "
+            self.db_helper.sql_execute(sqlinsert)
+            self.recordid=next_recordid
+            self.save()
+        
     
     def set_field(self,field_key,field_value): 
         self.fields[field_key]=field_value   
