@@ -4841,6 +4841,20 @@ def get_ticket_feedback(request):
     return JsonResponse(response, safe=False)
 
     
+def get_freshdesk_tickets(request):
+    api_key = os.environ.get('FRESHDESK_APIKEY')
+    password = "x"
+    yourdomain = "swissbix"
+
+    url = f"https://{yourdomain}.freshdesk.com/api/v2/tickets?include=requester,description,stats&updated_since=2020-07-01&per_page=10"
+
+    response = requests.get(url, auth=(api_key, password))
+
+
+    headers = response.headers
+    response = json.loads(response.text)
+
+    return JsonResponse(response, safe=False)
 
 
 
