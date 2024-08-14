@@ -130,8 +130,7 @@ def get_user_table_settings(bixid, tableid):
     for setting in settings:
         returned_settings[setting['settingid']] = setting['value']
 
-    if setting['settingid'] == 'default_viewid':
-        returned_settings['default_viewid'] = int(returned_settings['default_viewid'])
+    returned_settings['default_viewid'] = int(returned_settings['default_viewid'])
     return returned_settings
 
 
