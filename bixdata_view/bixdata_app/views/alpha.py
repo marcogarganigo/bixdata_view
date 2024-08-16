@@ -58,8 +58,6 @@ from docx.enum.style import WD_STYLE_TYPE
 from docxcompose.composer import Composer
 from .helpers.helperdb import *
 
-
-
 import qrcode
 
 from .businesslogic.models.record import *
@@ -630,7 +628,7 @@ def get_block_records_kanbanBAK(request):
     }
 
     response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_records_kanban", data=post)
-    #response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
+    # response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_records_kanban", data=post)
     response_dict = json.loads(response.text)
     groups = response_dict['groups']
     return_groups = []
@@ -638,9 +636,9 @@ def get_block_records_kanbanBAK(request):
         return_group = dict()
         return_group['description'] = group['description']
         # da implementare il total
-        return_group['totals']=list()
-        return_group['totals'].append({'totalname':'totale 1','totalvalue':100})
-        return_group['totals'].append({'totalname':'totale 2','totalvalue':200})
+        return_group['totals'] = list()
+        return_group['totals'].append({'totalname': 'totale 1', 'totalvalue': 100})
+        return_group['totals'].append({'totalname': 'totale 2', 'totalvalue': 200})
         return_group_records = []
         return_record = dict()
         return_record['recordid'] = '123456789'
@@ -668,7 +666,7 @@ def get_block_records_kanbanBAK(request):
 # Questa funzione serve per buildare il kanban e ritornarlo in una pagina html (per ora non in utilizzo)
 @login_required(login_url='/login/')
 def get_block_records_kanban(request):
-    db=DatabaseHelper()
+    db = DatabaseHelper()
     context = dict()
     tableid = request.POST.get('tableid')
     searchTerm = request.POST.get('searchTerm')
@@ -697,7 +695,6 @@ def get_block_records_kanban(request):
 
     groups = db.sql_query(sql)
 
-
     with connection.cursor() as cursor:
         cursor.execute(
             "SELECT sys_field.fieldid FROM sys_field JOIN sys_user_field_order ON sys_field.id = sys_user_field_order.fieldid WHERE sys_user_field_order.typepreference = 'kanban_fields'"
@@ -707,30 +704,30 @@ def get_block_records_kanban(request):
 
         fields_str = ', '.join(fieldids)
 
-    #totali per ogni gruppo
+    # totali per ogni gruppo
 
-    #organizzazione valori di ritorno
+    # organizzazione valori di ritorno
     return_groups = []
     for group in groups:
         return_group = dict()
-        dealstage=group['itemcode']
+        dealstage = group['itemcode']
         return_group['description'] = group['itemdesc']
         # da implementare il total
-        return_group['totals']=list()
-        return_group['totals'].append({'totalname':'totale 1','totalvalue':100})
-        return_group['totals'].append({'totalname':'totale 2','totalvalue':200})
+        return_group['totals'] = list()
+        return_group['totals'].append({'totalname': 'totale 1', 'totalvalue': 100})
+        return_group['totals'].append({'totalname': 'totale 2', 'totalvalue': 200})
 
         sql = f"SELECT value, settingid FROM sys_user_table_settings WHERE tableid='{tableid}' AND settingid LIKE 'kanban_%'"
         kanban_settings = db.sql_query(sql)
 
-        #separate settingids from values
+        # separate settingids from values
         settings = []
         for setting in kanban_settings:
             set = setting['settingid'].split('_')
             setting['settingid'] = set[1]
             settings.append(setting)
 
-        #now create a list of strings with values + 'AS' + settingid
+        # now create a list of strings with values + 'AS' + settingid
         settings_str = ''
         for setting in settings:
             settings_str += f"{setting['value']} AS {setting['settingid']}"
@@ -740,10 +737,12 @@ def get_block_records_kanban(request):
         sql = f"SELECT recordid_ as recordid, {settings_str} FROM user_{tableid}  WHERE dealstage='{dealstage}' AND deleted_='n' ORDER BY closedate desc"
         records = db.sql_query(sql)
         return_group['records'] = records
-        sql_totals=f"SELECT ROUND(SUM(amount)) as totalamount, ROUND(SUM(expectedmargin)) as totalmargin FROM user_deal WHERE dealstage='{dealstage}' AND deleted_='n'"
-        totals=db.sql_query_row(sql_totals)
-        return_group['totalamount'] = "{:,.2f}".format(totals['totalamount']).replace(",", "'") if totals['totalamount'] is not None else "0.00"
-        return_group['totalmargin'] = "{:,.2f}".format(totals['totalmargin']).replace(",", "'") if totals['totalmargin'] is not None else "0.00"
+        sql_totals = f"SELECT ROUND(SUM(amount)) as totalamount, ROUND(SUM(expectedmargin)) as totalmargin FROM user_deal WHERE dealstage='{dealstage}' AND deleted_='n'"
+        totals = db.sql_query_row(sql_totals)
+        return_group['totalamount'] = "{:,.2f}".format(totals['totalamount']).replace(",", "'") if totals[
+                                                                                                       'totalamount'] is not None else "0.00"
+        return_group['totalmargin'] = "{:,.2f}".format(totals['totalmargin']).replace(",", "'") if totals[
+                                                                                                       'totalmargin'] is not None else "0.00"
         return_groups.append(return_group)
 
     with connection.cursor() as cursor:
@@ -756,7 +755,6 @@ def get_block_records_kanban(request):
         if group_field['fieldid'] == fieldid:
             group_field['selected'] = True
 
-
     context = {
         'groups': return_groups,
         'tableid': tableid,
@@ -764,7 +762,6 @@ def get_block_records_kanban(request):
     }
     records_table = render_to_string('block/records/records_kanban.html', context, request=request)
     return HttpResponse(records_table)
-
 
 
 @login_required(login_url='/login/')
@@ -786,7 +783,7 @@ def get_block_records_calendar(request):
     conditions_list.append(f"user = {userid}")
     conditions_list.append("( status not like 'Chiuso' OR status is null)")
     conditions_list.append("duedate is not null")
-    #conditions_list.append("id=832 OR id=863")
+    # conditions_list.append("id=832 OR id=863")
 
     if datetype is None:
         fieldid_date = result[1]['fieldid']
@@ -795,8 +792,8 @@ def get_block_records_calendar(request):
         fieldid_date = str(datetype)
         datetype = fieldid_date + ' as date'
 
-    select_fields=['recordid_','description as description', datetype, 'start as start','end as end']
-    events_bixdata = table_obj.get_records(conditions_list=conditions_list,fields=select_fields)
+    select_fields = ['recordid_', 'description as description', datetype, 'start as start', 'end as end']
+    events_bixdata = table_obj.get_records(conditions_list=conditions_list, fields=select_fields)
 
     # Sostituisci i caratteri di nuova riga con <br> nella descrizione
     for event in events_bixdata:
@@ -809,8 +806,8 @@ def get_block_records_calendar(request):
         else:
             option['selected'] = ''
 
-    return render(request, 'block/records/records_calendar.html', {'events': events_bixdata, 'select_fields': result, 'tableid': tableid})
-
+    return render(request, 'block/records/records_calendar.html',
+                  {'events': events_bixdata, 'select_fields': result, 'tableid': tableid})
 
 
 # Questa funzione non viene usata penso, quella nuova è in bixdata_view
@@ -851,8 +848,6 @@ def get_block_record(request):
     return records_table
 
 
-
-
 # Questa funzione richiama la funzione per creare la record card e ritorna la card come http response
 @login_required(login_url='/login/')
 def request_block_record_card(request):
@@ -866,7 +861,6 @@ def request_block_record_card(request):
 
 # Questa funzione serve per creare la record card e ritorna la card come stringa
 def get_block_record_card(request, tableid, recordid, userid, master_tableid='', master_recordid=''):
-
     context = dict()
 
     if tableid == 'salespush':
@@ -879,7 +873,6 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
                 display = 'block'
 
             context['display'] = display
-
 
     if tableid == 'timesheet':
         with connection.cursor() as cursor:
@@ -916,7 +909,7 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
     context['userid'] = userid
     context['user_table_settings'] = get_user_table_settings(userid, tableid)
     # TODO: recuperare i dati dal table settings generico
-    table_settings=get_user_table_settings(1, tableid)
+    table_settings = get_user_table_settings(1, tableid)
     context['recordtab'] = table_settings['default_recordtab']
     # returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
     return render_to_string('block/record/record_card.html', context)
@@ -1000,11 +993,9 @@ def get_block_record_fields(request, prefilled_fields=dict()):
     record.context = contextfunction
     fields = record.get_fields()
 
-    
-
     for key, value in fields['Dati'].items():
-            if value['fieldtypewebid'] == 'html':
-                value['unique_id'] = str(uuid.uuid4().hex)
+        if value['fieldtypewebid'] == 'html':
+            value['unique_id'] = str(uuid.uuid4().hex)
 
     context['record_fields_labels'] = fields
     context['contextfunction'] = contextfunction
@@ -1193,7 +1184,6 @@ def save_record_fields(request):
         if tableid == 'task':
             check_task_status(recordid)
 
-
     if tableid == 'ticketbixdata' and 'description' in fields_dict:
         message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(request.user.username,
                                                                                  fields_dict['description'],
@@ -1250,7 +1240,9 @@ def save_record_fields(request):
 
                 # return render(request, 'other/new_task.html', fields_dict)
 
-                send_email(emails=[email], subject='Nuovo task assegnato da ' + fields_dict['username'] + score + companyname, html_message=message)
+                send_email(emails=[email],
+                           subject='Nuovo task assegnato da ' + fields_dict['username'] + score + companyname,
+                           html_message=message)
 
     elif tableid == 'salespush':
 
@@ -1286,7 +1278,6 @@ def save_record_fields(request):
                 # return render(request, 'other/new_task.html', fields_dict)
 
                 send_email(emails=[email], subject='Nuovo push commerciale', html_message=message)
-
 
     for field_name, uploaded_files in request.FILES.items():
         fs = FileSystemStorage(location='attachments')
@@ -1341,9 +1332,9 @@ def custom_save_record(request, tableid, recordid):
         worktime_decimal = 0
         travel_time_decimal = 0
         totaltime_decimal = 0
-        workprice=0
-        travelprice=0
-        totalprice=0
+        workprice = 0
+        travelprice = 0
+        totalprice = 0
         timesheet_record.fields['worktime_decimal'] = ''
         timesheet_record.fields['traveltime_decimal'] = ''
         timesheet_record.fields['totaltime_decimal'] = ''
@@ -1369,23 +1360,21 @@ def custom_save_record(request, tableid, recordid):
 
         # inizio valutazione invoice status
 
+        # se ho già un service contract lo mantengo
+        # if not isempty(servicecontract_record.recordid) and invoiceoption!='Out of contract':
+        #   if servicecontract_record.fields['type']=='Monte Ore':
+        #      timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
+        #     invoicestatus="Service Contract: Monte Ore"
+        #    productivity='Ricavo diretto'
+        # else:
+        #    if invoicestatus!='Invoiced':
+        #       invoicestatus='To Process'
+        # else:
+        #   if invoicestatus!='Invoiced':
+        #      invoicestatus='To Process'
 
-        #se ho già un service contract lo mantengo
-        #if not isempty(servicecontract_record.recordid) and invoiceoption!='Out of contract':
-         #   if servicecontract_record.fields['type']=='Monte Ore':
-          #      timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
-           #     invoicestatus="Service Contract: Monte Ore"
-            #    productivity='Ricavo diretto'
-           # else:
-            #    if invoicestatus!='Invoiced':
-             #       invoicestatus='To Process'
-        #else:
-         #   if invoicestatus!='Invoiced':
-          #      invoicestatus='To Process'
-
-        if invoicestatus!='Invoiced':
-                invoicestatus='To Process'
-
+        if invoicestatus != 'Invoiced':
+            invoicestatus = 'To Process'
 
         # valutazione del tipo di servizio se produttivo o meno
         if invoicestatus == 'To Process':
@@ -1394,13 +1383,13 @@ def custom_save_record(request, tableid, recordid):
                 productivity = 'Senza ricavo'
 
         # valutazione delle option 
-        if invoicestatus=='To Process':
-            if invoiceoption=='Under Warranty' or invoiceoption=='Commercial support' or invoiceoption=='Swisscom incident' or invoiceoption=='Swisscom ServiceNow' or invoiceoption=='To check':
-                invoicestatus=invoiceoption
-                productivity='Senza ricavo'
-                timesheet_record.fields['print_type']='Garanzia'
-                timesheet_record.fields['print_hourprice']='Garanzia'
-                timesheet_record.fields['print_travel']='Garanzia'
+        if invoicestatus == 'To Process':
+            if invoiceoption == 'Under Warranty' or invoiceoption == 'Commercial support' or invoiceoption == 'Swisscom incident' or invoiceoption == 'Swisscom ServiceNow' or invoiceoption == 'To check':
+                invoicestatus = invoiceoption
+                productivity = 'Senza ricavo'
+                timesheet_record.fields['print_type'] = 'Garanzia'
+                timesheet_record.fields['print_hourprice'] = 'Garanzia'
+                timesheet_record.fields['print_travel'] = 'Garanzia'
 
         # valutazione eventuale project
         if invoicestatus == 'To Process' and (
@@ -1439,91 +1428,97 @@ def custom_save_record(request, tableid, recordid):
                                          "(service='Assistenza Web Hosting')"])
 
                 if flat_service_contract:
-                    servicecontract_record=Record('servicecontract',flat_service_contract[0]['recordid_'])
-                    timesheet_record.fields['recordidservicecontract_']=servicecontract_record.recordid
-                    invoicestatus='Service Contract: '+servicecontract_record.fields['type']
-                    productivity='Ricavo indiretto'
-                    timesheet_record.fields['print_type']='Contratto di servizio'
-                    timesheet_record.fields['print_hourprice']='Compreso nel contratto di servizio'
+                    servicecontract_record = Record('servicecontract', flat_service_contract[0]['recordid_'])
+                    timesheet_record.fields['recordidservicecontract_'] = servicecontract_record.recordid
+                    invoicestatus = 'Service Contract: ' + servicecontract_record.fields['type']
+                    productivity = 'Ricavo indiretto'
+                    timesheet_record.fields['print_type'] = 'Contratto di servizio'
+                    timesheet_record.fields['print_hourprice'] = 'Compreso nel contratto di servizio'
                     timesheet_record.fields['print_travel'] = 'Compresa nel contratto di servizio'
-        #valutazione monte ore pbx
-        if ((invoicestatus=='To Process' or invoicestatus=='Under Warranty' or invoicestatus=='Commercial support') and invoiceoption!='Out of contract' and travel_time_decimal == 0):
-            service_contracts=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","type='Monte Ore Remoto PBX'","status='In Progress'"])
+        # valutazione monte ore pbx
+        if ((
+                invoicestatus == 'To Process' or invoicestatus == 'Under Warranty' or invoicestatus == 'Commercial support') and invoiceoption != 'Out of contract' and travel_time_decimal == 0):
+            service_contracts = servicecontract_table.get_records(
+                conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'",
+                                 "type='Monte Ore Remoto PBX'", "status='In Progress'"])
             if service_contracts:
-                timesheet_record.fields['recordidservicecontract_']=service_contracts[0]['recordid_']
-                servicecontract_record=Record('servicecontract',service_contracts[0]['recordid_'])
-                if invoicestatus=='To Process':
-                    invoicestatus='Service Contract: Monte Ore Remoto PBX'
-                    productivity='Ricavo diretto'
-                if invoicestatus=='Under Warranty':
-                    invoicestatus='Under Warranty'
-                    productivity='Senza ricavo'
-                if invoicestatus=='Commercial support':
-                    invoicestatus='Commercial support'
-                    productivity='Senza ricavo'
-                timesheet_record.fields['print_type']='Monte Ore Remoto PBX'
-                timesheet_record.fields['print_hourprice']='Scalato dal monte ore'
+                timesheet_record.fields['recordidservicecontract_'] = service_contracts[0]['recordid_']
+                servicecontract_record = Record('servicecontract', service_contracts[0]['recordid_'])
+                if invoicestatus == 'To Process':
+                    invoicestatus = 'Service Contract: Monte Ore Remoto PBX'
+                    productivity = 'Ricavo diretto'
+                if invoicestatus == 'Under Warranty':
+                    invoicestatus = 'Under Warranty'
+                    productivity = 'Senza ricavo'
+                if invoicestatus == 'Commercial support':
+                    invoicestatus = 'Commercial support'
+                    productivity = 'Senza ricavo'
+                timesheet_record.fields['print_type'] = 'Monte Ore Remoto PBX'
+                timesheet_record.fields['print_hourprice'] = 'Scalato dal monte ore'
                 if servicecontract_record.fields['excludetravel']:
                     timesheet_record.fields['print_travel'] = 'Non scalata dal monte ore e non fatturata'
-        #valutazione monte ore
-        if ((invoicestatus=='To Process' or invoicestatus=='Under Warranty' or invoicestatus=='Commercial support') and invoiceoption!='Out of contract'):
-            service_contracts=servicecontract_table.get_records(conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'","type='Monte Ore'","status='In Progress'"])
+        # valutazione monte ore
+        if ((
+                invoicestatus == 'To Process' or invoicestatus == 'Under Warranty' or invoicestatus == 'Commercial support') and invoiceoption != 'Out of contract'):
+            service_contracts = servicecontract_table.get_records(
+                conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'",
+                                 "type='Monte Ore'", "status='In Progress'"])
             if service_contracts:
-                timesheet_record.fields['recordidservicecontract_']=service_contracts[0]['recordid_']
-                servicecontract_record=Record('servicecontract',service_contracts[0]['recordid_'])
-                if invoicestatus=='To Process':
-                    invoicestatus='Service Contract: Monte Ore'
-                    productivity='Ricavo diretto'
-                if invoicestatus=='Under Warranty':
-                    invoicestatus='Under Warranty'
-                    productivity='Senza ricavo'
-                if invoicestatus=='Commercial support':
-                    invoicestatus='Commercial support'
-                    productivity='Senza ricavo'
-                timesheet_record.fields['print_type']='Monte Ore'
-                timesheet_record.fields['print_hourprice']='Scalato dal monte ore'
+                timesheet_record.fields['recordidservicecontract_'] = service_contracts[0]['recordid_']
+                servicecontract_record = Record('servicecontract', service_contracts[0]['recordid_'])
+                if invoicestatus == 'To Process':
+                    invoicestatus = 'Service Contract: Monte Ore'
+                    productivity = 'Ricavo diretto'
+                if invoicestatus == 'Under Warranty':
+                    invoicestatus = 'Under Warranty'
+                    productivity = 'Senza ricavo'
+                if invoicestatus == 'Commercial support':
+                    invoicestatus = 'Commercial support'
+                    productivity = 'Senza ricavo'
+                timesheet_record.fields['print_type'] = 'Monte Ore'
+                timesheet_record.fields['print_hourprice'] = 'Scalato dal monte ore'
                 if servicecontract_record.fields['excludetravel']:
                     timesheet_record.fields['print_travel'] = 'Non scalata dal monte ore e non fatturata'
 
-        #da fatturare quando chiusi
-        if invoicestatus=='To Process':
-            productivity='Ricavo diretto'
-            hourprice=140
-            travelstandardprice=None
-            timesheet_record.fields['print_travel']='Da fatturare'
+        # da fatturare quando chiusi
+        if invoicestatus == 'To Process':
+            productivity = 'Ricavo diretto'
+            hourprice = 140
+            travelstandardprice = None
+            timesheet_record.fields['print_travel'] = 'Da fatturare'
 
             if not isempty(company_record.fields['ictpbx_price']):
-                hourprice=company_record.fields['ictpbx_price']
-                travelstandardprice=company_record.fields['travel_price']
+                hourprice = company_record.fields['ictpbx_price']
+                travelstandardprice = company_record.fields['travel_price']
 
-            timesheet_record.fields['print_hourprice']='Fr.'+ str(hourprice)+'.--'
+            timesheet_record.fields['print_hourprice'] = 'Fr.' + str(hourprice) + '.--'
 
             if not isempty(project_record.recordid):
                 if project_record.fields['completed'] != 'Si':
                     invoicestatus = 'To invoice when Project Completed'
 
             if not isempty(ticket_record.recordid):
-                if  ticket_record.fields['vtestatus'] != 'Closed':
-                    invoicestatus='To invoice when Ticket Closed'
-            timesheet_record.fields['hourprice']=hourprice
-            workprice=hourprice*worktime_decimal
-            timesheet_record.fields['workprice']=workprice
+                if ticket_record.fields['vtestatus'] != 'Closed':
+                    invoicestatus = 'To invoice when Ticket Closed'
+            timesheet_record.fields['hourprice'] = hourprice
+            workprice = hourprice * worktime_decimal
+            timesheet_record.fields['workprice'] = workprice
             if travel_time_decimal:
-                if travel_time_decimal>0:
+                if travel_time_decimal > 0:
                     if travelstandardprice:
-                        travelprice=travelstandardprice;
+                        travelprice = travelstandardprice;
                     else:
-                        travelprice=hourprice*travel_time_decimal;
-                    timesheet_record.fields['travelprice']=travelprice
-            timesheet_record.fields['totalprice']=workprice+travelprice
-            if invoicestatus=='To Process':
-                invoicestatus='To Invoice'
+                        travelprice = hourprice * travel_time_decimal;
+                    timesheet_record.fields['travelprice'] = travelprice
+            timesheet_record.fields['totalprice'] = workprice + travelprice
+            if invoicestatus == 'To Process':
+                invoicestatus = 'To Invoice'
 
         timesheet_record.fields['invoicestatus'] = invoicestatus
         timesheet_record.fields['productivity'] = productivity
-        if service=='Assistenza IT' or service=='Assistenza PBX' or service=='Assistenza SW' or service=='Assistenza Web Hosting' or service=='Printing':
-            if timesheet_record.fields['validated']!='Si':
-                timesheet_record.fields['validated']='No'
+        if service == 'Assistenza IT' or service == 'Assistenza PBX' or service == 'Assistenza SW' or service == 'Assistenza Web Hosting' or service == 'Printing':
+            if timesheet_record.fields['validated'] != 'Si':
+                timesheet_record.fields['validated'] = 'No'
 
         timesheet_record.save()
 
@@ -1537,7 +1532,7 @@ def custom_save_record(request, tableid, recordid):
     if tableid == 'servicecontract':
         servicecontract_table = Table(tableid='servicecontract')
         servicecontract_record = Record('servicecontract', recordid)
-        salesorderline_record=Record('salesorderline', servicecontract_record.fields['recordidsalesorderline_'])
+        salesorderline_record = Record('salesorderline', servicecontract_record.fields['recordidsalesorderline_'])
 
         # recupero campi
         contracthours = servicecontract_record.fields['contracthours']
@@ -1555,14 +1550,15 @@ def custom_save_record(request, tableid, recordid):
 
         timesheet_linkedrecords = servicecontract_record.get_linkedrecords(linkedtable='timesheet')
         for timesheet_linkedrecord in timesheet_linkedrecords:
-            if timesheet_linkedrecord['invoiceoption']!='Under Warranty' and timesheet_linkedrecord['invoiceoption']!='Commercial support':
-                usedhours=usedhours+timesheet_linkedrecord['worktime_decimal']
-                if excludetravel!='1' and excludetravel!='Si':
+            if timesheet_linkedrecord['invoiceoption'] != 'Under Warranty' and timesheet_linkedrecord[
+                'invoiceoption'] != 'Commercial support':
+                usedhours = usedhours + timesheet_linkedrecord['worktime_decimal']
+                if excludetravel != '1' and excludetravel != 'Si':
                     if not isempty(timesheet_linkedrecord['traveltime_decimal']):
-                        usedhours=usedhours+timesheet_linkedrecord['traveltime_decimal']
-        residualhours=contracthours+previousresidual-usedhours
-        if contracthours+previousresidual!=0:
-            progress=(usedhours/(contracthours+previousresidual))*100
+                        usedhours = usedhours + timesheet_linkedrecord['traveltime_decimal']
+        residualhours = contracthours + previousresidual - usedhours
+        if contracthours + previousresidual != 0:
+            progress = (usedhours / (contracthours + previousresidual)) * 100
 
         if isempty(servicecontract_record.fields['status']):
             servicecontract_record.fields['status'] = 'In Progress'
@@ -1576,375 +1572,399 @@ def custom_save_record(request, tableid, recordid):
             custom_save_record(request, tableid='salesorderline', recordid=salesorderline_record.recordid)
 
     # ---SALES ORDER
-    if tableid=='salesorder':
-        salesorder_record=Record('salesorder',recordid)
-        deal_record=Record('deal',salesorder_record.fields['recordiddeal_'])
-        salesorder_record.fields['totalcost']=0
-        salesorder_record.fields['totalmargin']=0
-        salesorder_record.fields['totalnetyearly']=0
-        salesorder_record.fields['totalcostyearly']=0
-        salesorder_record.fields['expectedmarginyearly']=0
-        salesorder_record.fields['annual_actual_cost']=0
-        salesorder_record.fields['totalmarginyearly']=0
-        salesorder_record.fields['total_price']=0
-        salesorder_record.fields['total_cost']=0
-        salesorder_record.fields['total_margin']=0
-        salesorder_record.fields['total_actual_cost']=0
-        salesorder_record.fields['total_actual_margin']=0
-        salesorder_record.fields['annual_contract_hours']=0
-        salesorder_record.fields['annual_actual_hours']=0
-        salesorder_record.fields['total_contract_hours']=0
-        salesorder_record.fields['total_actual_hours']=0
+    if tableid == 'salesorder':
+        salesorder_record = Record('salesorder', recordid)
+        deal_record = Record('deal', salesorder_record.fields['recordiddeal_'])
+        salesorder_record.fields['totalcost'] = 0
+        salesorder_record.fields['totalmargin'] = 0
+        salesorder_record.fields['totalnetyearly'] = 0
+        salesorder_record.fields['totalcostyearly'] = 0
+        salesorder_record.fields['expectedmarginyearly'] = 0
+        salesorder_record.fields['annual_actual_cost'] = 0
+        salesorder_record.fields['totalmarginyearly'] = 0
+        salesorder_record.fields['total_price'] = 0
+        salesorder_record.fields['total_cost'] = 0
+        salesorder_record.fields['total_margin'] = 0
+        salesorder_record.fields['total_actual_cost'] = 0
+        salesorder_record.fields['total_actual_margin'] = 0
+        salesorder_record.fields['annual_contract_hours'] = 0
+        salesorder_record.fields['annual_actual_hours'] = 0
+        salesorder_record.fields['total_contract_hours'] = 0
+        salesorder_record.fields['total_actual_hours'] = 0
 
         salesorderline_linkedrecords = salesorder_record.get_linkedrecords(linkedtable='salesorderline')
         for salesorderline_record_dict in salesorderline_linkedrecords:
-            if salesorderline_record_dict['status']=='In Progress':
+            if salesorderline_record_dict['status'] == 'In Progress':
                 if not isempty(salesorderline_record_dict['cost']):
-                    salesorder_record.fields['totalcost']=salesorder_record.fields['totalcost']+salesorderline_record_dict['cost']
+                    salesorder_record.fields['totalcost'] = salesorder_record.fields['totalcost'] + \
+                                                            salesorderline_record_dict['cost']
                 if not isempty(salesorderline_record_dict['margin']):
-                    salesorder_record.fields['totalmargin']=salesorder_record.fields['totalmargin']+salesorderline_record_dict['margin']
+                    salesorder_record.fields['totalmargin'] = salesorder_record.fields['totalmargin'] + \
+                                                              salesorderline_record_dict['margin']
                 if not isempty(salesorderline_record_dict['total_net_yearly']):
-                    salesorder_record.fields['totalnetyearly']=salesorder_record.fields['totalnetyearly']+salesorderline_record_dict['total_net_yearly']
+                    salesorder_record.fields['totalnetyearly'] = salesorder_record.fields['totalnetyearly'] + \
+                                                                 salesorderline_record_dict['total_net_yearly']
                 if not isempty(salesorderline_record_dict['annual_cost']):
-                    salesorder_record.fields['totalcostyearly']=salesorder_record.fields['totalcostyearly']+salesorderline_record_dict['annual_cost']
+                    salesorder_record.fields['totalcostyearly'] = salesorder_record.fields['totalcostyearly'] + \
+                                                                  salesorderline_record_dict['annual_cost']
                 if not isempty(salesorderline_record_dict['marginyearly']):
-                    salesorder_record.fields['expectedmarginyearly']=salesorder_record.fields['expectedmarginyearly']+salesorderline_record_dict['marginyearly']
+                    salesorder_record.fields['expectedmarginyearly'] = salesorder_record.fields[
+                                                                           'expectedmarginyearly'] + \
+                                                                       salesorderline_record_dict['marginyearly']
                 if not isempty(salesorderline_record_dict['annual_actual_cost']):
-                    salesorder_record.fields['annual_actual_cost']=salesorder_record.fields['annual_actual_cost']+salesorderline_record_dict['annual_actual_cost']
+                    salesorder_record.fields['annual_actual_cost'] = salesorder_record.fields['annual_actual_cost'] + \
+                                                                     salesorderline_record_dict['annual_actual_cost']
                 if not isempty(salesorderline_record_dict['annual_actual_margin']):
-                    salesorder_record.fields['totalmarginyearly']=salesorder_record.fields['totalmarginyearly']+salesorderline_record_dict['annual_actual_margin']
+                    salesorder_record.fields['totalmarginyearly'] = salesorder_record.fields['totalmarginyearly'] + \
+                                                                    salesorderline_record_dict['annual_actual_margin']
                 if not isempty(salesorderline_record_dict['total_price']):
-                    salesorder_record.fields['total_price']=salesorder_record.fields['total_price']+salesorderline_record_dict['total_price']
+                    salesorder_record.fields['total_price'] = salesorder_record.fields['total_price'] + \
+                                                              salesorderline_record_dict['total_price']
                 if not isempty(salesorderline_record_dict['total_cost']):
-                    salesorder_record.fields['total_cost']=salesorder_record.fields['total_cost']+salesorderline_record_dict['total_cost']
+                    salesorder_record.fields['total_cost'] = salesorder_record.fields['total_cost'] + \
+                                                             salesorderline_record_dict['total_cost']
                 if not isempty(salesorderline_record_dict['total_margin']):
-                    salesorder_record.fields['total_margin']=salesorder_record.fields['total_margin']+salesorderline_record_dict['total_margin']
+                    salesorder_record.fields['total_margin'] = salesorder_record.fields['total_margin'] + \
+                                                               salesorderline_record_dict['total_margin']
                 if not isempty(salesorderline_record_dict['total_actual_cost']):
-                    salesorder_record.fields['total_actual_cost']=salesorder_record.fields['total_actual_cost']+salesorderline_record_dict['total_actual_cost']
+                    salesorder_record.fields['total_actual_cost'] = salesorder_record.fields['total_actual_cost'] + \
+                                                                    salesorderline_record_dict['total_actual_cost']
                 if not isempty(salesorderline_record_dict['total_actual_margin']):
-                    salesorder_record.fields['total_actual_margin']=salesorder_record.fields['total_actual_margin']+salesorderline_record_dict['total_actual_margin']
+                    salesorder_record.fields['total_actual_margin'] = salesorder_record.fields['total_actual_margin'] + \
+                                                                      salesorderline_record_dict['total_actual_margin']
                 if not isempty(salesorderline_record_dict['annual_contract_hours']):
-                    salesorder_record.fields['annual_contract_hours']=salesorder_record.fields['annual_contract_hours']+salesorderline_record_dict['annual_contract_hours']
+                    salesorder_record.fields['annual_contract_hours'] = salesorder_record.fields[
+                                                                            'annual_contract_hours'] + \
+                                                                        salesorderline_record_dict[
+                                                                            'annual_contract_hours']
                 if not isempty(salesorderline_record_dict['annual_actual_hours']):
-                    salesorder_record.fields['annual_actual_hours']=salesorder_record.fields['annual_actual_hours']+salesorderline_record_dict['annual_actual_hours']
+                    salesorder_record.fields['annual_actual_hours'] = salesorder_record.fields['annual_actual_hours'] + \
+                                                                      salesorderline_record_dict['annual_actual_hours']
                 if not isempty(salesorderline_record_dict['total_contract_hours']):
-                    salesorder_record.fields['total_contract_hours']=salesorder_record.fields['total_contract_hours']+salesorderline_record_dict['total_contract_hours']
+                    salesorder_record.fields['total_contract_hours'] = salesorder_record.fields[
+                                                                           'total_contract_hours'] + \
+                                                                       salesorderline_record_dict[
+                                                                           'total_contract_hours']
                 if not isempty(salesorderline_record_dict['total_actual_hours']):
-                    salesorder_record.fields['total_actual_hours']=salesorder_record.fields['total_actual_hours']+salesorderline_record_dict['total_actual_hours']
+                    salesorder_record.fields['total_actual_hours'] = salesorder_record.fields['total_actual_hours'] + \
+                                                                     salesorderline_record_dict['total_actual_hours']
 
         if not isempty(deal_record.recordid):
-            salesorder_record.fields['expectedmarginyearly']=deal_record.fields['annualmargin']
+            salesorder_record.fields['expectedmarginyearly'] = deal_record.fields['annualmargin']
         salesorder_record.save()
 
     # ---SALES ORDER LINE
-    if tableid=='salesorderline':
-        dbh=DatabaseHelper()
+    if tableid == 'salesorderline':
+        dbh = DatabaseHelper()
         salesorderline_record = Record('salesorderline', recordid)
-        salesorder_record=Record('salesorder',salesorderline_record.fields['recordidsalesorder_'])
-        servicecontract_table=Table('servicecontract')
-        servicecontract_record=servicecontract_table.get_record_by_condition([f"recordidsalesorderline_='{recordid}'"])
-        salesorderline_record.fields['repetitiontype']=salesorder_record.fields['repetitiontype']
-        salesorderline_record.fields['bexio_repetition_type']=salesorder_record.fields['bexio_repetition_type']
-        salesorderline_record.fields['bexio_repetition_interval']=salesorder_record.fields['bexio_repetition_interval']
-        salesorderline_record.fields['recordidcompany_']=salesorder_record.fields['recordidcompany_']
-        salesorderline_record.fields['bexio_orderno']=salesorder_record.fields['documentnr']
-        accountid=salesorderline_record.fields['bexio_account_id']
-        account_table=Table('bexio_account')
-        account_record=account_table.get_record_by_condition([f"account_id='{accountid}'"])
+        salesorder_record = Record('salesorder', salesorderline_record.fields['recordidsalesorder_'])
+        servicecontract_table = Table('servicecontract')
+        servicecontract_record = servicecontract_table.get_record_by_condition(
+            [f"recordidsalesorderline_='{recordid}'"])
+        salesorderline_record.fields['repetitiontype'] = salesorder_record.fields['repetitiontype']
+        salesorderline_record.fields['bexio_repetition_type'] = salesorder_record.fields['bexio_repetition_type']
+        salesorderline_record.fields['bexio_repetition_interval'] = salesorder_record.fields[
+            'bexio_repetition_interval']
+        salesorderline_record.fields['recordidcompany_'] = salesorder_record.fields['recordidcompany_']
+        salesorderline_record.fields['bexio_orderno'] = salesorder_record.fields['documentnr']
+        accountid = salesorderline_record.fields['bexio_account_id']
+        account_table = Table('bexio_account')
+        account_record = account_table.get_record_by_condition([f"account_id='{accountid}'"])
         if account_record:
-            salesorderline_record.fields['account_no']=account_record.fields['account_no']
-            salesorderline_record.fields['account']=account_record.fields['name']
-            salesorderline_record.fields['servicecontract_type']=account_record.fields['servicecontract_type']
-            salesorderline_record.fields['servicecontract_service']=account_record.fields['servicecontract_service']
-            salesorderline_record.fields['sector']=account_record.fields['sector']
+            salesorderline_record.fields['account_no'] = account_record.fields['account_no']
+            salesorderline_record.fields['account'] = account_record.fields['name']
+            salesorderline_record.fields['servicecontract_type'] = account_record.fields['servicecontract_type']
+            salesorderline_record.fields['servicecontract_service'] = account_record.fields['servicecontract_service']
+            salesorderline_record.fields['sector'] = account_record.fields['sector']
 
-        unitcost=salesorderline_record.fields['unitcost']
+        unitcost = salesorderline_record.fields['unitcost']
         if not unitcost:
-            unitcost=0
-        quantity=salesorderline_record.fields['quantity']
+            unitcost = 0
+        quantity = salesorderline_record.fields['quantity']
         if not quantity:
-            quantity=0
+            quantity = 0
 
-        linecost=unitcost * quantity
-        salesorderline_record.fields['cost']=linecost
+        linecost = unitcost * quantity
+        salesorderline_record.fields['cost'] = linecost
 
         if salesorderline_record.fields['servicecontract_type']:
-            salesorderline_record.fields['contracthours']=(salesorderline_record.fields['price']-linecost)/110
-            linecost=linecost+salesorderline_record.fields['contracthours']*60
-            salesorderline_record.fields['potential_cost']=linecost
-            salesorderline_record.fields['margin']=salesorderline_record.fields['price']-linecost
-
-
-
+            salesorderline_record.fields['contracthours'] = (salesorderline_record.fields['price'] - linecost) / 110
+            linecost = linecost + salesorderline_record.fields['contracthours'] * 60
+            salesorderline_record.fields['potential_cost'] = linecost
+            salesorderline_record.fields['margin'] = salesorderline_record.fields['price'] - linecost
 
         # calcolo annuali
-        multiplier=salesorder_record.fields['multiplier']
-        salesorderline_record.fields['total_net_yearly']=salesorderline_record.fields['price']*multiplier
-        salesorderline_record.fields['annual_cost']=linecost*multiplier
-        salesorderline_record.fields['annual_actual_cost']=salesorderline_record.fields['annual_cost']
-        salesorderline_record.fields['marginyearly']=salesorderline_record.fields['margin']*multiplier
-        salesorderline_record.fields['annual_actual_margin']=salesorderline_record.fields['marginyearly']
-
+        multiplier = salesorder_record.fields['multiplier']
+        salesorderline_record.fields['total_net_yearly'] = salesorderline_record.fields['price'] * multiplier
+        salesorderline_record.fields['annual_cost'] = linecost * multiplier
+        salesorderline_record.fields['annual_actual_cost'] = salesorderline_record.fields['annual_cost']
+        salesorderline_record.fields['marginyearly'] = salesorderline_record.fields['margin'] * multiplier
+        salesorderline_record.fields['annual_actual_margin'] = salesorderline_record.fields['marginyearly']
 
         # calcolo totali
-        repetitionstartdate=salesorder_record.fields['repetitionstartdate']
-        lastoccurence=HelperView.get_last_occurrence(repetitionstartdate.strftime('%Y-%m-%d'))
-        occurrencescount=HelperView.get_occurrences_count(repetitionstartdate.strftime('%Y-%m-%d'))
-        repetitioncount=HelperView.get_repetition_count(repetitionstartdate.strftime('%Y-%m-%d'),12/multiplier)
+        repetitionstartdate = salesorder_record.fields['repetitionstartdate']
+        lastoccurence = HelperView.get_last_occurrence(repetitionstartdate.strftime('%Y-%m-%d'))
+        occurrencescount = HelperView.get_occurrences_count(repetitionstartdate.strftime('%Y-%m-%d'))
+        repetitioncount = HelperView.get_repetition_count(repetitionstartdate.strftime('%Y-%m-%d'), 12 / multiplier)
 
-        salesorderline_record.fields['total_price']=salesorderline_record.fields['price']*repetitioncount
-        salesorderline_record.fields['total_cost']=linecost*repetitioncount
-        salesorderline_record.fields['total_margin']=salesorderline_record.fields['total_price']-salesorderline_record.fields['total_cost']
+        salesorderline_record.fields['total_price'] = salesorderline_record.fields['price'] * repetitioncount
+        salesorderline_record.fields['total_cost'] = linecost * repetitioncount
+        salesorderline_record.fields['total_margin'] = salesorderline_record.fields['total_price'] - \
+                                                       salesorderline_record.fields['total_cost']
 
         # calcolo su contratti con ore comprese
         if salesorderline_record.fields['servicecontract_type']:
 
-            salesorderline_record.fields['annual_contract_hours']=salesorderline_record.fields['total_net_yearly']/110
-            salesorderline_record.fields['total_contract_hours']=salesorderline_record.fields['contracthours']*repetitioncount
-            usedhours=servicecontract_record.fields['usedhours']
+            salesorderline_record.fields['annual_contract_hours'] = salesorderline_record.fields[
+                                                                        'total_net_yearly'] / 110
+            salesorderline_record.fields['total_contract_hours'] = salesorderline_record.fields[
+                                                                       'contracthours'] * repetitioncount
+            usedhours = servicecontract_record.fields['usedhours']
             if not usedhours:
-                usedhours=0
-            salesorderline_record.fields['total_actual_hours']=usedhours
+                usedhours = 0
+            salesorderline_record.fields['total_actual_hours'] = usedhours
 
             today = datetime.datetime.now()
             twelve_months_ago = today - timedelta(days=365)  # Approximate (not considering leap years)
-            result_row=dbh.sql_query_row(f"select sum(totaltime_decimal) as annualusedhours FROM user_timesheet WHERE recordidservicecontract_='{servicecontract_record.recordid}' and deleted_='N' AND date>='{twelve_months_ago.strftime('%Y-%m-%d')}'")
+            result_row = dbh.sql_query_row(
+                f"select sum(totaltime_decimal) as annualusedhours FROM user_timesheet WHERE recordidservicecontract_='{servicecontract_record.recordid}' and deleted_='N' AND date>='{twelve_months_ago.strftime('%Y-%m-%d')}'")
             if result_row:
-                annualusedhours=result_row['annualusedhours']
+                annualusedhours = result_row['annualusedhours']
                 if not annualusedhours:
-                    annualusedhours=0
-            salesorderline_record.fields['annual_actual_hours']=annualusedhours
-            salesorderline_record.fields['annual_actual_cost']=annualusedhours*60
-            salesorderline_record.fields['annual_actual_margin']=salesorderline_record.fields['total_net_yearly']-salesorderline_record.fields['annual_actual_cost']
-            salesorderline_record.fields['total_actual_cost']=usedhours*60
-            salesorderline_record.fields['total_actual_margin']=salesorderline_record.fields['total_price']-salesorderline_record.fields['total_actual_cost']
+                    annualusedhours = 0
+            salesorderline_record.fields['annual_actual_hours'] = annualusedhours
+            salesorderline_record.fields['annual_actual_cost'] = annualusedhours * 60
+            salesorderline_record.fields['annual_actual_margin'] = salesorderline_record.fields['total_net_yearly'] - \
+                                                                   salesorderline_record.fields['annual_actual_cost']
+            salesorderline_record.fields['total_actual_cost'] = usedhours * 60
+            salesorderline_record.fields['total_actual_margin'] = salesorderline_record.fields['total_price'] - \
+                                                                  salesorderline_record.fields['total_actual_cost']
 
         salesorderline_record.save()
         if not isempty(salesorder_record.recordid):
             custom_save_record(request, tableid='salesorder', recordid=salesorder_record.recordid)
 
-
     # ---PROJECT
     if tableid == 'project':
-        project_record=Record('project',recordid)
-        completed=project_record.fields['completed']
-        deal_record=Record('deal',project_record.fields['recordiddeal_'])
-        expectedhours=project_record.fields['expectedhours']
-        usedhours=0
-        residualhours=0
-        fixedpricehours=0
-        servicecontracthours=0
-        bankhours=0
-        invoicedhours=0
-        timesheet_records_list=project_record.get_linkedrecords('timesheet')
+        project_record = Record('project', recordid)
+        completed = project_record.fields['completed']
+        deal_record = Record('deal', project_record.fields['recordiddeal_'])
+        expectedhours = project_record.fields['expectedhours']
+        usedhours = 0
+        residualhours = 0
+        fixedpricehours = 0
+        servicecontracthours = 0
+        bankhours = 0
+        invoicedhours = 0
+        timesheet_records_list = project_record.get_linkedrecords('timesheet')
         for timesheet_record_dict in timesheet_records_list:
-            usedhours=usedhours+timesheet_record_dict['totaltime_decimal']
-            if timesheet_record_dict['invoicestatus']=='Fixed Price Project':
-                fixedpricehours=fixedpricehours+timesheet_record_dict['totaltime_decimal']
-            if timesheet_record_dict['invoicestatus']=='Service Contract: Monte Ore':
-                bankhours=bankhours+timesheet_record_dict['totaltime_decimal']
-            if timesheet_record_dict['invoicestatus']=='Invoiced':
-                invoicedhours=invoicedhours+timesheet_record_dict['totaltime_decimal']
+            usedhours = usedhours + timesheet_record_dict['totaltime_decimal']
+            if timesheet_record_dict['invoicestatus'] == 'Fixed Price Project':
+                fixedpricehours = fixedpricehours + timesheet_record_dict['totaltime_decimal']
+            if timesheet_record_dict['invoicestatus'] == 'Service Contract: Monte Ore':
+                bankhours = bankhours + timesheet_record_dict['totaltime_decimal']
+            if timesheet_record_dict['invoicestatus'] == 'Invoiced':
+                invoicedhours = invoicedhours + timesheet_record_dict['totaltime_decimal']
         if expectedhours:
-            residualhours=expectedhours-usedhours
-        project_record.fields['usedhours']=usedhours
-        project_record.fields['residualhours']=residualhours
-        deal_record.fields['usedhours']=usedhours
-        deal_record.fields['fixedpricehours']=fixedpricehours
-        deal_record.fields['servicecontracthours']=servicecontracthours
-        deal_record.fields['bankhours']=bankhours
-        deal_record.fields['invoicedhours']=invoicedhours
-        deal_record.fields['residualhours']=residualhours
+            residualhours = expectedhours - usedhours
+        project_record.fields['usedhours'] = usedhours
+        project_record.fields['residualhours'] = residualhours
+        deal_record.fields['usedhours'] = usedhours
+        deal_record.fields['fixedpricehours'] = fixedpricehours
+        deal_record.fields['servicecontracthours'] = servicecontracthours
+        deal_record.fields['bankhours'] = bankhours
+        deal_record.fields['invoicedhours'] = invoicedhours
+        deal_record.fields['residualhours'] = residualhours
 
-        deal_record.fields['projectcompleted']=completed
+        deal_record.fields['projectcompleted'] = completed
         deal_record.save()
         project_record.save()
         if not isempty(deal_record.recordid):
             custom_save_record(request, tableid='deal', recordid=deal_record.recordid)
 
-
-
     # ---DEALLINE
     if tableid == 'dealline':
-        dealline_record=Record('dealline',recordid)
+        dealline_record = Record('dealline', recordid)
         custom_save_record(request, tableid='deal', recordid=dealline_record.fields['recordiddeal_'])
 
     # ---DEAL
     if tableid == 'deal':
-        dbh=DatabaseHelper()
+        dbh = DatabaseHelper()
         # recupero informazioni necessarie
         deal_record = Record('deal', recordid)
-        creation=deal_record.fields['creation_']
-        deal_record.fields['opendate']=creation.strftime("%Y-%m-%d")
-        deal_user_recorddict= dbh.sql_query_row(f"select * from sys_user where id={deal_record.fields['dealuser1']}")
-        deal_record.fields['adiuto_dealuser']=deal_user_recorddict['adiutoid']
-        deal_project_recorddict= dbh.sql_query_row(f"select * from user_project where recordiddeal_={recordid}")
-        project_recordid=''
+        creation = deal_record.fields['creation_']
+        deal_record.fields['opendate'] = creation.strftime("%Y-%m-%d")
+        deal_user_recorddict = dbh.sql_query_row(f"select * from sys_user where id={deal_record.fields['dealuser1']}")
+        deal_record.fields['adiuto_dealuser'] = deal_user_recorddict['adiutoid']
+        deal_project_recorddict = dbh.sql_query_row(f"select * from user_project where recordiddeal_={recordid}")
+        project_recordid = ''
         if deal_project_recorddict:
-            project_recordid=deal_project_recorddict['recordid_']
+            project_recordid = deal_project_recorddict['recordid_']
 
-        deal_price=deal_record.fields['amount']
+        deal_price = deal_record.fields['amount']
         if not deal_price:
-            deal_price=0
-        deal_price_sum=0
-        deal_expectedcost=deal_record.fields['expectedcost']
+            deal_price = 0
+        deal_price_sum = 0
+        deal_expectedcost = deal_record.fields['expectedcost']
         if not deal_expectedcost:
-            deal_expectedcost=0
-        deal_expectedcost_sum=0
-        deal_actualcost=0
-        deal_expectedhours=0
-        deal_usedhours=deal_record.fields['usedhours']
+            deal_expectedcost = 0
+        deal_expectedcost_sum = 0
+        deal_actualcost = 0
+        deal_expectedhours = 0
+        deal_usedhours = deal_record.fields['usedhours']
         if not deal_usedhours:
-            deal_usedhours=0
-        deal_expectedmargin=0
-        deal_actualmargin=0
-        deal_annualprice=0
-        deal_annualcost=0
-        deal_annualmargin=0
+            deal_usedhours = 0
+        deal_expectedmargin = 0
+        deal_actualmargin = 0
+        deal_annualprice = 0
+        deal_annualcost = 0
+        deal_annualmargin = 0
 
-        deal_record.fields['fixedprice']='No'
-        dealline_records=deal_record.get_linkedrecords(linkedtable='dealline')
+        deal_record.fields['fixedprice'] = 'No'
+        dealline_records = deal_record.get_linkedrecords(linkedtable='dealline')
         for dealline_recorddict in dealline_records:
-            dealline_recordid=dealline_recorddict['recordid_']
-            product_recordid=dealline_recorddict['recordidproduct_']
-            dealline_recordid=dealline_recorddict['recordid_']
-            dealline_quantity=dealline_recorddict['quantity']
-            dealline_price=dealline_recorddict['price']
-            dealline_expectedcost=dealline_recorddict['expectedcost']
-            dealline_expectedmargin=dealline_recorddict['expectedmargin']
-            dealline_unitactualcost=dealline_recorddict['uniteffectivecost']
+            dealline_recordid = dealline_recorddict['recordid_']
+            product_recordid = dealline_recorddict['recordidproduct_']
+            dealline_recordid = dealline_recorddict['recordid_']
+            dealline_quantity = dealline_recorddict['quantity']
+            dealline_price = dealline_recorddict['price']
+            dealline_expectedcost = dealline_recorddict['expectedcost']
+            dealline_expectedmargin = dealline_recorddict['expectedmargin']
+            dealline_unitactualcost = dealline_recorddict['uniteffectivecost']
             if not dealline_unitactualcost:
-                dealline_unitactualcost=0
-            dealline_frequency=dealline_recorddict['frequency']
-            multiplier=1
-            if dealline_frequency=='Annuale':
-                multiplier=1
-            if dealline_frequency=='Semestrale':
-                multiplier=2
-            if dealline_frequency=='Trimestrale':
-                multiplier=3
-            if dealline_frequency=='Bimestrale':
-                multiplier=6
-            if dealline_frequency=='Mensile':
-                multiplier=12
-            deal_price_sum=deal_price_sum+dealline_price
-            deal_expectedcost_sum=deal_expectedcost_sum+dealline_expectedcost
-            dealline_record=Record('dealline',dealline_recordid)
-            dealline_record.fields['recordidproject_']=project_recordid
+                dealline_unitactualcost = 0
+            dealline_frequency = dealline_recorddict['frequency']
+            multiplier = 1
+            if dealline_frequency == 'Annuale':
+                multiplier = 1
+            if dealline_frequency == 'Semestrale':
+                multiplier = 2
+            if dealline_frequency == 'Trimestrale':
+                multiplier = 3
+            if dealline_frequency == 'Bimestrale':
+                multiplier = 6
+            if dealline_frequency == 'Mensile':
+                multiplier = 12
+            deal_price_sum = deal_price_sum + dealline_price
+            deal_expectedcost_sum = deal_expectedcost_sum + dealline_expectedcost
+            dealline_record = Record('dealline', dealline_recordid)
+            dealline_record.fields['recordidproject_'] = project_recordid
 
-            dealline_actualcost=dealline_unitactualcost*dealline_quantity
-            product_record=Record('product',product_recordid)
-            product_fixedprice='No'
+            dealline_actualcost = dealline_unitactualcost * dealline_quantity
+            product_record = Record('product', product_recordid)
+            product_fixedprice = 'No'
             if not isempty(product_record.recordid):
-                product_fixedprice=product_record.fields['fixedprice']
+                product_fixedprice = product_record.fields['fixedprice']
             if not dealline_recorddict['expectedhours']:
-                dealline_recorddict['expectedhours']=0
-            deal_expectedhours=deal_expectedhours+dealline_recorddict['expectedhours']
-            if product_fixedprice=='Si':
-                deal_record.fields['fixedprice']='Si'
+                dealline_recorddict['expectedhours'] = 0
+            deal_expectedhours = deal_expectedhours + dealline_recorddict['expectedhours']
+            if product_fixedprice == 'Si':
+                deal_record.fields['fixedprice'] = 'Si'
                 if isempty(dealline_record.fields['expectedhours']):
-                    dealline_record.fields['expectedhours']=dealline_price/140
-                if deal_usedhours!=0:
-                    dealline_record.fields['usedhours']=deal_usedhours
-                    dealline_actualcost=deal_usedhours*60
-                    deal_usedhours=0
-            if dealline_actualcost!=0:
-                dealline_actualmargin=dealline_price-dealline_actualcost
+                    dealline_record.fields['expectedhours'] = dealline_price / 140
+                if deal_usedhours != 0:
+                    dealline_record.fields['usedhours'] = deal_usedhours
+                    dealline_actualcost = deal_usedhours * 60
+                    deal_usedhours = 0
+            if dealline_actualcost != 0:
+                dealline_actualmargin = dealline_price - dealline_actualcost
             else:
-                dealline_actualmargin=dealline_expectedmargin
-            dealline_record.fields['effectivecost']=dealline_actualcost
-            dealline_record.fields['margin_actual']=dealline_actualmargin
+                dealline_actualmargin = dealline_expectedmargin
+            dealline_record.fields['effectivecost'] = dealline_actualcost
+            dealline_record.fields['margin_actual'] = dealline_actualmargin
 
             if not isempty(dealline_frequency):
-                dealline_record.fields['annualprice']=dealline_price*multiplier
-                if dealline_actualcost!=0:
-                    dealline_record.fields['annualcost']=dealline_actualcost*multiplier
+                dealline_record.fields['annualprice'] = dealline_price * multiplier
+                if dealline_actualcost != 0:
+                    dealline_record.fields['annualcost'] = dealline_actualcost * multiplier
                 else:
-                    dealline_record.fields['annualcost']=dealline_expectedcost*multiplier
-                dealline_record.fields['annualmargin']=dealline_record.fields['annualprice']-dealline_record.fields['annualcost']
-                deal_annualprice=deal_annualprice+dealline_record.fields['annualprice']
-                deal_annualcost=deal_annualcost+dealline_record.fields['annualcost']
-                deal_annualmargin=deal_annualmargin+dealline_record.fields['annualmargin']
+                    dealline_record.fields['annualcost'] = dealline_expectedcost * multiplier
+                dealline_record.fields['annualmargin'] = dealline_record.fields['annualprice'] - dealline_record.fields[
+                    'annualcost']
+                deal_annualprice = deal_annualprice + dealline_record.fields['annualprice']
+                deal_annualcost = deal_annualcost + dealline_record.fields['annualcost']
+                deal_annualmargin = deal_annualmargin + dealline_record.fields['annualmargin']
             dealline_record.save()
 
-            deal_actualcost=deal_actualcost+dealline_actualcost
-            deal_actualmargin=deal_actualmargin+dealline_actualmargin
+            deal_actualcost = deal_actualcost + dealline_actualcost
+            deal_actualmargin = deal_actualmargin + dealline_actualmargin
 
-        if deal_price_sum!=0:
-            deal_price=deal_price_sum
-        if deal_expectedcost_sum!=0:
-            deal_expectedcost=deal_expectedcost_sum
-        deal_expectedmargin=deal_price-deal_expectedcost
-        if deal_actualcost==0:
-            deal_actualmargin= deal_expectedmargin
+        if deal_price_sum != 0:
+            deal_price = deal_price_sum
+        if deal_expectedcost_sum != 0:
+            deal_expectedcost = deal_expectedcost_sum
+        deal_expectedmargin = deal_price - deal_expectedcost
+        if deal_actualcost == 0:
+            deal_actualmargin = deal_expectedmargin
 
-        deal_record.fields['amount']=round(deal_price, 2)
-        deal_record.fields['expectedcost']=round(deal_expectedcost, 2)
-        deal_record.fields['expectedmargin']= round(deal_expectedmargin, 2)
-        deal_record.fields['expectedhours']=deal_expectedhours
-        deal_record.fields['actualcost']=deal_actualcost
-        deal_record.fields['effectivemargin']=deal_actualmargin
-        deal_record.fields['margindifference']=deal_actualmargin-deal_expectedmargin
-        deal_record.fields['annualprice']=deal_annualprice
-        deal_record.fields['annualcost']=deal_annualcost
-        deal_record.fields['annualmargin']=deal_annualmargin
+        deal_record.fields['amount'] = round(deal_price, 2)
+        deal_record.fields['expectedcost'] = round(deal_expectedcost, 2)
+        deal_record.fields['expectedmargin'] = round(deal_expectedmargin, 2)
+        deal_record.fields['expectedhours'] = deal_expectedhours
+        deal_record.fields['actualcost'] = deal_actualcost
+        deal_record.fields['effectivemargin'] = deal_actualmargin
+        deal_record.fields['margindifference'] = deal_actualmargin - deal_expectedmargin
+        deal_record.fields['annualprice'] = deal_annualprice
+        deal_record.fields['annualcost'] = deal_annualcost
+        deal_record.fields['annualmargin'] = deal_annualmargin
 
         # valutazione step workflow
-        deal_type=deal_record.fields['type']
-        deal_record.fields['techvalidation']='No'
-        deal_record.fields['creditcheck']='Si'
-        deal_record.fields['project']='Si'
-        deal_record.fields['purchaseorder']='Si'
+        deal_type = deal_record.fields['type']
+        deal_record.fields['techvalidation'] = 'No'
+        deal_record.fields['creditcheck'] = 'Si'
+        deal_record.fields['project'] = 'Si'
+        deal_record.fields['purchaseorder'] = 'Si'
         # default tech
-        if deal_type=='Printing':
-            deal_record.fields['project_default_adiutotech']=1019
-        if deal_type=='Software' or deal_type=='Hosting':
-            deal_record.fields['project_default_adiutotech']=1011
-        #tech validation
-        if deal_type=='ICT' or deal_type=='PBX':
-            deal_record.fields['techvalidation']='Si'
+        if deal_type == 'Printing':
+            deal_record.fields['project_default_adiutotech'] = 1019
+        if deal_type == 'Software' or deal_type == 'Hosting':
+            deal_record.fields['project_default_adiutotech'] = 1011
+        # tech validation
+        if deal_type == 'ICT' or deal_type == 'PBX':
+            deal_record.fields['techvalidation'] = 'Si'
 
-        #credit check
-        if deal_type=='Rinnovo Monte ore' or deal_type=='Riparazione Lenovo':
-            deal_record.fields['creditcheck']='No'
-        if deal_record.fields['amount']<500:
-            deal_record.fields['creditcheck']='No'
+        # credit check
+        if deal_type == 'Rinnovo Monte ore' or deal_type == 'Riparazione Lenovo':
+            deal_record.fields['creditcheck'] = 'No'
+        if deal_record.fields['amount'] < 500:
+            deal_record.fields['creditcheck'] = 'No'
 
-        #progetto
-        if deal_type=='Aggiunta servizi' or deal_type=='Materiale senza attività' or deal_type=='Rinnovo Monte ore':
-            deal_record.fields['project']='No'
-            deal_record.fields['project_default_adiutotech']=1019
+        # progetto
+        if deal_type == 'Aggiunta servizi' or deal_type == 'Materiale senza attività' or deal_type == 'Rinnovo Monte ore':
+            deal_record.fields['project'] = 'No'
+            deal_record.fields['project_default_adiutotech'] = 1019
 
-        #ordine materiale
-        if deal_type=='Rinnovo Monte ore':
-            deal_record.fields['purchaseorder']='No'
+        # ordine materiale
+        if deal_type == 'Rinnovo Monte ore':
+            deal_record.fields['purchaseorder'] = 'No'
 
         deal_record.save()
 
-
     # ---userlog Attività e Note
     if tableid == 'user_log':
-        userlog_record=Record('user_log',recordid)
-        salespush_record=Record('salespush',userlog_record.fields['recordidsalespush_'])
-        reminder=userlog_record.fields['reminder']
-        description=userlog_record.fields['description']
+        userlog_record = Record('user_log', recordid)
+        salespush_record = Record('salespush', userlog_record.fields['recordidsalespush_'])
+        reminder = userlog_record.fields['reminder']
+        description = userlog_record.fields['description']
         if reminder:
-            salespush_record.fields['recalldate']=reminder.strftime("%Y-%m-%d")
-        salespush_record.fields['lastupdate']=description
+            salespush_record.fields['recalldate'] = reminder.strftime("%Y-%m-%d")
+        salespush_record.fields['lastupdate'] = description
         salespush_record.save()
         userlog_record.save()
     # ---CONTACT---
     if tableid == 'contact':
-        contact_record=Record('contact',recordid)
-        company_record=Record('company',contact_record.fields['recordidcompany_'])
-        contact_record.fields['reference']=''
+        contact_record = Record('contact', recordid)
+        company_record = Record('company', contact_record.fields['recordidcompany_'])
+        contact_record.fields['reference'] = ''
 
         if not isempty(contact_record.fields['name']):
-            contact_record.fields['reference']=contact_record.fields['reference']+" "+contact_record.fields['name']
+            contact_record.fields['reference'] = contact_record.fields['reference'] + " " + contact_record.fields[
+                'name']
         if not isempty(contact_record.fields['surname']):
-            contact_record.fields['reference']=contact_record.fields['reference']+" "+contact_record.fields['surname']
-        #if not isempty(company_record.recordid):
-         #   contact_record.fields['reference']=contact_record.fields['name']+" "+contact_record.fields['surname']+" - "+company_record.fields['companyname']
+            contact_record.fields['reference'] = contact_record.fields['reference'] + " " + contact_record.fields[
+                'surname']
+        # if not isempty(company_record.recordid):
+        #   contact_record.fields['reference']=contact_record.fields['name']+" "+contact_record.fields['surname']+" - "+company_record.fields['companyname']
         contact_record.save()
 
     return True
@@ -2450,9 +2470,7 @@ def stampa_timesheet(request):
             line['expectedquantity'] = line['expectedquantity'] or ''
             line['actualquantity'] = line['actualquantity'] or ''
 
-
     row['timesheetlines'] = timesheetlines
-
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
@@ -2499,12 +2517,12 @@ def stampa_servicecontract(request):
                 f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}' AND deleted_='N'"
             )
             timesheets = dictfetchall(cursor)
-        timesheets_updated=list()
+        timesheets_updated = list()
         for timesheet in timesheets:
-            ticket_record=Record(tableid='ticket',recordid=timesheet['recordidticket_'])
-            timesheet['ticket_subject']=''
+            ticket_record = Record(tableid='ticket', recordid=timesheet['recordidticket_'])
+            timesheet['ticket_subject'] = ''
             if not isempty(ticket_record.recordid):
-                timesheet['ticket_subject']=ticket_record.fields['subject']
+                timesheet['ticket_subject'] = ticket_record.fields['subject']
             timesheets_updated.append(timesheet)
         context['timesheets'] = timesheets_updated
 
@@ -2852,7 +2870,8 @@ def check_task_status(recordid):
                 description = user[0]['description']
 
                 message = render_to_string('other/close_task.html',
-                                           {'username': username, 'company': company, 'description': description, 'recordid': recordid})
+                                           {'username': username, 'company': company, 'description': description,
+                                            'recordid': recordid})
                 send_email(
                     emails=[email],
                     subject='Task chiuso da ' + username,
@@ -3225,7 +3244,6 @@ def print_word(request):
     filename = filename.replace("\\", "-")
     filename = filename.replace("'", "")
     filename = filename.replace('"', "")
-
 
     # instead of creating a word i want to open one
 
@@ -4526,7 +4544,6 @@ def get_user_worktime(request):
         if worked is None:
             worked = 0
 
-
     return JsonResponse({'worktime': worked})
 
 
@@ -4555,6 +4572,7 @@ def update_record_date(request):
 
     return JsonResponse({'success': True})
 
+
 def update_end_date(request):
     enddate = request.POST.get('enddate')
     recordid = request.POST.get('recordid')
@@ -4568,6 +4586,7 @@ def update_end_date(request):
     print(recordid)
 
     return JsonResponse({'success': True})
+
 
 def set_event_allday(request):
     recordid = request.POST.get('recordid')
@@ -4584,8 +4603,7 @@ def set_event_allday(request):
 
 
 def get_script(request):
-
-    sql="SELECT * FROM sys_table"
+    sql = "SELECT * FROM sys_table"
     with connection.cursor() as cursor:
         cursor.execute(sql)
         tables = dictfetchall(cursor)
@@ -4597,24 +4615,23 @@ def get_script(request):
 
 
 def execute_script(request):
+    tableid = request.POST.get('tableid')
+    condition = request.POST.get('condition')
 
-   tableid = request.POST.get('tableid')
-   condition = request.POST.get('condition')
+    recordids = []
 
-   recordids = []
-
-   sql= f"SELECT * FROM user_{tableid} WHERE {condition}"
-   with connection.cursor() as cursor:
+    sql = f"SELECT * FROM user_{tableid} WHERE {condition}"
+    with connection.cursor() as cursor:
         cursor.execute(sql)
         records = dictfetchall(cursor)
 
-   for record in records:
-      recordids.append(record['recordid_'])
+    for record in records:
+        recordids.append(record['recordid_'])
 
-   for recordid in recordids:
+    for recordid in recordids:
         save_record_fields(request)
 
-   return True
+    return True
 
 
 def close_salespush(request):
@@ -4629,9 +4646,7 @@ def close_salespush(request):
 
 
 def get_user_sold(request):
-
     userid = get_userid(request.user.id)
-
 
     query = f"SELECT ROUND(SUM(d.effectivemargin)) FROM user_deal AS d WHERE d.dealuser1 = '{userid}' AND d.closedate >= DATE_FORMAT(CURDATE(), '%Y-%m-01') AND d.closedate <= CURDATE() AND d.deleted_ = 'N'"
 
@@ -4673,133 +4688,132 @@ def task_functions(request):
                 f"UPDATE user_task SET planneddate = NULL, duedate = CURDATE() + INTERVAL 1 MONTH WHERE recordid_ = '{recordid}'"
             )
 
-
     return JsonResponse({'success': True})
 
 
 def stampa_project(request):
-        dbh = DatabaseHelper()
-        recordid = request.POST.get('recordid')
-        type = request.POST.get('type')
-        users=dict()
-        rows=dbh.sql_query("SELECT * FROM sys_user WHERE firstname is not null and lastname is not null")
-        for row in rows:
-            users[int(row['id'])]=row['firstname']+" "+row['lastname']
+    dbh = DatabaseHelper()
+    recordid = request.POST.get('recordid')
+    type = request.POST.get('type')
+    users = dict()
+    rows = dbh.sql_query("SELECT * FROM sys_user WHERE firstname is not null and lastname is not null")
+    for row in rows:
+        users[int(row['id'])] = row['firstname'] + " " + row['lastname']
 
-        path = os.path.dirname(os.path.abspath(__file__))
-        path = path.rsplit('views', 1)[0]
-        filename_with_path = path + '\\static\\pdf\\' + 'project.pdf'
+    path = os.path.dirname(os.path.abspath(__file__))
+    path = path.rsplit('views', 1)[0]
+    filename_with_path = path + '\\static\\pdf\\' + 'project.pdf'
 
-        uid = uuid.uuid4().hex
-         
-        context = {}
-        
-        context['type'] = type
-         
-        record_project=Record('project',recordid)
-        record_company=Record('company',record_project.fields['recordidcompany_'])
-        context['nomeprogetto']=record_project.fields['projectname']
-        context['nomeazienda']=record_company.fields['companyname']
-        context['responsabile']=users[int(record_project.fields['assignedto'])]
+    uid = uuid.uuid4().hex
 
-        technicians=list()
-        sql=f"""
+    context = {}
+
+    context['type'] = type
+
+    record_project = Record('project', recordid)
+    record_company = Record('company', record_project.fields['recordidcompany_'])
+    context['nomeprogetto'] = record_project.fields['projectname']
+    context['nomeazienda'] = record_company.fields['companyname']
+    context['responsabile'] = users[int(record_project.fields['assignedto'])]
+
+    technicians = list()
+    sql = f"""
             SELECT distinct user,COUNT(*) AS counter 
             FROM user_timesheet WHERE deleted_='N' AND recordidproject_='{recordid}' 
             GROUP BY USER
             ORDER BY counter desc
         """
-        rows=dbh.sql_query(sql)
-        for row in rows:
-            technicians.append(users[int(row['user'])])
-        context['tecnici']=technicians
-        context['datainizio']=record_project.fields['startdate']
-        context['datafineprevista']=record_project.fields['targetenddate']
-        context['datafineeffettiva']=''
-        context['descrizione']= null_check(record_project.fields['publicdescription']).replace('\n', '<br/>')
-        context['note']=null_check(record_project.fields['publicnote']).replace('\n', '<br/>')
-        table_timesheet = Table('timesheet')
+    rows = dbh.sql_query(sql)
+    for row in rows:
+        technicians.append(users[int(row['user'])])
+    context['tecnici'] = technicians
+    context['datainizio'] = record_project.fields['startdate']
+    context['datafineprevista'] = record_project.fields['targetenddate']
+    context['datafineeffettiva'] = ''
+    context['descrizione'] = null_check(record_project.fields['publicdescription']).replace('\n', '<br/>')
+    context['note'] = null_check(record_project.fields['publicnote']).replace('\n', '<br/>')
+    table_timesheet = Table('timesheet')
+    conditions_list = list()
+    conditions_list.append(f"recordidproject_ = {recordid}")
+    conditions_list.append(f"deleted_='N'")
+    timesheets = table_timesheet.get_records(conditions_list=conditions_list, orderby='date asc')
+    context['timesheets'] = list()
+    for timesheet in timesheets:
+        timesheet['user'] = users[int(timesheet['user'])]
+        context['timesheets'].append(timesheet)
+
+        first_name, last_name = timesheet['user'].split(' ', 1)
+        profile_pic = f"{first_name}.{last_name}"
+        profile_pic = profile_pic.lower()
+        timesheet['profile_pic'] = profile_pic
+
+    table_projectmilestone = Table('projectmilestone')
+    conditions_list = list()
+    conditions_list.append(f"recordidproject_ = {recordid}")
+    conditions_list.append(f"deleted_='N'")
+    milestones = table_projectmilestone.get_records(conditions_list=conditions_list, orderby='expecteddate asc')
+    context['milestones'] = milestones
+
+    milestones_tasks = dict()
+    table_tasks = Table('task')
+    for milestone in milestones:
+        milestone_recordid = milestone['recordid_']
+        milestones_tasks[milestone_recordid] = dict()
+        milestones_tasks[milestone_recordid]['titolo'] = milestone['title']
+        milestones_tasks[milestone_recordid]['descrizione'] = milestone['note']
+        milestones_tasks[milestone_recordid]['stato'] = milestone['stato']
         conditions_list = list()
-        conditions_list.append(f"recordidproject_ = {recordid}")
-        conditions_list.append(f"deleted_='N'")
-        timesheets = table_timesheet.get_records(conditions_list=conditions_list,orderby='date asc')
-        context['timesheets']=list()
-        for timesheet in timesheets:
-            timesheet['user']=users[int(timesheet['user'])]
-            context['timesheets'].append(timesheet)
+        conditions_list.append(f"recordidprojectmilestone_ = {milestone['recordid_']}")
+        milestones_tasks[milestone_recordid]['tasks'] = table_tasks.get_records(conditions_list=conditions_list,
+                                                                                orderby='recordid_ asc')
+    context['milestones_tasks'] = milestones_tasks
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
 
-            first_name, last_name = timesheet['user'].split(' ', 1)
-            profile_pic = f"{first_name}.{last_name}"
-            profile_pic = profile_pic.lower()
-            timesheet['profile_pic'] = profile_pic
+    record_deal = Record('deal', record_project.fields['recordiddeal_'])
+    context['redditivita'] = dict()
+    context['redditivita']['labels'] = ['Importo trattativa', 'Margine Previsto', 'Margine effettivo']
+    context['redditivita']['values'] = [record_deal.fields['amount'], record_deal.fields['expectedmargin'],
+                                        record_deal.fields['effectivemargin']]
+    context['redditivita']['importo'] = record_deal.fields['amount']
+    context['redditivita']['margineprevisto'] = record_deal.fields['expectedmargin']
+    context['redditivita']['margineffettivo'] = record_deal.fields['effectivemargin']
 
-        table_projectmilestone = Table('projectmilestone')
-        conditions_list = list()
-        conditions_list.append(f"recordidproject_ = {recordid}")
-        conditions_list.append(f"deleted_='N'")
-        milestones = table_projectmilestone.get_records(conditions_list=conditions_list,orderby='expecteddate asc')
-        context['milestones']=milestones
+    righedettaglio = list()
+    table_dealline = Table('dealline')
+    conditions_list = list()
+    conditions_list.append(f"recordidproject_ = {recordid}")
+    conditions_list.append(f"deleted_='N'")
+    righedettaglio = table_dealline.get_records(conditions_list=conditions_list, orderby='recordid_ desc')
+    context['righedettaglio'] = righedettaglio
 
-        milestones_tasks=dict()
-        table_tasks=Table('task')
-        for milestone in milestones:
-            milestone_recordid=milestone['recordid_']
-            milestones_tasks[milestone_recordid]=dict()
-            milestones_tasks[milestone_recordid]['titolo']=milestone['title']
-            milestones_tasks[milestone_recordid]['descrizione']=milestone['note']
-            milestones_tasks[milestone_recordid]['stato']=milestone['stato']
-            conditions_list = list()
-            conditions_list.append(f"recordidprojectmilestone_ = {milestone['recordid_']}")
-            milestones_tasks[milestone_recordid]['tasks']=table_tasks.get_records(conditions_list=conditions_list,orderby='recordid_ asc')
-        context['milestones_tasks']=milestones_tasks
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
- 
+    sql = f"SELECT SUM(totaltime_decimal) as totaltime_decimal,service FROM user_timesheet WHERE deleted_='N' AND recordidproject_='{recordid}' GROUP BY service"
+    rows = dbh.sql_query(sql)
+    values = list()
+    labels = list()
+    for row in rows:
+        values.append(row['totaltime_decimal'])
+        labels.append(row['service'])
+    if None in labels:
+        labels = ['Non assegnato' if v is None else v for v in labels]
+    context['ore_servizio'] = dict()
+    context['ore_servizio']['labels'] = labels
+    context['ore_servizio']['values'] = values
 
-        record_deal=Record('deal',record_project.fields['recordiddeal_'])
-        context['redditivita']=dict()
-        context['redditivita']['labels']=['Importo trattativa','Margine Previsto','Margine effettivo']
-        context['redditivita']['values']=[record_deal.fields['amount'],record_deal.fields['expectedmargin'],record_deal.fields['effectivemargin']]
-        context['redditivita']['importo']=record_deal.fields['amount']
-        context['redditivita']['margineprevisto']=record_deal.fields['expectedmargin']
-        context['redditivita']['margineffettivo']=record_deal.fields['effectivemargin']
+    sql = f"SELECT SUM(totaltime_decimal) as totaltime_decimal,invoiceoption FROM user_timesheet WHERE deleted_='N' AND recordidproject_='{recordid}' GROUP BY invoiceoption"
+    rows = dbh.sql_query(sql)
+    values = list()
+    labels = list()
+    for row in rows:
+        values.append(row['totaltime_decimal'])
+        labels.append(row['invoiceoption'])
+    if None in labels:
+        labels = ['Non assegnato' if v is None else v for v in labels]
+    context['ore_opzioni'] = dict()
+    context['ore_opzioni']['labels'] = labels
+    context['ore_opzioni']['values'] = values
 
-        righedettaglio=list()
-        table_dealline = Table('dealline')
-        conditions_list = list()
-        conditions_list.append(f"recordidproject_ = {recordid}")
-        conditions_list.append(f"deleted_='N'")
-        righedettaglio = table_dealline.get_records(conditions_list=conditions_list,orderby='recordid_ desc')
-        context['righedettaglio']=righedettaglio
-
-        sql=f"SELECT SUM(totaltime_decimal) as totaltime_decimal,service FROM user_timesheet WHERE deleted_='N' AND recordidproject_='{recordid}' GROUP BY service"
-        rows= dbh.sql_query(sql)
-        values=list()
-        labels=list()
-        for row in rows:
-            values.append(row['totaltime_decimal'])
-            labels.append(row['service'])
-        if None in labels:
-            labels = ['Non assegnato' if v is None else v for v in labels]
-        context['ore_servizio']=dict()
-        context['ore_servizio']['labels']=labels
-        context['ore_servizio']['values']=values
-
-
-        sql=f"SELECT SUM(totaltime_decimal) as totaltime_decimal,invoiceoption FROM user_timesheet WHERE deleted_='N' AND recordidproject_='{recordid}' GROUP BY invoiceoption"
-        rows= dbh.sql_query(sql)
-        values=list()
-        labels=list()
-        for row in rows:
-            values.append(row['totaltime_decimal'])
-            labels.append(row['invoiceoption'])
-        if None in labels:
-            labels = ['Non assegnato' if v is None else v for v in labels]
-        context['ore_opzioni']=dict()
-        context['ore_opzioni']['labels']=labels
-        context['ore_opzioni']['values']=values
-
-        """
+    """
         try:
             with open(filename_with_path, 'rb') as fh:
                 response = HttpResponse(fh.read(), content_type="application/pdf")
@@ -4810,11 +4824,10 @@ def stampa_project(request):
         finally:
             os.remove(filename_with_path)
         """
-        return render(request, 'pdf/project.html', context)
+    return render(request, 'pdf/project.html', context)
 
 
 def get_ticket_feedback(request):
-
     url = f"https://www.swissbix.ch/ticketfeedback/get_tickets.php?password={get_tickets_password}"
 
     headers = {
@@ -4822,7 +4835,7 @@ def get_ticket_feedback(request):
     }
 
     response = requests.get(url, headers=headers)
-    
+
     response = json.loads(response.text)
     for feedback in response:
         field = Helperdb.sql_query_row(f"select * from user_ticketfeedback WHERE ticketid='{feedback['ticketid']}'")
@@ -4833,17 +4846,15 @@ def get_ticket_feedback(request):
             new_record.fields['comment'] = feedback['comment']
 
             new_record.save()
-        else:   
+        else:
             record = Record(tableid='ticketfeedback', recordid=field['recordid_'])
             record.fields['level'] = feedback['level']
             record.fields['comment'] = feedback['comment']
             record.save()
 
-
-     
     return JsonResponse(response, safe=False)
 
-    
+
 def get_freshdesk_tickets(request):
     api_key = os.environ.get('FRESHDESK_APIKEY')
     password = "x"
@@ -4853,14 +4864,34 @@ def get_freshdesk_tickets(request):
 
     response = requests.get(url, auth=(api_key, password))
 
-
     headers = response.headers
     response = json.loads(response.text)
 
+    for ticket in response:
+        field = Helperdb.sql_query_row(f"select * from user_freshdesk_tickets WHERE ticket_id='{ticket['id']}'")
+        if not field:
+            new_record = Record(tableid='freshdesk_tickets')
+            new_record.fields['ticket_id'] = ticket['id']
+            new_record.fields['subject'] = ticket['subject']
+            new_record.fields['description'] = ticket['description_text']
+            new_record.fields['created_at'] = ticket['created_at']
+            new_record.fields['closed_at'] = ticket['stats']['closed_at']
+            new_record.fields['requester_id'] = ticket['requester']['id']
+            new_record.fields['requester_name'] = ticket['requester']['name']
+            new_record.fields['requester_email'] = ticket['requester']['email']
+            new_record.fields['responder_id'] = ticket['responder_id']
+            new_record.fields['status'] = ticket['status']
+
+            new_record.save()
+        else:
+            record = Record(tableid='freshdesk_tickets', ticket_id=field['id'])
+            record.fields['subject'] = ticket['subject']
+            record.fields['description'] = ticket['description_text']
+            record.fields['closed_at'] = ticket['stats']['closed_at']
+            record.fields['status'] = ticket['status']
+            record.fields['responder_id'] = ticket['responder_id']
+
+            record.save()
 
 
     return JsonResponse(response, safe=False)
-
-
-
-
