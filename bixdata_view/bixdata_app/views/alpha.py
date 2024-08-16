@@ -4685,7 +4685,7 @@ def stampa_project(request):
         rows=dbh.sql_query("SELECT * FROM sys_user WHERE firstname is not null and lastname is not null")
         for row in rows:
             users[int(row['id'])]=row['firstname']+" "+row['lastname']
-        
+
         path = os.path.dirname(os.path.abspath(__file__))
         path = path.rsplit('views', 1)[0]
         filename_with_path = path + '\\static\\pdf\\' + 'project.pdf'
@@ -4716,8 +4716,8 @@ def stampa_project(request):
         context['datainizio']=record_project.fields['startdate']
         context['datafineprevista']=record_project.fields['targetenddate']
         context['datafineeffettiva']=''
-        context['descrizione']= record_project.fields['publicdescription'].replace('\n', '<br/>')
-        context['note']=record_project.fields['publicnote'].replace('\n', '<br/>')
+        context['descrizione']= null_check(record_project.fields['publicdescription']).replace('\n', '<br/>')
+        context['note']=null_check(record_project.fields['publicnote']).replace('\n', '<br/>')
         table_timesheet = Table('timesheet')
         conditions_list = list()
         conditions_list.append(f"recordidproject_ = {recordid}")
@@ -4856,6 +4856,8 @@ def get_freshdesk_tickets(request):
 
     headers = response.headers
     response = json.loads(response.text)
+
+
 
     return JsonResponse(response, safe=False)
 

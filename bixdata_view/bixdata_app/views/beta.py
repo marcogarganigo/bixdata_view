@@ -258,3 +258,9 @@ def isempty(var):
             return True
         else:
             return False
+
+def null_check(var):
+    if var is None or var=='None' or var=='null':
+        return ''
+    else:
+        return var

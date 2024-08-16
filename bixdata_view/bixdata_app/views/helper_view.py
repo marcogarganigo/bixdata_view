@@ -140,6 +140,7 @@ class HelperView:
         ripetizioni = delta_totale_mesi // intervallo_mesi + 1
         
         return ripetizioni
+
     
     
     
