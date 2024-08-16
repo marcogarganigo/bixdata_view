@@ -71,8 +71,17 @@ class Record:
                 next_recordid = '00000000000000000000000000000001'
             else:
                 next_recordid = str(int(max_recordid) + 1).zfill(32)
+            
+            sqlmax=f"SELECT MAX(id) as max_id FROM user_{self.tableid}"
+            result=Helperdb.sql_query_row(sqlmax)
+            max_id=result['max_id']
+            if max_id is None:
+                next_id = 1
+            else:
+                next_id = max_id+1
+            
             current_datetime=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            sqlinsert=f"INSERT INTO user_{self.tableid} (recordid_,creatorid_,creation_) VALUES ('{next_recordid}',{self.userid},'{current_datetime}') "
+            sqlinsert=f"INSERT INTO user_{self.tableid} (recordid_,creatorid_,creation_,id) VALUES ('{next_recordid}',{self.userid},'{current_datetime}',{next_id}) "
             self.db_helper.sql_execute(sqlinsert)
             self.recordid=next_recordid
             self.save()
