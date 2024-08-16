@@ -4830,11 +4830,14 @@ def get_ticket_feedback(request):
             new_record = Record(tableid='ticketfeedback')
             new_record.fields['ticketid'] = feedback['ticketid']
             new_record.fields['level'] = feedback['level']
+            new_record.fields['comment'] = feedback['comment']
 
             new_record.save()
-        else:
-            field['level'] = feedback['level']
-            field.save()
+        else:   
+            record = Record(tableid='ticketfeedback', recordid=field['recordid_'])
+            record.fields['level'] = feedback['level']
+            record.fields['comment'] = feedback['comment']
+            record.save()
 
 
      
