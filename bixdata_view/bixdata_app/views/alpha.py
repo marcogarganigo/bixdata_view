@@ -1203,7 +1203,7 @@ def save_record_fields(request):
                 email = row[0]
 
                 cursor.execute("SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s",
-                               [creator])
+                        [fields_dict['creator']])
                 row = cursor.fetchone()
                 first_name = row[0]
                 last_name = row[1]
@@ -4908,4 +4908,55 @@ def get_bexio_contacts(request):
 
     response = requests.request("GET", url, headers=headers)
     response = json.loads(response.text)
+
+    for contact in response:
+        field = Helperdb.sql_query_row(f"select * from user_bexio_contact WHERE bexio_id='{contact['id']}'")
+        if not field:
+            new_record = Record(tableid="bexio_contact")
+            new_record.fields['bexio_id'] = contact['id']
+            new_record.fields['nr'] = contact['nr']
+            new_record.fields['nr'] = contact['nr']
+            new_record.fields['contact_type_id'] = contact['contact_type_id']
+            new_record.fields['name_1'] = contact['name_1']
+            new_record.fields['name_2'] = contact['name_2']
+            new_record.fields['address'] = contact['address']
+            new_record.fields['postcode'] = contact['postcode']
+            new_record.fields['city'] = contact['city']
+            new_record.fields['country_id'] = contact['country_id']
+            new_record.fields['mail'] = contact['mail']
+            new_record.fields['mail_second'] = contact['mail_second']
+            new_record.fields['phone_fixed'] = contact['phone_fixed']
+            new_record.fields['phone_mobile'] = contact['phone_mobile']
+            new_record.fields['contact_group_ids'] = contact['contact_group_ids']
+            new_record.fields['contact_branch_ids'] = contact['contact_branch_ids']
+            new_record.fields['user_id'] = contact['user_id']
+            new_record.fields['owner_id'] = contact['owner_id']
+            #new_record.fields['status'] = contact['status']
+
+            new_record.save()
+
+        else:
+            record = Record(tableid="bexio_contact", bexio_id=field['id'])
+            record.fields['bexio_id'] = contact['id']
+            record.fields['nr'] = contact['nr']
+            record.fields['nr'] = contact['nr']
+            record.fields['contact_type_id'] = contact['contact_type_id']
+            record.fields['name_1'] = contact['name_1']
+            record.fields['name_2'] = contact['name_2']
+            record.fields['address'] = contact['address']
+            record.fields['postcode'] = contact['postcode']
+            record.fields['city'] = contact['city']
+            record.fields['country_id'] = contact['country_id']
+            record.fields['mail'] = contact['mail']
+            record.fields['mail_second'] = contact['mail_second']
+            record.fields['phone_fixed'] = contact['phone_fixed']
+            record.fields['phone_mobile'] = contact['phone_mobile']
+            record.fields['contact_group_ids'] = contact['contact_group_ids']
+            record.fields['contact_branch_ids'] = contact['contact_branch_ids']
+            record.fields['user_id'] = contact['user_id']
+            record.fields['owner_id'] = contact['owner_id']
+            #record.fields['status'] = contact['status']
+
+            record.save()
+
     return JsonResponse(response, safe=False)
