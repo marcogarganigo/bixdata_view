@@ -4895,3 +4895,17 @@ def get_freshdesk_tickets(request):
 
 
     return JsonResponse(response, safe=False)
+
+
+def get_bexio_contacts(request):
+    url = "https://api.bexio.com/2.0/contact/order_by=id_desc"
+    accesstoken=os.environ.get('BEXIO_ACCESSTOKEN')
+    headers = {
+        'Accept': "application/json",
+        'Content-Type': "application/json",
+        'Authorization': f"Bearer {accesstoken}",
+    }
+
+    response = requests.request("GET", url, headers=headers)
+    response = json.loads(response.text)
+    return JsonResponse(response, safe=False)

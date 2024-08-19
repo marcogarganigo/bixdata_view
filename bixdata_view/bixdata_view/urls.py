@@ -190,5 +190,6 @@ urlpatterns = [
     path('stampa_project/', alpha.stampa_project, name='stampa_project'),
     path('get_ticket_feedback/', alpha.get_ticket_feedback, name='get_ticket_feedback'),
     path('get_freshdesk_tickets/', alpha.get_freshdesk_tickets, name='get_freshdesk_tickets'),
+    path('get_bexio_contacts/', alpha.get_bexio_contacts, name='get_bexio_contacts'),
     
 ]
