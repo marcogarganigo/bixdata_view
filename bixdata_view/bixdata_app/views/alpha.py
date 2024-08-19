@@ -4960,3 +4960,26 @@ def get_bexio_contacts(request):
             record.save()
 
     return JsonResponse(response, safe=False)
+    
+def get_bexio_orders(request):
+    url = "https://api.bexio.com/2.0/kb_order/search/?order_by=id_desc&limit=100&offset=0"
+    accesstoken=os.environ.get('BEXIO_ACCESSTOKEN')
+    headers = {
+        'Accept': "application/json",
+        'Content-Type': "application/json",
+        'Authorization': f"Bearer {accesstoken}",
+    }
+
+    payload = """
+    [
+        {
+            "field": "kb_item_status_id",
+            "value": "5",
+            "criteria": "="
+        }
+    ]
+    """
+
+    response = requests.request("POST", url, data=payload, headers=headers)
+    response = json.loads(response.text)
+    return JsonResponse(response, safe=False)
