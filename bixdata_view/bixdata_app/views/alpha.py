@@ -4898,7 +4898,7 @@ def get_freshdesk_tickets(request):
 
 
 def get_bexio_contacts(request):
-    url = "https://api.bexio.com/2.0/contact/order_by=id_desc"
+    url = "https://api.bexio.com/2.0/contact/"
     accesstoken=os.environ.get('BEXIO_ACCESSTOKEN')
     headers = {
         'Accept': "application/json",
