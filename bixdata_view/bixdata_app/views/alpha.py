@@ -5041,3 +5041,17 @@ def get_bexio_positions(request,bexiotable,bexioid):
         record.save()
     
     return JsonResponse(response, safe=False)
+
+
+def get_bexio_invoices(request):
+    url = "https://api.bexio.com/2.0/kb_invoice?order_by=id_desc&limit=100&offset=0"
+    accesstoken=os.environ.get('BEXIO_ACCESSTOKEN')
+    headers = {
+        'Accept': "application/json",
+        'Content-Type': "application/json",
+        'Authorization': f"Bearer {accesstoken}",
+    }
+
+    response = requests.request("GET", url, headers=headers)
+    response = json.loads(response.text)
+    return JsonResponse(response, safe=False)
