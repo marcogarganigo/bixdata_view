@@ -4884,7 +4884,7 @@ def get_freshdesk_tickets(request):
 
             new_record.save()
         else:
-            record = Record(tableid='freshdesk_tickets', ticket_id=field['id'])
+            record = Record(tableid='freshdesk_tickets', recordid=field['recordid_'])
             record.fields['subject'] = ticket['subject']
             record.fields['description'] = ticket['description_text']
             record.fields['closed_at'] = ticket['stats']['closed_at']
@@ -4912,52 +4912,33 @@ def get_bexio_contacts(request):
     for contact in response:
         field = Helperdb.sql_query_row(f"select * from user_bexio_contact WHERE bexio_id='{contact['id']}'")
         if not field:
-            new_record = Record(tableid="bexio_contact")
-            new_record.fields['bexio_id'] = contact['id']
-            new_record.fields['nr'] = contact['nr']
-            new_record.fields['nr'] = contact['nr']
-            new_record.fields['contact_type_id'] = contact['contact_type_id']
-            new_record.fields['name_1'] = contact['name_1']
-            new_record.fields['name_2'] = contact['name_2']
-            new_record.fields['address'] = contact['address']
-            new_record.fields['postcode'] = contact['postcode']
-            new_record.fields['city'] = contact['city']
-            new_record.fields['country_id'] = contact['country_id']
-            new_record.fields['mail'] = contact['mail']
-            new_record.fields['mail_second'] = contact['mail_second']
-            new_record.fields['phone_fixed'] = contact['phone_fixed']
-            new_record.fields['phone_mobile'] = contact['phone_mobile']
-            new_record.fields['contact_group_ids'] = contact['contact_group_ids']
-            new_record.fields['contact_branch_ids'] = contact['contact_branch_ids']
-            new_record.fields['user_id'] = contact['user_id']
-            new_record.fields['owner_id'] = contact['owner_id']
-            #new_record.fields['status'] = contact['status']
-
-            new_record.save()
+            record = Record(tableid="bexio_contact")
 
         else:
-            record = Record(tableid="bexio_contact", bexio_id=field['id'])
-            record.fields['bexio_id'] = contact['id']
-            record.fields['nr'] = contact['nr']
-            record.fields['nr'] = contact['nr']
-            record.fields['contact_type_id'] = contact['contact_type_id']
-            record.fields['name_1'] = contact['name_1']
-            record.fields['name_2'] = contact['name_2']
-            record.fields['address'] = contact['address']
-            record.fields['postcode'] = contact['postcode']
-            record.fields['city'] = contact['city']
-            record.fields['country_id'] = contact['country_id']
-            record.fields['mail'] = contact['mail']
-            record.fields['mail_second'] = contact['mail_second']
-            record.fields['phone_fixed'] = contact['phone_fixed']
-            record.fields['phone_mobile'] = contact['phone_mobile']
-            record.fields['contact_group_ids'] = contact['contact_group_ids']
-            record.fields['contact_branch_ids'] = contact['contact_branch_ids']
-            record.fields['user_id'] = contact['user_id']
-            record.fields['owner_id'] = contact['owner_id']
-            #record.fields['status'] = contact['status']
+            record = Record(tableid="bexio_contact", recordid=field['recordid_'])
 
-            record.save()
+        record.fields['bexio_id'] = contact['id']
+        record.fields['nr'] = contact['nr']
+        record.fields['nr'] = contact['nr']
+        record.fields['contact_type_id'] = contact['contact_type_id']
+        record.fields['name_1'] = contact['name_1']
+        record.fields['name_2'] = contact['name_2']
+        record.fields['address'] = contact['address']
+        record.fields['postcode'] = contact['postcode']
+        record.fields['city'] = contact['city']
+        record.fields['country_id'] = contact['country_id']
+        record.fields['mail'] = contact['mail']
+        record.fields['mail_second'] = contact['mail_second']
+        record.fields['phone_fixed'] = contact['phone_fixed']
+        record.fields['phone_mobile'] = contact['phone_mobile']
+        record.fields['contact_group_ids'] = contact['contact_group_ids']
+        record.fields['contact_branch_ids'] = contact['contact_branch_ids']
+        record.fields['user_id'] = contact['user_id']
+        record.fields['owner_id'] = contact['owner_id']
+        # record.fields['status'] = contact['status']
+
+
+        record.save()
 
     return JsonResponse(response, safe=False)
     
@@ -4984,56 +4965,41 @@ def get_bexio_orders(request):
     response = json.loads(response.text)
 
     for order in response:
-        field = Helperdb.sql_query_row(f"select * from user_bexio_orders WHERE document_nr='{order['document_nr']}'")
+        field = Helperdb.sql_query_row(f"select * from user_bexio_orders WHERE bexio_id='{order['id']}'")
         if not field:
-            new_record = Record(tableid="bexio_orders")
-            new_record.fields['bexio_id'] = order['id']
-            new_record.fields['document_nr'] = order['document_nr']
-            new_record.fields['document_nr'] = order['document_nr']
-            new_record.fields['title'] = order['title']
-            new_record.fields['contact_id'] = order['contact_id']
-            new_record.fields['user_id'] = order['user_id']
-            new_record.fields['total_gross'] = order['total_gross']
-            new_record.fields['total_net'] = order['total_net']
-            new_record.fields['total_taxes'] = order['total_taxes']
-            new_record.fields['total'] = order['total']
-            new_record.fields['is_valid_from'] = order['is_valid_from']
-            new_record.fields['contact_address'] = order['contact_address']
-            new_record.fields['delivery_address'] = order['delivery_address']
-            new_record.fields['is_recurring'] = order['is_recurring']
-            new_record.fields['is_recurring'] = order['is_recurring']
-            #new_record.fields['taxs_percentage'] = order['taxs']['percentage']
-            #new_record.fields['taxs_value'] = order['taxs']['value']
+            record = Record(tableid="bexio_orders")
 
-            new_record.save()
         else:
-            record = Record(tableid="bexio_orders", document_nr=field['document_nr'])
-            new_record.fields['bexio_id'] = order['id']
-            new_record.fields['document_nr'] = order['document_nr']
-            new_record.fields['document_nr'] = order['document_nr']
-            new_record.fields['title'] = order['title']
-            new_record.fields['contact_id'] = order['contact_id']
-            new_record.fields['user_id'] = order['user_id']
-            new_record.fields['total_gross'] = order['total_gross']
-            new_record.fields['total_net'] = order['total_net']
-            new_record.fields['total_taxes'] = order['total_taxes']
-            new_record.fields['total'] = order['total']
-            new_record.fields['is_valid_from'] = order['is_valid_from']
-            new_record.fields['contact_address'] = order['contact_address']
-            new_record.fields['delivery_address'] = order['delivery_address']
-            new_record.fields['is_recurring'] = order['is_recurring']
-            new_record.fields['is_recurring'] = order['is_recurring']
-            #new_record.fields['taxs_percentage'] = order['taxs'][0]['percentage']
-            #new_record.fields['taxs_value'] = order['taxs'][0]['value']
+            record = Record(tableid="bexio_orders", recordid=field['recordid_'])
 
-            record.save()
 
+        record.fields['bexio_id'] = order['id']
+        record.fields['document_nr'] = order['document_nr']
+        record.fields['document_nr'] = order['document_nr']
+        record.fields['title'] = order['title']
+        record.fields['contact_id'] = order['contact_id']
+        record.fields['user_id'] = order['user_id']
+        record.fields['total_gross'] = order['total_gross']
+        record.fields['total_net'] = order['total_net']
+        record.fields['total_taxes'] = order['total_taxes']
+        record.fields['total'] = order['total']
+        record.fields['is_valid_from'] = order['is_valid_from']
+        record.fields['contact_address'] = order['contact_address']
+        record.fields['delivery_address'] = order['delivery_address']
+        record.fields['is_recurring'] = order['is_recurring']
+        record.fields['is_recurring'] = order['is_recurring']
+        # record.fields['taxs_percentage'] = order['taxs']['percentage']
+        # record.fields['taxs_value'] = order['taxs']['value']
+
+        record.save()
+        
+        get_bexio_positions_example(request, order['id'])
 
     return JsonResponse(response, safe=False)
 
 
-def get_bexio_positions_example(request):
-    return get_bexio_positions(request,'kb_order',3532)
+def get_bexio_positions_example(request, bexioid):
+    return get_bexio_positions(request,'kb_order',bexioid)
 
 
 def get_bexio_positions(request,bexiotable,bexioid):
@@ -5047,4 +5013,31 @@ def get_bexio_positions(request,bexiotable,bexioid):
 
     response = requests.request("GET", url, headers=headers)
     response = json.loads(response.text)
+    
+    for position in response:
+        field = Helperdb.sql_query_row(f"select * from user_bexio_positions WHERE bexio_id='{position['id']}'")
+        if not field:
+            record = Record(tableid="bexio_positions")
+        else:
+            record = Record(tableid="bexio_positions", recordid=field['recordid_'])
+
+        record.fields['bexio_id'] = position['id']
+        record.fields['type'] = position['type']
+        record.fields['amount'] = position['amount']
+        record.fields['unit_id'] = position['unit_id']
+        record.fields['account_id'] = position['account_id']
+        record.fields['unit_name'] = position['unit_name']
+        record.fields['tax_id'] = position['tax_id']
+        record.fields['tax_value'] = position['tax_value']
+        record.fields['text'] = position['text']
+        record.fields['unit_price'] = position['unit_price']
+        record.fields['discount_in_percent'] = position['discount_in_percent']
+        record.fields['position_total'] = position['position_total']
+        record.fields['pos'] = position['pos']
+        record.fields['internal_pos'] = position['internal_pos']
+        record.fields['parent_id'] = position['parent_id']
+        record.fields['is_optional'] = position['is_optional']
+
+        record.save()
+    
     return JsonResponse(response, safe=False)
