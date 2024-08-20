@@ -192,5 +192,6 @@ urlpatterns = [
     path('get_freshdesk_tickets/', alpha.get_freshdesk_tickets, name='get_freshdesk_tickets'),
     path('get_bexio_contacts/', alpha.get_bexio_contacts, name='get_bexio_contacts'),
     path('get_bexio_orders/', alpha.get_bexio_orders, name='get_bexio_orders'),
+    path('get_bexio_positions_example/', alpha.get_bexio_positions_example, name='get_bexio_positions_example'),
     
 ]

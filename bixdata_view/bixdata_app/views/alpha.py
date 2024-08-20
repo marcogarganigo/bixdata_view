@@ -5030,3 +5030,21 @@ def get_bexio_orders(request):
 
 
     return JsonResponse(response, safe=False)
+
+
+def get_bexio_positions_example(request):
+    return get_bexio_positions(request,'kb_order',3532)
+
+
+def get_bexio_positions(request,bexiotable,bexioid):
+    url = f"https://api.bexio.com/2.0/{bexiotable}/{bexioid}/kb_position_custom"
+    accesstoken=os.environ.get('BEXIO_ACCESSTOKEN')
+    headers = {
+        'Accept': "application/json",
+        'Content-Type': "application/json",
+        'Authorization': f"Bearer {accesstoken}",
+    }
+
+    response = requests.request("GET", url, headers=headers)
+    response = json.loads(response.text)
+    return JsonResponse(response, safe=False)
