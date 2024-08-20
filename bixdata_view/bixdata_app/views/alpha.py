@@ -4982,4 +4982,51 @@ def get_bexio_orders(request):
 
     response = requests.request("POST", url, data=payload, headers=headers)
     response = json.loads(response.text)
+
+    for order in response:
+        field = Helperdb.sql_query_row(f"select * from user_bexio_orders WHERE document_nr='{order['document_nr']}'")
+        if not field:
+            new_record = Record(tableid="bexio_orders")
+            new_record.fields['bexio_id'] = order['id']
+            new_record.fields['document_nr'] = order['document_nr']
+            new_record.fields['document_nr'] = order['document_nr']
+            new_record.fields['title'] = order['title']
+            new_record.fields['contact_id'] = order['contact_id']
+            new_record.fields['user_id'] = order['user_id']
+            new_record.fields['total_gross'] = order['total_gross']
+            new_record.fields['total_net'] = order['total_net']
+            new_record.fields['total_taxes'] = order['total_taxes']
+            new_record.fields['total'] = order['total']
+            new_record.fields['is_valid_from'] = order['is_valid_from']
+            new_record.fields['contact_address'] = order['contact_address']
+            new_record.fields['delivery_address'] = order['delivery_address']
+            new_record.fields['is_recurring'] = order['is_recurring']
+            new_record.fields['is_recurring'] = order['is_recurring']
+            #new_record.fields['taxs_percentage'] = order['taxs']['percentage']
+            #new_record.fields['taxs_value'] = order['taxs']['value']
+
+            new_record.save()
+        else:
+            record = Record(tableid="bexio_orders", document_nr=field['document_nr'])
+            new_record.fields['bexio_id'] = order['id']
+            new_record.fields['document_nr'] = order['document_nr']
+            new_record.fields['document_nr'] = order['document_nr']
+            new_record.fields['title'] = order['title']
+            new_record.fields['contact_id'] = order['contact_id']
+            new_record.fields['user_id'] = order['user_id']
+            new_record.fields['total_gross'] = order['total_gross']
+            new_record.fields['total_net'] = order['total_net']
+            new_record.fields['total_taxes'] = order['total_taxes']
+            new_record.fields['total'] = order['total']
+            new_record.fields['is_valid_from'] = order['is_valid_from']
+            new_record.fields['contact_address'] = order['contact_address']
+            new_record.fields['delivery_address'] = order['delivery_address']
+            new_record.fields['is_recurring'] = order['is_recurring']
+            new_record.fields['is_recurring'] = order['is_recurring']
+            #new_record.fields['taxs_percentage'] = order['taxs'][0]['percentage']
+            #new_record.fields['taxs_value'] = order['taxs'][0]['value']
+
+            record.save()
+
+
     return JsonResponse(response, safe=False)
