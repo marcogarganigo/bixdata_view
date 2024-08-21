@@ -1191,7 +1191,7 @@ def save_record_fields(request):
         send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'],
                    subject='Supporto bixdata', html_message=message)
 
-    elif tableid == 'task' and contextfunction == 'insert':
+    elif tableid == 'task':
 
         creator = str(creator)
 
@@ -2822,6 +2822,49 @@ def validate_timesheet(request):
         )
 
     return HttpResponse('done')
+
+def decline_timesheet(request):
+    recordid = request.POST.get('recordid')
+    decline_reason = request.POST.get('decline_reason')
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT user FROM user_timesheet WHERE recordid_ = {recordid}"
+        )
+        user = cursor.fetchone()
+        user = user[0]
+
+        cursor.execute(
+            f"UPDATE user_timesheet SET validated = 'No', decline_note = '{decline_reason}' WHERE recordid_ = {recordid}"
+        )
+
+        cursor.execute(
+            f"SELECT email from v_users WHERE sys_user_id = {user}"
+        )
+        email = cursor.fetchone()
+        email = email[0]
+
+        decliner = get_userid(request.user.id)
+
+        cursor.execute(
+            f"SELECT first_name, last_name FROM v_users WHERE sys_user_id = {decliner}"
+        )
+        decliner = dictfetchall(cursor)
+        decliner = decliner[0]
+        decliner = decliner['first_name'] + ' ' + decliner['last_name']
+
+
+
+        message = render_to_string('other/declined_timesheet.html', {'decliner': decliner, 'decline_reason': decline_reason, 'recordid': recordid})
+
+        send_email(
+            emails=[email],
+            subject='Timesheet rifiutato',
+            html_message=message
+        )
+
+
+        return JsonResponse({'success': True})
 
 
 def check_task_status(recordid):

@@ -362,6 +362,65 @@
         });
     }
 
+    function decline_timesheet() {
+        swal({
+            title: "Rifiuto timesheet",
+            content: {
+                element: "textarea",
+                attributes: {
+                    id: "decline-note-textarea",
+                    placeholder: "Motivazione del rifiuto del timesheet ed eventuali correzioni",
+                    disabled: false
+                }
+            },
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    text: "Cancella",
+                    value: null,
+                    visible: true,
+                    closeModal: true,
+                },
+                confirm: {
+                    text: "Salva",
+                    value: true,
+                    visible: true,
+                    closeModal: true,
+                }
+            }
+        })
+        .then((value) => {
+            if (value) {
+
+                decline_reason = $('#decline-note-textarea').val()
+                recordid = '{{ recordid }}'
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'decline_timesheet' %}",
+                    data: {
+                        'recordid': recordid,
+                        'decline_reason': decline_reason
+                    },
+                    success: function (response) {
+                        $('#fields_container_' + '{{ tableid }}' + '_' + '{{ recordid }}').load('/loading/');
+                        open_record(window.content, '{{ tableid }}', '{{ recordid }}')
+                        swal({
+                            text: "Timesheet rifiutato",
+                            icon: "success",
+                            timer: 1000,
+                            buttons: false,
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Errore');
+                    }
+                });
+
+            }
+        });
+    }
+
     function open_freshdesk() {
         var url = 'https://swissbix.freshdesk.com/a/tickets/' + '{{ freshdeskid }}';
         window.open(url, '_blank');
@@ -941,6 +1000,10 @@
                         <button onclick="validate_timesheet()"
                                 type="button" id="validate-button" style="display: {{ display }}"
                                 class="btn btn-outline-success">Valida
+                        </button>
+                        <button onclick="decline_timesheet()"
+                                type="button" id="decline-button" style="display: {{ display }}"
+                                class="btn btn-outline-danger">Rifiuta
                         </button>
                     {% endif %}
                 {% endif %}
