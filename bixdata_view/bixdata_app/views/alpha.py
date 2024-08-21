@@ -4993,7 +4993,7 @@ def get_bexio_orders(request):
 
         record.save()
         
-        get_bexio_positions_example(request, order['id'])
+        get_bexio_positions(request, 'kb_order', order['id'])
 
     return JsonResponse(response, safe=False)
 
@@ -5021,8 +5021,14 @@ def get_bexio_positions(request,bexiotable,bexioid):
         else:
             record = Record(tableid="bexio_positions", recordid=field['recordid_'])
 
+
+        if bexiotable == 'kb_order':
+            type='order'
+        else:
+            type='invoice'
+
         record.fields['bexio_id'] = position['id']
-        record.fields['type'] = position['type']
+        record.fields['type'] = type
         record.fields['amount'] = position['amount']
         record.fields['unit_id'] = position['unit_id']
         record.fields['account_id'] = position['account_id']
@@ -5054,4 +5060,33 @@ def get_bexio_invoices(request):
 
     response = requests.request("GET", url, headers=headers)
     response = json.loads(response.text)
+
+    for invoice in response:
+        field = Helperdb.sql_query_row(f"select * from user_bexio_invoices WHERE bexio_id='{invoice['id']}'")
+        if not field:
+            record = Record(tableid="bexio_invoices")
+        else:
+            record = Record(tableid="bexio_invoices", recordid=field['recordid_'])
+
+        record.fields['bexio_id'] = invoice['id']
+        record.fields['document_nr'] = invoice['document_nr']
+        record.fields['title'] = invoice['title']
+        record.fields['contact_id'] = invoice['contact_id']
+        record.fields['user_id'] = invoice['user_id']
+        record.fields['total_gross'] = invoice['total_gross']
+        record.fields['total_net'] = invoice['total_net']
+        record.fields['total_taxes'] = invoice['total_taxes']
+        record.fields['total_received_payments'] = invoice['total_received_payments']
+        record.fields['total_remaining_payments'] = invoice['total_remaining_payments']
+        record.fields['total'] = invoice['total']
+        record.fields['is_valid_from'] = invoice['is_valid_from']
+        record.fields['is_valid_to'] = invoice['is_valid_to']
+        record.fields['contact_address'] = invoice['contact_address']
+
+
+        record.save()
+
+        get_bexio_positions(request, 'kb_invoice', invoice['id'])
+
+
     return JsonResponse(response, safe=False)
