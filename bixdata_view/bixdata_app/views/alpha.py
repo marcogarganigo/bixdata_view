@@ -5154,6 +5154,15 @@ def get_bexio_invoices(request):
 
     return JsonResponse(response, safe=False)
 
+def syncdata(request,tableid):
+    sync_table=Helperdb.db_get_value('sys_table','sync_table',f"id='{tableid}'")
+    sync_field=Helperdb.db_get_value('sys_table','sync_field',f"id='{tableid}'")
+    sync_condition=Helperdb.db_get_value('sys_table','sync_condition',f"id='{tableid}'")
+    sync_order=Helperdb.db_get_value('sys_table','sync_order',f"id='{tableid}'")
+    bixdata_fields=dict()
+    rows=Helperdb.db_get('sys_field','*',f"tableid='{tableid}'")
+    for row in rows:
+        bixdata_fields[row['sync_fieldid']]=row['fieldid']
 
 def download_attachment(request):
     recordid = request.POST.get('recordid')
