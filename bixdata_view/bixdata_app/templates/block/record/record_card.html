@@ -608,6 +608,32 @@
         });
     }
 
+    function downloadAttachment() {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'download_attachment' %}",
+            data: {
+                'recordid': '{{ recordid }}',
+            },
+            success: function (response) {
+                swal({
+                    text: "Allegato scaricato",
+                    icon: "success",
+                    timer: 1000,
+                    buttons: false,
+                });
+
+                $('#block_record_card-{{ recordid }}').load('/loading/');
+
+                open_record(window.content, '{{ tableid }}', '{{ recordid }}')
+            },
+
+            error: function (xhr, status, error) {
+                
+            }
+        });
+    }
+
 </script>
 
 <div id="block_record_card-{{ recordid }}" class="block_record_card" data-recordid="{{ recordid }}"
@@ -756,6 +782,9 @@
                         <!--<li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>-->
                     </ul>
                 </div>
+                {% if tableid == 'attachment' %}
+                    <button class="btn btn-primary" onclick="downloadAttachment()">Scarica allegato</button>
+                {% endif %} 
 
                 {% if tableid == 'deal' %}
 
