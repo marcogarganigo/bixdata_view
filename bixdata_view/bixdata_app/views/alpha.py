@@ -1300,8 +1300,14 @@ def save_record_fields(request):
             if fields_dict['type'] == 'Documento firmato':
                 filename = 'deal' + '_' + fields_dict['recordiddeal_']
             else:
-                filename = 'deal-attachment' + '_' + fields_dict['recordiddeal_'] + '_' + fields_dict['note']
+                filename = 'deal-attachment' + '_' + fields_dict['recordiddeal_']
         filename = filename + '_' + basename + extension
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"UPDATE user_attachment SET filename = '{filename}' WHERE recordid_ = '{response_dict['recordid']}'"
+            )
+
         fs.save(filename, uploaded_files)
         fs_bix.save(filename, uploaded_files)
 
@@ -5151,9 +5157,15 @@ def get_bexio_invoices(request):
 
 def download_attachment(request):
     recordid = request.POST.get('recordid')
-    folder_path = 'attachment_bixdata'
+    folder_path = 'attachments_bixdata'
 
-    filename = next(file for file in os.listdir(folder_path) if recordid in file)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT filename from user_attachment WHERE recordid_='{recordid}'"
+        )
+
+        filename = cursor.fetchone()[0]
+
     file_path = os.path.join(folder_path, filename)
 
 
