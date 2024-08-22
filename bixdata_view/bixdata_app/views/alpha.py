@@ -910,6 +910,10 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
     context['user_table_settings'] = get_user_table_settings(userid, tableid)
     # TODO: recuperare i dati dal table settings generico
     table_settings = get_user_table_settings(1, tableid)
+
+    if not 'default_recordtab' in table_settings:
+        table_settings['default_recordtab'] = 'Dati'
+
     context['recordtab'] = table_settings['default_recordtab']
     # returned = user_agent(request, 'block/record/record_card.html', 'block/record/record_card_mobile.html', context)
     return render_to_string('block/record/record_card.html', context)
@@ -1179,11 +1183,15 @@ def save_record_fields(request):
 
     response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
     response_dict = json.loads(response.text)
+    
+    
+
 
     if contextfunction == 'edit':
         if tableid == 'task':
             check_task_status(recordid)
 
+        
     if tableid == 'ticketbixdata' and 'description' in fields_dict:
         message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(request.user.username,
                                                                                  fields_dict['description'],
@@ -1191,58 +1199,62 @@ def save_record_fields(request):
         send_email(emails=['marco.garganigo@swissbix.ch', 'alessandro.galli@swissbix.ch'],
                    subject='Supporto bixdata', html_message=message)
 
+
     elif tableid == 'task':
 
-        creator = str(creator)
 
-        if fields_dict['user'] != fields_dict['creator']:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT email FROM v_users WHERE sys_user_id = %s", [fields_dict['user']])
-                row = cursor.fetchone()
+        if (contextfunction == 'edit' or contextfunction == 'insert') and fields_dict['completed'] != 'Si':
 
-                email = row[0]
+            creator = str(creator)
 
-                cursor.execute("SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s",
-                        [fields_dict['creator']])
-                row = cursor.fetchone()
-                first_name = row[0]
-                last_name = row[1]
+            if fields_dict['user'] != fields_dict['creator']:
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT email FROM v_users WHERE sys_user_id = %s", [fields_dict['user']])
+                    row = cursor.fetchone()
 
-                companyname = ''
-                projectname = ''
+                    email = row[0]
 
-                if fields_dict['recordidcompany_'] != 'None':
-                    with connection.cursor() as cursor:
-                        cursor.execute("SELECT companyname FROM user_company WHERE recordid_ = %s",
-                                       [fields_dict['recordidcompany_']])
-                        row = cursor.fetchone()
-                        companyname = row[0]
+                    cursor.execute("SELECT first_name, last_name FROM v_users WHERE sys_user_id = %s",
+                            [fields_dict['creator']])
+                    row = cursor.fetchone()
+                    first_name = row[0]
+                    last_name = row[1]
 
-                if fields_dict['recordidproject_'] != 'None':
-                    with connection.cursor() as cursor:
-                        cursor.execute("SELECT projectname FROM user_project WHERE recordid_ = %s",
-                                       [fields_dict['recordidproject_']])
-                        row = cursor.fetchone()
-                        projectname = row[0]
+                    companyname = ''
+                    projectname = ''
 
-                fields_dict['username'] = first_name + ' ' + last_name
-                fields_dict['companyname'] = companyname
-                fields_dict['projectname'] = projectname
+                    if fields_dict['recordidcompany_'] != 'None':
+                        with connection.cursor() as cursor:
+                            cursor.execute("SELECT companyname FROM user_company WHERE recordid_ = %s",
+                                           [fields_dict['recordidcompany_']])
+                            row = cursor.fetchone()
+                            companyname = row[0]
 
-                fields_dict['recordid'] = response_dict['recordid']
+                    if fields_dict['recordidproject_'] != 'None':
+                        with connection.cursor() as cursor:
+                            cursor.execute("SELECT projectname FROM user_project WHERE recordid_ = %s",
+                                           [fields_dict['recordidproject_']])
+                            row = cursor.fetchone()
+                            projectname = row[0]
 
-                message = render_to_string('other/new_task.html', fields_dict)
+                    fields_dict['username'] = first_name + ' ' + last_name
+                    fields_dict['companyname'] = companyname
+                    fields_dict['projectname'] = projectname
 
-                score = ''
+                    fields_dict['recordid'] = response_dict['recordid']
 
-                if companyname != '':
-                    score = ' - '
+                    message = render_to_string('other/new_task.html', fields_dict)
 
-                # return render(request, 'other/new_task.html', fields_dict)
+                    score = ''
 
-                send_email(emails=[email],
-                           subject='Nuovo task assegnato da ' + fields_dict['username'] + score + companyname,
-                           html_message=message)
+                    if companyname != '':
+                        score = ' - '
+
+                    # return render(request, 'other/new_task.html', fields_dict)
+
+                    send_email(emails=[email],
+                               subject='Nuovo task assegnato da ' + fields_dict['username'] + score + companyname,
+                               html_message=message)
 
     elif tableid == 'salespush':
 
@@ -1281,6 +1293,7 @@ def save_record_fields(request):
 
     for field_name, uploaded_files in request.FILES.items():
         fs = FileSystemStorage(location='attachments')
+        fs_bix = FileSystemStorage(location='attachments_bixdata')
         basename, extension = os.path.splitext(uploaded_files.name)
         filename = tableid + '_' + response_dict['recordid']
         if tableid == 'attachment':
@@ -1290,6 +1303,7 @@ def save_record_fields(request):
                 filename = 'deal-attachment' + '_' + fields_dict['recordiddeal_'] + '_' + fields_dict['note']
         filename = filename + '_' + basename + extension
         fs.save(filename, uploaded_files)
+        fs_bix.save(filename, uploaded_files)
 
     # return render(request, 'block/record/record_fields.html')
     custom_save_record(request, tableid, response_dict['recordid'])
@@ -5143,3 +5157,20 @@ def syncdata(request,tableid):
     rows=Helperdb.db_get('sys_field','*',f"tableid='{tableid}'")
     for row in rows:
         bixdata_fields[row['sync_fieldid']]=row['fieldid']
+
+def download_attachment(request):
+    recordid = request.POST.get('recordid')
+    folder_path = 'attachment_bixdata'
+
+    filename = next(file for file in os.listdir(folder_path) if recordid in file)
+    file_path = os.path.join(folder_path, filename)
+
+
+    with open(file_path, 'rb') as f:
+        file_data = f.read()
+
+
+    response = HttpResponse(file_data, content_type='application/octet-stream')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
