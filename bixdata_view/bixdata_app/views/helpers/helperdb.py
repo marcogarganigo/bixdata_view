@@ -57,3 +57,39 @@ class Helperdb:
             dict(zip(columns, row))
             for row in cursor.fetchall()
         ]
+
+
+    @classmethod
+    def db_get(cls,table,columns='*',conditions='true',order='',limit=''):
+        if order!='':
+            order=f"ORDER BY {order}"
+        if limit!='':
+            limit=f"LIMIT {limit}"
+        sql = f"""
+            SELECT {columns}
+            FROM {table}
+            WHERE {conditions}
+            {order}
+            {limit}
+        """
+        rows=cls.sql_query(sql)
+        return rows
+    
+    @classmethod
+    def db_get_row(cls,table,columns='*',conditions='true',order=''):
+        rows= cls.db_get(table,columns,conditions,order,1)
+        if rows:
+            row=rows[0]
+        else:
+            row=None
+
+        return row
+    
+    @classmethod
+    def db_get_value(cls,table,column='',conditions='true',order=''):
+        row= cls.db_get_row(table,column,conditions,order)
+        if row:
+            value=row[column]
+        else:
+            value=None
+        return value

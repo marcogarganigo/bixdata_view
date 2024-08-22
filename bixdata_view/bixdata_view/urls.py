@@ -195,4 +195,5 @@ urlpatterns = [
     path('get_bexio_positions_example/', alpha.get_bexio_positions_example, name='get_bexio_positions_example'),
     path('get_bexio_invoices/', alpha.get_bexio_invoices, name='get_bexio_invoices'),
     path('decline_timesheet/', alpha.decline_timesheet, name='decline_timesheet'),
+    path('syncdata/<str:tableid>/', alpha.syncdata, name='syncdata'),
 ]
