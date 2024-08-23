@@ -1,4 +1,5 @@
 import base64
+import shutil
 import tempfile
 import uuid
 import threading
@@ -2155,6 +2156,25 @@ def get_account(request):
     context = {
         'user': user
     }
+
+    userid = request.user.id
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT first_name, last_name FROM v_users WHERE id = {userid}"
+        )
+        user = dictfetchall(cursor)
+        firstname= user[0]['first_name']
+        lastname = user[0]['last_name']
+
+        folder = 'bixdata_view/bixdata_app/static/images/avatars/' + firstname + lastname
+
+        context['images'] = []
+        context['user_folder'] = firstname + lastname
+
+        if os.path.exists(folder):
+            for file in os.listdir(folder):
+                context['images'].append(file)
 
     return render(request, 'other/account.html', context)
 
@@ -5185,4 +5205,64 @@ def download_attachment(request):
     response = HttpResponse(file_data, content_type='application/octet-stream')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
+
+
+def update_profile_pic(request):
+
+    src = request.POST.get('image')
+
+    src = src.split('static', 1)[1]
+
+    base_path = 'bixdata_view/bixdata_app/static'
+    image_path = os.path.join(base_path, src.strip(os.sep))
+    
+    destination_dir = 'bixdata_view/bixdata_app/static/images/users'
+
+    image_path = 'bixdata_view/bixdata_app/static' + image_path
+
+
+
+
+
+    userid=get_userid(request.user.id)
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM v_users WHERE sys_user_id='{userid}'"
+        )
+
+        user = dictfetchall(cursor)[0]
+
+        username= user['username']
+        
+        fullname = user['first_name'] + ' ' + user['last_name']
+
+        image1 = username + '.png'
+        image2 = fullname + '.png'
+        image3 = str(userid) + '.png'
+
+        destination_path1 = os.path.join(destination_dir, image1)
+        destination_path2 = os.path.join(destination_dir, image2)
+        destination_path3 = os.path.join(destination_dir, image3)
+
+        # Normalize paths
+        destination_path1 = os.path.normpath(destination_path1)
+        destination_path2 = os.path.normpath(destination_path2)
+        destination_path3 = os.path.normpath(destination_path3)
+
+        # Check and remove files if they exist
+        if os.path.exists(destination_path1):
+            os.remove(destination_path1)
+
+        if os.path.exists(destination_path2):
+            os.remove(destination_path2)
+
+        if os.path.exists(destination_path3):
+            os.remove(destination_path3)
+        
+        shutil.copy(image_path, destination_path1)
+        shutil.copy(image_path, destination_path2)
+        shutil.copy(image_path, destination_path3)
+
+    return JsonResponse({'success': True})
 
