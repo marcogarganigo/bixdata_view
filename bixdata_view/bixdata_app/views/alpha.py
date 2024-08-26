@@ -1293,8 +1293,8 @@ def save_record_fields(request):
                 send_email(emails=[email], subject='Nuovo push commerciale', html_message=message)
 
     for field_name, uploaded_files in request.FILES.items():
-        fs = FileSystemStorage(location=os.path.join(settings.BASE_DIR, 'attachments'))
-        fs_bix = FileSystemStorage(location=os.path.join(settings.BASE_DIR, 'attachments_bixdata'))
+        fs = os.path.join(settings.BASE_DIR, 'attachments')
+        fs_bix = os.path.join(settings.BASE_DIR, 'attachments_bixdata')
         basename, extension = os.path.splitext(uploaded_files.name)
         filename = tableid + '_' + response_dict['recordid']
         if tableid == 'attachment':
