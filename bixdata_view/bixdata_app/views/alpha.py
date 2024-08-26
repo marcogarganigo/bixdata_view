@@ -2159,6 +2159,9 @@ def get_account(request):
 
     userid = request.user.id
 
+    date = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+    context['date'] = date
+
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT first_name, last_name FROM v_users WHERE id = {userid}"
@@ -5236,21 +5239,24 @@ def update_profile_pic(request):
         username= user['username']
         
         fullname = user['first_name'] + ' ' + user['last_name']
+        
+        name = user['first_name'].lower()
 
         image1 = username + '.png'
         image2 = fullname + '.png'
         image3 = str(userid) + '.png'
+        image4 = name + '.png'
 
         destination_path1 = os.path.join(destination_dir, image1)
         destination_path2 = os.path.join(destination_dir, image2)
         destination_path3 = os.path.join(destination_dir, image3)
+        destination_path4 = os.path.join(destination_dir, image4)
 
-        # Normalize paths
         destination_path1 = os.path.normpath(destination_path1)
         destination_path2 = os.path.normpath(destination_path2)
         destination_path3 = os.path.normpath(destination_path3)
+        destination_path4 = os.path.normpath(destination_path4)
 
-        # Check and remove files if they exist
         if os.path.exists(destination_path1):
             os.remove(destination_path1)
 
@@ -5260,9 +5266,13 @@ def update_profile_pic(request):
         if os.path.exists(destination_path3):
             os.remove(destination_path3)
         
+        if os.path.exists(destination_path4):
+            os.remove(destination_path4)
+        
         shutil.copy(image_path, destination_path1)
         shutil.copy(image_path, destination_path2)
         shutil.copy(image_path, destination_path3)
+        shutil.copy(image_path, destination_path4)
 
     return JsonResponse({'success': True})
 
