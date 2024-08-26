@@ -3,8 +3,6 @@ import shutil
 import tempfile
 import uuid
 import threading
-from pathlib import Path
-
 from django.contrib.sessions.models import Session
 import threading
 from bixdata_app.models import *
@@ -1295,9 +1293,8 @@ def save_record_fields(request):
                 send_email(emails=[email], subject='Nuovo push commerciale', html_message=message)
 
     for field_name, uploaded_files in request.FILES.items():
-        fs = Path(__file__).resolve().parent.parent / 'attachments'
-        fs_bix = Path(__file__).resolve().parent.parent / 'attachments_bixdata'
-
+        fs = FileSystemStorage(location='attachments')
+        fs_bix = FileSystemStorage(location='attachments_bixdata')
         basename, extension = os.path.splitext(uploaded_files.name)
         filename = tableid + '_' + response_dict['recordid']
         if tableid == 'attachment':
