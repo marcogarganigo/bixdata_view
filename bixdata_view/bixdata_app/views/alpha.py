@@ -1321,6 +1321,8 @@ def custom_save_record(request, tableid, recordid):
         if record_deal.fields['advancepayment'] == None:
             record_deal.fields['advancepayment'] = 0
         record_deal.fields['reference'] = reference
+        if record_deal.fields['dealstatus'] is None or (record_deal.fields['dealstatus'] != 'Vinta' and record_deal.fields['dealstatus'] != 'Persa'):
+            record_deal.fields['dealstatus']='Aperta'
         record_deal.save()
 
     # ---TIMESHEET---
@@ -5154,9 +5156,33 @@ def syncdata(request,tableid):
     sync_condition=Helperdb.db_get_value('sys_table','sync_condition',f"id='{tableid}'")
     sync_order=Helperdb.db_get_value('sys_table','sync_order',f"id='{tableid}'")
     bixdata_fields=dict()
-    rows=Helperdb.db_get('sys_field','*',f"tableid='{tableid}'")
+    rows=Helperdb.db_get('sys_field','*',f"tableid='{tableid}' AND sync_fieldid is not null AND sync_fieldid<>'' ")
     for row in rows:
         bixdata_fields[row['sync_fieldid']]=row['fieldid']
+    if sync_condition:
+        condition=sync_condition
+    else:
+        condition='true'
+
+    if sync_order:
+        order=f"ORDER BY {sync_order}"
+    else:
+        order=''
+    sql=f"""
+        SELECT *
+        FROM {sync_table}
+        WHERE {condition}
+        {order}
+    """
+    syncrows=Helperdb.sql_query(sql)
+    for syncrow in syncrows:
+        sync_fields=dict()
+        for key, field in syncrow.items():
+            if key in bixdata_fields:
+                sync_fields[bixdata_fields[key]]=field
+    bixdata_sync_field=bixdata_fields[sync_field]
+    print(sync_fields)
+    
 
 def download_attachment(request):
     recordid = request.POST.get('recordid')
