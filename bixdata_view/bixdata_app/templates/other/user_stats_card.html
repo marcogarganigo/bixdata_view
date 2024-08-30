@@ -1,0 +1,61 @@
+{% load static %}
+
+<style>
+  .scrollable-row {
+    height: 80vh; /* Imposta l'altezza fissa per la row (80% della viewport height) */
+    overflow-y: auto; /* Abilita lo scroll verticale */
+  }
+
+  .card {
+    height: 100%; /* Assicura che la card occupi tutta l'altezza del contenitore */
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+</style>
+
+<div class="container-fluid" style="height: 100%">
+  {% if users|length == 1 or users|length == 2 %}
+    <div class="row scrollable-row" style="height: 100%">
+  {% else %}
+    <div class="row row-cols-2 scrollable-row" style="height: 100%">
+  {% endif %}
+
+    {% for user in users %}
+      {% if users|length == 1 or users|length == 2 %}
+        <div class="col" style="height: 100%; padding: 0.35%">
+      {% else %}
+        <div class="col" style="padding: 0.35%">
+      {% endif %}
+
+        <div class="card">
+          <div class="card-body">
+
+            <div class="container" style="width: 100%; height: 80%; margin:0">
+              <div class="row">
+                <div class="col d-flex align-items-center">
+                  <img src="{% static 'images/users/' %}{{ user.username }}.png?v={{ date }}"
+                       alt="{{ user.username }}"
+                       class="rounded-circle"
+                       style="width: 20%; margin-right: 1%;">
+                  <h3 class="card-title mb-0">{{ user.first_name }} {{ user.last_name }}</h3>
+                </div>
+
+              </div>
+            </div>
+              <br>
+              <b>task aperti: {{ user.opentasks }} </b>
+              {{ user.chartblock|safe }}
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+
+      </div>
+    {% endfor %}
+
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<script>
+    function newUser() {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'settings_user_newuser' %}",
+            success: function (response) {
+                $("#container-users-2").load('/loading/')
+                setTimeout(function () {
+                    $("#container-users-2").html(response);
+                }, 150);
+            }
+        });
+    }
+
+    function newGroup() {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'settings_user_newgroup' %}",
+            success: function (response) {
+                $("#container-users-2").load('/loading/')
+                setTimeout(function () {
+                    $("#container-users-2").html(response);
+                }, 150);
+            }
+        });
+    }
+</script>
+
+<div id="user-settings-container" class="container-fluid">
+    <div class="row">
+        <div id="users-list-container" class="col-2">
+            {% for user in users %}
+                {{ user.username }}
+                <br>
+            {% endfor %}
+
+            <button class="btn btn-primary" onclick="newUser()">Nuovo Utente</button>
+            <br>
+            <button class="btn btn-primary" onclick="newGroup()">Nuovo Gruppo</button>
+        </div>
+        <div id="container-users-2" class="col-3">
+
+        </div>
+    </div>
+</div>

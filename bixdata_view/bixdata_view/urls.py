@@ -198,4 +198,11 @@ urlpatterns = [
     path('syncdata/<str:tableid>/', alpha.syncdata, name='syncdata'),
     path('download_attachment/', alpha.download_attachment, name='download_attachment'),
     path('update_profile_pic/', alpha.update_profile_pic, name='update_profile_pic'),
+    path('get_user_stats_page/', alpha.get_user_stats_page, name='get_user_stats_page'),
+    path('get_user_stats_card/', alpha.get_user_stats_card, name='get_user_stats_card'),
+    path('settings_user/', settings_view.settings_user, name='settings_user'),
+    path('settings_user_newuser/', settings_view.settings_user_newuser, name='settings_user_newuser'),
+    path('save_newuser/', settings_view.save_newuser, name='save_newuser'),
+    path('settings_user_newgroup/', settings_view.settings_user_newgroup, name='settings_user_newgroup'),
+
 ]

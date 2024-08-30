@@ -5276,3 +5276,137 @@ def update_profile_pic(request):
 
     return JsonResponse({'success': True})
 
+"""
+User stats START
+"""
+
+def get_user_stats_page(request):
+    context = dict()
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM v_users"
+        )
+
+        context['users'] = dictfetchall(cursor)
+
+    return render(request, 'other/user_statistics.html', context)
+
+
+def get_user_stats_card(request):
+    
+    context = dict()
+    context['date'] = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+
+    selected_users = request.POST.get('selectedUsers')
+    selected_users = json.loads(selected_users)
+
+    ids = [str(user) for user in selected_users]
+
+    placeholders = ', '.join(['%s'] * len(ids))
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            f"SELECT * FROM v_users WHERE sys_user_id IN ({placeholders})",
+            ids
+        )
+        context['users'] = dictfetchall(cursor)
+
+        block_list = dict()
+
+        for user in context['users']:
+
+            #dict contenente tutti i blocchi che verranno passati ad una pagina html che li cicla e li organizza per poi andare a caricarsi nella card
+            block_list['timesheet_chartblock'] = build_card_content(request, user['sys_user_id'])
+
+            """
+                esempio 
+            
+                intermediate_html = render_to_string('intermediate_template.html', {'block_list': block_list})
+
+                # Ora puoi usare `intermediate_html` come una stringa nel template finale
+                context['intermediate_html'] = intermediate_html
+                
+                che poi viene passato al template user_stats_card
+            """
+
+        
+        
+            user['chartblock'] = build_card_content(request, user['sys_user_id'])
+            sql = f"SELECT COUNT(recordid_) as opentasks FROM user_task WHERE status != 'Chiuso' AND user = {user['sys_user_id']}"
+            user['opentasks'] = get_card_data(request,sql,user['sys_user_id'])[0]['opentasks']
+        
+
+    return render(request, 'other/user_stats_card.html', context)
+
+
+def build_card_content(request, userid):
+
+    block = []
+
+
+    sql = f'SELECT SUM(totaltime_decimal),invoicestatus FROM user_timesheet WHERE date <= current_date AND date >= DATE_SUB(current_date,INTERVAL 14 day) and user={userid} GROUP BY invoicestatus'
+
+    block = get_card_chart(request,userid,sql, 'donutchart', 'Invoiced Time')
+
+    return block
+
+
+def get_card_chart(request, userid, sql, type, chartname):
+
+    with connection.cursor() as cursor2:
+        cursor2.execute(sql)
+        rows = cursor2.fetchall()
+        formatted_rows = []
+        for row in rows:
+            formatted_row = [str(value) if not isinstance(value, (int, float)) else value for value in row]
+            formatted_rows.append(formatted_row)
+
+        rows = formatted_rows
+
+        value = []
+        labels = []
+
+        for row in rows:
+            value.append(row[0])
+            labels.append(row[1])
+            
+            
+        
+        context = {
+            'value': value,
+            'labels': labels,
+            'name': chartname,
+            'id': uuid.uuid4().hex,
+        }
+
+        if type == 'barchart':
+            return render_to_string('other/barchart.html', context, request=request)
+        elif type == 'piechart':
+            return render_to_string('other/piechart.html', context, request=request)
+        elif type == 'linechart':
+            return render_to_string('other/linechart.html', context, request=request)
+        elif type == 'horizontalbarchart':
+            return render_to_string('other/horizontalbarchart.html', context, request=request)
+        elif type == 'donutchart':
+            return render_to_string('other/donutchart_card.html', context, request=request)
+
+
+def get_card_data(request, sql, userid):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            sql
+        )
+
+        rows = dictfetchall(cursor)
+
+    return rows
+
+
+
+
+"""
+User Stats END
+"""
+
+

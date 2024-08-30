@@ -1,0 +1,77 @@
+<script>
+    function selectAllText(input) {
+        input.setSelectionRange(0, input.value.length);
+    }
+
+    $('#statistics-container').find('.select2-input').each(function () {
+        $(this).select2({
+            dropdownParent: $(this).parent()
+        }).addClass('select2-initialized');
+    });
+
+
+    $(document).on('select2:open', function (e) {
+        window.setTimeout(function () {
+            document.querySelector('input.select2-search__field').focus();
+        }, 0);
+    })
+
+    function getUserStats(usersSelect) {
+
+        var element = usersSelect
+        var selectedUsers = [];
+        for (var j = 0; j < element.options.length; j++) {
+            if (element.options[j].selected) {
+                selectedUsers.push(element.options[j].value);
+            }
+        }
+
+        selectedUsers = JSON.stringify(selectedUsers)
+        console.info(selectedUsers)
+
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'get_user_stats_card' %}",
+            data: {
+                selectedUsers: selectedUsers,
+            },
+            success: function (response) {
+
+                $("#user-cards-container").html(response);
+
+                $('[data-toggle="tooltip"]').tooltip();
+            },
+            error: function (response) {
+                $("#content_container").html(response);
+            }
+        });
+    }
+</script>
+
+
+
+
+
+<div class="container-fluid" style="height: 100%">
+  <div class="row" style="height: 100%">
+    <div class="col-2 order-1">
+
+        <div id="statistics-container" class="mt-2">
+            <select id="select-user" class="select2-input" multiple="multiple" onchange="getUserStats(this)">
+                {% for user in users  %}
+                    <option value="{{ user.sys_user_id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+    </div>
+
+    <div class="col-10 order-2" style="height: 100%">
+        <div id="user-cards-container" class="container-fluid" style="height: 100%">
+
+        </div>
+
+    </div>
+  </div>
+</div>

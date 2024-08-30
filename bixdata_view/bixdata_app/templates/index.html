@@ -129,6 +129,21 @@
                 });
             }
 
+            function getUserStatsPage() {
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'get_user_stats_page' %}",
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
+
             function getContentRecordsAdmin(page) {
                 $.ajax({
                     type: "POST",
@@ -243,6 +258,21 @@
                     data: {
                         'page': page
                     },
+                    success: function (response) {
+                        $("#content_container").html(response);
+                        $('[data-toggle="tooltip"]').tooltip();
+                    },
+                    error: function (response) {
+                        $("#content_container").html(response);
+                    }
+                });
+            }
+
+            function getUsersSettings() {
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    url: "{% url 'settings_user' %}",
                     success: function (response) {
                         $("#content_container").html(response);
                         $('[data-toggle="tooltip"]').tooltip();
@@ -955,7 +985,7 @@
                                                 <a class="side-nav-txt" onclick="setColor(this)">Impostazioni
                                                     tabelle</a>
                                             </li>
-                                            <li onclick="">
+                                            <li onclick="getUsersSettings()">
                                                 <a class="side-nav-txt" onclick="setColor(this)">Impostazioni utenti</a>
                                             </li>
                                             <li onclick="getSchedulerSettings()">
@@ -991,6 +1021,12 @@
                             <li class="side-nav-item">
                                 <a data-bs-toggle="collapse" onclick="getScript()" aria-expanded="false" class="side-nav-link">
                                     <span>Script</span>
+                                </a>
+                            </li>
+
+                            <li class="side-nav-item">
+                                <a data-bs-toggle="collapse" onclick="getUserStatsPage()" aria-expanded="false" class="side-nav-link">
+                                    <span>User Stats</span>
                                 </a>
                             </li>
 

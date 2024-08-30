@@ -1,0 +1,39 @@
+<script>
+    function saveNewUser() {
+        $.ajax({
+            url: "{% url 'save_newuser' %}",
+            type: 'POST',
+            data: {
+                'firstname': $('#user-firstname').val(),
+                'lastname': $('#user-lastname').val(),
+                'email': $('#user-email').val(),
+                'password': $('#user-password').val(),
+            },
+            success: function (data) {
+                swal({
+                        title: "Salvato!",
+                        text: "Il record è stato salvato",
+                        icon: "success",
+                        timer: 800,
+                        buttons: false,
+                });
+            }
+        });
+    }
+</script>
+
+<div class="container-fluid" id="newuser-container">
+    <h3>Nuovo utente</h3>
+
+    <input id="user-firstname" type="text" class="form-control" placeholder="Nome" aria-label="Example text with button addon" aria-describedby="button-addon1">
+    <input id="user-lastname" type="text" class="form-control" placeholder="Cognome" aria-label="Example text with button addon" aria-describedby="button-addon1">
+    <br>
+    <input id="user-email" type="email" class="form-control" placeholder="Email" aria-label="Example text with button addon" aria-describedby="button-addon1">
+    <input id="user-password" type="password" class="form-control" placeholder="Password" aria-label="Example text with button addon" aria-describedby="button-addon1">
+
+
+    <br>
+
+    <button class="btn btn-primary" type="button" onclick="saveNewUser()">Crea</button>
+
+</div>
