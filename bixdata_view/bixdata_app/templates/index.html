@@ -695,7 +695,7 @@
                             <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown"
                                role="button" aria-haspopup="false" aria-expanded="false">
                                 <span class="account-user-avatar">
-                                    <img src="{% static 'images/users/' %}{{ username }}.png?v=" + time alt=""
+                                    <img src="{% static 'images/users/' %}{{ username }}.png?v={{ date }}" alt="{{ username }}"
                                          class="rounded-circle">
                                 </span>
                                 <span>

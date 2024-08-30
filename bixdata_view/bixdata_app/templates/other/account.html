@@ -1,7 +1,41 @@
 {% load static %}
 <div class="container text-center">
-  <h1>Benvenuto nel tuo account</h1>
-  <img src="{% static 'images/users/' %}{{ user }}.png" alt="" width="500px" class="rounded-circle">
+  <h1>Benvenuto nel tuo profilo</h1>
+  <img src="{% static 'images/users/' %}{{ user }}.png?v={{ date }}?v={{ date }}" alt="" width="500px" class="rounded-circle">
+<br>
+<br>
+<br>
+<br>
+
+
+<h2>Seleziona la tua nuova immagine profilo cliccando quella che preferisci</h2>
+
+<br>
+<br>
+
+<div id="image-options-container" style="display: flex;">
+    {% for image in images %}
+        <img src="{% static 'images/avatars/' %}{{ user_folder }}/{{ image }}" alt="" width="200px" class="rounded-circle" onclick="updateProPic(this)">
+    {% endfor %}
+</div>
+
+<script>
+    function updateProPic(imgElement) {
+        $.ajax({
+            type: 'POST',
+            url: '{% url 'update_profile_pic' %}',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                image: imgElement.src
+            },
+            success: function() {
+                location.reload();
+            }
+        });
+    }
+</script>
+
+
     <!--
   <form method="post" action="{% url 'update_profile_pic' %}" enctype="multipart/form-data">
     {% csrf_token %}
@@ -16,3 +50,5 @@
 </div>
 
 -->
+
+

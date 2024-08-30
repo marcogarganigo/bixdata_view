@@ -615,7 +615,33 @@
             data: {
                 'recordid': '{{ recordid }}',
             },
-            success: function (response) {
+             xhrFields: {
+            responseType: 'blob'
+            },
+            success: function (blob, status, xhr) {
+                var url = window.URL.createObjectURL(blob);
+    
+                var a = document.createElement('a');
+                a.href = url;
+    
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                var filename = 'downloaded_file';
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) {
+                        filename = matches[1].replace(/['"]/g, '');
+                    }
+                }
+    
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+
+
+
                 swal({
                     text: "Allegato scaricato",
                     icon: "success",
@@ -623,13 +649,11 @@
                     buttons: false,
                 });
 
-                $('#block_record_card-{{ recordid }}').load('/loading/');
 
-                open_record(window.content, '{{ tableid }}', '{{ recordid }}')
             },
 
             error: function (xhr, status, error) {
-                
+
             }
         });
     }
