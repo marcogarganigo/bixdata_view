@@ -24,17 +24,47 @@
             }
         });
     }
+
+    function getGroupSettings(groupusername) {
+        console.info(groupusername)
+        $.ajax({
+            type: "POST",
+            url: "{% url 'get_group_settings' %}",
+            data: {
+                'groupusername': groupusername
+            },
+            success: function (response) {
+                $("#container-users-2").load('/loading/')
+                setTimeout(function () {
+                    $("#container-users-2").html(response);
+                }, 150);
+            }
+        });
+    }
 </script>
 
-<div id="user-settings-container" class="container-fluid">
-    <div class="row">
+<div id="user-settings-container" class="container-fluid" style="height: 100%">
+    <div class="row" style="height: 100%">
         <div id="users-list-container" class="col-2">
-            {% for user in users %}
-                {{ user.username }}
-                <br>
-            {% endfor %}
+            <div id="user-buttons-container">
+                {% for user in users %}
+                    <button class="btn btn-secondary user-button">{{ user.username }}</button>
+                    <br>
+                {% endfor %}
+            </div>
 
+            <br>
             <button class="btn btn-primary" onclick="newUser()">Nuovo Utente</button>
+        </div>
+
+        <div id="groups-list-container" class="col-2">
+            <div id="group-buttons-container">
+                {% for group in groups %}
+                    <button class="btn btn-secondary user-button" value="{{ group.username }}" onclick="getGroupSettings(this.value)">{{ group.username }}</button>
+                    <br>
+                {% endfor %}
+            </div>
+
             <br>
             <button class="btn btn-primary" onclick="newGroup()">Nuovo Gruppo</button>
         </div>
@@ -43,3 +73,15 @@
         </div>
     </div>
 </div>
+
+
+<style>
+    .user-button {
+        text-align: left;
+        margin-bottom: 5px;
+    }
+
+    #user-buttons-container {
+        width: fit-content;
+    }
+</style>

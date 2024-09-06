@@ -1,0 +1,90 @@
+<script>
+    $('#user-cards-container').find('.select2-input').each(function () {
+        $(this).select2({
+            dropdownParent: $(this).parent()
+        }).addClass('select2-initialized');
+    });
+
+
+    $(document).on('select2:open', function (e) {
+        window.setTimeout(function () {
+            document.querySelector('input.select2-search__field').focus();
+        }, 0);
+    })
+
+    function saveGroupUsers() {
+        var element = document.getElementById('group-select-user');
+        var selectedUsers = [];
+        for (var j = 0; j < element.options.length; j++) {
+            if (element.options[j].selected) {
+                selectedUsers.push(element.options[j].value);
+            }
+        }
+
+        selectedUsers = JSON.stringify(selectedUsers);
+
+        groupid = document.getElementById('input-group-id').value;
+
+        $.ajax({
+            type: "POST",
+            crossDomain: true,
+            url: "{% url 'save_group_users' %}",
+            data: {
+                selectedUsers: selectedUsers,
+                groupid: groupid,
+            },
+            success: function (response) {
+                swal({
+                        title: "Salvato!",
+                        text: "Utenti gruppo aggiornati",
+                        icon: "success",
+                        timer: 800,
+                        buttons: false,
+                });
+            },
+            error: function (response) {
+                $("#content_container").html(response);
+            }
+        });
+    }
+</script>
+
+<button class="btn btn-secondary">Permessi gruppo</button>
+
+<div id="user-cards-container" style="height: 90%">
+
+    <select id="group-select-user" class="select2-input" multiple="multiple" onchange="">
+        {% for user in users  %}
+            <option value="{{ user.id }}">{{ user.firstname }} {{ user.lastname }}</option>
+        {% endfor %}
+        {% for user in users_selected  %}
+        	<option selected value="{{ user.id }}">{{ user.firstname }} {{ user.lastname }}</option>
+        {% endfor %}
+
+    </select>
+    <input id="input-group-id" type="hidden" value="{{ groupid }}">
+<button class="btn btn-primary" onclick="saveGroupUsers()">Salva</button>
+</div>
+
+
+
+
+
+
+<style>
+    .user-card {
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        padding: 10px;
+        justify-content: space-between;
+        background-color: white;
+    }
+
+    #user-cards-container {
+        height: 100%;
+        overflow-y:scroll;
+    }
+</style>
+

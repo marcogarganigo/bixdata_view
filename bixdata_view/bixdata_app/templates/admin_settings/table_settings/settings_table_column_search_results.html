@@ -14,7 +14,7 @@
     <div id="settings_block_usertables_settings" class="drag-elements-container" >
         <div class="drag-item">
             {% for field in fields %}
-                <div data-order="{{ forloop.counter0 }}" class="drag-item2">
+                <div data-order="{{  forloop.counter0 }}" class="drag-item2">
                     {% if field.fieldorder != null %}
                         <input class="form-check-input mt-0 checkbox" type="checkbox" checked value="" aria-label="Checkbox for following text input">
                     {% else %}

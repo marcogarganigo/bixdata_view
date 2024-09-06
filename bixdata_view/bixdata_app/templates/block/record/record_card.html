@@ -658,6 +658,31 @@
         });
     }
 
+    function stampaMilestone() {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'stampa_milestone' %}",
+            data: {
+                'recordid': '{{ recordid }}',
+            },
+            success: function (response, status, xhr) {
+                //open response in blank page
+                var win = window.open('', '_blank');
+                win.document.write(response);
+            },
+            error: function (response) {
+                swal({
+                    title: "Errore nella generazione del file",
+                    text: "sengnalalo ad un tecnico del software al più presto",
+                    icon: "error",
+                    button: "Ok",
+                    dangerMode: true,
+                });
+            }
+        });
+    
+    }
+
 </script>
 
 <div id="block_record_card-{{ recordid }}" class="block_record_card" data-recordid="{{ recordid }}"
@@ -714,6 +739,12 @@
                                 {% elif tableid == 'servicecontract' %}
                                     Stampa report monte ore
                                 {% endif %}
+                            </a></li>
+                        {% endif %}
+                        {% if tableid == 'projectmilestone' %}
+                            <li><a class="dropdown-item"
+                                   onclick="stampaMilestone()">
+                                    Stampa milestone
                             </a></li>
                         {% endif %}
                         {% if tableid == 'deal' %}

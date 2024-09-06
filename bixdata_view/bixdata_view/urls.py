@@ -204,5 +204,9 @@ urlpatterns = [
     path('settings_user_newuser/', settings_view.settings_user_newuser, name='settings_user_newuser'),
     path('save_newuser/', settings_view.save_newuser, name='save_newuser'),
     path('settings_user_newgroup/', settings_view.settings_user_newgroup, name='settings_user_newgroup'),
+    path('save_newgroup/', settings_view.save_newgroup, name='save_newgroup'),
+    path('get_group_settings/', settings_view.get_group_settings, name='get_group_settings'),
+    path('save_group_users/', settings_view.save_group_users, name='save_group_users'),
+    path('stampa_milestone/', alpha.stampa_milestone, name='stampa_milestone'),
 
 ]

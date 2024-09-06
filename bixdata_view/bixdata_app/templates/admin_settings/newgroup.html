@@ -1,0 +1,34 @@
+<script>
+    function saveNewGroup() {
+        $.ajax({
+            url: "{% url 'save_newgroup' %}",
+            type: 'POST',
+            data: {
+                'name': $('#group-name').val(),
+                'username': $('#group-username').val(),
+            },
+            success: function (data) {
+                swal({
+                        title: "Salvato!",
+                        text: "Il record è stato salvato",
+                        icon: "success",
+                        timer: 800,
+                        buttons: false,
+                });
+            }
+        });
+    }
+</script>
+
+<div class="container-fluid" id="newgroup-container">
+    <h3>Nuovo gruppo</h3>
+
+    <input id="group-name" type="text" class="form-control" placeholder="Nome Gruppo" aria-label="Example text with button addon" aria-describedby="button-addon1">
+
+    <input id="group-username" type="text" class="form-control" placeholder="Username formato (group.grouptype)" aria-label="Example text with button addon" aria-describedby="button-addon1">
+
+    <br>
+
+    <button class="btn btn-primary" type="button" onclick="saveNewGroup()">Crea</button>
+
+</div>

@@ -6,6 +6,8 @@ from .businesslogic.settings_business_logic import *
 from .businesslogic.models.record import *
 from .businesslogic.models.field_settings import *
 from django.contrib.auth.models import User
+from .helpers.helperdb import *
+
 
 
 @login_required(login_url='/login/')
@@ -460,8 +462,7 @@ def settings_table_fields_new_field(request):
 
         if not row:
 
-            if fieldtype != 'Linked':
-
+            if fieldtype != 'Linked' and fieldtype != 'LongText':
                 if fieldtype == 'Categoria':
                     cursor.execute(
                         "INSERT INTO sys_field (tableid, fieldid, description, lookuptableid, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s, %s)",
@@ -495,6 +496,19 @@ def settings_table_fields_new_field(request):
                             "INSERT INTO sys_lookup_table_item (lookuptableid, itemcode, itemdesc) VALUES (%s, %s, %s)",
                             [fieldid + '_' + tableid, description, description]
                         )
+
+            elif fieldtype == 'LongText':
+
+
+                cursor.execute(
+                    "INSERT INTO sys_field (tableid, fieldid, description, fieldtypeid, length, label, fieldtypewebid) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    [tableid, fieldid, fielddescription, 'Memo', 4294967295, 'Dati', 'html']
+                )
+
+                sql = f"ALTER TABLE user_{tableid} ADD COLUMN {fieldid} LONGTEXT NULL"
+
+                cursor.execute(sql)
+
 
             else:
 
@@ -625,8 +639,19 @@ def save_newtable(request):
 @login_required(login_url='/login/')
 def settings_user(request):
     hv = HelperView(request)
-    users = SysUser.objects.all().values()
+    users = Helperdb.sql_query("SELECT * FROM sys_user")
+
+
+    groups = []
+
+    for user in users:
+        if user['description'] == 'Gruppo':
+            users.remove(user)
+            groups.append(user)
+
     hv.context['users'] = users
+    hv.context['groups'] = groups
+
     return hv.render_template('admin_settings/user_settings/settings_user.html')
 
 
@@ -642,35 +667,37 @@ def save_newuser(request):
 
     username = firstname.lower() + '.' + lastname.lower()
 
-
-    user = User.objects.create_user(
-        username=username,
-        password=password,
-        first_name=firstname,
-        last_name=lastname,
-        email=email
-    )
-    bixid = user.id
-
-    sql =  "INSERT INTO sys_user (firstname, lastname, username, disabled, superuser, bixid) VALUES (%s, %s, %s, 'N', 'N', %s)",[firstname, lastname, username, bixid]
-
     with connection.cursor() as cursor:
-
         cursor.execute(
-            "SELECT id FROM sys_user"
+            "SELECT * FROM auth_user WHERE username = %s", [username]
         )
-        user_ids = dictfetchall(cursor)
+        user = dictfetchall(cursor)
 
-        userid = user_ids[-1]['id']
+        if user:
+            return JsonResponse({'success': False})
+        else:
 
-        userid += 1
+            user = User.objects.create_user(
+                username=username,
+                password=password,
+                first_name=firstname,
+                last_name=lastname,
+                email=email
+            )
+            bixid = user.id
 
-        cursor.execute(
-            "INSERT INTO sys_user (id, firstname, lastname, username, disabled, superuser, bixid) VALUES (%s, %s, %s, %s, 'N', 'N', %s)",
-            [userid, firstname, lastname, username, bixid]
-        )
+            sql =  "INSERT INTO sys_user (firstname, lastname, username, disabled, superuser, bixid) VALUES (%s, %s, %s, 'N', 'N', %s)",[firstname, lastname, username, bixid]
 
-    return JsonResponse({'success': True})
+            Hv = HelperView(request)
+            userid = Hv.create_new_userid()
+
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO sys_user (id, firstname, lastname, username, disabled, superuser, bixid) VALUES (%s, %s, %s, %s, 'N', 'N', %s)",
+                    [userid, firstname, lastname, username, bixid]
+                )
+
+            return JsonResponse({'success': True})
 
 
 def settings_user_newgroup(request):
@@ -681,3 +708,83 @@ def settings_user_newgroup(request):
         )
         users = dictfetchall(cursor)
     return render(request, 'admin_settings/newgroup.html')
+
+
+def save_newgroup(request):
+    groupname = request.POST.get('name')
+    groupusername = request.POST.get('username')
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM sys_user WHERE username = %s", [groupusername]
+        )
+        user = dictfetchall(cursor)
+
+
+        if not user:
+            Hv = HelperView(request)
+            userid = Hv.create_new_userid()
+
+            cursor.execute(
+                "INSERT INTO sys_user (id, firstname, description, username) VALUES (%s, %s, %s, %s)", [userid, groupname, 'Gruppo', groupusername]
+            )
+
+    return JsonResponse({'success': True})
+
+
+def get_group_settings(request):
+
+    context = {}
+
+    groupusername = request.POST.get('groupusername')
+
+    groupid = Helperdb.sql_query(f"SELECT id FROM sys_user WHERE username = '{groupusername}'")
+
+    groupid = groupid[0]['id']
+
+
+    group_users = Helperdb.sql_query(f"SELECT userid FROM sys_group_user WHERE groupid = {groupid}")
+
+    users_selected = []
+
+    if group_users:
+        for user in group_users:
+            selected_users = Helperdb.sql_query(
+                f"SELECT * FROM sys_user WHERE id = {user['userid']} AND description != 'Gruppo'")
+            users_selected.extend(selected_users)
+
+        users = Helperdb.sql_query("SELECT * FROM sys_user WHERE description != 'Gruppo'")
+
+        for user_selected in users_selected:
+            users = [user for user in users if user['id'] != user_selected['id']]
+
+
+    else:
+        users = Helperdb.sql_query("SELECT * FROM sys_user WHERE description != 'Gruppo'")
+        users_selected = []
+
+    context['users'] = users
+    context['users_selected'] = users_selected
+    context['groupid'] = groupid
+
+
+    return render(request, 'admin_settings/group_settings.html', context)
+
+
+def save_group_users(request):
+    selected_users = request.POST.get('selectedUsers')
+    selected_users = json.loads(selected_users)
+
+    groupid = request.POST.get('groupid')
+
+    Helperdb.sql_execute(f"DELETE FROM sys_group_user WHERE groupid = {groupid}")
+
+    if selected_users:
+        for user in selected_users:
+            Helperdb.sql_execute(f"INSERT INTO sys_group_user (groupid, userid) VALUES ({groupid}, {user})")
+
+
+
+
+
+    return JsonResponse({'success': True})

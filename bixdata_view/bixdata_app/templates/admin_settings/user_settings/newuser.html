@@ -9,15 +9,28 @@
                 'email': $('#user-email').val(),
                 'password': $('#user-password').val(),
             },
-            success: function (data) {
-                swal({
+            success: function (response) {
+                console.info(response.success);
+                if (response.success == false)  {
+                    swal({
+                        title: "Utente non salvato",
+                        text: "Utente già presente nel sistema",
+                        icon: "error",
+                        timer: 1500,
+                        buttons: false,
+                    })
+
+                }
+                else if (response.success == true) {
+                    swal({
                         title: "Salvato!",
                         text: "Il record è stato salvato",
                         icon: "success",
                         timer: 800,
                         buttons: false,
-                });
-            }
+                    });
+                }
+            },
         });
     }
 </script>

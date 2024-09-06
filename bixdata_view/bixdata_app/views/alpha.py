@@ -532,15 +532,15 @@ def get_chart(request, sql, id, name, layout, fields):
         }
 
         if layout_chart == 'barchart':
-            return render_to_string('other/barchart.html', context, request=request)
+            return render_to_string('block/chart/barchart.html', context, request=request)
         elif layout_chart == 'piechart':
-            return render_to_string('other/piechart.html', context, request=request)
+            return render_to_string('block/chart/piechart.html', context, request=request)
         elif layout_chart == 'linechart':
-            return render_to_string('other/linechart.html', context, request=request)
+            return render_to_string('block/chart/linechart.html', context, request=request)
         elif layout_chart == 'horizontalbarchart':
-            return render_to_string('other/horizontalbarchart.html', context, request=request)
+            return render_to_string('block/chart/horizontalbarchart.html', context, request=request)
         elif layout_chart == 'donutchart':
-            return render_to_string('other/donutchart.html', context, request=request)
+            return render_to_string('block/chart/donutchart.html', context, request=request)
 
 
 @login_required(login_url='/login/')
@@ -5407,16 +5407,15 @@ def get_card_chart(request, userid, sql, type, chartname):
         }
 
         if type == 'barchart':
-            return render_to_string('other/barchart.html', context, request=request)
+            return render_to_string('block/chart/barchart.html', context, request=request)
         elif type == 'piechart':
-            return render_to_string('other/piechart.html', context, request=request)
+            return render_to_string('block/chart/piechart.html', context, request=request)
         elif type == 'linechart':
-            return render_to_string('other/linechart.html', context, request=request)
+            return render_to_string('block/chart/linechart.html', context, request=request)
         elif type == 'horizontalbarchart':
-            return render_to_string('other/horizontalbarchart.html', context, request=request)
+            return render_to_string('block/chart/horizontalbarchart.html', context, request=request)
         elif type == 'donutchart':
-            return render_to_string('other/donutchart_card.html', context, request=request)
-
+            return render_to_string('block/chart_stats/donutchart.html', context, request=request)
 
 def get_card_data(request, sql, userid):
     with connection.cursor() as cursor:
@@ -5434,5 +5433,60 @@ def get_card_data(request, sql, userid):
 """
 User Stats END
 """
+
+
+
+
+def stampa_milestone(request):
+    recordid = request.POST.get('recordid')
+
+    tasks = Helperdb.sql_query(f"SELECT * FROM user_task WHERE recordidprojectmilestone_='{recordid}'")
+    
+    for task in tasks:
+        fullname = Helperdb.sql_query(f"SELECT first_name, last_name FROM v_users WHERE sys_user_id = '{task['user']}'")
+        fullname = fullname[0]['first_name'] + ' ' + fullname[0]['last_name']
+        task['username'] = fullname
+
+
+    milestone = Helperdb.sql_query(f"SELECT * FROM user_projectmilestone WHERE recordid_='{recordid}'")[0]
+        
+        
+    context = dict()
+    context['tasks'] = tasks
+    context['milestone'] = milestone
+
+    """
+        filename = 'test.pdf'
+        
+        
+        path = os.path.dirname(os.path.abspath(__file__))
+        path = path.rsplit('views', 1)[0]
+        filename_with_path = path + '\\static\\pdf\\' + filename
+    
+    
+    
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
+    
+        config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+        content = render_to_string('pdf/milestone.html', context)
+    
+        pdfkit.from_string(content, filename_with_path, configuration=config)
+    
+        try:
+            with open(filename_with_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type="application/pdf")
+                response['Content-Disposition'] = f'inline; filename={filename}'
+    
+            return response
+    
+        finally:
+            os.remove(filename_with_path)
+    """
+    return render(request, 'pdf/milestone.html', context)
+
+
+
+
 
 

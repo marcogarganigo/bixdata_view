@@ -29,7 +29,6 @@
     <orderEntry type="library" name="zebra_datepicker" level="application" />
     <orderEntry type="library" name="dragula" level="application" />
     <orderEntry type="library" name="fullcalendar" level="application" />
-    <orderEntry type="library" name="select2" level="application" />
     <orderEntry type="library" name="jquery-ui" level="application" />
     <orderEntry type="library" name="gridstack" level="application" />
     <orderEntry type="library" name="bootstrap-select" level="application" />
@@ -37,9 +36,10 @@
     <orderEntry type="library" name="panzoom" level="application" />
     <orderEntry type="library" name="gridstack.js" level="application" />
     <orderEntry type="library" name="jquery" level="application" />
-    <orderEntry type="library" name="select2" level="application" />
     <orderEntry type="library" name="lodash.js" level="application" />
     <orderEntry type="library" name="jqueryui" level="application" />
+    <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="select2" level="application" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />

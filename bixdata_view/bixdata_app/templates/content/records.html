@@ -433,11 +433,13 @@
     function closeCard(vrbl) {
         $(vrbl).closest('.modal').modal('hide');
         setTimeout(function () {
+            $(vrbl).closest('.RecordCard').html('')
         }, 1000);
         if (window.innerWidth > min_width) {
             $(vrbl).closest("#RecordCard").slideToggle(200, function () {
             });
         }
+
     }
 
     $('.modal').on('hidden.bs.modal', function (e) {

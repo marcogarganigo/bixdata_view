@@ -141,6 +141,17 @@ class HelperView:
         
         return ripetizioni
 
+    def create_new_userid(self):
+        # Get the last user id
+        sql = "SELECT MAX(id) AS max_id FROM sys_user"
+        max_id = self.db_helper.sql_query_row(sql)
+        if max_id:
+            new_id = max_id['max_id'] + 1
+        else:
+            new_id = 1
+
+        return new_id
+
     
     
     
