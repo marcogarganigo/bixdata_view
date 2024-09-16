@@ -907,6 +907,7 @@ def get_block_record_card(request, tableid, recordid, userid, master_tableid='',
             cursor.execute(f"SELECT id_bexio FROM user_salesorder WHERE recordid_={recordid}")
             id_bexio = cursor.fetchone()[0]
             context['id_bexio'] = id_bexio
+
     context['userid'] = userid
     context['user_table_settings'] = get_user_table_settings(userid, tableid)
     # TODO: recuperare i dati dal table settings generico
@@ -985,6 +986,7 @@ def get_block_record_fields(request, prefilled_fields=dict()):
     contextreference = request.POST.get('contextreference')
     # creator = request.POST.get('creator')
 
+
     row = SysUser.objects.filter(bixid=request.user.id).values('id')
 
     if row:
@@ -996,11 +998,25 @@ def get_block_record_fields(request, prefilled_fields=dict()):
     record.master_tableid = master_tableid
     record.master_recordid = master_recordid
     record.context = contextfunction
+
+
+
+
     fields = record.get_fields()
+
 
     for key, value in fields['Dati'].items():
         if value['fieldtypewebid'] == 'html':
             value['unique_id'] = str(uuid.uuid4().hex)
+
+    #check se creator è lo stesso dello user che visualizza, in caso contrario, duedate non è modificabile
+    if tableid == 'task' and contextfunction != 'insert':
+        creator = fields['Dati']['creator']['valuecode'][0]['code']
+        userid = str(get_userid(request.user.id))
+        if creator != userid:
+            fields['Dati']['duedate']['edit'] = 'disabled'
+        else:
+            fields['Dati']['duedate']['edit'] = ''
 
     context['record_fields_labels'] = fields
     context['contextfunction'] = contextfunction
@@ -1009,6 +1025,8 @@ def get_block_record_fields(request, prefilled_fields=dict()):
     context['recordid'] = recordid
     context['master_tableid'] = master_tableid
     context['master_recordid'] = master_recordid
+    
+
 
     bixuserid = get_userid(request.user.id)
 
@@ -1044,6 +1062,8 @@ def get_block_record_fields(request, prefilled_fields=dict()):
         block_record_fields_container = render_to_string('block/record/record_fields_container.html', context,
                                                          request=request)
     else:
+
+
         context['block_record_fields'] = render_to_string('block/record/record_fields.html', context, request=request)
         block_record_fields_container = render_to_string('block/record/record_fields_container.html', context,
                                                          request=request)
@@ -5316,7 +5336,7 @@ def get_user_stats_page(request):
 
         context['users'] = dictfetchall(cursor)
 
-    return render(request, 'other/user_statistics.html', context)
+    return render(request, 'block/user/stats/statistics.html', context)
 
 
 def get_user_stats_card(request):
@@ -5326,6 +5346,13 @@ def get_user_stats_card(request):
 
     selected_users = request.POST.get('selectedUsers')
     selected_users = json.loads(selected_users)
+
+    for user in selected_users:
+        user_group = Helperdb.sql_query(f"SELECT groupid FROM sys_group_user WHERE userid = '{user}'")
+
+        if user_group == '60':
+            task_stats = get_user_tasks_stats(request)
+
 
     ids = [str(user) for user in selected_users]
 
@@ -5363,7 +5390,7 @@ def get_user_stats_card(request):
             user['opentasks'] = get_card_data(request,sql,user['sys_user_id'])[0]['opentasks']
         
 
-    return render(request, 'other/user_stats_card.html', context)
+    return render(request, 'block/user/stats/stats_card.html', context)
 
 
 def build_card_content(request, userid):
@@ -5484,6 +5511,77 @@ def stampa_milestone(request):
             os.remove(filename_with_path)
     """
     return render(request, 'pdf/milestone.html', context)
+
+
+def get_user_tasks_stats(request):
+    userid = get_userid(request.user.id)
+
+    tasks = Helperdb.sql_query(f"SELECT * FROM user_task WHERE user='{userid}'")
+
+    open_tasks = []
+    closed_tasks = []
+    expired_tasks = []
+
+
+    for task in tasks:
+        if task['status'] != 'Chiuso':
+            open_tasks.append(task)
+        if task['status'] == 'Chiuso':
+            closed_tasks.append(task)
+        if task['status'] == 'Scaduto':
+            expired_tasks.append(task)
+
+
+    open_tasks_count = len(open_tasks)
+    closed_tasks_count = len(closed_tasks)
+    expired_tasks_count = len(expired_tasks)
+
+
+
+
+
+    closed_in_time = []
+    days_diff= []
+
+
+    for task in closed_tasks:
+        if task['closedate'] and task['duedate']:
+            if task['closedate'] < task['duedate']:
+                closed_in_time.append(task)
+
+            duedate = task['duedate']
+            closedate = task['closedate']
+            diff = (closedate - duedate).days
+            days_diff.append(diff)
+
+    closed_in_time = len(closed_in_time)
+
+    if days_diff:
+        avg_diff = round(sum(days_diff) / len(days_diff))
+    else:
+        avg_diff = 0
+
+    data = dict()
+
+    data['labels'] = ['Task aperti', 'Task chiusi', 'Task scaduti']
+    data['value'] = [open_tasks_count, closed_tasks_count, expired_tasks_count]
+
+    tasks_chart = render_to_string('block/chart_stats/donutchart.html', data, request=request)
+
+
+    context = dict()
+    context['tasks'] = tasks
+    context['open_tasks'] = open_tasks
+    context['closed_tasks'] = closed_tasks
+    context['expired_tasks'] = expired_tasks
+    context['open_tasks_count'] = open_tasks_count
+    context['closed_tasks_count'] = closed_tasks_count
+    context['expired_tasks_count'] = expired_tasks_count
+    context['closed_in_time'] = closed_in_time
+    context['avg_close_day'] = avg_diff
+    context['tasks_chart'] = tasks_chart
+
+    return JsonResponse(context, safe=False)
 
 
 

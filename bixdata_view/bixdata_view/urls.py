@@ -208,5 +208,6 @@ urlpatterns = [
     path('get_group_settings/', settings_view.get_group_settings, name='get_group_settings'),
     path('save_group_users/', settings_view.save_group_users, name='save_group_users'),
     path('stampa_milestone/', alpha.stampa_milestone, name='stampa_milestone'),
+    path('get_user_tasks_stats/', alpha.get_user_tasks_stats, name='get_user_tasks_stats'),
 
 ]

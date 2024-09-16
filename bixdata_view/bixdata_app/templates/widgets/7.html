@@ -1,0 +1,39 @@
+{% load static %}
+
+<script>
+
+    $(document).ready(function () {
+        get_user_tasks_stats();
+    });
+
+    function get_user_tasks_stats() {
+        $.ajax({
+            url: "{% url 'get_user_tasks_stats' %}",
+            type: "POST",
+            success: function (data) {
+                console.log(data);
+                $("#open-tasks").append(data.open_tasks_count);
+                $("#expired-tasks").append(data.expired_tasks_count);
+                $("#closed-in-time-tasks").append(data.closed_in_time);
+                $("#avg-close-day").append(data.avg_close_day + ' giorni');
+                $("#chart-container").html(data.tasks_chart);
+            }
+        });
+
+    }
+</script>
+
+
+<div class="container text-center" style="height: 20%">
+  <div class="row row-cols-2">
+      <div class="col"> <p id="open-tasks"><b>totale task aperti: </b></p></div>
+    <div class="col"><p id="expired-tasks"><b>totale task scaduti: </b></p></div>
+    <div class="col"><p id="closed-in-time-tasks"><b>totale task chiusi in tempo: </b></p></div>
+    <div class="col"><p id="avg-close-day"><b>media ritardo chiusura task: </b></p></div>
+  </div>
+</div>
+
+
+<div id="chart-container" class="container-fluid" style="height: 80%"></div>
+
+

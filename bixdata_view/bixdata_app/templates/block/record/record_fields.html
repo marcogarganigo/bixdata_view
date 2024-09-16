@@ -303,9 +303,15 @@
                             {% endif %}
 
                             {% if field.fieldtypeid == 'Data' %}
+                                {% if fieldid == 'field-duedate' %}
+                                	<input id="{{ fieldid }}" name="{{ fieldname }}"
+                                       class="form-control mb-2 datepicker {{ mandatory }} {{ calcolato }}" type="date" {{ field.edit }}
+                                       value="{{ field.valuecode.0.code }}" oninput="validateInput(this)">
+                                {% else %}
                                 <input id="{{ fieldid }}" name="{{ fieldname }}"
                                        class="form-control mb-2 datepicker {{ mandatory }} {{ calcolato }}" type="date"
                                        value="{{ field.valuecode.0.code }}" oninput="validateInput(this)">
+                                {% endif %}
                                 <script>
                                     function validateInput(el) {
                                         var inputValue = el.value;
