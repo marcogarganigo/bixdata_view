@@ -24,6 +24,7 @@ from bixdata_app.views import bixdata_view
 from bixdata_app.views import script_view
 from bixdata_app.views import scheduler
 from bixdata_app.views import bixapp_view
+from bixdata_app.views import test_react
 
 urlpatterns = [
     path('', bixdata_view.index, name='base'),
@@ -61,6 +62,8 @@ urlpatterns = [
     path('record_card_duplicate/', alpha.record_card_duplicate, name='record_card_duplicate'),
     path('record_card_delete/', alpha.get_record_card_delete, name='record_card_delete'),
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('login_react/', test_react.login_react, name='login_react/'),
+    path('logout_react/', test_react.logout_react, name='logout_react/'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('get_full_data/', alpha.get_full_data, name='get_full_data'),
     path('get_full_data2/', alpha.get_full_data2, name='get_full_data2'),
@@ -160,6 +163,7 @@ urlpatterns = [
     path('set_default_dashboard/', alpha.set_default_dashboard, name = 'set_default_dashboard'),
     path('new_timesheet/', alpha.new_timesheet, name='new_timesheet'),
     path('get_company_card/<str:phonenumber>/', alpha.get_company_card, name='get_record_path'),
+    path('save_phonenumber/', alpha.save_phonenumber, name='save_phonenumber'),
     path('get_3cx_card/<str:phonenumber>/<str:callername>', alpha.get_3cx_card, name='get_record_path'),
     path('notify_error/', alpha.notify_error, name='notify_error'),
     path('new_view/', alpha.new_view, name="new_view"),
@@ -209,5 +213,9 @@ urlpatterns = [
     path('save_group_users/', settings_view.save_group_users, name='save_group_users'),
     path('stampa_milestone/', alpha.stampa_milestone, name='stampa_milestone'),
     path('get_user_tasks_stats/', alpha.get_user_tasks_stats, name='get_user_tasks_stats'),
+    path('test_react_request/', test_react.test_react_request, name='test_react_request'),
+    path('api/csrf-token/', test_react.csrf_token_view, name='csrf-token'),
+    path('load_card_react/', test_react.load_card_react, name='load_card_react'),
+
 
 ]

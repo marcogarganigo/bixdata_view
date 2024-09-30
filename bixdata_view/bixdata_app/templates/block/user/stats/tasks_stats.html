@@ -1,0 +1,12 @@
+
+<div class="container text-center " style="height: 20%">
+  <div class="row row-cols-2">
+      <div class="col"> <p id=""><b>totale task aperti: </b>{{ open_tasks_count }}</p></div>
+    <div class="col"><p id=""><b>totale task scaduti: </b>{{ expired_tasks_count }}</p></div>
+    <div class="col"><p id=""><b>totale task chiusi in tempo: </b>{{ closed_in_time }}</p></div>
+    <div class="col"><p id=""><b>media ritardo chiusura task: </b>{{ avg_close_day }} giorni</p></div>
+  </div>
+</div>
+
+
+<div id="" class="container-fluid " style="height: 80%">{{ tasks_chart }}</div>

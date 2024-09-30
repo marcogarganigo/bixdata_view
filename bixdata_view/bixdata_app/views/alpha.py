@@ -64,6 +64,11 @@ import qrcode
 from .businesslogic.models.record import *
 from .businesslogic.models.table import *
 
+from django.middleware.csrf import get_token
+from Crypto.Cipher import AES
+
+
+
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 freshdesk_apikey = os.environ.get('FRESHDESK_APIKEY')
 get_tickets_password = os.environ.get('GET_TICKETS_PASSWORD')
@@ -4539,6 +4544,7 @@ def set_default_dashboard(request):
 
 def get_company_card(request, phonenumber):
     userid = request.user.id
+
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT * FROM user_company WHERE phonenumber='{phonenumber}'"
@@ -4556,19 +4562,39 @@ def get_company_card(request, phonenumber):
 
 def get_3cx_card(request, phonenumber, callername):
     userid = request.user.id
-    with connection.cursor() as cursor:
-        cursor.execute(
-            f"SELECT * FROM user_company WHERE phonenumber='{phonenumber}'"
-        )
-        rows = dictfetchall(cursor)
-        rows = rows[0]
+    context = dict()
+
+    contact = Helperdb.sql_query(f"SELECT recordidcompany_ FROM user_contact WHERE phone = '{phonenumber}' OR mobilephone = '{phonenumber}'")[0]
+    if contact:
+        rows = Helperdb.sql_query(f"SELECT * FROM user_company WHERE recordid_ = '{contact['recordidcompany_']}'")
+    else:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f"SELECT * FROM user_company WHERE phonenumber='{phonenumber}'"
+            )
+            rows = dictfetchall(cursor)
 
     if (rows):
-        context = dict()
+        rows = rows[0]
         context['company'] = rows
         context['company_block'] = get_block_record_card(request, 'company', rows['recordid_'], userid)
         content = render_to_string('other/company_card.html', context)
-        return index(request, content)
+    else:
+        companies = Helperdb.sql_query("SELECT * FROM user_company")
+        context['companies'] = companies
+        context['phonenumber'] = phonenumber
+        content = render_to_string('other/add_phonenumber.html', context)
+
+    return index(request, content)
+
+
+def save_phonenumber(request):
+    recordid = request.POST.get('recordid')
+    phonenumber = request.POST.get('phonenumber')
+
+    Helperdb.sql_execute(f"UPDATE user_company SET phonenumber = {phonenumber} WHERE recordid_ = {recordid}")
+
+    return JsonResponse({'success': True})
 
 
 def notify_error(request):
@@ -5347,11 +5373,7 @@ def get_user_stats_card(request):
     selected_users = request.POST.get('selectedUsers')
     selected_users = json.loads(selected_users)
 
-    for user in selected_users:
-        user_group = Helperdb.sql_query(f"SELECT groupid FROM sys_group_user WHERE userid = '{user}'")
 
-        if user_group == '60':
-            task_stats = get_user_tasks_stats(request)
 
 
     ids = [str(user) for user in selected_users]
@@ -5370,14 +5392,14 @@ def get_user_stats_card(request):
         for user in context['users']:
 
             #dict contenente tutti i blocchi che verranno passati ad una pagina html che li cicla e li organizza per poi andare a caricarsi nella card
-            block_list['timesheet_chartblock'] = build_card_content(request, user['sys_user_id'])
+            #block_list['timesheet_chartblock'] = build_card_content(request, user['sys_user_id'])
 
             """
                 esempio 
             
                 intermediate_html = render_to_string('intermediate_template.html', {'block_list': block_list})
 
-                # Ora puoi usare `intermediate_html` come una stringa nel template finale
+                # Ora puoi usare `intermediate_html` come una stringa nel template finale   
                 context['intermediate_html'] = intermediate_html
                 
                 che poi viene passato al template user_stats_card
@@ -5388,6 +5410,20 @@ def get_user_stats_card(request):
             user['chartblock'] = build_card_content(request, user['sys_user_id'])
             sql = f"SELECT COUNT(recordid_) as opentasks FROM user_task WHERE status != 'Chiuso' AND user = {user['sys_user_id']}"
             user['opentasks'] = get_card_data(request,sql,user['sys_user_id'])[0]['opentasks']
+
+
+            userid = user['sys_user_id']
+
+            user_group = Helperdb.sql_query(f"SELECT groupid FROM sys_group_user WHERE userid = '{userid}'")
+
+            if user_group:
+                user_group = user_group[0]['groupid']
+
+            if user_group == 60:
+                user['taskblock'] = get_user_tasks_stats(request, userid)
+            else:
+                user['taskblock'] = ''
+
         
 
     return render(request, 'block/user/stats/stats_card.html', context)
@@ -5513,8 +5549,12 @@ def stampa_milestone(request):
     return render(request, 'pdf/milestone.html', context)
 
 
-def get_user_tasks_stats(request):
-    userid = get_userid(request.user.id)
+def get_user_tasks_stats(request, userid=''):
+
+    request_type = ''
+    if not userid:
+        userid = get_userid(request.user.id)
+        request_type = 'ajax'
 
     tasks = Helperdb.sql_query(f"SELECT * FROM user_task WHERE user='{userid}'")
 
@@ -5563,8 +5603,12 @@ def get_user_tasks_stats(request):
 
     data = dict()
 
-    data['labels'] = ['Task aperti', 'Task chiusi', 'Task scaduti']
-    data['value'] = [open_tasks_count, closed_tasks_count, expired_tasks_count]
+    data = {
+        'value': [open_tasks_count, closed_tasks_count, expired_tasks_count],
+        'labels': ['Task aperti', 'Task chiusi', 'Task scaduti'],
+        'name': 'tasks chart',
+        'id': uuid.uuid4().hex,
+    }
 
     tasks_chart = render_to_string('block/chart_stats/donutchart.html', data, request=request)
 
@@ -5581,7 +5625,14 @@ def get_user_tasks_stats(request):
     context['avg_close_day'] = avg_diff
     context['tasks_chart'] = tasks_chart
 
-    return JsonResponse(context, safe=False)
+    if request_type == 'ajax':
+        return JsonResponse({'tasks_stats': render_to_string('block/user/stats/tasks_stats.html', context)})
+    else:
+        return render_to_string('block/user/stats/tasks_stats.html', context, request=request)
+
+
+
+
 
 
 

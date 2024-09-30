@@ -34,23 +34,30 @@
         <div class="card">
           <div class="card-body">
 
-            <div class="container" style="width: 100%; height: 80%; margin:0">
-              <div class="row">
+            <div class="container-fluid" style="width: 100%; height: 50%; margin:0">
+              <div class="row" style="">
                 <div class="col d-flex align-items-center">
                   <img src="{% static 'images/users/' %}{{ user.username }}.png?v={{ date }}"
                        alt="{{ user.username }}"
                        class="rounded-circle"
-                       style="width: 20%; margin-right: 1%;">
+                       style="width: 10vh; margin-right: 1%;">
                   <h3 class="card-title mb-0">{{ user.first_name }} {{ user.last_name }}</h3>
                 </div>
-
               </div>
+                <div class="row" style="height: 80% !important;">
+                    {% if user.taskblock|safe != '' %}
+                        <div class="col col-6" style="border: solid 1px grey">
+                            <div id="task-stats-container" style="height: 100%">
+                                {{ user.taskblock|safe }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="col col-6" style="border: solid 1px grey">
+                            {{ user.chartblock|safe }}
+                    </div>
+                </div>
             </div>
-              <br>
-              <b>task aperti: {{ user.opentasks }} </b>
-              {{ user.chartblock|safe }}
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+
           </div>
         </div>
 

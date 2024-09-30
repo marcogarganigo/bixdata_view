@@ -25,6 +25,10 @@
                 selectedUsers.push(element.options[j].value);
             }
         }
+        
+        if (selectedUsers.length == 0) {
+            return;
+        }
 
         selectedUsers = JSON.stringify(selectedUsers)
         console.info(selectedUsers)

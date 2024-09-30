@@ -99,6 +99,7 @@ function save_record(el, setting) {
 
             //console.info(formData)
 
+        
 
         closeNewRecordModal(el)
         $(el).closest('.modal').modal("hide");

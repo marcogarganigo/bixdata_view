@@ -1,0 +1,76 @@
+
+<script>
+    $(document).ready(function() {
+
+        $('.select2-input').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            }).addClass('select2-initialized');
+        });
+
+
+        $(document).on('select2:open', function (e) {
+            window.setTimeout(function () {
+                document.querySelector('input.select2-search__field').focus();
+            }, 0);
+        })
+    });
+
+
+    function savePhoneNumber() {
+        var company = $('#company-select').val();
+        var phonenumber = $('#new-phonenumber').val();
+
+        if(company==null || phonenumber==''){
+            alert('Inserisci tutti i campi')
+            return
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'save_phonenumber' %}",
+            data: {
+                'recordid': company,
+                'phonenumber': phonenumber,
+            },
+            success: function (data) {
+                swal({
+                    title: "Numero aggiornato!",
+                    text: "Il numero di telefono å stato aggiornato correttamente.",
+                    icon: "success",
+                    timer: 800,
+                    buttons: false,
+                })
+            }
+        });
+    }
+</script>
+
+ <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form>
+                    <div class="mb-3">
+                        <label for="company-select" class="form-label">Seleziona l'azienda</label>
+                        <br>
+                        <select id="company-select" class="form-select select2-input">
+                            <option id="company-select" selected value=""></option>
+                            {% for company in companies %}
+                                <option value="{{ company.recordid_ }}">{{ company.companyname }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new-phonenumber" class="form-label">Numero di Telefono</label>
+                        <input id="new-phonenumber" class="form-control" type="text" value="{{ phonenumber }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary" onclick="savePhoneNumber()">Salva</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
