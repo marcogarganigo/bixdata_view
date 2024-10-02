@@ -65,7 +65,7 @@ from .businesslogic.models.record import *
 from .businesslogic.models.table import *
 
 from django.middleware.csrf import get_token
-from Crypto.Cipher import AES
+
 
 
 

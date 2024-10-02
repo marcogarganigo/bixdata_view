@@ -1,3 +1,4 @@
+"""
 from django.http import JsonResponse, HttpResponse
 
 import json
@@ -107,3 +108,4 @@ def load_card_react(request):
     return JsonResponse({'card_block': card_block})   
 
 
+"""
