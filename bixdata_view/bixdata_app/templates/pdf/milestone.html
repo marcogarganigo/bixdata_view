@@ -23,6 +23,11 @@
               <div><img src="{% static 'images/users/' %}{{task.user}}.png" alt="{{task.user}}" width="32px" height="32px" class="rounded-circle"> {{task.username}}</div>
               <div class="card-body">
                 <p class="card-text">{{ task.publicdescription }}</p>
+                {% if task.completed == 'Si' %}
+                <b style="color: green">Completato {{ task.closedate }}</b>
+                {% else %}
+                <b style="color: red">Non completato</b>
+                {% endif %}
               </div>
             </div>
         </div>
@@ -41,4 +46,4 @@
         padding: 0.3%;
         border: 0px;
     }
-</style>    
+</style>

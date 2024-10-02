@@ -11,11 +11,12 @@ from Crypto.Util.Padding import unpad
 
 from django.shortcuts import render
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
 
 
 logger = logging.getLogger(__name__)
 
-
+@login_required(login_url='/login/')
 def test_react_request(request):
     if request.method == 'POST':
         # Carica i dati JSON dalla richiesta
@@ -98,6 +99,7 @@ def decrypt(encrypted_data, key):
         return None
     
 
+@login_required(login_url='/login/')
 def load_card_react(request):
 
     card_block = render_to_string('other/react_card.html')

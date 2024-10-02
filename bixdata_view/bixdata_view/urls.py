@@ -25,6 +25,10 @@ from bixdata_app.views import script_view
 from bixdata_app.views import scheduler
 from bixdata_app.views import bixapp_view
 from bixdata_app.views import test_react
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('', bixdata_view.index, name='base'),
@@ -216,6 +220,10 @@ urlpatterns = [
     path('test_react_request/', test_react.test_react_request, name='test_react_request'),
     path('api/csrf-token/', test_react.csrf_token_view, name='csrf-token'),
     path('load_card_react/', test_react.load_card_react, name='load_card_react'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+
 
 
 ]
