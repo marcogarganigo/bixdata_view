@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "bixdata_view": "file:",
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.10.5",
     "bootstrap-select": "^1.13.18",
