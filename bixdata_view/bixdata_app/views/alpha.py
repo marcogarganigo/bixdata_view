@@ -1817,17 +1817,17 @@ def custom_save_record(request, tableid, recordid):
             residualhours = expectedhours - usedhours
         project_record.fields['usedhours'] = usedhours
         project_record.fields['residualhours'] = residualhours
-        deal_record.fields['usedhours'] = usedhours
-        deal_record.fields['fixedpricehours'] = fixedpricehours
-        deal_record.fields['servicecontracthours'] = servicecontracthours
-        deal_record.fields['bankhours'] = bankhours
-        deal_record.fields['invoicedhours'] = invoicedhours
-        deal_record.fields['residualhours'] = residualhours
 
-        deal_record.fields['projectcompleted'] = completed
-        deal_record.save()
         project_record.save()
         if not isempty(deal_record.recordid):
+            deal_record.fields['usedhours'] = usedhours
+            deal_record.fields['fixedpricehours'] = fixedpricehours
+            deal_record.fields['servicecontracthours'] = servicecontracthours
+            deal_record.fields['bankhours'] = bankhours
+            deal_record.fields['invoicedhours'] = invoicedhours
+            deal_record.fields['residualhours'] = residualhours
+            deal_record.fields['projectcompleted'] = completed
+            deal_record.save()
             custom_save_record(request, tableid='deal', recordid=deal_record.recordid)
 
     # ---DEALLINE
@@ -4905,14 +4905,21 @@ def stampa_project(request):
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
 
     record_deal = Record('deal', record_project.fields['recordiddeal_'])
-    context['redditivita'] = dict()
-    context['redditivita']['labels'] = ['Importo trattativa', 'Margine Previsto', 'Margine effettivo']
-    context['redditivita']['values'] = [record_deal.fields['amount'], record_deal.fields['expectedmargin'],
-                                        record_deal.fields['effectivemargin']]
-    context['redditivita']['importo'] = record_deal.fields['amount']
-    context['redditivita']['margineprevisto'] = record_deal.fields['expectedmargin']
-    context['redditivita']['margineffettivo'] = record_deal.fields['effectivemargin']
-
+    if not isempty(record_deal.recordid):
+        context['redditivita'] = dict()
+        context['redditivita']['labels'] = ['Importo trattativa', 'Margine Previsto', 'Margine effettivo']
+        context['redditivita']['values'] = [record_deal.fields['amount'], record_deal.fields['expectedmargin'],
+                                            record_deal.fields['effectivemargin']]
+        context['redditivita']['importo'] = record_deal.fields['amount']
+        context['redditivita']['margineprevisto'] = record_deal.fields['expectedmargin']
+        context['redditivita']['margineffettivo'] = record_deal.fields['effectivemargin']
+    else:
+        context['redditivita'] = dict()
+        context['redditivita']['labels']=[]
+        context['redditivita']['values']=[]
+        context['redditivita']['importo']=""
+        context['redditivita']['margineprevisto']=""
+        context['redditivita']['margineffettivo']=""
     righedettaglio = list()
     table_dealline = Table('dealline')
     conditions_list = list()
