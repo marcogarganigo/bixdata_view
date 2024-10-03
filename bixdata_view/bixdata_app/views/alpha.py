@@ -4564,8 +4564,9 @@ def get_3cx_card(request, phonenumber, callername):
     userid = request.user.id
     context = dict()
 
-    contact = Helperdb.sql_query(f"SELECT recordidcompany_ FROM user_contact WHERE phone = '{phonenumber}' OR mobilephone = '{phonenumber}'")[0]
+    contact = Helperdb.sql_query(f"SELECT recordidcompany_ FROM user_contact WHERE phone = '{phonenumber}' OR mobilephone = '{phonenumber}'")
     if contact:
+        contact = contact[0]
         rows = Helperdb.sql_query(f"SELECT * FROM user_company WHERE recordid_ = '{contact['recordidcompany_']}'")
     else:
         with connection.cursor() as cursor:
