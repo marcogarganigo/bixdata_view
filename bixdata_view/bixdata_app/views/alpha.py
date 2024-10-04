@@ -4593,7 +4593,7 @@ def save_phonenumber(request):
     recordid = request.POST.get('recordid')
     phonenumber = request.POST.get('phonenumber')
 
-    Helperdb.sql_execute(f"UPDATE user_company SET phonenumber = {phonenumber} WHERE recordid_ = {recordid}")
+    Helperdb.sql_execute(f"UPDATE user_company SET phonenumber = '{phonenumber}' WHERE recordid_ = '{recordid}'")
 
     return JsonResponse({'success': True})
 
