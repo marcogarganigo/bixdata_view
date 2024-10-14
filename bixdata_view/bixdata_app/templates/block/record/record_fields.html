@@ -201,6 +201,13 @@
         }
     }
 
+    //when document is loaded focus on the first input
+    $(document).ready(function() {
+        $('input').first().focus();
+        console.info( $('input').first())
+    });
+
+
 </script>
 
 
@@ -376,6 +383,7 @@
                                                         initialEditType: 'wysiwyg',
                                                         previewStyle: 'vertical',
                                                         withoutFocus: true,
+                                                        autoFocus: false,
                                                         toolbarItems: [
                                                             ['heading', 'bold', 'italic', 'strike'],
                                                             ['hr', 'quote'],
@@ -392,6 +400,9 @@
                                                     //display the editor
                                                     editor{{ field.unique_id }}.getHtml();
                                                     editor{{ field.unique_id }}.setHtml(`{{ field.value|safe }}`);
+                                                    alert('blur')
+
+
 
 
                                                 </script>
