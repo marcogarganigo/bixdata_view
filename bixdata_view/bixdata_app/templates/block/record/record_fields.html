@@ -367,14 +367,15 @@
                                                 <!-- Inclusione dello script di Toast UI Editor -->
 
                                                 <script>
-                                                    const Editor{{ field.unique_id }} = toastui.Editor;
 
+                                                    const Editor{{ field.unique_id }} = toastui.Editor;
 
                                                     const editor{{ field.unique_id }} = new Editor{{ field.unique_id }} ({
                                                         el: document.querySelector('#editor-{{ field.unique_id }}'),
                                                         height: '500px',
                                                         initialEditType: 'wysiwyg',
                                                         previewStyle: 'vertical',
+                                                        withoutFocus: true,
                                                         toolbarItems: [
                                                             ['heading', 'bold', 'italic', 'strike'],
                                                             ['hr', 'quote'],
@@ -384,12 +385,14 @@
                                                             ['scrollSync'],
                                                         ],
                                                         initialValue: `{{ field.value|safe }}`,
+                                                        autofocus: false
                                                     });
 
 
-                                                    function getEditor() {
-                                                        return Editor{{ field.unique_id }};
-                                                    }
+                                                    //display the editor
+                                                    editor{{ field.unique_id }}.getHtml();
+                                                    editor{{ field.unique_id }}.setHtml(`{{ field.value|safe }}`);
+
 
                                                 </script>
                                 {% else %}

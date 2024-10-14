@@ -1449,6 +1449,7 @@ def custom_save_record(request, tableid, recordid):
                 timesheet_record.fields['print_hourprice'] = 'Compreso nel progetto'
                 timesheet_record.fields['print_travel'] = 'Inclusa'
 
+
         # valutazione flat service contract
         if invoicestatus == 'To Process':
             if not isempty(timesheet_record.fields['worktime']) and invoiceoption != 'Out of contract':
@@ -2527,6 +2528,29 @@ def stampa_timesheet(request):
 
         row['recordid'] = recordid
         row['completeUrl'] = completeUrl + qr_name
+
+        project_nr = ''
+        ticket_nr = ''
+        if row['recordidproject_'] is not None and row['recordidproject_'] != '' and row['recordidproject_'] != 'None':
+            deal_nr = Helperdb.sql_query(f"SELECT iddeal FROM user_project WHERE recordid_ = {row['recordidproject_']}")
+            iddeal = int(deal_nr[0]['iddeal'])
+            iddeal = str(iddeal)
+            project_nr = 'Progetto Nr ' + iddeal
+
+
+        if row['recordidticket_'] is not None and row['recordidticket_'] != '' and row['recordidticket_'] != 'None':
+            ticket_nr = Helperdb.sql_query(f"SELECT freshdeskid FROM user_ticket WHERE recordid_ = {row['recordidticket_']}")
+            ticket_nr = ticket_nr[0]['freshdeskid']
+            ticket_nr = 'Ticket Nr ' + ticket_nr
+
+
+        if project_nr and ticket_nr:
+            row['print_type'] = project_nr + ' - ' + ticket_nr
+        elif project_nr:
+            row['print_type'] = project_nr
+        elif ticket_nr:
+            row['print_type'] = ticket_nr
+
 
     with connection.cursor() as cursor:
         cursor.execute(
@@ -4631,7 +4655,7 @@ def save_dashboard_table(request):
             query = "REPLACE INTO sys_dashboard ({}) VALUES ({})".format(
                 ', '.join(names), ', '.join(formatted_values)
             )
-            with connection.cursor() as cursor:
+            with connection.cursor() as cursor: 
                 cursor.execute(query)
 
     return JsonResponse({'success': True})
