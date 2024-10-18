@@ -468,6 +468,11 @@ def settings_table_fields_new_field(request):
                         "INSERT INTO sys_field (tableid, fieldid, description, lookuptableid, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s, %s)",
                         [tableid, fieldid, fielddescription, fieldid + '_' + tableid, 'Parola', 255, 'Dati']
                     )
+                if fieldtype == 'Checkbox':
+                    cursor.execute(
+                        "INSERT INTO sys_field (tableid, fieldid, description, lookuptableid, fieldtypeid, length, label, fieldtypewebid) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                        [tableid, fieldid, fielddescription, fieldid + '_' + tableid, 'Parola', 255, 'Dati', 'checkbox']
+                    )
 
                 elif fieldtype in ['Data', 'Numero', 'Parola', 'Memo', 'Utente']:
                     cursor.execute(
@@ -496,6 +501,23 @@ def settings_table_fields_new_field(request):
                             "INSERT INTO sys_lookup_table_item (lookuptableid, itemcode, itemdesc) VALUES (%s, %s, %s)",
                             [fieldid + '_' + tableid, description, description]
                         )
+                    
+                if fieldtype == 'Checkbox':
+                    
+                    cursor.execute(
+                        "INSERT INTO sys_lookup_table (description, tableid, itemtype, codelen, desclen) VALUES (%s, %s, %s, %s, %s)",
+                        [fieldid, fieldid + '_' + tableid, 'Carattere', 255, 255]
+                    )
+
+                    cursor.execute(
+                        "INSERT INTO sys_lookup_table_item (lookuptableid, itemcode, itemdesc) VALUES (%s, %s, %s)",
+                        [fieldid + '_' + tableid, 'Si', 'Si']
+                    )
+
+                    cursor.execute(
+                        "INSERT INTO sys_lookup_table_item (lookuptableid, itemcode, itemdesc) VALUES (%s, %s, %s)",
+                        [fieldid + '_' + tableid, 'No', 'No']
+                    )
 
             elif fieldtype == 'LongText':
 
