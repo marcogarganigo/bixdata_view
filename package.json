@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "@toast-ui/editor": "^3.2.2",
     "bixdata_view": "file:",
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.10.5",

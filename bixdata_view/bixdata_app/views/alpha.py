@@ -5670,6 +5670,8 @@ def task_reminder(request):
     fields_dict = dict()
 
     recordid = request.POST.get('recordid')
+    reminder_message = request.POST.get('reminderMessage')
+
     reminder_creator = get_userid(request.user.id)
 
 
@@ -5683,6 +5685,11 @@ def task_reminder(request):
     fields_dict['email'] = Helperdb.sql_query(f"SELECT email from v_users WHERE sys_user_id = '{task_user}'")[0]['email']
 
     fields_dict['recordid'] = recordid
+    fields_dict['reminder_message'] = reminder_message
+    print(reminder_message)
+    print(reminder_message)
+    print(reminder_message)
+    
 
     message = render_to_string('other/task_reminder.html', fields_dict)
 

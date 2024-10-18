@@ -552,6 +552,7 @@
             }
         });
     }
+     
 
     function stampaProject(type) {
          $.ajax({
@@ -580,35 +581,55 @@
         });
     }
 
+    function setReminderMessage() {
 
-    function taskReminder() {
-        $.ajax({
-            type: "POST",
-            url: "{% url 'task_reminder' %}",
-             data: {
-                 'recordid': '{{ recordid}}',
-             },
-
-            success: function (response, status, xhr) {
-                //open response in blank page
-                swal({
-                    text: "Sollecito inviato",
-                    icon: "success",
-                    timer: 1000,
-                    buttons: false,
-                });
-            },
-            error: function (response) {
-                swal({
-                    title: "Errore nell'invio del sollecito",
-                    text: "sengnalalo ad un tecnico del software al più presto",
-                    icon: "error",
-                    button: "Ok",
-                    dangerMode: true,
-                });
-            }
-        });
     }
+
+    async function taskReminderAlert() {
+        
+        $('#alert-reminder-container').slideToggle(200)
+        
+      }
+      </script>
+      <div id="alert-reminder-container" style="display:none">
+        <div class="text-center" style=" margin: auto">
+            <div style='' class='form-floating'><textarea id='task-reminder-message' class='form-control' placeholder='Scrivi un messaggio per il sollecito' style='height: 100px'></textarea><label for='floatingTextarea2'>Messaggio sollecito</label></div>
+            <br>
+            <button style='' type='button' class='btn btn-primary' onclick="$('#alert-reminder-container').slideToggle(200)">Annulla</button>
+            <button style='' type='button' class='btn btn-primary' onclick="taskReminder($('#task-reminder-message').val()); $('#alert-reminder-container').slideToggle(200);">Invia</button>
+        </div>
+      </div>
+      <script>
+      
+      function taskReminder(reminderMessage) {
+          $.ajax({
+              type: "POST",
+              url: "{% url 'task_reminder' %}",
+               data: {
+                   'recordid': '{{ recordid}}',
+                   'reminderMessage': reminderMessage,
+               },
+      
+              success: function (response, status, xhr) {
+                  //open response in blank page
+                  swal({
+                      text: "Sollecito inviato",
+                      icon: "success",
+                      timer: 1000,
+                      buttons: false,
+                  });
+              },
+              error: function (response) {
+                  swal({
+                      title: "Errore nell'invio del sollecito",
+                      text: "sengnalalo ad un tecnico del software al più presto",
+                      icon: "error",
+                      button: "Ok",
+                      dangerMode: true,
+                  });
+              }
+          });
+      }
 
 
     function taskFunctions(func) {
@@ -861,7 +882,7 @@
                             <li><a class="dropdown-item" onclick="taskFunctions('plannedtomorrow')">Pianifica per domani</a></li>
                             <li><a class="dropdown-item" onclick="taskFunctions('weekpostpone')">Rimanda scadenza di una settimana</a></li>
                             <li><a class="dropdown-item" onclick="taskFunctions('monthpostpone')">Rimanda scadenza di un mese</a></li>
-                            <li><a class="dropdown-item" onclick="taskReminder()">Sollecita</a></li>
+                            <li><a class="dropdown-item" onclick="taskReminderAlert()">Sollecita</a></li>
 
 
                         {% endif %}

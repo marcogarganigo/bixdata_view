@@ -98,8 +98,11 @@
 <body>
   <div class="email-container">
     <h3>{{ reminder_creator }} ti sollecita a svolgere questo task</h3>
+    <p>{{ reminder_message }}</p>
     <div class="task-info">
+      <h4>Descrizione</h4>
       <p>{{ task.description }}</p>
+      <br>
         <div class="due-date">
           <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20" class="icon">
           <span>{{ task.duedate }}</span>
