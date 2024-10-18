@@ -581,6 +581,36 @@
     }
 
 
+    function taskReminder() {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'task_reminder' %}",
+             data: {
+                 'recordid': '{{ recordid}}',
+             },
+
+            success: function (response, status, xhr) {
+                //open response in blank page
+                swal({
+                    text: "Sollecito inviato",
+                    icon: "success",
+                    timer: 1000,
+                    buttons: false,
+                });
+            },
+            error: function (response) {
+                swal({
+                    title: "Errore nell'invio del sollecito",
+                    text: "sengnalalo ad un tecnico del software al più presto",
+                    icon: "error",
+                    button: "Ok",
+                    dangerMode: true,
+                });
+            }
+        });
+    }
+
+
     function taskFunctions(func) {
         $.ajax({
             type: "POST",
@@ -831,7 +861,8 @@
                             <li><a class="dropdown-item" onclick="taskFunctions('plannedtomorrow')">Pianifica per domani</a></li>
                             <li><a class="dropdown-item" onclick="taskFunctions('weekpostpone')">Rimanda scadenza di una settimana</a></li>
                             <li><a class="dropdown-item" onclick="taskFunctions('monthpostpone')">Rimanda scadenza di un mese</a></li>
-                            
+                            <li><a class="dropdown-item" onclick="taskReminder()">Sollecita</a></li>
+
 
                         {% endif %}
                         <!--<li><a class="dropdown-item" onclick="duplicateFunc()">Duplica</a></li>-->
@@ -1046,7 +1077,7 @@
                 {% if tableid == 'task' %}
                     <button style="display: none" id="close-task-button-{{ recordid }}" class="btn btn-success"
                             type="button"
-                            onclick="$('#input-{{ recordid }}').val('Si'); change_checkbox_view(); $('#save-button-{{ recordid }}').click()">
+                            onclick="$('#input-{{ recordid }}-completed').val('Si'); change_checkbox_view(); $('#save-button-{{ recordid }}').click()">
                         Chiudi task
                     </button>
                 {% endif %}

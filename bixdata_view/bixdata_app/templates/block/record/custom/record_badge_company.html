@@ -1,29 +1,38 @@
+{% load static %}
+
 <div id="block_record_badge" class="card shadow-shadow-sm" style="height: 100%; width: 100%; background-color: #074048 ;color: white">
     <div class="card-body" style="padding: 5px">
         <div class="row row-cols-3">
             <div class="col">
                 <div class="row">
                     <div class="col-lg-12" style="margin-bottom: 1%; color: white">
-                        {{ fields.companyname.value }}<br/>
-                        {{ fields.status.value }}<br/>
-                        {{ fields.paymentstatus.value }}<br/>
+                         Pit Service SAGL<br/>
+                        Via San Gottardo 26, Vezia<br/>
+                        contabilita@pitservice.ch/091 993 03 92<br/>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="row">
                     <div class="col-lg-12" style="margin-bottom: 1%; color: white">
-                        {{ fields.city.value }} {{ fields.city.address }}<br/>
-                        {{ fields.status.email }}<br/>
-                        {{ fields.paymentstatus.phonenumber }}<br/>
+                        <!--<b>Contratti</b> <br/>-->
+                        {% for service in fields.services %}
+                            <span class="badge bg-danger fs-5">{{ service.type}}</span>
+                            <br>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
             <div class="col">
-                <b>Contratti</b> <br/>
-                {% for service in fields.services %}
-                    {{service.type}} <br/>
-                {% endfor %}
+                <span class="material-symbols-outlined" style="font-size: 20pt !important; color: yellow" title="Cliente VIP">
+                    workspace_premium
+                </span>
+                <span class="material-symbols-outlined" style="font-size: 20pt !important; color: forestgreen" title="Cliente pagante">
+                    credit_score
+                </span>
+                <br>
+                <img src="{% static 'images/users/' %}mauro.gallani.png?v={{ date }}" alt="Mauro Gallani" class="rounded-circle" width="50">
+
             </div>
         </div>
     </div>

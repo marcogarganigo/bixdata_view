@@ -5665,6 +5665,38 @@ def get_user_tasks_stats(request, userid=''):
 
 
 
+def task_reminder(request):
+    
+    fields_dict = dict()
+
+    recordid = request.POST.get('recordid')
+    reminder_creator = get_userid(request.user.id)
+
+
+    user = Helperdb.sql_query(f"SELECT * FROM v_users WHERE sys_user_id = {reminder_creator}")[0]
+    fields_dict['reminder_creator'] = user['first_name'] + ' ' + user['last_name']
+
+    
+    fields_dict['task'] = Helperdb.sql_query(f"SELECT * FROM user_task WHERE recordid_ = {recordid}")[0]
+    task_user = fields_dict['task']['user']
+
+    fields_dict['email'] = Helperdb.sql_query(f"SELECT email from v_users WHERE sys_user_id = '{task_user}'")[0]['email']
+
+    fields_dict['recordid'] = recordid
+
+    message = render_to_string('other/task_reminder.html', fields_dict)
+
+    # return render(request, 'other/new_task.html', fields_dict)
+
+    send_email(emails=[fields_dict['email']],
+               subject=fields_dict['reminder_creator'] + ' Ti sollecita a svolgere questo task',
+               html_message=message)
+
+    return JsonResponse({'success': True})
+
+
+
+
 
 
 

@@ -59,7 +59,9 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.admindocs',
     'corsheaders',
-    'bixdata_app'
+    'bixdata_app',
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 
@@ -85,7 +87,7 @@ MIGRATION_MODULES = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Mantieni questo qui in alto
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -94,8 +96,19 @@ MIDDLEWARE = [
     'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ORIGIN_WHITELIST = ['http://localhost:8000', 'http://localhost:3000' ]
+# Rimuovi questa linea, perché non puoi avere tutte le origini abilitate con le credenziali
+# CORS_ALLOW_ALL_ORIGINS = True
+
+# Aggiungi questa configurazione per consentire l'uso delle credenziali
+CORS_ALLOW_CREDENTIALS = True
+
+# Imposta le origini autorizzate
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Origine del tuo frontend React
+]
+
+# Se utilizzi anche il dominio localhost:8000 per scopi diversi, puoi includerlo
+# CORS_ALLOWED_ORIGINS.append('http://localhost:8000')
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
@@ -104,6 +117,9 @@ CSRF_TRUSTED_ORIGINS = [
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+# Assicurati che la configurazione della sessione sia corretta
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Assicurati che stia usando il database
 
 
 

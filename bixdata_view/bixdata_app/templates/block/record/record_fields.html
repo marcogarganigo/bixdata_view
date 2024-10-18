@@ -255,16 +255,16 @@
                             {% if field.fieldtypeid == 'Parola' %}
                                 {% if field.fieldtypewebid == 'checkbox' %}
                                     <input class="form-check-input mt-0" type="checkbox" value=""
-                                           id="checkbox-{{ recordid }}" aria-label="Checkbox for following text input"
+                                           id="checkbox-{{ recordid }}-{{field.fieldid}}" aria-label="Checkbox for following text input"
                                            onchange="set_checkbox_value(this)">
-                                    <input id="input-{{ recordid }}" type="hidden" name="{{ fieldname }}"
+                                    <input id="input-{{ recordid }}-{{field.fieldid}}" type="hidden" name="{{ fieldname }}"
                                            value="{{ field.value }}">
                                     <script>
                                         change_checkbox_view()
 
                                         function change_checkbox_view() {
-                                            if ($('#input-{{ recordid }}').val() == 'Si') {
-                                                $('#input-{{ recordid }}').prev('input').prop('checked', true);
+                                            if ($('#input-{{ recordid }}-{{field.fieldid}}').val() == 'Si') {
+                                                $('#input-{{ recordid }}-{{field.fieldid}}').prev('input').prop('checked', true);
                                             } else {
                                                 $('#close-task-button-{{ recordid }}').css('display', 'block')
                                             }
@@ -365,7 +365,6 @@
 
 
                                                 <style>
-                                                    #editor-{{field.unique_id}} { margin: 0 auto; }
                                                 </style>
 
 
@@ -582,12 +581,23 @@
 
                                 // Handle empty input
                                 $("#{{ tableid }}-{{ fieldid }}-{{ recordid }}-autocomplete").on("input", function () {
-                                    var inputValue = $(this).val();
+                                    var inputValue = $(this).closest('.field').find('.hidden-input').val("");
                                     if (inputValue === "") {
                                         $(this).val(""); // Imposta il valore predefinito
-                                        $(this).closest('.field').find('.hidden-input').val("");
                                     }
                                 });
+
+
+                                $("#{{ tableid }}-{{ fieldid }}-{{ recordid }}-autocomplete").on("blur", function () {
+                                    var inputValue = $(this).val();
+                                    var hiddenInput = $(this).closest('.field').find('.hidden-input');
+                            
+                                    if (hiddenInput.val() === "") {
+                                        $(this).val("");
+                                    }
+                                });
+                                
+
                             });
 
 

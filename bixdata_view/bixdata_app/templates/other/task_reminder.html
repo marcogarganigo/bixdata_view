@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 0;
+        background-color: #5590cc;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .email-container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border: 1px solid #dddddd;
+    }
+
+    h3 {
+      color: #333333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    thead th {
+      background-color: #eeae6b;
+      font-size: 15pt;
+      color: #ffffff;
+    }
+
+    .description {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+
+    .icon {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+
+    .task-info {
+      padding: 10px 0;
+    }
+
+    .due-date, .planned-date {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .email-container {
+        padding: 10px;
+      }
+
+      th, td {
+        padding: 5px;
+      }
+
+      h3 {
+        font-size: 18px;
+      }
+
+      thead th {
+        font-size: 12pt;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <h3>{{ reminder_creator }} ti sollecita a svolgere questo task</h3>
+    <div class="task-info">
+      <p>{{ task.description }}</p>
+        <div class="due-date">
+          <img src="https://freepngimg.com/save/89647-angle-icons-clock-computer-design-test-speed/1356x1127" alt="Scadenza" width="20" class="icon">
+          <span>{{ task.duedate }}</span>
+    </div>
+      <p><a href="http://bixcrm01:8000/get_record_path/task/{{ recordid }}" class="description button">Apri in Bixdata</a></p>
+    </div>
+  </div>
+</body>
+</html>

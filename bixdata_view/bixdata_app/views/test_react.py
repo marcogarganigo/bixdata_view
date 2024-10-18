@@ -1,4 +1,5 @@
-"""
+
+from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 
 import json
@@ -14,10 +15,14 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 
+import jwt
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 logger = logging.getLogger(__name__)
 
-@login_required(login_url='/login/')
+
+@login_required
 def test_react_request(request):
     if request.method == 'POST':
         # Carica i dati JSON dalla richiesta
@@ -33,11 +38,42 @@ def test_react_request(request):
     return JsonResponse({'error': 'Metodo non supportato'}, status=405)
 
 
+def check_authentication_react(request):
+    jwt_token = request.headers.get('Authorization')
+    if jwt_token is None:
+        return JsonResponse({'error': 'Token mancante'}, status=401)
+    
+    try:
+        # Il token dovrebbe essere nel formato "Bearer <token>"
+        token = jwt_token.split()[1]
+        # Verifica e decodifica il token    
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        # Qui puoi aggiungere ulteriori controlli sul payload se necessario
+        # Ad esempio, verifica dell'expiration time, dell'issuer, ecc.
+        
+        return JsonResponse({'message': 'Token valido', 'user_id': payload.get('user_id')}, status=200)
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({'error': 'Token scaduto'}, status=401)
+    except jwt.InvalidTokenError:
+        return JsonResponse({'error': 'Token non valido'}, status=401)
+    except IndexError:
+        return JsonResponse({'error': 'Token malformato'}, status=401)
+
+
+
 
 
 def csrf_token_view(request):
     csrf_token = get_token(request)
     return JsonResponse({'csrfToken': csrf_token})
+
+
+def generate_jwt_token(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+}
 
 
 def login_react(request):
@@ -70,7 +106,11 @@ def login_react(request):
 
         if user is not None:
             login(request, user)  # Effettua il login dell'utente
-            return JsonResponse({'message': 'Login effettuato con successo'}, status=200)
+            #generate jwt token
+            tokens = generate_jwt_token(user)
+            #get the user id
+            user_id = user.id
+            return JsonResponse({'message': 'Login successful', 'tokens': tokens, 'userid': user_id}, status=200)        
         else:
             return JsonResponse({'error': 'Username o password errati'}, status=401)
 
@@ -107,5 +147,3 @@ def load_card_react(request):
 
     return JsonResponse({'card_block': card_block})   
 
-
-"""
