@@ -5,11 +5,11 @@ from django.http import JsonResponse, HttpResponse
 import json
 from django.middleware.csrf import get_token
 from django.contrib.auth import authenticate, login, logout
-from Crypto.Cipher import AES
+#from Crypto.Cipher import AES
 import base64
 from cryptography.fernet import Fernet
 import logging
-from Crypto.Util.Padding import unpad
+#from Crypto.Util.Padding import unpad
 
 from django.shortcuts import render
 from django.template.loader import render_to_string
