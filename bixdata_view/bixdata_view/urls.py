@@ -225,6 +225,7 @@ urlpatterns = [
     path('task_reminder/', alpha.task_reminder, name='task_reminder'),
     path('check_authentication_react/', test_react.check_authentication_react, name='check_authentication_react'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),    
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),    
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('open_card_react/', test_react.open_card_react, name='open_card_react'),    
 
 ]
