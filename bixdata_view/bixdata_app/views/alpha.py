@@ -1319,7 +1319,9 @@ def save_record_fields(request):
 
     for field_name, uploaded_files in request.FILES.items():
         fs = FileSystemStorage(location='attachments')
+        print("Location: "+fs.location)
         fs_bix = FileSystemStorage(location='attachments_bixdata')
+        print("Location:"+fs_bix.location)
         basename, extension = os.path.splitext(uploaded_files.name)
         filename = tableid + '_' + response_dict['recordid']
         if tableid == 'attachment':
