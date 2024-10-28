@@ -575,7 +575,7 @@ def get_record_card_delete(request):
                 query
             )
         deleted_record = Record(tableid=tableid, recordid=recordid)
-        if tableid == 'dealline':
+        if tableid == 'dealline': 
             recordid_deal = deleted_record.fields['recordiddeal_'];
             custom_update(tableid='deal', recordid=recordid_deal)
     return JsonResponse({'success': True})
@@ -5700,6 +5700,22 @@ def task_reminder(request):
     send_email(emails=[fields_dict['email']],
                subject=fields_dict['reminder_creator'] + ' Ti sollecita a svolgere questo task',
                html_message=message)
+
+    return JsonResponse({'success': True})
+
+
+
+def save_user_timesheet(request):
+
+    timesheets = Helperdb.sql_query(f"select * from user_timesheet WHERE  true AND user_timesheet.recordid_ in(                       SELECT recordid_ FROM user_timesheet WHERE true AND ( invoicestatus like '%to invoice when%')                              ) AND date>'2024-01-01'")
+
+    for timesheet in timesheets:
+        request.POST = request.POST.copy()
+        request.POST['recordid'] = timesheet['recordid_']
+        request.POST['tableid'] = 'timesheet'
+        request.POST['contextfunction'] = 'edit'
+        save_record_fields(request)
+
 
     return JsonResponse({'success': True})
 
