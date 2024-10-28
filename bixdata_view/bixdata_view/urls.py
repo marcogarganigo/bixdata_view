@@ -227,5 +227,6 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),    
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('open_card_react/', test_react.open_card_react, name='open_card_react'),    
+    path('save_user_timesheet/', alpha.save_user_timesheet, name='save_user_timesheet'),
 
 ]
