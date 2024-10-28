@@ -1,4 +1,4 @@
-
+﻿"""
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 
@@ -155,5 +155,5 @@ def open_card_react(request):
 
         return JsonResponse({'card_id': card_id, 'card_title': card_title})
 
-
+"""
 
