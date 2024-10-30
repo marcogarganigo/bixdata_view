@@ -485,12 +485,15 @@ h5{
   <i>{{milestone_tasks.descrizione}}</i><br/>
   
   <table>
+    <tr style="font-weight: bold;">
+      <td></td><td style="width: 20px;"></td><td style="width: 100px;">Scadenza</td><td style="width: 100px;">Pianificazione</td><td>Attività</td>
+    </tr>
     {% for task in milestone_tasks.tasks %}
       <tr>
         {% if task.completed == 'Si' %}
-          <td style="width: 20px;"><span class="task checked"></span></td><td>{{task.description}}</td>
+          <td style="width: 20px;"><span class="task checked"></span></td><td style="padding-left: 5px;"><img src="{% static 'images/users/' %}{{ task.user }}.png" alt="{{ task.user }}" width="32px" height="32px" class="rounded-circle"></td><td style="width: 100px;padding-left: 5px;">{{task.duedate|date:"Y-m-d" }}</td><td style="width: 100px;">{{task.planneddate|date:"Y-m-d" }}</td><td>{{task.description}}</td>
         {% else %}
-          <td style="width: 20px;"><span class="task"></span></td><td>{{task.description}}</td>
+          <td style="width: 20px;"><span class="task"></span></td><td style="padding-left: 5px;"><img src="{% static 'images/users/' %}{{ task.user }}.png" alt="{{ task.user }}" width="32px" height="32px" class="rounded-circle"></td><td style="width: 100px;padding-left: 5px;">{{task.duedate|date:"Y-m-d" }}</td><td style="width: 100px;">{{task.planneddate|date:"Y-m-d" }}</td><td>{{task.description}}</td>
         {% endif %}
         
       </tr>
