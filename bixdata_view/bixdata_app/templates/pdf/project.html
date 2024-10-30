@@ -321,18 +321,18 @@
             font-size: 0.8em;
             opacity: 0.8;
         }
-        #step1 { background-color: #4ECDC4; }
-        #step1::after { border-left-color: #4ECDC4; }
-        #step2 { background-color: #4ECDC4; }
-        #step2::after { border-left-color: #4ECDC4; }
-        #step3 { background-color: #4ECDC4; }
-        #step3::after { border-left-color: #4ECDC4; }
-        #step4 { background-color: #4ECDC4; }
-        #step4::after { border-left-color: #4ECDC4; }
-        #step5 { background-color: #45B7D1; }
-        #step5::after { border-left-color: #45B7D1; }
-        #step6 { background-color: #FFA07A; }
-        #step6::after { border-left-color: #FFA07A; }
+
+
+        .step-status-Completato{ background-color: #4ECDC4;}
+        .step-status-Completato::after { border-left-color: #4ECDC4; }
+
+        .step-status-Incorso { background-color: #45B7D1; }
+        .step-status-Incorso ::after { border-left-color: #45B7D1; }
+
+        .step-status-Noniniziato { background-color: #FFA07A; }
+        .step-status-Noniniziato::after { border-left-color: #FFA07A; }
+
+     
 
 h1{
   color:#e43b2c;
@@ -457,10 +457,13 @@ h5{
 <br/>
 <div class="diagram">
   {% for milestone in milestones %}
-       <div id="step{{ forloop.counter }}" class="step">
+       <div id="step{{ forloop.counter }}" class="step step-status-{{ milestone.stato|cut:' '}}">
           <!--<div class="step-icon">💡</div>-->
           <div class="step-title">{{ milestone.title }}</div>
           <div class="step-description">{{ milestone.note }}</div>
+          <div class="step-description">{{ milestone.stato }}</div>
+          <div class="step-description">{{ milestone.expecteddate }}</div>
+
       </div>
   {% endfor %}
 </div>
