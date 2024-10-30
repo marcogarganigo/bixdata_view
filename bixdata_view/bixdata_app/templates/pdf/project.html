@@ -460,9 +460,9 @@ h5{
        <div id="step{{ forloop.counter }}" class="step step-status-{{ milestone.stato|cut:' '}}">
           <!--<div class="step-icon">💡</div>-->
           <div class="step-title">{{ milestone.title }}</div>
+          <div class="step-description">{{ milestone.expecteddate|date:"Y-m-d" }}</div>
           <div class="step-description">{{ milestone.note }}</div>
-          <div class="step-description">{{ milestone.stato }}</div>
-          <div class="step-description">{{ milestone.expecteddate }}</div>
+          
 
       </div>
   {% endfor %}
@@ -486,7 +486,7 @@ h5{
   
   <table>
     <tr style="font-weight: bold;">
-      <td></td><td style="width: 20px;"></td><td style="width: 100px;">Scadenza</td><td style="width: 100px;">Pianificazione</td><td>Attività</td>
+      <td></td><td style="width: 20px;"></td><td style="width: 100px;">Scadenza</td><td style="width: 100px;">Pianificazione</td><td></td>
     </tr>
     {% for task in milestone_tasks.tasks %}
       <tr>
