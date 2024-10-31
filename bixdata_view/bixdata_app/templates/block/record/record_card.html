@@ -555,11 +555,16 @@
      
 
     function stampaProject(type) {
-         $.ajax({
+        if('{{master_recordid}}' != 'None'){
+            var recordid = '{{master_recordid}}';
+        }else{
+            var recordid = '{{recordid}}';
+        }
+        $.ajax({
             type: "POST",
             url: "{% url 'stampa_project' %}",
              data: {
-                 'recordid': '{{ recordid}}',
+                 'recordid': recordid,
                  'type': type,
              },
 
