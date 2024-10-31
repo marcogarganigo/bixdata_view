@@ -5710,11 +5710,8 @@ def save_user_timesheet(request):
     timesheets = Helperdb.sql_query(f"select * from user_timesheet WHERE  true AND user_timesheet.recordid_ in(                       SELECT recordid_ FROM user_timesheet WHERE true AND ( invoicestatus like '%to invoice when%')                              ) AND date>'2024-01-01'")
 
     for timesheet in timesheets:
-        request.POST = request.POST.copy()
-        request.POST['recordid'] = timesheet['recordid_']
-        request.POST['tableid'] = 'timesheet'
-        request.POST['contextfunction'] = 'edit'
-        save_record_fields(request)
+
+        custom_save_record(request,'timesheet',timesheet['recordid_'])
 
 
     return JsonResponse({'success': True})
