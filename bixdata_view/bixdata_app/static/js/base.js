@@ -77,10 +77,10 @@ function save_record(el, setting) {
             formData.append('contextfunction', contextfunction);
 
             // Check if there are any textarea-editor elements
-            if ($('.textarea-editor').length > 0) {
+            if ($(el).closest('#universal-container-timesheet').find('.textarea-editor').length > 0) {
 
                 // Iterate over each textarea-editor element
-                $('.textarea-editor').each(function () {
+                $(el).closest('#universal-container-timesheet').find('.textarea-editor').each(function () {
                     // Get the HTML content from the second .ProseMirror element
                     var valuea = $(this).find('.ProseMirror:eq(1)').html();
 
@@ -93,6 +93,7 @@ function save_record(el, setting) {
 
                         // Append the field name and value to FormData
                         formData.append(fieldname, valuea);
+                        console.log(fieldname)
                     }
                 });
             }
@@ -175,6 +176,9 @@ function load_linked(linkedtableid, tableid, masterrecordid, mastertableid, orde
     if (order_field == 'None') {
         order_field = ''
     }
+
+    console.log('recordid: ' + recordid)
+    console.log('master_recordid: ' + master_recordid)
 
     var masterrecordid = masterrecordid
     var mastertableid = mastertableid

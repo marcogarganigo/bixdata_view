@@ -1149,7 +1149,7 @@ def get_linked(request):
     return JsonResponse(name)
 
 
-#@login_required(login_url='/login/')
+@login_required(login_url='/login/')
 def save_record_fields(request):
     db_helper = DatabaseHelper('default')
     file = request.FILES.get('file')
@@ -1209,15 +1209,15 @@ def save_record_fields(request):
 
     response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/set_record", data=post_data)
     response_dict = json.loads(response.text)
-    
-    
+
+
 
 
     if contextfunction == 'edit':
         if tableid == 'task':
             check_task_status(recordid)
 
-        
+
     if tableid == 'ticketbixdata' and 'description' in fields_dict:
         message = 'Nuovo ticket aperto da {} \nDescrizione: {}\nTipo: {}'.format(request.user.username,
                                                                                  fields_dict['description'],
@@ -1432,7 +1432,7 @@ def custom_save_record(request, tableid, recordid):
                 invoicestatus = 'Attività non fatturabile'
                 productivity = 'Senza ricavo'
 
-        # valutazione delle option 
+        # valutazione delle option
         if invoicestatus == 'To Process':
             if invoiceoption == 'Under Warranty' or invoiceoption == 'Commercial support' or invoiceoption == 'Swisscom incident' or invoiceoption == 'Swisscom ServiceNow' or invoiceoption == 'To check':
                 invoicestatus = invoiceoption
@@ -4657,7 +4657,7 @@ def save_dashboard_table(request):
             query = "REPLACE INTO sys_dashboard ({}) VALUES ({})".format(
                 ', '.join(names), ', '.join(formatted_values)
             )
-            with connection.cursor() as cursor: 
+            with connection.cursor() as cursor:
                 cursor.execute(query)
 
     return JsonResponse({'success': True})
@@ -5109,7 +5109,7 @@ def get_bexio_contacts(request):
         record.save()
 
     return JsonResponse(response, safe=False)
-    
+
 def get_bexio_orders(request):
     url = "https://api.bexio.com/2.0/kb_order/search/?order_by=id_desc&limit=100&offset=0"
     accesstoken=os.environ.get('BEXIO_ACCESSTOKEN')
@@ -5160,7 +5160,7 @@ def get_bexio_orders(request):
         # record.fields['taxs_value'] = order['taxs']['value']
 
         record.save()
-        
+
         get_bexio_positions(request, 'kb_order', order['id'])
 
     return JsonResponse(response, safe=False)
@@ -5181,7 +5181,7 @@ def get_bexio_positions(request,bexiotable,bexioid):
 
     response = requests.request("GET", url, headers=headers)
     response = json.loads(response.text)
-    
+
     for position in response:
         field = Helperdb.sql_query_row(f"select * from user_bexio_positions WHERE bexio_id='{position['id']}'")
         if not field:
@@ -5213,7 +5213,7 @@ def get_bexio_positions(request,bexiotable,bexioid):
         record.fields['is_optional'] = position['is_optional']
 
         record.save()
-    
+
     return JsonResponse(response, safe=False)
 
 
@@ -5291,7 +5291,7 @@ def syncdata(request,tableid):
                 sync_fields[bixdata_fields[key]]=field
     bixdata_sync_field=bixdata_fields[sync_field]
     print(sync_fields)
-    
+
 
 def download_attachment(request):
     recordid = request.POST.get('recordid')
@@ -5324,7 +5324,7 @@ def update_profile_pic(request):
 
     base_path = 'bixdata_view/bixdata_app/static'
     image_path = os.path.join(base_path, src.strip(os.sep))
-    
+
     destination_dir = 'bixdata_view/bixdata_app/static/images/users'
 
     image_path = 'bixdata_view/bixdata_app/static' + image_path
@@ -5343,9 +5343,9 @@ def update_profile_pic(request):
         user = dictfetchall(cursor)[0]
 
         username= user['username']
-        
+
         fullname = user['first_name'] + ' ' + user['last_name']
-        
+
         name = user['first_name'].lower()
 
         image1 = username + '.png'
@@ -5371,10 +5371,10 @@ def update_profile_pic(request):
 
         if os.path.exists(destination_path3):
             os.remove(destination_path3)
-        
+
         if os.path.exists(destination_path4):
             os.remove(destination_path4)
-        
+
         shutil.copy(image_path, destination_path1)
         shutil.copy(image_path, destination_path2)
         shutil.copy(image_path, destination_path3)
@@ -5400,7 +5400,7 @@ def get_user_stats_page(request):
 
 
 def get_user_stats_card(request):
-    
+
     context = dict()
     context['date'] = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
 
@@ -5439,8 +5439,8 @@ def get_user_stats_card(request):
                 che poi viene passato al template user_stats_card
             """
 
-        
-        
+
+
             user['chartblock'] = build_card_content(request, user['sys_user_id'])
             sql = f"SELECT COUNT(recordid_) as opentasks FROM user_task WHERE status != 'Chiuso' AND user = {user['sys_user_id']}"
             user['opentasks'] = get_card_data(request,sql,user['sys_user_id'])[0]['opentasks']
@@ -5458,7 +5458,7 @@ def get_user_stats_card(request):
             else:
                 user['taskblock'] = ''
 
-        
+
 
     return render(request, 'block/user/stats/stats_card.html', context)
 
@@ -5493,9 +5493,9 @@ def get_card_chart(request, userid, sql, type, chartname):
         for row in rows:
             value.append(row[0])
             labels.append(row[1])
-            
-            
-        
+
+
+
         context = {
             'value': value,
             'labels': labels,
@@ -5538,7 +5538,7 @@ def stampa_milestone(request):
     recordid = request.POST.get('recordid')
 
     tasks = Helperdb.sql_query(f"SELECT * FROM user_task WHERE recordidprojectmilestone_='{recordid}'")
-    
+
     for task in tasks:
         fullname = Helperdb.sql_query(f"SELECT first_name, last_name FROM v_users WHERE sys_user_id = '{task['user']}'")
         fullname = fullname[0]['first_name'] + ' ' + fullname[0]['last_name']
@@ -5546,8 +5546,8 @@ def stampa_milestone(request):
 
 
     milestone = Helperdb.sql_query(f"SELECT * FROM user_projectmilestone WHERE recordid_='{recordid}'")[0]
-        
-        
+
+
     context = dict()
     context['tasks'] = tasks
     context['milestone'] = milestone
@@ -5668,7 +5668,7 @@ def get_user_tasks_stats(request, userid=''):
 
 
 def task_reminder(request):
-    
+
     fields_dict = dict()
 
     recordid = request.POST.get('recordid')
@@ -5680,7 +5680,7 @@ def task_reminder(request):
     user = Helperdb.sql_query(f"SELECT * FROM v_users WHERE sys_user_id = {reminder_creator}")[0]
     fields_dict['reminder_creator'] = user['first_name'] + ' ' + user['last_name']
 
-    
+
     fields_dict['task'] = Helperdb.sql_query(f"SELECT * FROM user_task WHERE recordid_ = {recordid}")[0]
     task_user = fields_dict['task']['user']
 
@@ -5691,7 +5691,7 @@ def task_reminder(request):
     print(reminder_message)
     print(reminder_message)
     print(reminder_message)
-    
+
 
     message = render_to_string('other/task_reminder.html', fields_dict)
 
@@ -5707,19 +5707,18 @@ def task_reminder(request):
 
 def save_user_timesheet(request):
 
-    timesheets = Helperdb.sql_query(f"select * from user_timesheet WHERE  true AND user_timesheet.recordid_ in(                       SELECT recordid_ FROM user_timesheet WHERE true AND ( invoicestatus like '%to invoice when%')                              ) AND date>'2024-01-01'")
+    timesheets = Helperdb.sql_query(f"select * from user_timesheet WHERE  true AND user_timesheet.recordid_ in(                       SELECT recordid_ FROM user_timesheet WHERE true AND ( invoicestatus like '%To invoice when%')                              ) AND date>'2024-01-01'")
 
-    responsetxt = 1
     for timesheet in timesheets:
         request.POST = request.POST.copy()
         request.POST['recordid'] = timesheet['recordid_']
         request.POST['tableid'] = 'timesheet'
         request.POST['contextfunction'] = 'edit'
         save_record_fields(request)
-        responsetxt += 1
 
 
-    return JsonResponse({'success': responsetxt, 'selected': timesheets})
+
+    return JsonResponse({'success': True})
 
 
 
