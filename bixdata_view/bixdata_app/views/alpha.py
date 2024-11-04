@@ -1149,7 +1149,7 @@ def get_linked(request):
     return JsonResponse(name)
 
 
-@login_required(login_url='/login/')
+#@login_required(login_url='/login/')
 def save_record_fields(request):
     db_helper = DatabaseHelper('default')
     file = request.FILES.get('file')
@@ -5709,15 +5709,17 @@ def save_user_timesheet(request):
 
     timesheets = Helperdb.sql_query(f"select * from user_timesheet WHERE  true AND user_timesheet.recordid_ in(                       SELECT recordid_ FROM user_timesheet WHERE true AND ( invoicestatus like '%to invoice when%')                              ) AND date>'2024-01-01'")
 
+    responsetxt = 1
     for timesheet in timesheets:
         request.POST = request.POST.copy()
         request.POST['recordid'] = timesheet['recordid_']
         request.POST['tableid'] = 'timesheet'
         request.POST['contextfunction'] = 'edit'
         save_record_fields(request)
+        responsetxt += 1
 
 
-    return JsonResponse({'success': True})
+    return JsonResponse({'success': responsetxt, 'selected': timesheets})
 
 
 
