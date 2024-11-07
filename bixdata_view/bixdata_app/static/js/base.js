@@ -177,9 +177,6 @@ function load_linked(linkedtableid, tableid, masterrecordid, mastertableid, orde
         order_field = ''
     }
 
-    console.log('recordid: ' + recordid)
-    console.log('master_recordid: ' + master_recordid)
-
     var masterrecordid = masterrecordid
     var mastertableid = mastertableid
     $("#linked-container-" + linkedtableid).load('/loading/')
