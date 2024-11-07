@@ -68,7 +68,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     #path('login_react/', test_react.login_react, name='login_react/'),
     #path('logout_react/', test_react.logout_react, name='logout_react/'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='registration/login.html'), name='logout'),
+    path('logout/', alpha.logout_view, name='logout'),
     path('get_full_data/', alpha.get_full_data, name='get_full_data'),
     path('get_full_data2/', alpha.get_full_data2, name='get_full_data2'),
     path('get_linked/', alpha.get_linked, name='get_linked'),

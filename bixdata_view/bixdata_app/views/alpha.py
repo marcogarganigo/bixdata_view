@@ -5721,6 +5721,12 @@ def save_user_timesheet(request):
     return JsonResponse({'success': True})
 
 
+def logout_view(request):
+
+    logout(request)
+    return redirect('login')
+
+
 
 
 
