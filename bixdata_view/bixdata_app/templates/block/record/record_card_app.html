@@ -41,7 +41,7 @@
 
     //appena la card carica aprire collegati di default
     var recordtab_{{recordid}} = '{{recordtab}}';
-    $('#block_record_card-{{recordid}}').ready(function () {
+    $('#block_record_card-{{ tableid }}-{{recordid}}').ready(function () {
         if (recordtab_{{recordid}} === 'linked') {
             $('#linked-tab-{{ recordid }}').click();
         } else {
@@ -348,7 +348,7 @@
 
 </script>
 
-<div id="block_record_card-{{ recordid }}" class="block_record_card" data-recordid="{{ recordid }}"
+<div id="block_record_card-{{ tableid }}-{{ recordid }}" class="block_record_card" data-recordid="{{ recordid }}"
      data-tableid="{{ tableid }}" data-master_tableid="{{ master_tableid }}"
      data-master_recordid="{{ master_recordid }}" style="height: 100%;width: 100%;">
     <div id="RecordCard" class="card RecordCard" style=" height: 100%; overflow: hidden">
