@@ -105,7 +105,7 @@ def index(request, content=''):
     if favorite_tables:
         i = 0
         for table in tables:
-            if i < len(favorite_tables) and table['id'] == favorite_tables[i]['tableid']:
+            if i <= len(favorite_tables) and table['id'] == favorite_tables[i]['tableid']:
                 favorite_tables[i]['description'] = table['description']
                 i += 1
 

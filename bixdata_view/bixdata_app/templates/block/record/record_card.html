@@ -23,7 +23,14 @@
         } else {
             $('#fields-tab-{{ tableid }}-{{ recordid }}').click();
         }
+
+        if ('{{ tableid }}' === 'contratto') {
+            $('#linked-tab-{{ tableid }}-{{ recordid }}').click();
+            $('#label-righe-{{ recordid }}').click();
+        }
     });
+
+
 
 
     function caricaRis(el) {

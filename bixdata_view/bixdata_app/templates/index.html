@@ -883,7 +883,7 @@
                         <!--- Sidemenu -->
                         <ul class="side-nav">
 
-                            <li class="side-nav-item">
+<li class="side-nav-item">
                                 <a data-bs-toggle="collapse" onclick="" href="#sidebarFavoriteTables" aria-expanded="true"
                                    aria-controls="sidebarFavoriteTables" class="side-nav-link">
                                     <i class="uil-star"></i>
@@ -996,7 +996,18 @@
                                             </li>
                                         </ul>
                                     </div>
-
+                                <li class="side-nav-item">
+                                    <a data-bs-toggle="collapse" onclick="getScript()" aria-expanded="false" class="side-nav-link">
+                                        <span>Script</span>
+                                    </a>
+                                </li>
+    
+                                <li class="side-nav-item">
+                                    <a data-bs-toggle="collapse" onclick="getUserStatsPage()" aria-expanded="false" class="side-nav-link">
+                                        <span>User Stats</span>
+                                    </a>
+                                </li>
+    
                                 </li>
                             {% endif %}
 
@@ -1021,17 +1032,6 @@
                                 </li>
                             {% endif %}
 
-                            <li class="side-nav-item">
-                                <a data-bs-toggle="collapse" onclick="getScript()" aria-expanded="false" class="side-nav-link">
-                                    <span>Script</span>
-                                </a>
-                            </li>
-
-                            <li class="side-nav-item">
-                                <a data-bs-toggle="collapse" onclick="getUserStatsPage()" aria-expanded="false" class="side-nav-link">
-                                    <span>User Stats</span>
-                                </a>
-                            </li>
 
                             {% if username|lower == 'marco.garganigo' or username|lower == 'alessandro.galli' %}
                                 <li class="side-nav-item">
