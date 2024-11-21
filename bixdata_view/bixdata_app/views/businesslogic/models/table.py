@@ -100,6 +100,7 @@ class Table:
     
     
     def get_fields(self):
+        print("FUN:get_fields")
         #t=Table(self.tableid)
         #fields=t.get_fields(context)
         #fields_values=self.fields
@@ -109,9 +110,9 @@ class Table:
             'userid': self.userid,
             'context': self.context
         }
-
+        print(post)
         response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_record_fields", data=post)
-
+        print(response.text)
         response_dict = json.loads(response.text)
 
        # if (ticketid):
