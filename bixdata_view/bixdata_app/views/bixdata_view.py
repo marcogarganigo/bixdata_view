@@ -103,11 +103,10 @@ def index(request, content=''):
         tables = dictfetchall(cursor)
 
     if favorite_tables:
-        i = 0
         for table in tables:
-            if i <= len(favorite_tables) and table['id'] == favorite_tables[i]['tableid']:
-                favorite_tables[i]['description'] = table['description']
-                i += 1
+            for favorite_table in favorite_tables:
+                if favorite_table['tableid'] == table['id']:
+                    favorite_table['description'] = table['description']
 
     query = "SELECT value FROM sys_user_settings WHERE setting = 'default_dashboard' AND userid = '{}'".format(userid)
     with connection.cursor() as cursor:

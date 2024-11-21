@@ -2098,12 +2098,12 @@ def save_favorite_tables(request):
     fav_tables = json.loads(fav_tables)
     sys_user_id = get_userid(request.user.id)
 
-    if fav_tables:
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "DELETE FROM sys_user_favorite_tables where sys_user_id = %s",
-                [sys_user_id]
-            )
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "DELETE FROM sys_user_favorite_tables where sys_user_id = %s",
+            [sys_user_id]
+        )
 
     with connection.cursor() as cursor:
         for table in fav_tables:
