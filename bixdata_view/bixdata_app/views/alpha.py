@@ -7,7 +7,6 @@ from django.contrib.sessions.models import Session
 import threading
 from bixdata_app.models import *
 
-import locale
 import pyperclip
 from aiohttp.web_fileresponse import FileResponse
 from django.core.files.storage import FileSystemStorage
@@ -3512,7 +3511,11 @@ def print_word(request):
     for i, header_text in enumerate(header_cells):
         table.cell(0, i).text = header_text
 
-    locale.setlocale(locale.LC_ALL, 'de_CH.UTF-8')  # Svizzera tedesca
+    def format_chf(amount):
+        if amount is None:
+            return f"CHF 0.00"
+        else:
+            return f"CHF {amount:,.2f}".replace(",", "'")
 
 
     # Add data for each dealline
@@ -3521,8 +3524,8 @@ def print_word(request):
         row.cells[0].text = str(dealline['name'])
         row.cells[0].paragraphs[0].runs[0].font.bold = True
         row.cells[1].text = "{:.2f}".format(dealline['quantity'])
-        row.cells[2].text = locale.currency(dealline['unitprice'])
-        row.cells[3].text = locale.currency(dealline['price'])
+        row.cells[2].text = format_chf(dealline['unitprice'])
+        row.cells[3].text = format_chf (dealline['price'])
         row.cells[3].paragraphs[0].runs[0].font.bold = True
 
     p_space = doc.add_paragraph()

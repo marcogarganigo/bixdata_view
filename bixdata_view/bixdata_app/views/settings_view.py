@@ -474,13 +474,22 @@ def settings_table_fields_new_field(request):
                         [tableid, fieldid, fielddescription, fieldid + '_' + tableid, 'Parola', 255, 'Dati', 'checkbox']
                     )
 
-                elif fieldtype in ['Data', 'Numero', 'Parola', 'Memo', 'Utente']:
+                elif fieldtype in [ 'Numero', 'Parola', 'Memo', 'Utente']:
                     cursor.execute(
                         "INSERT INTO sys_field (tableid, fieldid, description, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s)",
                         [tableid, fieldid, fielddescription, fieldtype, 255, 'Dati']
                     )
 
                 sql = f"ALTER TABLE user_{tableid} ADD COLUMN {fieldid} VARCHAR(255) NULL"
+
+                if fieldtype == 'Data':
+                    cursor.execute(
+                        "INSERT INTO sys_field (tableid, fieldid, description, fieldtypeid, length, label) VALUES (%s, %s, %s, %s, %s, %s)",
+                        [tableid, fieldid, fielddescription, 'Data', 255, 'Dati']
+                    )
+
+                    sql = f"ALTER TABLE user_{tableid} ADD COLUMN {fieldid} DATE NULL"
+
 
                 cursor.execute(sql)
 
