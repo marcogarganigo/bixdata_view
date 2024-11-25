@@ -7,6 +7,7 @@ from django.contrib.sessions.models import Session
 import threading
 from bixdata_app.models import *
 
+import locale
 import pyperclip
 from aiohttp.web_fileresponse import FileResponse
 from django.core.files.storage import FileSystemStorage
@@ -3425,6 +3426,7 @@ def print_word(request):
     font1.color.rgb = grey
     p1.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 
+
     p_companyname = doc.add_paragraph()
     text_companyname = f"{companyname}"
     run_companyname = p_companyname.add_run(text_companyname)
@@ -3510,14 +3512,17 @@ def print_word(request):
     for i, header_text in enumerate(header_cells):
         table.cell(0, i).text = header_text
 
+    locale.setlocale(locale.LC_ALL, 'de_CH.UTF-8')  # Svizzera tedesca
+
+
     # Add data for each dealline
     for i, dealline in enumerate(dealline_records, start=1):
         row = table.rows[i]
         row.cells[0].text = str(dealline['name'])
         row.cells[0].paragraphs[0].runs[0].font.bold = True
         row.cells[1].text = "{:.2f}".format(dealline['quantity'])
-        row.cells[2].text = "{:.2f} CHF".format(dealline['unitprice'])
-        row.cells[3].text = "{:.2f} CHF".format(dealline['price'])
+        row.cells[2].text = locale.currency(dealline['unitprice'])
+        row.cells[3].text = locale.currency(dealline['price'])
         row.cells[3].paragraphs[0].runs[0].font.bold = True
 
     p_space = doc.add_paragraph()
