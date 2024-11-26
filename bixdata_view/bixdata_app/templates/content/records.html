@@ -1,4 +1,4 @@
-    <script src="https://cdn.jsdelivr.net/npm/jq-pagination/js/jquery.jqpagination.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jq-pagination/js/jquery.jqpagination.min.js"></script>
 
 
 <script type="text/javascript">
@@ -31,6 +31,11 @@
                     searchChart()
                 })
             }
+            if ($(this).attr("id") == 'report-tab') {
+                $(this)[0].addEventListener('shown.bs.tab', function (event) {
+                    searchReport()
+                })
+            }
         })
 
 
@@ -61,6 +66,55 @@
         $('#calendar-tab a:last').tab('show');
     });
 
+
+    function searchReport() {
+         var serialized_data = [];
+        console.info('referesh:');
+        console.info($('#records_filters_form').serializeArray())
+        console.info('refresh2')
+        serialized_data.push({
+            name: 'tableid',
+            value: '{{tableid}}'
+        });
+
+        serialized_data.push({
+            name: 'searchTerm',
+            value: $("#searchTerm").val()
+        });
+        serialized_data.push({
+            name: 'viewid',
+            value: $("#viewid").val()
+        });
+        serialized_data.push({
+            name: 'filters',
+            value: convertFormToJSON(serializeForm($('#records_filters_form').find("select,textarea,input")))
+        });
+        serialized_data.push({
+            name: 'currentpage',
+            value: $('#my-pagination').data('currentpage')
+        });
+
+        serialized_data.push({
+            name: 'order_field',
+            value: $('#content-table').find('#block_records_table').data('order-field')
+        });
+        serialized_data.push({
+            name: 'order',
+            value: $('#content-table').find('#block_records_table').data('order')
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'block_records_table_report' %}",
+            data: serialized_data,
+            success: function (response) {
+                $("#report-tab-pane").html(response);
+            },
+            error: function () {
+                $("#report-tab-pane").html(response);
+            }
+        });
+    }
 
 
     function searchGantt() {
@@ -240,6 +294,9 @@
         } else if (activeTab.id == 'records_table_container') {
             container = '#records_table_container'
             funcname = 'block_records_table'
+        } else if (activeTab.id == 'report-tab-pane') {
+            container = '#report-tab-pane'
+            funcname = 'block_records_table_report'
         }
 
         //serialized_data=$('#filters').serializeArray()
@@ -268,7 +325,10 @@
 
         tableType = ''
 
-
+        if (activeTab.id == 'report-tab-pane')
+        {
+            tableType = 'report'
+        }
 
         var serialized_data = [];
         serialized_data.push({
@@ -636,7 +696,12 @@
                             -->
                             {% endif %}
 
-
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="report-tab" data-bs-toggle="tab"
+                                        data-bs-target="#report-tab-pane" type="button" role="tab"
+                                        aria-controls="report-tab-pane" aria-selected="false">Report
+                                </button>
+                            </li>
                             <!--
 
                               <li class="nav-item" role="presentation">
@@ -675,6 +740,9 @@
                                      role="tabpanel" aria-labelledby="grouped-tab" tabindex="0">
                                 </div>
                             {% endif %}
+                            <div class="tab-pane fade" id="report-tab-pane" style="height: 100%; width: 100%"
+                                 role="tabpanel" aria-labelledby="report-tab" tabindex="0">
+                            </div>
                             <div class="tab-pane fade " id="chart-tab-pane" role="tabpanel" aria-labelledby="chart-tab"
                                  tabindex="0" style="overflow: hidden">
                             </div>
