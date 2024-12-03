@@ -2611,7 +2611,7 @@ def stampa_servicecontract(request):
         context = row
         with connection.cursor() as cursor:
             cursor.execute(
-                f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}' AND deleted_='N'"
+                f"SELECT t.*,u.firstname,u.lastname FROM user_timesheet as t join sys_user as u on t.user=u.id  WHERE t.recordidservicecontract_='{recordid}' AND deleted_='N' ORDER BY t.date asc"
             )
             timesheets = dictfetchall(cursor)
         timesheets_updated = list()
