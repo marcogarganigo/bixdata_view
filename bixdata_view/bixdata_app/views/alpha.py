@@ -1327,7 +1327,7 @@ def save_record_fields(request):
         if tableid == 'attachment':
             if fields_dict['type'] == 'Documento firmato':
                 filename = 'deal' + '_' + fields_dict['recordiddeal_']
-            else:
+            if fields_dict['type'] == 'Allegato generico':
                 filename = 'deal-attachment' + '_' + fields_dict['recordiddeal_']
         filename = filename + '_' + basename + extension
 
@@ -2017,6 +2017,13 @@ def custom_save_record(request, tableid, recordid):
         # if not isempty(company_record.recordid):
         #   contact_record.fields['reference']=contact_record.fields['name']+" "+contact_record.fields['surname']+" - "+company_record.fields['companyname']
         contact_record.save()
+
+    # ---STABILE
+    if tableid == 'stabile':
+        stabile_record = Record('stabile', recordid)
+        riferimento=stabile_record.fields['titolo']+" "+stabile_record.fields['indirizzo']
+        stabile_record.fields['riferimento']=riferimento
+        stabile_record.save()
 
     return True
 
