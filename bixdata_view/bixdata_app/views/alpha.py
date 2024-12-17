@@ -2023,7 +2023,7 @@ def custom_save_record(request, tableid, recordid):
         stabile_record = Record('stabile', recordid)
         riferimento=stabile_record.fields['titolo']+" "+stabile_record.fields['indirizzo']
         stabile_record.fields['riferimento']=riferimento
-        stabile_record.save()
+        #stabile_record.save()
 
     return True
 
