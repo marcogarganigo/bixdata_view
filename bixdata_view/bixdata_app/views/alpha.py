@@ -1320,8 +1320,8 @@ def save_record_fields(request):
     for field_name, uploaded_files in request.FILES.items():
         fs = FileSystemStorage(location='attachments')
         print("Location: "+fs.location)
-        fs_bix = FileSystemStorage(location='attachments_bixdata')
-        print("Location:"+fs_bix.location)
+        #fs_bix = FileSystemStorage(location='attachments_bixdata')
+        #print("Location:"+fs_bix.location)
         basename, extension = os.path.splitext(uploaded_files.name)
         filename = tableid + '_' + response_dict['recordid']
         if tableid == 'attachment':
@@ -1329,7 +1329,8 @@ def save_record_fields(request):
                 filename = 'deal' + '_' + fields_dict['recordiddeal_']
             if fields_dict['type'] == 'Allegato generico':
                 filename = 'deal-attachment' + '_' + fields_dict['recordiddeal_']
-        filename = filename + '_' + basename + extension
+        current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = filename + '_' + basename + '_' + current_datetime + extension
 
         with connection.cursor() as cursor:
             cursor.execute(
@@ -1337,7 +1338,10 @@ def save_record_fields(request):
             )
 
         fs.save(filename, uploaded_files)
-        fs_bix.save(filename, uploaded_files)
+        record = Record(tableid, recordid)
+        record.fields[field_name]=filename
+        record.save()
+        #fs_bix.save(filename, uploaded_files)
 
     # return render(request, 'block/record/record_fields.html')
     custom_save_record(request, tableid, response_dict['recordid'])
@@ -2021,6 +2025,8 @@ def custom_save_record(request, tableid, recordid):
     # ---STABILE
     if tableid == 'stabile':
         stabile_record = Record('stabile', recordid)
+        if isempty(stabile_record.fields['titolo_stabile']):
+            stabile_record.fields['titolo_stabile']=""
         riferimento=stabile_record.fields['titolo_stabile']+" "+stabile_record.fields['indirizzo']
         stabile_record.fields['riferimento']=riferimento
         stabile_record.save()

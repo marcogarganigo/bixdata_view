@@ -269,7 +269,8 @@
 
                                     <input id="{{ fieldid }}" name="{{ fieldname }}"
                                            class="form-control mb-2 {{ mandatory }} {{ calcolato }}" type="file"
-                                           value="{{ field.valuecode.0.code }}">
+                                           value="{{ field.valuecode.0.code }}" style="width: 50% Important!;">
+                                           <a href="{{ field.valuecode.0.code }}">Scarica</a>
                                 {% elif field.lookuptableid %}
                                     {% for valuecode in field.valuecode %}
                                         <div class="input-group mb-2">
