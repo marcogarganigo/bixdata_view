@@ -2668,7 +2668,7 @@ def stampa_letturagasolio(request):
     filename_with_path = filename_with_path + '\\static\\pdf\\' + filename
     pdfkit.from_string(content, filename_with_path, configuration=config, options={"enable-local-file-access": ""})
 
-    return HttpResponse(content)
+    #return HttpResponse(content)
 
     try:
         with open(filename_with_path, 'rb') as fh:
