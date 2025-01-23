@@ -83,10 +83,14 @@ def get_test_autocomplete(request):
 def get_autocomplete_data(request):
     term = request.GET.get('term')
     tableid = request.GET.get('tableid')
+    recordid = request.GET.get('recordid')
     mastertableid = request.GET.get('mastertableid')
+    recordidstabile = request.GET.get('recordidstabile')
     post = {
         'tableid': tableid,
+        'recordid': recordid,
         'mastertableid': mastertableid,
+        'recordidstabile': recordidstabile,
         'term': term
     }
     response = requests.post(f"{bixdata_server}bixdata/index.php/rest_controller/get_autocomplete_data", data=post)

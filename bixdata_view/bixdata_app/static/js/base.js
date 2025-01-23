@@ -56,8 +56,8 @@ function save_record(el, setting) {
             buttons: false,
         })
         console.info("DEBUG")
-        const tipoContrattoselectedValues = $('#field-tipocontratto').val(); // Ottieni i valori selezionati
-        console.log('Valori selezionati:', tipoContrattoselectedValues);
+        //const tipoContrattoselectedValues = $('#field-tipocontratto').val(); // Ottieni i valori selezionati
+        //console.log('Valori selezionati:', tipoContrattoselectedValues);
         serialized_form = serializeForm($(el).closest('#universal-container-timesheet').find('.fields_container').find("select,textarea,input"));
 
 
@@ -79,7 +79,7 @@ function save_record(el, setting) {
             formData.append('tableid', tableid);
             formData.append('recordid', recordid);
             formData.append('contextfunction', contextfunction);
-            formData.append('tipocontratto', tipoContrattoselectedValues);
+            //formData.append('tipocontratto', tipoContrattoselectedValues);
             
             // Check if there are any textarea-editor elements
             if ($(el).closest('#universal-container-timesheet').find('.textarea-editor').length > 0) {

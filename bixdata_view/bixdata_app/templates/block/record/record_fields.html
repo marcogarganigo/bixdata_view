@@ -443,7 +443,7 @@
                                             <span class="material-symbols-outlined">clear</span>
                                         </button>
                                     </div>
-                                    <input type="hidden" class="hidden-input {{ mandatory }} {{ calcolato }}"
+                                    <input type="hidden" class="hidden-input {{ mandatory }} {{ calcolato }}" id="hidden-{{ tableid }}-{{ fieldid }}-{{ recordid }}"
                                            name="{{ field.fieldid }}" value="{{ field.recordid }}">
 
                                     <p id="autoc-paragraompleteph-{{ recordid }}" style="display:none; color: red">la
@@ -484,12 +484,20 @@
 
                                 $("#{{ tableid }}-{{ fieldid }}-{{ recordid }}-autocomplete").autocomplete({
                                     source: function (request, response) {
+                                        recordidstabile=''
+                                        recordtableid='{{ tableid }}'
+                                        if(recordtableid=='letturagasolio')
+                                        {
+                                            recordidstabile=$('[id^="hidden-letturagasolio-field-recordidstabile_"]').val()
+                                        }
                                         $.ajax({
                                             url: "{% url 'get_autocomplete_data' %}",
                                             data: {
                                                 'term': request.term,
                                                 'tableid': '{{tableid}}',
-                                                'mastertableid': '{{ field.tablelink }}'
+                                                'recordid': '{{ recordid }}',
+                                                'mastertableid': '{{ field.tablelink }}',
+                                                'recordidstabile': recordidstabile
                                             },
                                             success: function (data) {
                                                 console.info(data)
