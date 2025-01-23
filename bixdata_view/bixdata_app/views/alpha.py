@@ -1948,9 +1948,9 @@ def custom_save_record(request, tableid, recordid):
             deal_actualcost = deal_actualcost + dealline_actualcost
             deal_actualmargin = deal_actualmargin + dealline_actualmargin
 
-        if deal_price_sum != 0:
+        if(len(dealline_records) > 0): 
             deal_price = deal_price_sum
-        if deal_expectedcost_sum != 0:
+        if(len(dealline_records) > 0): 
             deal_expectedcost = deal_expectedcost_sum
         deal_expectedmargin = deal_price - deal_expectedcost
         if deal_actualcost == 0:
