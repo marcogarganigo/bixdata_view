@@ -2654,6 +2654,32 @@ def stampa_servicecontract(request):
         finally:
             os.remove(filename_with_path)
 
+def stampa_letturagasolio(request):
+    row={}
+    filename='gasolio.pdf'
+    recordid = ''
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
+    config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+    content = render_to_string('pdf/gasolio.html', row)
+
+    filename_with_path = os.path.dirname(os.path.abspath(__file__))
+    filename_with_path = filename_with_path.rsplit('views', 1)[0]
+    filename_with_path = filename_with_path + '\\static\\pdf\\' + filename
+    pdfkit.from_string(content, filename_with_path, configuration=config, options={"enable-local-file-access": ""})
+
+    return HttpResponse(content)
+
+    try:
+        with open(filename_with_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/pdf")
+            response['Content-Disposition'] = f'inline; filename={filename}'
+
+        return response
+
+    finally:
+        os.remove(filename_with_path)
+
 
 def stampa_servicecontract_test(request):
     recordid = request.POST.get('recordid')

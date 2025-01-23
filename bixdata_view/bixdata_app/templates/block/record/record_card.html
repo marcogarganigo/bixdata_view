@@ -794,13 +794,15 @@
 
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Stampa scheda</a></li>
-                        {% if tableid == 'timesheet' or tableid == 'servicecontract' %}
+                        {% if tableid == 'timesheet' or tableid == 'servicecontract' or tableid == 'letturagasolio' %}
                             <li><a class="dropdown-item"
                                    onclick="stampa('{{ tableid }}')">
                                 {% if tableid == 'timesheet' %}
                                     Stampa rapportino
                                 {% elif tableid == 'servicecontract' %}
                                     Stampa report monte ore
+                                {% elif tableid == 'letturagasolio' %}
+                                    Stampa report gasolio
                                 {% endif %}
                             </a></li>
                         {% endif %}

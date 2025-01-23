@@ -1,0 +1,114 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+        .container {
+            width: 100%;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .header .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6b8e23; /* Colore simile a quello dell'immagine */
+            text-align: right;
+        }
+        .title-sub {
+            font-size: 18px;
+            color: #6b8e23;
+            text-align: right;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .content p {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+        }
+        .content .data {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 14px;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+                <img src="http://localhost:8000/static/images/headers/pitservice_intestazione.jpg" alt="Swissbix Logo" width="50%">
+        </div>
+        <div class="content">
+            <p><strong>Concernente: </strong>livello olio combustibile</p>
+            <p><strong>Residenza: </strong>Collina D'Oro</p>
+            <p><strong>Vigilio</strong></p>
+            <p><strong>4 cisterne da LT 2000</strong></p>
+            <p class="data">Data lettura : 26/08/2024</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Quantità</th>
+                            <th>Descrizione</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>VIGLIO EST</td>
+                            <td>2 cisterne per CM 20 - 2 x LT 260</td>
+                        </tr>
+                        <tr>
+                            <td>VIGLIO OVEST</td>
+                            <td>2 cisterne per CM 70 - 2 x LT 910</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="footer">
+            In Fede.<br>
+            PIT SERVICE SAGL
+        </div>
+    </div>
+</body>
+</html>
