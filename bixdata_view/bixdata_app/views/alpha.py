@@ -2657,14 +2657,20 @@ def stampa_servicecontract(request):
 
         finally:
             os.remove(filename_with_path)
+            
+def get_stampa_gasolio_info(request):
+    return HttpResponse('ok')
 
-def stampa_stabile(request):
+def stampa_gasolio(request):
     data={}
     filename='gasolio.pdf'
     
     recordid_stabile = ''
     if request.method == 'POST':
         recordid_stabile = request.POST.get('recordid')
+        checkLetture=request.POST.get('checkLetture')
+        meseLettura=request.POST.get('meseLettura')
+        anno, mese = meseLettura.split('-')
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
@@ -2677,13 +2683,15 @@ FROM user_letturagasolio t
 INNER JOIN (
     SELECT recordidinformazionigasolio_, MAX(datalettura) AS max_datalettura
     FROM user_letturagasolio
+    WHERE anno='{anno}' AND mese like '%{mese}%' AND deleted_='N' AND recordidstabile_ = '{recordid_stabile}'
     GROUP BY recordidinformazionigasolio_
+    
 ) subquery
 ON t.recordidinformazionigasolio_ = subquery.recordidinformazionigasolio_ 
    AND t.datalettura = subquery.max_datalettura
 INNER JOIN user_informazionigasolio i
 ON t.recordidinformazionigasolio_ = i.recordid_
-WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N';
+WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N' 
         """
     ultimeletturegasolio = Helperdb.sql_query(sql)
     data['ultimeletturegasolio']=ultimeletturegasolio
@@ -2701,6 +2709,10 @@ WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N';
             response = HttpResponse(fh.read(), content_type="application/pdf")
             response['Content-Disposition'] = f'inline; filename={filename}'
 
+            if checkLetture=='si':
+                sql=f"UPDATE user_letturagasolio SET stato='Stampato' WHERE anno='{anno}' AND mese like '%{mese}%' AND recordidstabile_='{recordid_stabile}'"
+                Helperdb.sql_execute(sql)
+            return response
         return response
 
     finally:

@@ -6,6 +6,135 @@
 </style>
 
 <script type="text/javascript">
+    // Funzione per aprire il modal e richiedere informazioni dal backend
+    function openGasolioModal() {
+        // Mostra un indicatore di caricamento (opzionale)
+        swal({
+            title: "Caricamento dati...",
+            text: "Attendere prego.",
+            icon: "info",
+            buttons: false,
+            closeOnClickOutside: false,
+            closeOnEsc: false,
+        });
+
+        // Richiedi informazioni aggiuntive dal backend
+        $.ajax({
+            type: "POST",
+            url: "{% url 'get_stampa_gasolio_info' %}", // Sostituisci con l'URL corretto
+            data: {
+                'recordid': '{{ recordid }}',
+                'tableid': '{{ tableid }}',
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            success: function(response) {
+                // Chiudi l'indicatore di caricamento
+                swal.close();
+
+                // Inserisci le informazioni nel modal
+                var backendInfoHtml = `
+                        <!-- Aggiungi altre informazioni qui -->
+                `;
+                $('#backendInfo').html(backendInfoHtml);
+
+                // Pulisci eventuali valori precedenti nel form
+                $('#gasolioForm')[0].reset();
+
+                // Mostra il modal
+                $('#gasolioModal').modal('show');
+            },
+            error: function(xhr, status, error) {
+                swal({
+                    title: "Errore",
+                    text: "Impossibile caricare le informazioni. Riprova più tardi.",
+                    icon: "error",
+                    button: "Ok",
+                });
+            }
+        });
+    }
+
+    // Gestisci l'invio del form dal modal
+    $('#submitGasolioForm').on('click', function() {
+        // Raccogli i dati dal form
+        var checkLetture = $('#checkLetture').val();
+        var meseLettura = $('#meseLettura').val();
+
+     
+
+        // Mostra un indicatore di invio (opzionale)
+        swal({
+            title: "Attendere prego",
+            text: "Attendere prego.",
+            icon: "info",
+            buttons: false,
+            closeOnClickOutside: false,
+            closeOnEsc: false,
+        });
+
+        // Invia i dati al backend per la stampa gasolio
+        $.ajax({
+            type: "POST",
+            url: "{% url 'stampa_gasolio' %}", // Sostituisci con l'URL corretto
+            data: {
+                'recordid': '{{ recordid }}',
+                'tableid': '{{ tableid }}',
+                'checkLetture': checkLetture,
+                'meseLettura': meseLettura,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            xhrFields: {
+                responseType: 'blob' // Per gestire il download del file
+            },
+            success: function(response, status, xhr) {
+                // Chiudi l'indicatore di invio
+                swal.close();
+
+                // Gestisci il download del file
+                const contentType = xhr.getResponseHeader('content-type');
+                const blob = new Blob([response], {type: contentType});
+                const blobUrl = window.URL.createObjectURL(blob);
+                const contentDisposition = xhr.getResponseHeader('content-disposition');
+                let filename = 'stampa_gasolio.pdf'; // Valore predefinito
+
+                if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
+                    const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    const matches = filenameRegex.exec(contentDisposition);
+                    if (matches != null && matches[1]) {
+                        filename = matches[1].replace(/['"]/g, '');
+                    }
+                }
+
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(blobUrl);
+                document.body.removeChild(a);
+
+                // Mostra una notifica di successo
+                swal({
+                    text: "File generato e scaricato correttamente.",
+                    icon: "success",
+                    timer: 2000,
+                    buttons: false,
+                });
+            },
+            error: function(xhr, status, error) {
+                swal({
+                    title: "Errore",
+                    text: "Impossibile generare il file. Riprova più tardi.",
+                    icon: "error",
+                    button: "Ok",
+                });
+            }
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
     $("#RecordCard").ready(function () {
         $('[data-bs-toggle="tooltip"]').tooltip()
     });
@@ -794,7 +923,7 @@
 
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Stampa scheda</a></li>
-                        {% if tableid == 'timesheet' or tableid == 'servicecontract' or tableid == 'stabile' %}
+                        {% if tableid == 'timesheet' or tableid == 'servicecontract'  %}
                             <li><a class="dropdown-item"
                                    onclick="stampa('{{ tableid }}')">
                                 {% if tableid == 'timesheet' %}
@@ -805,6 +934,9 @@
                                     Stampa report gasolio stabile
                                 {% endif %}
                             </a></li>
+                        {% endif %}
+                        {% if tableid == 'stabile'  %}
+                            <a class="dropdown-item" href="#" onclick="openGasolioModal()">Stampa report gasolio stabile</a>
                         {% endif %}
                         {% if tableid == 'projectmilestone' %}
                             <li><a class="dropdown-item"
@@ -1291,3 +1423,49 @@
         }
     }
 </style>
+
+<!-- Modal per la Stampa Gasolio -->
+<div class="modal fade" id="gasolioModal" tabindex="-1" aria-labelledby="gasolioModalLabel" aria-hidden="true" >
+    <div class="modal-dialog" style="border: 3px solid black;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="gasolioModalLabel">Dati per la Stampa Gasolio</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Informazioni dal Backend -->
+          <div id="backendInfo">
+            <!-- I dati verranno inseriti qui tramite JavaScript -->
+          </div>
+          <!-- Form per Input Aggiuntivi -->
+          <div id="formContainer">
+            <form id="gasolioForm" >
+                {% csrf_token %}
+                <!-- Select Si/No -->
+                <label for="checkLetture">Vuoi segnare le letture come inviate?</label>
+                <select id="checkLetture" name="checkLetture" required>
+                    <option value="si">Si</option>
+                    <option value="no" selected>No</option>
+                </select>
+        
+                <!-- Select Multipla Anno-Mese Precompilata -->
+                <label for="meseLettura">Seleziona Anno-Mese:</label>
+                <select id="meseLettura" name="meseLettura"  required>
+                    <option value="2024-novembre">2024 Novembre</option>
+                    <option value="2024-dicembre">2024 Dicembre</option>
+                    <option value="2025-gennaio" selected>2025 Gennaio</option>
+                    <option value="2025-febbraio">2025 Febbraio</option>
+                </select>
+        
+            </form>
+        </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+          <button type="button" class="btn btn-primary" id="submitGasolioForm">Stampa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

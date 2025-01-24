@@ -455,7 +455,7 @@ function notify_error() {
         success: function (response) {
           swal({
             title: "Si è verificato un errore",
-            text: "L'errore è stato segnalato ai nostri tecnici competenti (credici)",
+            text: "L'errore è stato segnalato ai nostri tecnici ",
             icon: "error",
             button: "Ok",
             dangerMode: true,

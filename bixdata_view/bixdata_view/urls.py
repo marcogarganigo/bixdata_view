@@ -103,7 +103,6 @@ urlpatterns = [
     path('new_chart_block/', alpha.new_chart_block, name='new_chart_block'),
     path('stampa_timesheet/', alpha.stampa_timesheet, name='stampa_timesheet'),
     path('stampa_servicecontract/', alpha.stampa_servicecontract, name='stampa_servicecontract'),
-    path('stampa_stabile/', alpha.stampa_stabile, name='stampa_stabile'),
     path('new_ticket_timesheet/<str:ticket>/', alpha.new_ticket_timesheet, name='new_ticket_timesheet'),
     path('rinnova_contratto/', alpha.rinnova_contratto, name='rinnova_contratto'),
     path('sort_records/', alpha.sort_records, name='sort_records'),
@@ -229,5 +228,7 @@ urlpatterns = [
     #path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     #path('open_card_react/', test_react.open_card_react, name='open_card_react'),
     path('save_user_timesheet/', alpha.save_user_timesheet, name='save_user_timesheet'),
+    path('stampa_gasolio/', alpha.stampa_gasolio, name='stampa_gasolio'),
+    path('get_stampa_gasolio_info/', alpha.get_stampa_gasolio_info, name='get_stampa_gasolio_info'),
 
 ]
