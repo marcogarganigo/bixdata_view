@@ -2658,14 +2658,36 @@ def stampa_servicecontract(request):
         finally:
             os.remove(filename_with_path)
 
-def stampa_letturagasolio(request):
-    row={}
+def stampa_stabile(request):
+    data={}
     filename='gasolio.pdf'
-    recordid = ''
+    
+    recordid_stabile = ''
+    if request.method == 'POST':
+        recordid_stabile = request.POST.get('recordid')
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
-    content = render_to_string('pdf/gasolio.html', row)
+    
+    record_stabile=Record('stabile',recordid_stabile)
+    data['stabile']=record_stabile.fields
+    sql=f"""
+SELECT t.recordid_,t.anno,t.mese,t.datalettura,t.lettura, i.riferimento, i.livellominimo, i.capienzacisterna
+FROM user_letturagasolio t
+INNER JOIN (
+    SELECT recordidinformazionigasolio_, MAX(datalettura) AS max_datalettura
+    FROM user_letturagasolio
+    GROUP BY recordidinformazionigasolio_
+) subquery
+ON t.recordidinformazionigasolio_ = subquery.recordidinformazionigasolio_ 
+   AND t.datalettura = subquery.max_datalettura
+INNER JOIN user_informazionigasolio i
+ON t.recordidinformazionigasolio_ = i.recordid_
+WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N';
+        """
+    ultimeletturegasolio = Helperdb.sql_query(sql)
+    data['ultimeletturegasolio']=ultimeletturegasolio
+    content = render_to_string('pdf/gasolio.html', data)
 
     filename_with_path = os.path.dirname(os.path.abspath(__file__))
     filename_with_path = filename_with_path.rsplit('views', 1)[0]

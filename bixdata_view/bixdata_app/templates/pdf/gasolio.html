@@ -82,28 +82,29 @@
         </div>
         <div class="content">
             <p><strong>Concerne: </strong>livello olio combustibile</p>
-            <p><strong>Stabile: </strong>Via Ferria A 14 Lugano</p>
-            <p class="data">Data lettura : 26/08/2024</p>
+            <p><strong>Stabile: </strong>{{ stabile.titolo_stabile }}</p>
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
                             <th>Cisterna</th>
                             <th>Capienza</th>
-                            <th>Giacenza</th>
+                            <th>Livello minimo</th>
+                            <th>Data Lettura</th>
+                            <th>Livello</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Cisterna 1</td>
-                            <td>Litri 35.000</td>
-                            <td>Litri 10.000</td>
-                        </tr>
-                        <tr>
-                            <td>Cisterna 2</td>
-                            <td>Litri 30.000</td>
-                            <td>Cm 50</td>
-                        </tr>
+                        {% for lettura in ultimeletturegasolio %}
+                            <tr>
+                                <td>{{ lettura.riferimento }}</td>
+                                <td>{{ lettura.capienzacisterna }}</td>
+                                <td>{{ lettura.livellominimo }}</td>
+                                <td>{{ lettura.datalettura|date:"d/m/Y" }}</td>
+                                <td>{{ lettura.lettura }}</td>
+                            </tr>
+                        {% endfor %}
+
                     </tbody>
                 </table>
             </div>
