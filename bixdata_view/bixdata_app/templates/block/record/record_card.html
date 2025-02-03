@@ -932,11 +932,16 @@
                                     Stampa report monte ore
                                 {% elif tableid == 'stabile' %}
                                     Stampa report gasolio stabile
+                                {% elif tableid == 'bollettini' %}
+                                    Stampa bollettino
                                 {% endif %}
                             </a></li>
                         {% endif %}
                         {% if tableid == 'stabile'  %}
                             <a class="dropdown-item" href="#" onclick="openGasolioModal()">Stampa report gasolio stabile</a>
+                        {% endif %}
+                        {% if tableid == 'bollettini'  %}
+                            <a class="dropdown-item" href="#" onclick="stampa('{{ tableid }}')">Stampa bollettino</a>
                         {% endif %}
                         {% if tableid == 'projectmilestone' %}
                             <li><a class="dropdown-item"

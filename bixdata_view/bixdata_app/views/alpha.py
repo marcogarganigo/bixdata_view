@@ -66,7 +66,7 @@ from .businesslogic.models.table import *
 
 from django.middleware.csrf import get_token
 
-
+from django.http import FileResponse, Http404
 
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
@@ -1336,13 +1336,13 @@ def save_record_fields(request):
         current_datetime = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filename = filename + '_' + basename + '_' + current_datetime + extension
 
-        with connection.cursor() as cursor:
-            cursor.execute(
-                f"UPDATE user_attachment SET filename = '{filename}' WHERE recordid_ = '{response_dict['recordid']}'"
-            )
+        #with connection.cursor() as cursor:
+         #   cursor.execute(
+          #      f"UPDATE user_attachment SET filename = '{filename}' WHERE recordid_ = '{response_dict['recordid']}'"
+           # )
 
         fs.save(filename, uploaded_files)
-        record = Record(tableid, recordid)
+        record = Record(tableid, response_dict['recordid'])
         record.fields[field_name]=filename
         record.save()
         #fs_bix.save(filename, uploaded_files)
@@ -2712,6 +2712,37 @@ WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N'
             if checkLetture=='si':
                 sql=f"UPDATE user_letturagasolio SET stato='Stampato' WHERE anno='{anno}' AND mese like '%{mese}%' AND recordidstabile_='{recordid_stabile}'"
                 Helperdb.sql_execute(sql)
+            return response
+        return response
+
+    finally:
+        os.remove(filename_with_path)
+
+def stampa_bollettini(request):
+    data={}
+    filename='bollettino.pdf'
+    
+    recordid_bollettino = ''
+    if request.method == 'POST':
+        recordid_bollettino = request.POST.get('recordid')
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
+    config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+    
+    
+    content = render_to_string('pdf/bollettino1.html', data)
+
+    filename_with_path = os.path.dirname(os.path.abspath(__file__))
+    filename_with_path = filename_with_path.rsplit('views', 1)[0]
+    filename_with_path = filename_with_path + '\\static\\pdf\\' + filename
+    pdfkit.from_string(content, filename_with_path, configuration=config, options={"enable-local-file-access": ""})
+
+    #return HttpResponse(content)
+
+    try:
+        with open(filename_with_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/pdf")
+            response['Content-Disposition'] = f'inline; filename={filename}'
             return response
         return response
 
@@ -5395,6 +5426,17 @@ def download_attachment(request):
 
     with open(file_path, 'rb') as f:
         file_data = f.read()
+
+def download_file(request, filename):
+    # Costruisci il percorso completo al file
+    filepath = os.path.join(settings.ATTACHMENTS_ROOT, filename)
+    fs = FileSystemStorage(location='attachments')
+    filepath2=fs.location + "\\" + filename
+    if os.path.exists(filepath2):
+        # Restituisci il file come download
+        return FileResponse(open(filepath2, 'rb'), as_attachment=True, filename=filename)
+    else:
+        raise Http404("File non trovato")
 
 
     response = HttpResponse(file_data, content_type='application/octet-stream')

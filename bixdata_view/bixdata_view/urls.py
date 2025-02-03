@@ -230,5 +230,7 @@ urlpatterns = [
     path('save_user_timesheet/', alpha.save_user_timesheet, name='save_user_timesheet'),
     path('stampa_gasolio/', alpha.stampa_gasolio, name='stampa_gasolio'),
     path('get_stampa_gasolio_info/', alpha.get_stampa_gasolio_info, name='get_stampa_gasolio_info'),
+    path('stampa_bollettini/', alpha.stampa_bollettini, name='stampa_bollettini'),
+    path('download_file/<str:filename>/', alpha.download_file, name='download_file'),
 
 ]

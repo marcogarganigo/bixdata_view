@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Bollettino di Lavoro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            margin: 20px;
+        }
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            border: 1px solid #333;
+            padding: 10px;
+        }
+        .header-section {
+            display: grid;
+            grid-template-columns: 60% 40%;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .header-left {
+            display: flex;
+            flex-direction: column;
+        }
+        .header-left h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+        }
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: flex-end;
+            text-align: right;
+        }
+        .title-box {
+            margin-bottom: 5px;
+        }
+        .section-title {
+            background-color: #ddd;
+            padding: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .table-container {
+            width: 100%;
+            border: 1px solid #333;
+            border-collapse: collapse;
+        }
+        .table-container tr, .table-container td, .table-container th {
+            border: 1px solid #333;
+            vertical-align: top;
+        }
+        .table-container th {
+            background-color: #f0f0f0;
+            padding: 5px;
+            text-align: left;
+        }
+        .table-container td {
+            padding: 5px;
+        }
+        .sub-section {
+            margin-bottom: 10px;
+        }
+        .columns-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .observations, .lavoro-terminato, .other-section {
+            margin-top: 10px;
+        }
+        .observations textarea,
+        .products-list,
+        .material-list {
+            width: 100%;
+            height: 80px;
+        }
+        .footer-signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .signature-block {
+            width: 45%;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+        }
+        .signature-block strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .title-field {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header Section -->
+    <div class="header-section">
+        <!-- Colonna sinistra -->
+        <div class="header-left">
+            <div class="title-box">
+                <strong>DATA</strong><br>
+                ....................................
+            </div>
+            <h1>BOLLETTINO DI LAVORO</h1>
+        </div>
+        <!-- Colonna destra -->
+        <div class="header-right">
+            <div class="title-field">Livit</div>
+            <div>B village, ringhiera nord, app 2.11</div>
+        </div>
+    </div>
+
+    <!-- Titolo sezione -->
+    <div class="section-title">Pulizia appartamento</div>
+
+    <!-- Tabella principale (Data, Collaboratore, Ore di lavoro, ecc.) -->
+    <table class="table-container">
+        <tr>
+            <th style="width:10%">DATA</th>
+            <th style="width:20%">COLLABORATORE</th>
+            <th style="width:10%">ORE DI LAV.</th>
+            <th style="width:10%">TRASF.</th>
+            <th style="width:50%">LAVORO ESEGUITO</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <!-- Cucina -->
+                <div class="sub-section">
+                    <strong>Cucina</strong><br>
+                    <input type="checkbox"> Elettrodomestici
+                    <input type="checkbox"> Mobili
+                    <input type="checkbox"> Pavimenti
+                    <br>
+                    <input type="checkbox"> Finestre
+                    <input type="checkbox"> Telai Finestre
+                    <input type="checkbox"> Tapparelle
+                    <br>
+                    <input type="checkbox"> Porte
+                    <input type="checkbox"> Stipiti
+                    <input type="checkbox"> Radiatori
+                    <br>
+                    ..........................................<br>
+                    ..........................................
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Due colonne: Prodotti/Bagno -->
+    <div class="columns-2">
+        <!-- Prodotti -->
+        <div>
+            <div class="section-title">Prodotti utilizzati:</div>
+            <textarea class="products-list"></textarea>
+        </div>
+        <!-- Bagno -->
+        <div>
+            <div class="sub-section">
+                <strong>Bagno:
+                    <input type="checkbox">1
+                    <input type="checkbox">2
+                    <input type="checkbox">3
+                    <input type="checkbox">4
+                </strong><br>
+                <input type="checkbox"> Vasca
+                <input type="checkbox"> Piatto doccia
+                <input type="checkbox"> Lavabo
+                <input type="checkbox"> Bidet
+                <br>
+                <input type="checkbox"> Wc
+                <input type="checkbox"> Accessori
+                <input type="checkbox"> Rivestimenti
+                <br>
+                <input type="checkbox"> Porte
+                <input type="checkbox"> Stipiti
+                <input type="checkbox"> Radiatori
+                <input type="checkbox"> Pavimenti
+                <br>
+                <input type="checkbox"> Finestre
+                <input type="checkbox"> Telai Finestre
+                <input type="checkbox"> Tapparelle
+                <br>
+                ..........................................<br>
+                ..........................................
+            </div>
+        </div>
+    </div>
+
+    <!-- Due colonne: Materiale/Soggiorno -->
+    <div class="columns-2">
+        <!-- Materiale -->
+        <div>
+            <div class="section-title">Materiale:</div>
+            <textarea class="material-list"></textarea>
+        </div>
+        <!-- Soggiorno e atrio -->
+        <div>
+            <div class="sub-section">
+                <strong>Soggiorno e atrio</strong><br>
+                <input type="checkbox"> Finestre
+                <input type="checkbox"> Telai Finestre
+                <input type="checkbox"> Tapparelle
+                <br>
+                <input type="checkbox"> Porte
+                <input type="checkbox"> Stipiti
+                <input type="checkbox"> Radiatori
+                <input type="checkbox"> Pavimenti
+                <br>
+                <input type="checkbox"> Terrazzo
+                <input type="checkbox"> Armadio a muro
+                <br>
+                ..........................................<br>
+                ..........................................
+            </div>
+        </div>
+    </div>
+
+    <!-- Due colonne: Osservazioni/Camera da letto -->
+    <div class="columns-2">
+        <!-- Osservazioni -->
+        <div class="observations">
+            <div class="section-title">Osservazioni:</div>
+            <textarea></textarea>
+        </div>
+        <!-- Camera da letto -->
+        <div>
+            <div class="sub-section">
+                <strong>Camera da letto:
+                    <input type="checkbox">1
+                    <input type="checkbox">2
+                    <input type="checkbox">3
+                    <input type="checkbox">4
+                </strong><br>
+                <input type="checkbox"> Finestre
+                <input type="checkbox"> Telai Finestre
+                <input type="checkbox"> Tapparelle
+                <br>
+                <input type="checkbox"> Porte
+                <input type="checkbox"> Stipiti
+                <input type="checkbox"> Radiatori
+                <input type="checkbox"> Pavimenti
+                <br>
+                ..........................................<br>
+                ..........................................
+            </div>
+        </div>
+    </div>
+
+    <!-- Lavoro terminato / non terminato + Altro -->
+    <div class="columns-2">
+        <!-- Lavoro terminato -->
+        <div class="lavoro-terminato">
+            <div>
+                <input type="checkbox"> Lavoro terminato
+            </div>
+            <div>
+                <input type="checkbox"> Lavoro non terminato
+            </div>
+        </div>
+        <!-- Altre sezioni (bucalettere, cantina, box) -->
+        <div class="other-section">
+            <strong>Altro</strong><br>
+            <input type="checkbox"> Bucalettere
+            <input type="checkbox"> Cantina
+            <input type="checkbox"> Box/Posto Auto
+            <br>
+            <textarea style="width:100%; height:50px;"></textarea>
+        </div>
+    </div>
+
+    <!-- Footer con firme -->
+    <div class="footer-signatures">
+        <div class="signature-block">
+            <strong>Pit Service Sagl</strong>
+            Data: ........................................<br>
+            Firma: .......................................
+        </div>
+        <div class="signature-block">
+            <strong>Cliente</strong>
+            Data: ........................................<br>
+            Firma: .......................................
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

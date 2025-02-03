@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Bollettino di Lavoro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .contenitore {
+      width: 700px;
+      margin: 0 auto;
+      border: 1px solid #000; 
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    /* Sezione intestazione */
+    .testata {
+      border: 1px solid #000;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .riga-superiore {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .riga-superiore div {
+      width: 48%;
+    }
+    .logo-placeholder {
+      width: 60px; 
+      height: 60px; 
+      border: 1px solid #000;
+      display: inline-block;
+      margin-right: 10px;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 60px;
+    }
+    .titolo-bollettino {
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 0;
+      padding: 0;
+    }
+    .numero-bollettino {
+      text-align: right;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .spazio-verticale {
+      border: 1px solid #000; 
+      height: 35px; 
+      margin-bottom: 10px;
+    }
+    /* Titolo grande */
+    .titolo-grigio {
+      background-color: #ccc;
+      text-align: center;
+      font-weight: bold;
+      padding: 10px;
+      margin: 0;
+    }
+    /* Sezione centrale con la tabella */
+    .sezione-centrale {
+      border: 1px solid #000;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+    }
+    table, th, td {
+      border: 1px solid #000;
+    }
+    th, td {
+      padding: 5px;
+      vertical-align: top;
+    }
+    /* Altre sezioni (prodotti, materiale, osservazioni) */
+    .blocco {
+      margin-bottom: 10px;
+    }
+    .blocco .titolo-sezione {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .area-testo {
+      border: 1px solid #000; 
+      height: 60px; 
+      padding: 5px;
+    }
+    /* Checkboxes */
+    .checkboxes {
+      display: flex;
+      gap: 30px;
+      margin-top: 10px;
+    }
+    .checkboxes label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .checkboxes input[type="checkbox"] {
+      transform: scale(1.2);
+    }
+    /* Sezione footer */
+    .footer {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 12px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+<div class="contenitore">
+  <!-- INTESTAZIONE -->
+  <div class="testata">
+    <!-- Riga con logo, data, bollettino di lavoro, numero -->
+    <div class="riga-superiore">
+      <div>
+        <!-- Logo fittizio -->
+        <span class="logo-placeholder">Logo</span>
+        <span class="titolo-bollettino">BOLLETTINO DI LAVORO</span>
+      </div>
+      <div class="numero-bollettino">00</div>
+    </div>
+    <!-- Riga con due spazi verticali (per data e altre note) -->
+    <div class="riga-superiore">
+      <div class="spazio-verticale"></div>
+      <div class="spazio-verticale"></div>
+    </div>
+    <!-- Titolo grigio centrale -->
+    <p class="titolo-grigio">
+      SOSTITUZIONE SERVIZIO DI CUSTODIA<br>
+      PERIODO DAL ................... AL ...................
+    </p>
+  </div>
+
+  <!-- SEZIONE CENTRALE: tabella e altre info -->
+  <div class="sezione-centrale">
+    <table>
+      <thead>
+        <tr>
+          <th>DATA</th>
+          <th>COLLABORATORE</th>
+          <th>ORE DI LAV.</th>
+          <th>TRASF.</th>
+          <th>LAVORO ESEGUITO</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Riga principale (di esempio) -->
+        <tr>
+          <td style="height: 150px;"></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="blocco">
+      <div class="titolo-sezione">Prodotti utilizzati:</div>
+      <div class="area-testo"></div>
+    </div>
+
+    <div class="blocco">
+      <div class="titolo-sezione">Materiale:</div>
+      <div class="area-testo"></div>
+    </div>
+
+    <div class="blocco">
+      <div class="titolo-sezione">Osservazioni:</div>
+      <div class="area-testo"></div>
+    </div>
+
+    <div class="checkboxes">
+      <label><input type="checkbox"> Lavoro terminato</label>
+      <label><input type="checkbox"> Lavoro non terminato</label>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    Firma e Timbro (se necessario)
+  </div>
+
+</div>
+
+</body>
+</html>
