@@ -1,281 +1,223 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Bollettino di Lavoro</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 30px;
-    }
-
-    .container {
-      border: 1px solid #000;
-      padding: 10px;
-    }
-
-    /* Header */
-    .header-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #000;
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-    }
-
-    /* Logo e testo a sinistra */
-    .nr-section {
-      display: flex;
-      align-items: center;
-    }
-
-    .logo {
-      width: 60px;
-      height: 60px;
-      background-color: #eee; /* spazio riservato per un eventuale logo */
-      text-align: center;
-      line-height: 60px;
-      margin-right: 10px;
-      border: 1px solid #ccc;
-    }
-
-    .nr-text {
-      font-size: 1.2em;
-      text-transform: uppercase;
-      font-weight: bold;
-    }
-
-    /* Opzioni a destra (Pichetto e Lavoro a Regia) */
-    .options-section {
-      text-align: right;
-    }
-
-    .options-section label {
-      margin-left: 10px;
-      margin-right: 5px;
-    }
-
-    /* Sezione dei campi di testo sotto l'intestazione */
-    .two-inputs {
-      margin: 20px 0;
-    }
-
-    .two-inputs input {
-      width: 48%;
-      margin-right: 2%;
-      box-sizing: border-box;
-      padding: 5px;
-      margin-bottom: 5px;
-    }
-
-    /* Separatore "PICHETTO" */
-    .picketto-section {
-      text-align: center;
-      font-weight: bold;
-      border-top: 1px solid #000;
-      border-bottom: 1px solid #000;
-      margin-bottom: 10px;
-      padding: 5px 0;
-    }
-
-    /* Tabella dettagli */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 10px;
-    }
-
-    table, th, td {
-      border: 1px solid #000;
-    }
-
-    th, td {
-      padding: 5px;
-      text-align: left;
-    }
-
-    /* Sezione form */
-    .form-section {
-      margin-top: 10px;
-    }
-
-    .form-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .form-column {
-      width: 48%;
-    }
-
-    .form-column label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .form-column textarea {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 5px;
-      resize: vertical;
-    }
-
-    /* Checkbox “Lavoro terminato / non terminato” */
-    .checkbox-row {
-      margin-top: 10px;
-      display: flex;
-      gap: 20px;
-    }
-
-    .checkbox-row label {
-      margin-left: 5px;
-    }
-
-    /* Sezione footer */
-    .footer-section {
-      border-top: 1px solid #000;
-      padding-top: 10px;
-      margin-top: 20px;
-    }
-
-    .footer-field {
-      margin-bottom: 15px;
-    }
-
-    .footer-field label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .footer-field input {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 5px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Bollettino di Lavoro</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 210mm;
+            height: 297mm;
+            font-size: 11pt;
+        }
+        .container {
+            border: 1px solid black;
+            margin: 10mm;
+            width: 190mm;
+            height: 277mm;
+        }
+        .main-table {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+        }
+        .main-table td {
+            padding: 0;
+            vertical-align: top;
+        }
+        .header-row {
+            height: 25mm;
+        }
+        .header-left {
+            width: 30mm;
+            border-right: 1px solid black;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .header-right {
+            padding: 5mm;
+        }
+        .title {
+            float: left;
+        }
+        .checkboxes {
+            float: right;
+            width: 60mm;
+        }
+        .checkbox-item {
+            margin-bottom: 2mm;
+        }
+        input[type="checkbox"] {
+            width: 4mm;
+            height: 4mm;
+            vertical-align: middle;
+        }
+        .picchetto-row {
+            height: 8mm;
+            text-align: center;
+            vertical-align: middle;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+        .work-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: -1px;
+        }
+        .work-table th, .work-table td {
+            border: 1px solid black;
+            padding: 2mm;
+            text-align: left;
+            height: 8mm;
+        }
+        .work-table th {
+            font-weight: bold;
+            font-size: 10pt;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .info-table td {
+            width: 50%;
+            padding: 3mm;
+            height: 40mm;
+            border: 1px solid black;
+            vertical-align: top;
+        }
+        .completion-row td {
+            height: 15mm;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            padding: 3mm;
+        }
+        .completion-item {
+            margin-bottom: 2mm;
+        }
+        .signature-row td {
+            padding: 5mm;
+            height: 40mm;
+        }
+        .signature-line {
+            display: block;
+            margin-top: 2mm;
+            margin-bottom: 5mm;
+            border-bottom: 1px dotted black;
+        }
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+            }
+            .container {
+                margin: 10mm;
+                page-break-after: always;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<div class="container">
-  <!-- Header -->
-  <div class="header-section">
-    <!-- Logo e NR BOLLETTINO DI LAVORO -->
-    <div class="nr-section">
-      <div class="logo">
-        LOGO
-      </div>
-      <div class="nr-text">
-        NR BOLLETTINO DI LAVORO
-      </div>
+    <div class="container">
+        <table class="main-table">
+            <tr class="header-row">
+                <td class="header-left">
+                    <strong>NR</strong>
+                </td>
+                <td class="header-right">
+                    <div class="title">
+                        <strong>BOLLETTINO DI LAVORO</strong>
+                    </div>
+                    <div class="checkboxes">
+                        <div class="checkbox-item">
+                            PICCHETTO: <input type="checkbox">
+                        </div>
+                        <div class="checkbox-item">
+                            LAVORO A REGIA: <input type="checkbox">
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr class="picchetto-row">
+                <td colspan="2">{{riferimento}}</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table class="work-table">
+                        <tr>
+                            <th style="width: 20mm">DATA</th>
+                            <th style="width: 20mm">GIORNO</th>
+                            <th style="width: 15mm">ORA</th>
+                            <th style="width: 30mm">COLLABORATORE</th>
+                            <th style="width: 15mm">ORE DI LAV.</th>
+                            <th style="width: 15mm">TRAS.</th>
+                            <th>LAVORO ESEGUITO</th>
+                        </tr>
+                        <tr>
+                            <td>{{data}}</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table class="info-table">
+                        <tr>
+                            <td>
+                                <strong>CONTATTATO DA:</strong>
+                            </td>
+                            <td>
+                                <strong>INTERVENTO RICHIESTO:</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>CAUSA:</strong>
+                            </td>
+                            <td>
+                                <strong>MATERIALE UTILIZZATO:</strong>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr class="completion-row">
+                <td colspan="2">
+                    <div class="completion-item">
+                        Lavoro terminato <input type="checkbox">
+                    </div>
+                    <div class="completion-item">
+                        Lavoro non terminato <input type="checkbox">
+                    </div>
+                </td>
+            </tr>
+            <tr class="signature-row">
+                <td colspan="2">
+                    <div>NOME IN STAMPATELLO: <span class="signature-line">&nbsp;</span></div>
+                    <div>LUOGO E DATA: <span class="signature-line">&nbsp;</span></div>
+                    <div>Firma: <span class="signature-line">&nbsp;</span></div>
+                </td>
+            </tr>
+        </table>
     </div>
-
-    <!-- Opzioni: Pichetto e Lavoro a Regia -->
-    <div class="options-section">
-      <label for="pichetto">Pichetto:</label>
-      <select id="pichetto">
-        <option value="si">Sì</option>
-        <option value="no">No</option>
-      </select>
-      <label for="lavoroRegia">Lavoro a Regia:</label>
-      <input type="checkbox" id="lavoroRegia">
-    </div>
-  </div>
-
-  <!-- Due campi di testo sotto l'intestazione -->
-  <div class="two-inputs">
-    <input type="text" placeholder="..............................................................................">
-    <input type="text" placeholder="..............................................................................">
-  </div>
-
-  <!-- Sezione “PICHETTO” -->
-  <div class="picketto-section">
-    PICHETTO
-  </div>
-
-  <!-- Tabella Dettagli -->
-  <table>
-    <thead>
-      <tr>
-        <th>DATA</th>
-        <th>GIORNO</th>
-        <th>ORA</th>
-        <th>COLLABORATORE</th>
-        <th>ORE DI LAV.</th>
-        <th>TRAS.</th>
-        <th>LAVORO ESEGUITO</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Prima riga esempio (aggiungere altre righe se necessario) -->
-      <tr>
-        <td style="height: 50px;"></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Sezione Form (CONTATTATO DA, INTERVENTO RICHIESTO, CAUSA, MATERIALE) -->
-  <div class="form-section">
-    <div class="form-row">
-      <div class="form-column">
-        <label for="contattatoDa">CONTATTATO DA:</label>
-        <textarea id="contattatoDa" rows="5"></textarea>
-      </div>
-      <div class="form-column">
-        <label for="interventoRichiesto">INTERVENTO RICHIESTO:</label>
-        <textarea id="interventoRichiesto" rows="5"></textarea>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-column">
-        <label for="causa">CAUSA:</label>
-        <textarea id="causa" rows="5"></textarea>
-      </div>
-      <div class="form-column">
-        <label for="materiale">MATERIALE UTILIZZATO:</label>
-        <textarea id="materiale" rows="5"></textarea>
-      </div>
-    </div>
-
-    <!-- Checkbox lavoro terminato / non terminato -->
-    <div class="checkbox-row">
-      <div>
-        <input type="checkbox" id="lavoroTerminato">
-        <label for="lavoroTerminato">Lavoro terminato</label>
-      </div>
-      <div>
-        <input type="checkbox" id="lavoroNonTerminato">
-        <label for="lavoroNonTerminato">Lavoro non terminato</label>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer: NOME IN STAMPATELLO, LUOGO E DATA, FIRMA -->
-  <div class="footer-section">
-    <div class="footer-field">
-      <label for="nomeStampatello">NOME IN STAMPATELLO:</label>
-      <input type="text" id="nomeStampatello" placeholder="................................................................................................">
-    </div>
-    <div class="footer-field">
-      <label for="luogoData">LUOGO E DATA:</label>
-      <input type="text" id="luogoData" placeholder="................................................................................................">
-    </div>
-    <div class="footer-field">
-      <label for="firma">Firma:</label>
-      <input type="text" id="firma" placeholder="................................................................................................">
-    </div>
-  </div>
-</div>
-
 </body>
 </html>

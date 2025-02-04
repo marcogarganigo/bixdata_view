@@ -2725,6 +2725,11 @@ def stampa_bollettini(request):
     recordid_bollettino = ''
     if request.method == 'POST':
         recordid_bollettino = request.POST.get('recordid')
+    record_bollettino = Record('bollettini',recordid_bollettino)
+    recordid_stabile=record_bollettino.fields['recordidstabile_']
+    record_stabile=Record('stabile',recordid_stabile)
+    data['riferimento']=record_stabile.fields['riferimento']
+    data['data']=record_bollettino.fields['data']
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
