@@ -123,16 +123,19 @@
 </head>
 <body>
     <div class="container">
-        <table class="main-table">
-            <tr class="header-row">
-                <td class="header-left">
+        <table>
+            <tr class="header-row" style="border-bottom: 1px solid black;">
+                <td class="header-left" style="border-bottom: 1px solid black;">
                     <strong>NR</strong>
                 </td>
-                <td class="header-right">
+                <td class="header-right" style="width: 40%;border-bottom: 1px solid black;">
                     <div class="title">
                         <strong>BOLLETTINO DI LAVORO</strong>
                     </div>
-                    <div class="checkboxes">
+                    
+                </td>
+                <td style="border-bottom: 1px solid black;">
+                    <div class="checkboxes" style="text-align: right;">
                         <div class="checkbox-item">
                             PICCHETTO: <input type="checkbox">
                         </div>
@@ -142,9 +145,17 @@
                     </div>
                 </td>
             </tr>
+        </table>
+        <table>
             <tr class="picchetto-row">
-                <td colspan="2">{{riferimento}}</td>
+                <td >{{nome_cliente}}</td>
+                <td style="width: 40%;">
+
+                </td>
+                <td>{{riferimento}}<br/>{{informazioni}}</td>
             </tr>
+        </table>
+        <table>
             <tr>
                 <td colspan="2">
                     <table class="work-table">
@@ -161,8 +172,8 @@
                             <td>{{data}}</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
+                            <td>{{dipendente}}</td>
+                            <td></td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                         </tr>
@@ -184,14 +195,20 @@
                         <tr>
                             <td>
                                 <strong>CONTATTATO DA:</strong>
+                                <br/>
+                                {{contattatoda}}
                             </td>
                             <td>
                                 <strong>INTERVENTO RICHIESTO:</strong>
+                                <br/>
+                                {{interventorichiesto}}
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <strong>CAUSA:</strong>
+                                <br/>
+                                {{causa}}
                             </td>
                             <td>
                                 <strong>MATERIALE UTILIZZATO:</strong>
@@ -200,6 +217,8 @@
                     </table>
                 </td>
             </tr>
+        </table>
+        <table>
             <tr class="completion-row">
                 <td colspan="2">
                     <div class="completion-item">

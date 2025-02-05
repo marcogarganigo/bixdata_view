@@ -2728,8 +2728,18 @@ def stampa_bollettini(request):
     record_bollettino = Record('bollettini',recordid_bollettino)
     recordid_stabile=record_bollettino.fields['recordidstabile_']
     record_stabile=Record('stabile',recordid_stabile)
+    recordid_dipendente=record_bollettino.fields['recordiddipendente_']
+    record_dipendente=Record('dipendente',recordid_dipendente)
+    recordid_cliente=record_bollettino.fields['recordidcliente_']
+    record_cliente=Record('cliente',recordid_cliente)
+    data['nome_cliente']=record_cliente.fields['nome_cliente']
     data['riferimento']=record_stabile.fields['riferimento']
     data['data']=record_bollettino.fields['data']
+    data['dipendente']=record_dipendente.fields['nome']+' '+record_dipendente.fields['cognome']
+    data['informazioni']=record_bollettino.fields['informazioni']
+    data['contattatoda']=record_bollettino.fields['contattatoda']
+    data['causa']=record_bollettino.fields['causa']
+    data['interventorichiesto']=record_bollettino.fields['interventorichiesto'] 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
