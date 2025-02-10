@@ -68,3 +68,4 @@ class DatabaseHelper:
             dict(zip(columns, row))
             for row in cursor.fetchall()
         ]
+    
