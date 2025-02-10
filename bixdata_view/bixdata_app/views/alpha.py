@@ -2726,26 +2726,36 @@ def stampa_bollettini(request):
     if request.method == 'POST':
         recordid_bollettino = request.POST.get('recordid')
     record_bollettino = Record('bollettini',recordid_bollettino)
-    recordid_stabile=record_bollettino.fields['recordidstabile_']
+    recordid_stabile=record_bollettino.get_field('recordidstabile_')
     record_stabile=Record('stabile',recordid_stabile)
-    recordid_dipendente=record_bollettino.fields['recordiddipendente_']
+    recordid_dipendente=record_bollettino.get_field('recordiddipendente_')
     record_dipendente=Record('dipendente',recordid_dipendente)
-    recordid_cliente=record_bollettino.fields['recordidcliente_']
+    recordid_cliente=record_bollettino.get_field('recordidcliente_')
     record_cliente=Record('cliente',recordid_cliente)
-    data['nome_cliente']=record_cliente.fields['nome_cliente']
-    data['riferimento']=record_stabile.fields['riferimento']
-    data['data']=record_bollettino.fields['data']
-    data['dipendente']=record_dipendente.fields['nome']+' '+record_dipendente.fields['cognome']
-    data['informazioni']=record_bollettino.fields['informazioni']
-    data['contattatoda']=record_bollettino.fields['contattatoda']
-    data['causa']=record_bollettino.fields['causa']
-    data['interventorichiesto']=record_bollettino.fields['interventorichiesto'] 
+    data['nome_cliente']=record_cliente.get_field('nome_cliente')
+    data['riferimento']=record_stabile.get_field('riferimento')
+    data['data']=record_bollettino.get_field('data')
+    data['dipendente']=record_dipendente.get_field('nome')+' '+record_dipendente.get_field('cognome')
+    data['informazioni']=record_bollettino.get_field('informazioni')
+    data['contattatoda']=record_bollettino.get_field('contattatoda')
+    data['causa']=record_bollettino.get_field('causa')
+    data['interventorichiesto']=record_bollettino.get_field('interventorichiesto')
+    data['id']=record_bollettino.get_field('id')  
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
     
-    
-    content = render_to_string('pdf/bollettino1.html', data)
+    tipo_bollettino=record_bollettino.fields['tipo_bollettino']
+    if tipo_bollettino=='Generico':
+        content = render_to_string('pdf/bollettino1.html', data)
+    if tipo_bollettino=='Sostituzione':
+        content = render_to_string('pdf/bollettino2.html', data)
+    if tipo_bollettino=='Pulizia':
+        content = render_to_string('pdf/bollettino3.html', data)
+    if tipo_bollettino=='Tinteggio':
+        content = render_to_string('pdf/bollettino4.html', data)
+    if tipo_bollettino=='Picchetto':
+        content = render_to_string('pdf/bollettino5.html', data)
 
     filename_with_path = os.path.dirname(os.path.abspath(__file__))
     filename_with_path = filename_with_path.rsplit('views', 1)[0]

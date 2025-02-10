@@ -42,7 +42,7 @@ class Record:
         if recordid:
             self.fields=self.db_helper.sql_query_row(f"SELECT * FROM user_{self.tableid} WHERE recordid_='{self.recordid}'")
         else:
-            self.fields=dict()
+            self.fields={}
     
     def get_recordid(self):
         return self.recordid
@@ -91,7 +91,13 @@ class Record:
         self.fields[field_key]=field_value   
                 
     def get_field(self,field_key):
-        return self.fields[field_key]    
+        if field_key in self.fields:
+            if (self.fields[field_key] is None  or self.fields[field_key]=='None'):
+                return ''  
+            else:
+                return self.fields[field_key]      
+        else:
+            return ''
             
     def get_linkedtables():
         return dict()
