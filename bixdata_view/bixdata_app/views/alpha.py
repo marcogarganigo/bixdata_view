@@ -1322,7 +1322,9 @@ def save_record_fields(request):
                 send_email(emails=[email], subject='Nuovo push commerciale', html_message=message)
 
     for field_name, uploaded_files in request.FILES.items():
-        fs = FileSystemStorage(location='attachments')
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        attachments_path = os.path.join(base_dir, 'attachments')
+        fs = FileSystemStorage(location=attachments_path)
         print("Location: "+fs.location)
         #fs_bix = FileSystemStorage(location='attachments_bixdata')
         #print("Location:"+fs_bix.location)
