@@ -5440,6 +5440,7 @@ def syncdata(request,tableid):
 def download_attachment(request):
     recordid = request.POST.get('recordid')
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    attachments_path = os.path.join(base_dir, 'attachments')
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT filename from user_attachment WHERE recordid_='{recordid}'"
@@ -5447,7 +5448,7 @@ def download_attachment(request):
 
         filename = cursor.fetchone()[0]
 
-    file_path = os.path.join(base_dir, filename)
+    file_path = os.path.join(attachments_path, filename)
 
 
     with open(file_path, 'rb') as f:
