@@ -5439,8 +5439,8 @@ def syncdata(request,tableid):
 
 def download_attachment(request):
     recordid = request.POST.get('recordid')
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    attachments_path = os.path.join(base_dir, 'attachments')
+    folder_path = 'attachments_bixdata'
+
     with connection.cursor() as cursor:
         cursor.execute(
             f"SELECT filename from user_attachment WHERE recordid_='{recordid}'"
@@ -5448,7 +5448,7 @@ def download_attachment(request):
 
         filename = cursor.fetchone()[0]
 
-    file_path = os.path.join(attachments_path, filename)
+    file_path = os.path.join(folder_path, filename)
 
 
     with open(file_path, 'rb') as f:
@@ -5456,12 +5456,12 @@ def download_attachment(request):
 
 def download_file(request, filename):
     # Costruisci il percorso completo al file
-    filepath = os.path.join(settings.ATTACHMENTS_ROOT, filename)
-    fs = FileSystemStorage(location='attachments') 
-    filepath2=fs.location + "\\" + filename
-    if os.path.exists(filepath2):
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    attachments_path = os.path.join(base_dir, 'attachments')
+    file_path = os.path.join(attachments_path, filename)
+    if os.path.exists(file_path):
         # Restituisci il file come download
-        return FileResponse(open(filepath2, 'rb'), as_attachment=True, filename=filename)
+        return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=filename)
     else:
         raise Http404("File non trovato")
 
