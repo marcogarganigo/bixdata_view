@@ -2040,8 +2040,8 @@ def custom_save_record(request, tableid, recordid):
     return True
 
     # ---CONTATTO---
-    if tableid == 'contatto':
-        contatto_record = Record('contatto', recordid)
+    if tableid == 'contatti':
+        contatto_record = Record('contatti', recordid)
         if isempty(contatto_record.fields['nome']):
             contatto_record.fields['nome']=""
         if isempty(contatto_record.fields['cognome']):
