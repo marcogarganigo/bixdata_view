@@ -2039,6 +2039,19 @@ def custom_save_record(request, tableid, recordid):
 
     return True
 
+    # ---CONTATTO---
+    if tableid == 'contatto':
+        contatto_record = Record('contatto', recordid)
+        if isempty(contatto_record.fields['nome']):
+            contatto_record.fields['nome']=""
+        if isempty(contatto_record.fields['cognome']):
+            contatto_record.fields['cognome']=""
+        riferimento=contatto_record.fields['nome']+" "+contatto_record.fields['cognome']
+        contatto_record.fields['riferimento']=riferimento
+        contatto_record.save()
+
+    return True
+
 
 @login_required(login_url='/login/')
 def pagination(request):
