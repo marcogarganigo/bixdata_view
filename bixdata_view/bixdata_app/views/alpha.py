@@ -2796,6 +2796,8 @@ def stampa_bollettini(request):
         content = render_to_string('pdf/bollettino_tinteggio.html', data)
     if tipo_bollettino=='Picchetto':
         content = render_to_string('pdf/bollettino_picchetto.html', data)
+    if tipo_bollettino=='Giardino':
+        content = render_to_string('pdf/bollettino_giardino.html', data)
 
     filename_with_path = os.path.dirname(os.path.abspath(__file__))
     filename_with_path = filename_with_path.rsplit('views', 1)[0]
