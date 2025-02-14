@@ -2057,15 +2057,22 @@ def custom_save_record(request, tableid, recordid):
     if tableid == 'bollettini':
         bollettino_record = Record('bollettini', recordid)
         tipo_bollettino=bollettino_record.fields['tipo_bollettino']
-        sql="SELECT nr FROM bixdata.bollettini WHERE tipo_bollettino='"+tipo_bollettino+"' ORDER BY nr desc LIMIT 1"
-        bollettino_recorddict = dbh.sql_query_row(sql)
-        if bollettino_recorddict:
-            nr=bollettino_recorddict['nr']+1
+        nr=bollettino_record.fields['nr']   
+        sql="SELECT * FROM user_bollettini WHERE tipo_bollettino='"+tipo_bollettino+"' AND deleted_='n' ORDER BY nr desc LIMIT 1"
+        bollettino_recorddict = Helperdb.sql_query_row(sql)
+        if nr is None:
+            if bollettino_recorddict['nr'] is None:
+                nr=1
+            else:
+                nr = int(bollettino_recorddict['nr']) + 1
+            bollettino_record.fields['nr']=nr
+            
+        allegato=bollettino_record.fields['allegato']
+        if allegato:
+            bollettino_record.fields['allegatocaricato']='Si'
         else:
-            nr=1
-        bollettino_record['nr']=nr
+            bollettino_record.fields['allegatocaricato']='No'
         bollettino_record.save()
-
 
     return True
 
