@@ -2041,7 +2041,6 @@ def custom_save_record(request, tableid, recordid):
         stabile_record.fields['riferimento']=riferimento
         stabile_record.save()
 
-    return True
 
     # ---CONTATTO---
     if tableid == 'contatti':
@@ -2053,6 +2052,20 @@ def custom_save_record(request, tableid, recordid):
         riferimento=contatto_record.fields['nome']+" "+contatto_record.fields['cognome']
         contatto_record.fields['riferimento']=riferimento
         contatto_record.save()
+
+    # ---BOLLETTINI---
+    if tableid == 'bollettini':
+        bollettino_record = Record('bollettini', recordid)
+        tipo_bollettino=bollettino_record.fields['tipo_bollettino']
+        sql="SELECT nr FROM bixdata.bollettini WHERE tipo_bollettino='"+tipo_bollettino+"' ORDER BY nr desc LIMIT 1"
+        bollettino_recorddict = dbh.sql_query_row(sql)
+        if bollettino_recorddict:
+            nr=bollettino_recorddict['nr']+1
+        else:
+            nr=1
+        bollettino_record['nr']=nr
+        bollettino_record.save()
+
 
     return True
 
@@ -2760,21 +2773,22 @@ def stampa_bollettini(request):
     data['causa']=record_bollettino.get_field('causa')
     data['interventorichiesto']=record_bollettino.get_field('interventorichiesto')
     data['id']=record_bollettino.get_field('id')  
+    data['nr']=record_bollettino.get_field('nr')
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
     
     tipo_bollettino=record_bollettino.fields['tipo_bollettino']
     if tipo_bollettino=='Generico':
-        content = render_to_string('pdf/bollettino1.html', data)
+        content = render_to_string('pdf/bollettino_generico.html', data)
     if tipo_bollettino=='Sostituzione':
-        content = render_to_string('pdf/bollettino2.html', data)
+        content = render_to_string('pdf/bollettino_sostituzione.html', data)
     if tipo_bollettino=='Pulizia':
-        content = render_to_string('pdf/bollettino3.html', data)
+        content = render_to_string('pdf/bollettino_pulizia.html', data)
     if tipo_bollettino=='Tinteggio':
-        content = render_to_string('pdf/bollettino4.html', data)
+        content = render_to_string('pdf/bollettino_tinteggio.html', data)
     if tipo_bollettino=='Picchetto':
-        content = render_to_string('pdf/bollettino5.html', data)
+        content = render_to_string('pdf/bollettino_picchetto.html', data)
 
     filename_with_path = os.path.dirname(os.path.abspath(__file__))
     filename_with_path = filename_with_path.rsplit('views', 1)[0]
