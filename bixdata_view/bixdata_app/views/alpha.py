@@ -2781,6 +2781,8 @@ def stampa_bollettini(request):
     data['interventorichiesto']=record_bollettino.get_field('interventorichiesto')
     data['id']=record_bollettino.get_field('id')  
     data['nr']=record_bollettino.get_field('nr')
+    data['sostituzionedal']=record_bollettino.get_field('sostituzionedal')
+    data['sostituzioneal']=record_bollettino.get_field('sostituzioneal')
     script_dir = os.path.dirname(os.path.abspath(__file__))
     wkhtmltopdf_path = script_dir + '\\wkhtmltopdf.exe'
     config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)

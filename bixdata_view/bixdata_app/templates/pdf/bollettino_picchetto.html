@@ -2,7 +2,6 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Bollettino di Lavoro</title>
     <style>
         @page {
             size: A4 portrait;
@@ -126,22 +125,23 @@
         <table>
             <tr class="header-row" style="border-bottom: 1px solid black;">
                 <td class="header-left" style="border-bottom: 1px solid black;">
-                    <img style="width:95%"src="http://localhost:8000//static/images/logos/logo-pitservice-bn.jpg" alt="Pitservice Logo" >
-                </td>
-                <td class="header-left" style="border-bottom: 1px solid black;">
-                    <strong>NR {{id}}</strong>
+                    <img style="width:100px"src="http://localhost:8000//static/images/logos/logo-pitservice-bn.jpg" alt="Pitservice Logo" >
                 </td>
                 <td class="header-right" style="width: 60%;border-bottom: 1px solid black;">
-                    <div style="font-size: 30px;font-weight: bold;text-align: center;">
+                    <div style="font-size: 25px;font-weight: bold;text-align: center;">
                         BOLLETTINO DI LAVORO
                     </div>
                     
                 </td>
+                <td class="header-left" style="border-bottom: 1px solid black;border-left: 1px solid black;font-size: 25px;font-weight: bold;text-align: center;">
+                    <strong>NR {{id}}</strong>
+                </td>
+                
                 
             </tr>
         </table>
         <table>
-            <tr class="picchetto-row" style="height:150px;">
+            <tr class="picchetto-row" style="height:200px;">
                 <td >{{nome_cliente}}</td>
                 <td style="width: 40%;">
 
@@ -160,19 +160,21 @@
                     <table style="border-collapse: collapse;">
                         <tr style="border-bottom: 1px solid black">
                             <th style="width: 20mm">DATA</th>
-                            <th style="border-left: 1px solid black;width: 15mm">ORA</th>
-                            <th style="border-left: 1px solid black;width: 30mm">COLLABORATORE</th>
-                            <th style="border-left: 1px solid black;width: 15mm">ORE DI LAV.</th>
-                            <th style="border-left: 1px solid black;width: 15mm">TRAS.</th>
-                            <th><b>LAVORO ESEGUITO</b></th>
+                            <th style="border-left: 1px solid black;">GIORNO</th>
+                            <th style="border-left: 1px solid black;">ORA</th>
+                            <th style="border-left: 1px solid black;">COLLABORATORE</th>
+                            <th style="border-left: 1px solid black;">ORE DI LAV.</th>
+                            <th style="border-left: 1px solid black;">TRAS.</th>
+                            <th style="border-left: 1px solid black;width: 50%;"><b>LAVORO ESEGUITO</b></th>
                         </tr>
                         <tr style="height: 250px;border-bottom: 1px solid black">
                             <td >{{data}}</td>
                             <td style="border-left: 1px solid black;">&nbsp;</td>
+                            <td style="border-left: 1px solid black;">&nbsp;</td>
                             <td style="border-left: 1px solid black">{{dipendente}}</td>
                             <td style="border-left: 1px solid black"></td>
                             <td style="border-left: 1px solid black">&nbsp;</td>
-                            <td style="border-left: 1px solid black">&nbsp;</td>
+                            <td style="border-left: 1px solid black;">&nbsp;</td>
                         </tr>
                     </table>
                 </td>
@@ -236,12 +238,23 @@
             </tr>
         </table>
         <table >
-            <tr class="signature-row">
-                <td colspan="2">
-                    <div>NOME IN STAMPATELLO: <span class="signature-line">&nbsp;</span></div>
-                    <div>LUOGO E DATA: <span class="signature-line">&nbsp;</span></div>
-                    <div>Firma: <span class="signature-line">&nbsp;</span></div>
+            <tr>
+                <td style="padding: 10px;vertical-align: top;">
+                    <br/>
+                    NOME IN STAMPATELLO ..................................................................
                 </td>
+                <td>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px;vertical-align: top;">DATA E LUOGO ..................................................................................</td>
+                <td style="padding: 10px;vertical-align: top;">FIRMA ..........................................................................</td>
             </tr>
         </table>
     </div>
