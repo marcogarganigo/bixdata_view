@@ -126,35 +126,16 @@
         <table>
             <tr class="header-row" style="border-bottom: 1px solid black;">
                 <td class="header-left" style="border-bottom: 1px solid black;">
+                    <img style="width:95%"src="http://localhost:8000//static/images/logos/logo-pitservice-bn.jpg" alt="Pitservice Logo" >
+                </td>
+                <td class="header-left" style="border-bottom: 1px solid black;">
                     <strong>NR {{id}}</strong>
                 </td>
                 <td class="header-right" style="width: 60%;border-bottom: 1px solid black;">
-                    <div style="font-size: 30px;font-weight: bold;">
+                    <div style="font-size: 30px;font-weight: bold;text-align: center;">
                         BOLLETTINO DI LAVORO
                     </div>
                     
-                </td>
-                <td style="border-bottom: 1px solid black;padding: 10px;">
-                    <table>
-                        <tr>
-                            <td style="width: 150px;">
-                                PICCHETTO: 
-                            </td>
-                            <td>
-                                <div class="checkboxdiv">
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                LAVORO A REGIA: 
-                            </td>
-                            <td>
-                                <div class="checkboxdiv">
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
                 </td>
             </tr>
         </table>
@@ -169,7 +150,7 @@
         </table>
         <table>
             <tr class="picchetto-row" style="height: 25px;">
-                <td style="font-size: 20px;font-weight: bold;background-color: #dedede;padding: 10xp;border-left: 1px solid black;">PICCHETTO</td>
+                <td style="font-size: 20px;font-weight: bold;background-color: #dedede;padding: 10xp;border-left: 1px solid black;">GIARDINO</td>
             </tr>
         </table>
         <table>
@@ -178,16 +159,14 @@
                     <table style="border-collapse: collapse;">
                         <tr style="border-bottom: 1px solid black">
                             <th style="width: 20mm">DATA</th>
-                            <th style="border-left: 1px solid black;width: 20mm">GIORNO</th>
                             <th style="border-left: 1px solid black;width: 15mm">ORA</th>
                             <th style="border-left: 1px solid black;width: 30mm">COLLABORATORE</th>
                             <th style="border-left: 1px solid black;width: 15mm">ORE DI LAV.</th>
                             <th style="border-left: 1px solid black;width: 15mm">TRAS.</th>
                             <th><b>LAVORO ESEGUITO</b></th>
                         </tr>
-                        <tr style="height: 150px;border-bottom: 1px solid black">
+                        <tr style="height: 250px;border-bottom: 1px solid black">
                             <td >{{data}}</td>
-                            <td style="border-left: 1px solid black;">&nbsp;</td>
                             <td style="border-left: 1px solid black;">&nbsp;</td>
                             <td style="border-left: 1px solid black">{{dipendente}}</td>
                             <td style="border-left: 1px solid black"></td>
@@ -200,8 +179,8 @@
             <tr>
                 <td>
                     <table>
-                        <tr style="border-bottom: 1px solid black;height: 200px;">
-                            <td style="padding: 10px;vertical-align: top;">
+                        <tr style="border-bottom: 1px solid black;height: 250px;">
+                            <td style="padding: 10px;vertical-align: top;width: 50%;">
                                 <strong>CONTATTATO DA:</strong>
                                 <br/>
                                 {{contattatoda}}
@@ -212,7 +191,7 @@
                                 {{interventorichiesto}}
                             </td>
                         </tr>
-                        <tr style="border-bottom: 1px solid black;height: 200px">
+                        <tr style="border-bottom: 1px solid black;height: 250px">
                             <td style="padding: 10px;vertical-align: top;">
                                 <strong>CAUSA:</strong>
                                 <br/>

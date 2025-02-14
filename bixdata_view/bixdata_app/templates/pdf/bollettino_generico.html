@@ -50,18 +50,6 @@
             width: 20px;
             border: 1px solid black;;
         }
-        .checkboxes {
-            float: right;
-            width: 60mm;
-        }
-        .checkbox-item {
-            margin-bottom: 2mm;
-        }
-        input[type="checkbox"] {
-            width: 4mm;
-            height: 4mm;
-            vertical-align: middle;
-        }
         .picchetto-row {
             height: 8mm;
             text-align: center;
@@ -138,21 +126,21 @@
         <table>
             <tr class="header-row" style="border-bottom: 1px solid black;">
                 <td class="header-left" style="border-bottom: 1px solid black;">
-                    <strong>NR</strong>
+                    <img style="width:95%"src="http://localhost:8000//static/images/logos/logo-pitservice-bn.jpg" alt="Pitservice Logo" >
                 </td>
-                <td class="header-right" style="width: 40%;border-bottom: 1px solid black;">
-                    <div class="title">
-                        <strong>BOLLETTINO DI LAVORO</strong>
+                <td class="header-left" style="border-bottom: 1px solid black;">
+                    <strong>NR {{id}}</strong>
+                </td>
+                <td class="header-right" style="width: 60%;border-bottom: 1px solid black;">
+                    <div style="font-size: 30px;font-weight: bold;text-align: center;">
+                        BOLLETTINO DI LAVORO
                     </div>
-                    
-                </td>
-                <td style="border-bottom: 1px solid black;">
                     
                 </td>
             </tr>
         </table>
         <table>
-            <tr class="picchetto-row" style="height: 200px;">
+            <tr class="picchetto-row" style="height:150px;">
                 <td >{{nome_cliente}}</td>
                 <td style="width: 40%;">
 
@@ -161,33 +149,27 @@
             </tr>
         </table>
         <table>
+            <tr class="picchetto-row" style="height: 25px;">
+                <td style="font-size: 20px;font-weight: bold;background-color: #dedede;padding: 10xp;border-left: 1px solid black;">INTERVENTO A REGIA</td>
+            </tr>
+        </table>
+        <table>
             <tr>
                 <td>
                     <table style="border-collapse: collapse;">
                         <tr style="border-bottom: 1px solid black">
                             <th style="width: 20mm">DATA</th>
-                            <th style="border-left: 1px solid black;width: 20mm">GIORNO</th>
                             <th style="border-left: 1px solid black;width: 15mm">ORA</th>
                             <th style="border-left: 1px solid black;width: 30mm">COLLABORATORE</th>
                             <th style="border-left: 1px solid black;width: 15mm">ORE DI LAV.</th>
                             <th style="border-left: 1px solid black;width: 15mm">TRAS.</th>
-                            <th>LAVORO ESEGUITO</th>
+                            <th><b>LAVORO ESEGUITO</b></th>
                         </tr>
-                        <tr style="height: 100px;border-bottom: 1px solid black">
+                        <tr style="height: 250px;border-bottom: 1px solid black">
                             <td >{{data}}</td>
-                            <td style="border-left: 1px solid black;">&nbsp;</td>
                             <td style="border-left: 1px solid black;">&nbsp;</td>
                             <td style="border-left: 1px solid black">{{dipendente}}</td>
                             <td style="border-left: 1px solid black"></td>
-                            <td style="border-left: 1px solid black">&nbsp;</td>
-                            <td style="border-left: 1px solid black">&nbsp;</td>
-                        </tr>
-                        <tr style="height: 100px;border-bottom: 1px solid black">
-                            <td >&nbsp;</td>
-                            <td style="border-left: 1px solid black">&nbsp;</td>
-                            <td style="border-left: 1px solid black">&nbsp;</td>
-                            <td style="border-left: 1px solid black">&nbsp;</td>
-                            <td style="border-left: 1px solid black">&nbsp;</td>
                             <td style="border-left: 1px solid black">&nbsp;</td>
                             <td style="border-left: 1px solid black">&nbsp;</td>
                         </tr>
@@ -197,8 +179,8 @@
             <tr>
                 <td>
                     <table>
-                        <tr style="border-bottom: 1px solid black;height: 200px;">
-                            <td style="padding: 10px;vertical-align: top;">
+                        <tr style="border-bottom: 1px solid black;height: 250px;">
+                            <td style="padding: 10px;vertical-align: top;width: 50%;">
                                 <strong>CONTATTATO DA:</strong>
                                 <br/>
                                 {{contattatoda}}
@@ -209,7 +191,7 @@
                                 {{interventorichiesto}}
                             </td>
                         </tr>
-                        <tr style="border-bottom: 1px solid black;height: 200px">
+                        <tr style="border-bottom: 1px solid black;height: 250px">
                             <td style="padding: 10px;vertical-align: top;">
                                 <strong>CAUSA:</strong>
                                 <br/>
@@ -243,6 +225,13 @@
                 </div>
 
               </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td style="height: 20px;background-color: #dedede;border-left: 1px solid black;">
+
+                </td>
             </tr>
         </table>
         <table >
