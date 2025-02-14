@@ -1045,8 +1045,12 @@ def get_block_record_fields(request, prefilled_fields=dict()):
             [bixuserid]
         )
         user_setting = cursor.fetchone()
+        if isempty(user_setting):
+            cursor.execute(
+            "SELECT value FROM sys_user_settings WHERE setting = 'record_open_layout' AND userid = 1"
+            )
+            user_setting = cursor.fetchone()
         user_setting = user_setting[0]
-
         context['user_setting'] = user_setting
 
     if tableid == 'timesheet':

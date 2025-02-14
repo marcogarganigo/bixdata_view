@@ -1,0 +1,781 @@
+:root {
+    --blue: #e74a3b;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #e74a3b;
+    --orange: #fd7e14;
+    --yellow: #f6c23e;
+    --green: #1cc88a;
+    --teal: #20c9a6;
+    --cyan: #36b9cc;
+    --white: #fff;
+    --gray: #858796;
+    --gray-dark: #5a5c69;
+    --primary: #e74a3b;
+    --secondary: #858796;
+    --success: #1cc88a;
+    --info: #36b9cc;
+    --warning: #f6c23e;
+    --danger: #e74a3b;
+    --light: #f8f9fc;
+    --dark: #5a5c69;
+    --bluemarine: #004d80;
+    --darkgrey: #333333;
+    --lightgreen: #84c341;
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --font-family-sans-serif: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+body {
+    margin: 0;
+    padding: 0%;
+    font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #858796;
+    text-align: left;
+    background-color: rgb(247, 247, 247, 1);
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 1070;
+    display: block;
+    margin: 0;
+    font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    text-align: start;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: normal;
+    word-break: normal;
+    word-spacing: normal;
+    white-space: normal;
+    line-break: auto;
+    font-size: 0.875rem;
+    word-wrap: break-word;
+    opacity: 0;
+}
+
+.popover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1060;
+    display: block;
+    max-width: 276px;
+    font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    text-align: start;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: normal;
+    word-break: normal;
+    word-spacing: normal;
+    white-space: normal;
+    line-break: auto;
+    font-size: 0.875rem;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3rem;
+}
+
+
+.simplebar-mask {
+    background-color: black;
+    background-image: linear-gradient(180deg, var(--darkgrey) 90%, #ede4e4 200%);
+    background-size: cover;
+}
+
+.navbar-custom {
+    background-color: white;
+    background-image: linear-gradient(180deg, #ffffff 50%, #ede4e4 200%);
+    background-size: cover;
+}
+
+.nav-user {
+    height: 20px;
+}
+
+.user-hover:hover {
+    color: black;
+}
+
+html[data-sidenav-color=light] .side-nav .side-nav-link:active,
+html[data-sidenav-color=light] .side-nav .side-nav-link:focus,
+html[data-sidenav-color=light] .side-nav .side-nav-link:hover {
+    color: white;
+}
+
+html[data-sidenav-color=light] {
+    --ct-bg-leftbar: rgb(255, 255, 255);
+    --ct-menu-item: #d3cfcf;
+    --ct-menu-item-hover: var(--lightgreen);
+    --ct-menu-item-active: white;
+}
+
+html[data-sidenav-color=light] .side-nav .side-nav-link:active,
+html[data-sidenav-color=light] .side-nav .side-nav-link:focus,
+html[data-sidenav-color=light] .side-nav .side-nav-link:hover {
+    --ct-bg-leftbar: rgb(255, 255, 255);
+    --ct-menu-item: #cfd3cf;
+    color: var(--lightgreen);
+    --ct-menu-item-active: white;
+}
+
+.find {
+    color: black !important;
+    background-color: #000000 !important;
+}
+
+side-nav-link {
+    color: black !important;
+}
+
+.side-nav-second-level li:hover {
+    cursor: pointer;
+    /*text-decoration: underline;*/
+}
+
+
+.input-group-text {
+    border: 1px solid var(--bluemarine);
+    background-color: var(--bluemarine);
+}
+
+.input-group-text:hover {
+    background-color: var(--bluemarine);
+    border: 1px solid var(--bluemarine);
+}
+
+#logo-leftside {
+    background-color: white !important;
+
+}
+
+#logo-leftside-bix {
+    line-height: normal !important;
+}
+
+
+html[data-topbar-color=dark] .navbar-custom .app-search .form-control {
+
+    background-image: linear-gradient(90deg, var(--bluemarine) 100%, #ede4e4 200%);
+    background-size: cover;
+}
+
+html[data-topbar-color=dark] .navbar-custom .nav-user {
+    background-color: white !important;
+    border: 0px solid var(--ct-nav-user-border-dark-topbar) !important;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #858796;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+
+#results-hover:hover {
+    color: black
+}
+
+.table-bordered:hover {
+    border: 1px solid #e3e6f0;
+}
+
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #e3e6f0;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #e3e6f0;
+}
+
+.table tbody + tbody {
+    border-top: 2px solid #e3e6f0;
+}
+
+.table-sm th,
+.table-sm td {
+    padding: 0.3rem;
+}
+
+.table-bordered {
+    border: 1px solid #e3e6f0;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #e3e6f0;
+}
+
+.table-bordered thead th,
+.table-bordered thead td {
+    border-bottom-width: 2px;
+}
+
+.table-borderless th,
+.table-borderless td,
+.table-borderless thead th,
+.table-borderless tbody + tbody {
+    border: 0;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table-hover tbody tr:hover {
+    color: #858796;
+    background-color: rgba(224, 0, 0, 0.07);
+}
+
+.table-primary,
+.table-primary > th,
+.table-primary > td {
+    background-color: #cdd8f6;
+}
+
+.table-primary th,
+.table-primary td,
+.table-primary thead th,
+.table-primary tbody + tbody {
+    border-color: #a3b6ee;
+}
+
+.table-hover .table-primary:hover {
+    background-color: #b7c7f2;
+}
+
+.table-hover .table-primary:hover > td,
+.table-hover .table-primary:hover > th {
+    background-color: #b7c7f2;
+}
+
+.table-secondary,
+.table-secondary > th,
+.table-secondary > td {
+    background-color: #dddde2;
+}
+
+.table-secondary th,
+.table-secondary td,
+.table-secondary thead th,
+.table-secondary tbody + tbody {
+    border-color: #c0c1c8;
+}
+
+.table-hover .table-secondary:hover {
+    background-color: #cfcfd6;
+}
+
+.table-hover .table-secondary:hover > td,
+.table-hover .table-secondary:hover > th {
+    background-color: #cfcfd6;
+}
+
+.table-success,
+.table-success > th,
+.table-success > td {
+    background-color: #bff0de;
+}
+
+.table-success th,
+.table-success td,
+.table-success thead th,
+.table-success tbody + tbody {
+    border-color: #89e2c2;
+}
+
+.table-hover .table-success:hover {
+    background-color: #aaebd3;
+}
+
+.table-hover .table-success:hover > td,
+.table-hover .table-success:hover > th {
+    background-color: #aaebd3;
+}
+
+.table-info,
+.table-info > th,
+.table-info > td {
+    background-color: #c7ebf1;
+}
+
+.table-info th,
+.table-info td,
+.table-info thead th,
+.table-info tbody + tbody {
+    border-color: #96dbe4;
+}
+
+.table-hover .table-info:hover {
+    background-color: #b3e4ec;
+}
+
+.table-hover .table-info:hover > td,
+.table-hover .table-info:hover > th {
+    background-color: #b3e4ec;
+}
+
+.table-warning,
+.table-warning > th,
+.table-warning > td {
+    background-color: #fceec9;
+}
+
+.table-warning th,
+.table-warning td,
+.table-warning thead th,
+.table-warning tbody + tbody {
+    border-color: #fadf9b;
+}
+
+.table-hover .table-warning:hover {
+    background-color: #fbe6b1;
+}
+
+.table-hover .table-warning:hover > td,
+.table-hover .table-warning:hover > th {
+    background-color: #fbe6b1;
+}
+
+.table-danger,
+.table-danger > th,
+.table-danger > td {
+    background-color: #f8ccc8;
+}
+
+.table-danger th,
+.table-danger td,
+.table-danger thead th,
+.table-danger tbody + tbody {
+    border-color: #f3a199;
+}
+
+.table-hover .table-danger:hover {
+    background-color: #f5b7b1;
+}
+
+.table-hover .table-danger:hover > td,
+.table-hover .table-danger:hover > th {
+    background-color: #f5b7b1;
+}
+
+.table-light,
+.table-light > th,
+.table-light > td {
+    background-color: #fdfdfe;
+}
+
+.table-light th,
+.table-light td,
+.table-light thead th,
+.table-light tbody + tbody {
+    border-color: #fbfcfd;
+}
+
+.table-hover .table-light:hover {
+    background-color: #ececf6;
+}
+
+.table-hover .table-light:hover > td,
+.table-hover .table-light:hover > th {
+    background-color: #ececf6;
+}
+
+.table-dark,
+.table-dark > th,
+.table-dark > td {
+    background-color: #d1d1d5;
+}
+
+.table-dark th,
+.table-dark td,
+.table-dark thead th,
+.table-dark tbody + tbody {
+    border-color: #a9aab1;
+}
+
+.table-hover .table-dark:hover {
+    background-color: #c4c4c9;
+}
+
+.table-hover .table-dark:hover > td,
+.table-hover .table-dark:hover > th {
+    background-color: #c4c4c9;
+}
+
+.table-active,
+.table-active > th,
+.table-active > td {
+    background-color: rgba(0, 0, 0, 0.075);
+}
+
+.table-hover .table-active:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+}
+
+.table-hover .table-active:hover > td,
+.table-hover .table-active:hover > th {
+    background-color: rgba(0, 0, 0, 0.075);
+}
+
+.table .thead-dark th {
+    color: #fff;
+    background-color: #5a5c69;
+    border-color: #6c6e7e;
+}
+
+.table .thead-light th {
+    color: #6e707e;
+    background-color: #eaecf4;
+    border-color: #e3e6f0;
+}
+
+.table-dark {
+    color: #fff;
+    background-color: #5a5c69;
+}
+
+.table-dark th,
+.table-dark td,
+.table-dark thead th {
+    border-color: #6c6e7e;
+}
+
+.table-dark.table-bordered {
+    border: 0;
+}
+
+.table-dark.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-dark.table-hover tbody tr:hover {
+    color: #fff;
+    background-color: rgba(229, 7, 7, 0.07);
+}
+
+.btn-group-sm > .btn,
+.btn-sm {
+    margin-top: -30px;
+    --ct-btn-padding-y: 0.6rem;
+    --ct-btn-padding-x: 0.8rem;
+    --ct-btn-font-size: 0.875rem;
+    --ct-btn-border-radius: 0.15rem;
+}
+
+.content-page {
+    overflow: hidden;
+    padding: 0px 15px 0px;
+}
+
+.btn .mdi:before {
+    line-height: initial;
+    font-size: 20px;
+}
+
+#btnRecordCard .btn {
+    --ct-btn-padding-x: 0.6rem;
+
+}
+
+html[data-sidenav-size=condensed]:not(.authentication-bg) .logo span.logo-lg {
+    display: none !important;
+}
+
+
+html[data-sidenav-size=condensed]:not(.authentication-bg) .logo span.logo-sm {
+    display: block !important;
+    line-height: 70px;
+    color: #536de6;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #dadada;
+    border-radius: 20px;
+}
+
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+    color: var(--lightgreen);
+    background-color: var(--ct-nav-tabs-link-active-bg);
+    border-color: var(--ct-nav-tabs-link-active-border-color);
+}
+
+.nav-link:focus,
+.nav-link:hover {
+    color: #000000;
+}
+
+.nav-link {
+    display: block;
+    padding: var(--ct-nav-link-padding-y) var(--ct-nav-link-padding-x);
+    font-size: var(--ct-nav-link-font-size);
+    font-weight: var(--ct-nav-link-font-weight);
+    color: #8a969c;
+    -webkit-transition: color .3s ease-in-out, background-color .3s ease-in-out, border-color .3s ease-in-out;
+    transition: color .3s ease-in-out, background-color .3s ease-in-out, border-color .3s ease-in-out;
+}
+
+#toggle-menu {
+    color: #a4a49f;
+}
+
+#toggle-menu:hover {
+    color: #70706f;
+}
+
+.custom-popover {
+    --bs-popover-max-width: 200px;
+    --bs-popover-border-color: var(--bs-primary);
+    --bs-popover-header-bg: var(--bs-primary);
+    --bs-popover-header-color: var(--bs-white);
+    --bs-popover-body-padding-x: 1rem;
+    --bs-popover-body-padding-y: .5rem;
+}
+
+.side-nav-txt:hover {
+    color: var(--lightgreen) !important;
+}
+
+html[data-sidenav-size=condensed] .side-nav-txt {
+    background-color: #f5f1f1 !important;
+}
+
+html[aria-expanded=false] .side-nav-second-level {
+    background-color: rgb(255, 255, 255) !important;
+    box-shadow: 0 2px 5px #ccc;
+}
+
+html[aria-expanded=true] .side-nav-second-level {
+    background-image: linear-gradient(90deg, var(--bluemarine) 100%, #ede4e4 200%);
+}
+
+html[data-sidenav-color=light][data-sidenav-size=condensed] .side-nav .side-nav-item:hover .side-nav-link {
+    background-image: linear-gradient(90deg, #788385 100%, #ede4e4 200%)
+}
+
+
+html[data-sidenav-size=condensed] .side-nav .side-nav-forth-level li a,
+html[data-sidenav-size=condensed] .side-nav .side-nav-second-level li a,
+html[data-sidenav-size=condensed] .side-nav .side-nav-third-level li a {
+
+    color: #524d4d;
+}
+
+html[data-sidenav-size=default] .side-nav .side-nav-forth-level li a,
+html[data-sidenav-size=default] .side-nav .side-nav-second-level li a,
+html[data-sidenav-size=default] .side-nav .side-nav-third-level li a {
+
+    color: #bbafaf
+}
+
+html[data-topbar-color=dark] .navbar-custom .topbar-menu li .show.nav-link {
+    color: black !important;
+}
+
+.noti-title, .notify-item, .me-1, .notify-item > span {
+    cursor: pointer;
+}
+
+.nav-user {
+    background-color: white;
+    background-image: linear-gradient(180deg, #ffffff 50%, #ede4e4 200%);
+    background-size: cover;
+}
+
+#results-row:hover > td {
+    border: 1px solid #706d6d !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+.swal-overlay {
+    z-index: 100000 !important;
+}
+
+.swal-modal {
+    z-index: 100001 !important;
+}
+
+.center-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.pagination a {
+    border: 1px solid var(--bluemarine);
+    color: var(--bluemarine);
+}
+
+.pagination a:hover {
+    background-color: var(--bluemarine);
+    color: #fff;
+}
+
+.pagination .current {
+    background-color: var(--bluemarine);
+    color: #fff;
+}
+
+.dropdown-color {
+    background-color: white;
+    border: 0px;
+    border-top: 1px solid var(--bluemarine);
+    color: var(--bluemarine);
+}
+
+.sidenavitem-active {
+    color: var(--lightgreen) !important;
+}
+
+.cool-loader:before {
+    border-top-color: var(--bluemarine) !important;
+    border-bottom-color: var(--bluemarine) !important;
+}
+
+.cool-loader:after {
+    border-left-color: var(--bluemarine) !important;
+    border-right-color: var(--bluemarine) !important;
+}
+
+.save-button {
+    background-color: var(--bluemarine);
+    color: white;
+}
+
+.records-button {
+    --ct-btn-color: var(--bluemarine);
+    --ct-btn-border-color: var(--bluemarine);
+    --ct-btn-hover-color: #fff;
+    --ct-btn-hover-bg:var(--bluemarine);
+    --ct-btn-hover-border-color: var(--bluemarine);
+    --ct-btn-focus-shadow-rgb: 255, 91, 91;
+    --ct-btn-active-color: #fff;
+    --ct-btn-active-bg: var(--bluemarine);
+    --ct-btn-active-border-color: var(--bluemarine);;
+    --ct-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --ct-btn-disabled-color: var(--bluemarine);
+    --ct-btn-disabled-bg: transparent;
+    --ct-btn-disabled-border-color: var(--bluemarine);
+    --ct-gradient: none;
+}
+
+.badge-color {
+    background-color: var(--lightgreen) !important;
+}
+
+.records-button-secondary {
+    --ct-btn-color: var(--darkgrey);
+    --ct-btn-border-color: var(--darkgrey);
+    --ct-btn-hover-color: #fff;
+    --ct-btn-hover-bg: var(--darkgrey);
+    --ct-btn-hover-border-color: var(--darkgrey);
+    --ct-btn-focus-shadow-rgb: 255, 91, 91;
+    --ct-btn-active-color: #fff;
+    --ct-btn-active-bg: var(--darkgrey);
+    --ct-btn-active-border-color: var(--darkgrey);
+    --ct-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --ct-btn-disabled-color: var(--darkgrey);
+    --ct-btn-disabled-bg: transparent;
+    --ct-btn-disabled-border-color: var(--darkgrey);
+    --ct-gradient: none;
+}
+
+.sidenavitem-active {
+    color: var(--lightgreen) !important;
+}
+
+.save-button:hover {
+    background-color: var(--bluemarine);
+}
+
+.save-button:active {
+    background-color: var(--bluemarine);
+}
+
+.save-button {
+    background-color: var(--bluemarine);
+    color: white;
+}
+
+.cool-loader:before {
+    border-top-color: var(--lightgreen) !important;
+    border-bottom-color: var(--lightgreen) !important;
+}
+
+.cool-loader:after {
+    border-left-color: var(--bluemarine) !important;
+    border-right-color: var(--bluemarine) !important;
+}
+
+.linked-field {
+    color: var(--bluemarine) !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
