@@ -2058,6 +2058,8 @@ def custom_save_record(request, tableid, recordid):
         bollettino_record = Record('bollettini', recordid)
         tipo_bollettino=bollettino_record.fields['tipo_bollettino']
         nr=bollettino_record.fields['nr']   
+        if not tipo_bollettino:
+            tipo_bollettino=''
         sql="SELECT * FROM user_bollettini WHERE tipo_bollettino='"+tipo_bollettino+"' AND deleted_='n' ORDER BY nr desc LIMIT 1"
         bollettino_recorddict = Helperdb.sql_query_row(sql)
         if nr is None:
@@ -2072,6 +2074,10 @@ def custom_save_record(request, tableid, recordid):
             bollettino_record.fields['allegatocaricato']='Si'
         else:
             bollettino_record.fields['allegatocaricato']='No'
+
+        stabile_record = Record('stabile', bollettino_record.fields['recordidstabile_'])
+        cliente_recordid=stabile_record.fields['recordidcliente_']
+        bollettino_record.fields['recordidcliente_']=cliente_recordid
         bollettino_record.save()
 
     return True
