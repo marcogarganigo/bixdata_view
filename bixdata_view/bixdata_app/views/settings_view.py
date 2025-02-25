@@ -693,9 +693,12 @@ def settings_user_newuser(request):
 def save_newuser(request):
     username = request.POST.get('username')
     firstname = request.POST.get('firstname')
-    lastname = request.POST.get('lastname')
     password = request.POST.get('password')
-    email = request.POST.get('email')
+    lastname = request.POST.get('lastname', '')
+    email = request.POST.get('email', '')
+
+    if not username or not firstname or not password:
+        return JsonResponse({'success': False, 'error': 'I campi username, firstname e password sono obbligatori'}, status=400)
 
     username = username.lower()
 

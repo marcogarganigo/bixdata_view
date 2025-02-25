@@ -2092,10 +2092,10 @@ def custom_save_record(request, tableid, recordid):
         
         # Update the mutable copy
         mutable_post['username'] = utente_record.fields['nomeutente']
-        mutable_post['firstname'] = utente_record.fields['nome']
-        mutable_post['lastname'] = utente_record.fields['cognome']
-        mutable_post['email'] = utente_record.fields['email']
         mutable_post['password'] = utente_record.fields['password']
+        mutable_post['firstname'] = utente_record.fields['nome']
+        #mutable_post['lastname'] = utente_record.fields['cognome']
+        #mutable_post['email'] = utente_record.fields['email']
         
         # Temporarily replace request.POST
         original_post = request.POST
