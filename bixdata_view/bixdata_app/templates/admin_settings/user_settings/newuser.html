@@ -4,6 +4,7 @@
             url: "{% url 'save_newuser' %}",
             type: 'POST',
             data: {
+                'username': $('#user-username').val(),
                 'firstname': $('#user-firstname').val(),
                 'lastname': $('#user-lastname').val(),
                 'email': $('#user-email').val(),
@@ -40,6 +41,8 @@
 
     <input id="user-firstname" type="text" class="form-control" placeholder="Nome" aria-label="Example text with button addon" aria-describedby="button-addon1">
     <input id="user-lastname" type="text" class="form-control" placeholder="Cognome" aria-label="Example text with button addon" aria-describedby="button-addon1">
+    <br>
+    <input id="user-username" type="text" class="form-control" placeholder="Username" aria-label="Example text with button addon" aria-describedby="button-addon1">
     <br>
     <input id="user-email" type="email" class="form-control" placeholder="Email" aria-label="Example text with button addon" aria-describedby="button-addon1">
     <input id="user-password" type="password" class="form-control" placeholder="Password" aria-label="Example text with button addon" aria-describedby="button-addon1">

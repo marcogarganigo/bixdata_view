@@ -691,12 +691,13 @@ def settings_user_newuser(request):
 
 
 def save_newuser(request):
+    username = request.POST.get('username')
     firstname = request.POST.get('firstname')
     lastname = request.POST.get('lastname')
     password = request.POST.get('password')
     email = request.POST.get('email')
 
-    username = firstname.lower() + '.' + lastname.lower()
+    username = username.lower()
 
     with connection.cursor() as cursor:
         cursor.execute(
@@ -815,7 +816,24 @@ def save_group_users(request):
             Helperdb.sql_execute(f"INSERT INTO sys_group_user (groupid, userid) VALUES ({groupid}, {user})")
 
 
-
-
-
     return JsonResponse({'success': True})
+
+
+def settings_charts(request):
+    context = []
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "SELECT * FROM sys_dashboard ORDER BY name asc"
+        )
+        rows = dictfetchall(cursor)
+
+        with connection.cursor as cursor:
+            cursor.execute(
+                "SELECT * FROM v_users where is_active = 1"
+
+            )
+            users = dictfetchall(cursor)
+
+    context['dashboards'] = rows
+    context['users'] = users
+    return render(request, 'admin_settings/settings_charts.html', {'context': context})

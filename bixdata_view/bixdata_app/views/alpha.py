@@ -68,6 +68,8 @@ from django.middleware.csrf import get_token
 
 from django.http import FileResponse, Http404
 
+from bixdata_app.views.settings_view import save_newuser
+
 
 bixdata_server = os.environ.get('BIXDATA_SERVER')
 freshdesk_apikey = os.environ.get('FRESHDESK_APIKEY')
@@ -2086,6 +2088,25 @@ def custom_save_record(request, tableid, recordid):
        # qui va il codice che crea realmente l'utente anche nel sistema
         utente_record.save() # questo serve solo se eventualmente vengono aggiunti campi al record utente
 
+        mutable_post = request.POST.copy()
+        
+        # Update the mutable copy
+        mutable_post['username'] = utente_record.fields['nomeutente']
+        mutable_post['firstname'] = utente_record.fields['nome']
+        mutable_post['lastname'] = utente_record.fields['cognome']
+        mutable_post['email'] = utente_record.fields['email']
+        mutable_post['password'] = utente_record.fields['password']
+        
+        # Temporarily replace request.POST
+        original_post = request.POST
+        request.POST = mutable_post
+        
+        # Call save_newuser
+        result = save_newuser(request)
+        
+        # Restore original request.POST
+        request.POST = original_post
+
     return True
 
 
@@ -3472,26 +3493,6 @@ def admin_table_settings(request):
         users = dictfetchall(cursor)
 
     return render(request, 'other/admin_table_settings.html', {'tables': tables, 'users': users})
-
-
-def settings_charts(request):
-    context = []
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "SELECT * FROM sys_dashboard ORDER BY name asc"
-        )
-        rows = dictfetchall(cursor)
-
-        with connection.cursor as cursor:
-            cursor.execute(
-                "SELECT * FROM v_users where is_active = 1"
-
-            )
-            users = dictfetchall(cursor)
-
-    context['dashboards'] = rows
-    context['users'] = users
-    return render(request, 'admin_settings/settings_charts.html', {'context': context})
 
 
 def test_adiuto_db(request):
