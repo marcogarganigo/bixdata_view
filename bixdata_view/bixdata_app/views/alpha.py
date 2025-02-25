@@ -2080,6 +2080,12 @@ def custom_save_record(request, tableid, recordid):
         bollettino_record.fields['recordidcliente_']=cliente_recordid
         bollettino_record.save()
 
+     # ---UTENTE---TELEFONO AMICO
+    if tableid == 'utenti':
+        utente_record = Record('utenti', recordid)
+       # qui va il codice che crea realmente l'utente anche nel sistema
+        utente_record.save() # questo serve solo se eventualmente vengono aggiunti campi al record utente
+
     return True
 
 
