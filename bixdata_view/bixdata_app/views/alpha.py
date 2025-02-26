@@ -952,7 +952,7 @@ def get_block_record_badge(tableid, recordid):
     }
     # response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_fissi", data=post)
     # response_dict = json.loads(response.text)
-    sql = f"SELECT sys_field.* FROM sys_field join sys_user_order on sys_field.fieldid=sys_user_order.fieldid WHERE sys_user_order.userid=1 AND sys_user_order.tableid='{tableid}' AND typePreference='campiFissi' ORDER BY fieldorder asc"
+    sql = f"SELECT sys_field.* FROM sys_field join sys_user_field_order on sys_field.id=sys_user_field_order.fieldid WHERE sys_user_field_order.userid=1 AND sys_user_field_order.tableid='{tableid}' AND typePreference='badge_fields' ORDER BY fieldorder asc"
 
     fields = db_query_sql(sql)
     values = db_get_row(f"user_{tableid}", "*", f"recordid_='{recordid}'")
