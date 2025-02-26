@@ -2746,7 +2746,7 @@ def get_stampa_gasolio_info(request):
 
 def stampa_gasolio(request):
     data={}
-    filename='gasolio.pdf'
+    filename=''
     
     recordid_stabile = ''
     if request.method == 'POST':
@@ -2780,6 +2780,7 @@ WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N'
     data['ultimeletturegasolio']=ultimeletturegasolio
     content = render_to_string('pdf/gasolio.html', data)
 
+    filename=record_stabile.fields['riferimento']+' '+meseLettura+'.pdf'
     filename_with_path = os.path.dirname(os.path.abspath(__file__))
     filename_with_path = filename_with_path.rsplit('views', 1)[0]
     filename_with_path = filename_with_path + '\\static\\pdf\\' + filename
@@ -2790,7 +2791,7 @@ WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N'
     try:
         with open(filename_with_path, 'rb') as fh:
             response = HttpResponse(fh.read(), content_type="application/pdf")
-            response['Content-Disposition'] = f'inline; filename={filename}'
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
             if checkLetture=='si':
                 sql=f"UPDATE user_letturagasolio SET stato='Stampato' WHERE anno='{anno}' AND mese like '%{mese}%' AND recordidstabile_='{recordid_stabile}'"
