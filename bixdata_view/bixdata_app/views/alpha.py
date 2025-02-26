@@ -2058,7 +2058,7 @@ def custom_save_record(request, tableid, recordid):
     # ---CONTATTO STABILE---
     if tableid == 'contattostabile':
         contattostabile_record = Record('contattostabile', recordid)
-        contatto_record=Record('contatti',contattostabile_record.fields['recordidcontatto_'])
+        contatto_record=Record('contatti',contattostabile_record.fields['recordidcontatti_'])
         contattostabile_record.fields['nome']=contatto_record.fields['nome']   
         contattostabile_record.fields['cognome']=contatto_record.fields['cognome']
         contattostabile_record.fields['email']=contatto_record.fields['email']
