@@ -2055,6 +2055,17 @@ def custom_save_record(request, tableid, recordid):
         contatto_record.fields['riferimento']=riferimento
         contatto_record.save()
 
+    # ---CONTATTO STABILE---
+    if tableid == 'contattostabile':
+        contattostabile_record = Record('contattostabile', recordid)
+        contatto_record=Record('contatti',contattostabile_record.fields['recordidcontatto_'])
+        contattostabile_record.fields['nome']=contatto_record.fields['nome']   
+        contattostabile_record.fields['cognome']=contatto_record.fields['cognome']
+        contattostabile_record.fields['email']=contatto_record.fields['email']
+        contattostabile_record.fields['telefono']=contatto_record.fields['telefono']
+        contattostabile_record.fields['ruolo']=contatto_record.fields['ruolo']
+        contattostabile_record.save()
+
     # ---BOLLETTINI---
     if tableid == 'bollettini':
         bollettino_record = Record('bollettini', recordid)
