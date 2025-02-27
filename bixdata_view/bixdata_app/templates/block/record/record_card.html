@@ -1332,6 +1332,21 @@
                         </span>
 
                     </button>
+
+                    {% if tableid == 'company' %}
+                    <button class="nav-link" id="custom-tab-{{ tableid }}-{{ recordid }}" data-bs-toggle="tab"
+                            data-bs-target="#custom-tab-pane-{{ tableid }}-{{ recordid }}"
+                            type="button" role="tab" aria-controls="custom-tab-pane-{{ tableid }}-{{ recordid }}"
+                            aria-selected="false">
+
+                        <p class="tabs-title">Custom</p>
+                        <span class="material-symbols-outlined tabs-icon" data-bs-toggle="tooltip"
+                              data-bs-title="custom">
+                            link
+                        </span>
+
+                    </button>
+                    {% endif %}
                     <!--
                     <button class="nav-link" id="attachment-tab-{{ tableid }}-{{ recordid }}" data-bs-toggle="tab"
                             data-bs-target="#attachment-tab-pane-{{ tableid }}-{{ recordid }}" type="button" role="tab"
@@ -1391,6 +1406,12 @@
                      aria-labelledby="linked-tab"
                      tabindex="0" style="height: 100%; overflow:scroll">
                     {{ block_record_linked }}
+                </div>
+
+                <div class="tab-pane fade" id="custom-tab-pane-{{ tableid }}-{{ recordid }}" role="tabpanel"
+                     aria-labelledby="custom-tab"
+                     tabindex="0" style="height: 100%; overflow:scroll">
+                    aaaa
                 </div>
 
                 <div class="tab-pane fade" id="attachment-tab-pane-{{ tableid }}-{{ recordid }}" role="tabpanel"
