@@ -952,7 +952,7 @@ def get_block_record_badge(tableid, recordid):
     }
     # response = requests.post("http://10.0.0.133:8822/bixdata/index.php/rest_controller/get_fissi", data=post)
     # response_dict = json.loads(response.text)
-    sql = f"SELECT sys_field.* FROM sys_field join sys_user_order on sys_field.fieldid=sys_user_order.fieldid WHERE sys_user_order.userid=1 AND sys_user_order.tableid='{tableid}' AND typePreference='campiFissi' ORDER BY fieldorder asc"
+    sql = f"SELECT sys_field.* FROM sys_field join sys_user_field_order on sys_field.id=sys_user_field_order.fieldid WHERE sys_user_field_order.userid=1 AND sys_user_field_order.tableid='{tableid}' AND typePreference='badge_fields' ORDER BY fieldorder asc"
 
     fields = db_query_sql(sql)
     values = db_get_row(f"user_{tableid}", "*", f"recordid_='{recordid}'")
@@ -2055,6 +2055,17 @@ def custom_save_record(request, tableid, recordid):
         contatto_record.fields['riferimento']=riferimento
         contatto_record.save()
 
+    # ---CONTATTO STABILE---
+    if tableid == 'contattostabile':
+        contattostabile_record = Record('contattostabile', recordid)
+        contatto_record=Record('contatti',contattostabile_record.fields['recordidcontatti_'])
+        contattostabile_record.fields['nome']=contatto_record.fields['nome']   
+        contattostabile_record.fields['cognome']=contatto_record.fields['cognome']
+        contattostabile_record.fields['email']=contatto_record.fields['email']
+        contattostabile_record.fields['telefono']=contatto_record.fields['telefono']
+        contattostabile_record.fields['ruolo']=contatto_record.fields['ruolo']
+        contattostabile_record.save()
+
     # ---BOLLETTINI---
     if tableid == 'bollettini':
         bollettino_record = Record('bollettini', recordid)
@@ -2735,7 +2746,7 @@ def get_stampa_gasolio_info(request):
 
 def stampa_gasolio(request):
     data={}
-    filename='gasolio.pdf'
+    filename=''
     
     recordid_stabile = ''
     if request.method == 'POST':
@@ -2769,6 +2780,7 @@ WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N'
     data['ultimeletturegasolio']=ultimeletturegasolio
     content = render_to_string('pdf/gasolio.html', data)
 
+    filename=record_stabile.fields['riferimento']+' '+meseLettura+'.pdf'
     filename_with_path = os.path.dirname(os.path.abspath(__file__))
     filename_with_path = filename_with_path.rsplit('views', 1)[0]
     filename_with_path = filename_with_path + '\\static\\pdf\\' + filename
@@ -2779,7 +2791,7 @@ WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N'
     try:
         with open(filename_with_path, 'rb') as fh:
             response = HttpResponse(fh.read(), content_type="application/pdf")
-            response['Content-Disposition'] = f'inline; filename={filename}'
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
             if checkLetture=='si':
                 sql=f"UPDATE user_letturagasolio SET stato='Stampato' WHERE anno='{anno}' AND mese like '%{mese}%' AND recordidstabile_='{recordid_stabile}'"
