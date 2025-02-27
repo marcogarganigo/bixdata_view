@@ -382,6 +382,29 @@
 
     }
 
+
+    function creaListaLavanderie(mese) {
+
+        serialized_data=[]
+        serialized_data.push({
+                    name: 'mese',
+                    value: mese
+                });
+        $.ajax({
+            type: "POST",
+            url: "{% url 'crea_lista_lavanderie' %}",
+            data: serialized_data,
+            success: function (response, status, xhr) {
+                alert('Aggiunt righe: '+response.counter)
+
+            },
+            error: function () {
+                // Handle error
+            }
+        });
+
+        }
+
     $("#searchTerm").ready(function () {
         $("input").keypress(function () {
             var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -562,6 +585,16 @@
                                                 type="button" onclick="refresh()"><span
                                                 class="material-symbols-outlined" id="refresh-button">cached</span></button>
                                         <button class="btn btn-outline-danger me-md-2 records-button" type="button" onclick="newRecord('{{tableid}}')">Nuovo </button>
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary me md-2 dropdown-toggle records-button-secondary"
+                                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Funzioni
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#" onclick="creaListaLavanderie('mesecorrente')">Crea lista mese corrente</a></li>
+                                                <li><a class="dropdown-item" href="#" onclick="creaListaLavanderie('meseprossimo')">Crea lista prossimo mese</a></li>
+                                            </ul>
+                                        </div>
                                         <div class="dropdown">
                                             <button class="btn btn-outline-secondary me md-2 dropdown-toggle records-button-secondary"
                                                     type="button" data-bs-toggle="dropdown" aria-expanded="false">

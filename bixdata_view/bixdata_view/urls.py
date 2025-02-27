@@ -232,5 +232,6 @@ urlpatterns = [
     path('get_stampa_gasolio_info/', alpha.get_stampa_gasolio_info, name='get_stampa_gasolio_info'),
     path('stampa_bollettini/', alpha.stampa_bollettini, name='stampa_bollettini'),
     path('download_file/<str:filename>/', alpha.download_file, name='download_file'),
+    path('crea_lista_lavanderie/', alpha.crea_lista_lavanderie, name='crea_lista_lavanderie'),
 
 ]
