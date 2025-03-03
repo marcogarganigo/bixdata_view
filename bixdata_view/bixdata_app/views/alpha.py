@@ -5958,10 +5958,19 @@ def generate_eml_lavanderia(request):
     allegato_name=rendiconto_record.fields['allegato']
     mese=rendiconto_record.fields['mese'][3:]
     anno=rendiconto_record.fields['anno']
-    stabile_record=Record('stabile',rendiconto_record.fields['recordidstabile_'])
+    stabile_recordid=rendiconto_record.fields['recordidstabile_']
+    stabile_record=Record('stabile',stabile_recordid)
     stabile_riferimento=stabile_record.fields['riferimento']
     stabile_indirizzo=stabile_record.fields['indirizzo']
     stabile_citta=stabile_record.fields['citta']
+    sql=f"SELECT * FROM user_contattostabile WHERE deleted_='N' AND recordidstabile_='{stabile_recordid}'"
+    row=Helperdb.sql_query_row(sql)
+    contatto_emai=''
+    if row:
+        contatto_recordid=row['recordidcontatti_']
+        contatto_record=Record('contatti',contatto_recordid)
+        if contatto_record:
+            contatto_emai=contatto_record.fields['email']
 
     # Definisci il nome e il percorso del file PDF sul server
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -5988,7 +5997,7 @@ def generate_eml_lavanderia(request):
                 Lorenza S.<br/>
         """,
         from_email="contabilita@pitservice.ch",
-        to=[""],
+        to=[contatto_emai],
     )
 
     email.content_subtype = "html"
