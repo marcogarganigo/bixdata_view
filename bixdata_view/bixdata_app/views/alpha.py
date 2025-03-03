@@ -5953,18 +5953,45 @@ def logout_view(request):
 
 def generate_eml_lavanderia(request):
     """Genera un file .eml con un PDF allegato e lo invia all'utente per il download"""
+    rendiconto_recordid=request.POST.get('recordid')
+    rendiconto_record=Record('rendicontolavanderia',rendiconto_recordid)
+    allegato_name=rendiconto_record.fields['allegato']
+    mese=rendiconto_record.fields['mese'][3:]
+    anno=rendiconto_record.fields['anno']
+    stabile_record=Record('stabile',rendiconto_record.fields['recordidstabile_'])
+    stabile_riferimento=stabile_record.fields['riferimento']
+    stabile_indirizzo=stabile_record.fields['indirizzo']
+    stabile_citta=stabile_record.fields['citta']
 
     # Definisci il nome e il percorso del file PDF sul server
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    pdf_path = os.path.join(base_dir, 'attachments\\dummy.pdf')
+    if not allegato_name:
+        allegato_name='dummy.pdf'
+    pdf_path = os.path.join(base_dir, f"attachments\\{allegato_name}")
  
     # 2. Crea l’EmailMessage di Django
     email = EmailMessage(
-        subject="Documento Allegato",
-        body="In allegato il documento richiesto.",
-        from_email="mittente@example.com",
-        to=["destinatario@example.com"],
+        subject=f"Resoconto ricariche tessere lavanderia - {stabile_riferimento} - {mese} {anno}",
+        body=f"""
+                Egregi Signori,<br/>
+                <br/>
+                <br/>
+                <br/>
+                con la presente in allegato trasmettiamo il resoconto delle lavanderie dello stabile in {stabile_indirizzo} a {stabile_citta}.<br/>
+                <br/>
+                <br/>
+                <br/>
+                Restiamo volentieri a disposizione e porgiamo cordiali saluti.<br/>
+                <br/>
+                <br/>
+                <br/>
+                Lorenza S.<br/>
+        """,
+        from_email="contabilita@pitservice.ch",
+        to=[""],
     )
+
+    email.content_subtype = "html"
 
     # 3. Allegare il PDF già esistente
     email.attach_file(pdf_path)
