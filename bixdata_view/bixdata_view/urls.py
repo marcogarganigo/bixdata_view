@@ -205,6 +205,7 @@ urlpatterns = [
     path('decline_timesheet/', alpha.decline_timesheet, name='decline_timesheet'),
     path('syncdata/<str:tableid>/', alpha.syncdata, name='syncdata'),
     path('download_attachment/', alpha.download_attachment, name='download_attachment'),
+    path('generate_eml_lavanderia/', alpha.generate_eml_lavanderia, name='generate_eml_lavanderia'),
     path('update_profile_pic/', alpha.update_profile_pic, name='update_profile_pic'),
     path('get_user_stats_page/', alpha.get_user_stats_page, name='get_user_stats_page'),
     path('get_user_stats_card/', alpha.get_user_stats_card, name='get_user_stats_card'),

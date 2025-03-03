@@ -800,6 +800,41 @@
         });
     }
 
+
+    function generate_eml_lavanderia() {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'generate_eml_lavanderia' %}",
+            data: {
+                'recordid': '{{ recordid }}',
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            xhrFields: {
+                responseType: 'blob' // Vogliamo un Blob come risposta
+            },
+            success: function(blob, status, xhr) {
+                // 1. Crea un URL Blob dal file eml ricevuto
+                const url = window.URL.createObjectURL(blob);
+
+                // 2. Crea un link "invisibile" per il download
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'email_con_allegato.eml'; // Nome del file scaricato
+
+                // 3. Simula un click sul link per avviare il download
+                document.body.appendChild(link);
+                link.click();
+
+                // 4. Pulisci l'albero DOM
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            },
+            error: function (xhr, status, error) {
+                console.error('Errore durante la generazione del file EML', error);
+            }
+        });
+    }
+
     function downloadAttachment() {
         $.ajax({
             type: "POST",
@@ -1043,6 +1078,10 @@
                 {% if tableid == 'attachment' %}
                     <button class="btn btn-primary" onclick="downloadAttachment()">Scarica allegato</button>
                 {% endif %} 
+                {% if tableid == 'rendicontolavanderia' %}
+                    <button class="btn btn-primary" onclick="generate_eml_lavanderia()">Invia email</button>
+                {% endif %} 
+                
 
                 {% if tableid == 'deal' %}
 

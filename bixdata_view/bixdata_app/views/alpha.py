@@ -5951,6 +5951,34 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+def generate_eml_lavanderia(request):
+    """Genera un file .eml con un PDF allegato e lo invia all'utente per il download"""
+
+    # Definisci il nome e il percorso del file PDF sul server
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    pdf_path = os.path.join(base_dir, 'attachments\\dummy.pdf')
+ 
+    # 2. Crea l’EmailMessage di Django
+    email = EmailMessage(
+        subject="Documento Allegato",
+        body="In allegato il documento richiesto.",
+        from_email="mittente@example.com",
+        to=["destinatario@example.com"],
+    )
+
+    # 3. Allegare il PDF già esistente
+    email.attach_file(pdf_path)
+
+    # 4. Converti l’oggetto Django in un email.message.Message standard
+    msg = email.message()  # Restituisce l'oggetto standard Python
+
+    # 5. Convertilo in bytes (file .eml)
+    eml_content = msg.as_bytes()
+
+    # 6. Restituisci la risposta HTTP (download file .eml)
+    response = HttpResponse(eml_content, content_type="message/rfc822")
+    response["Content-Disposition"] = 'attachment; filename="email_con_allegato.eml"'
+    return response
 
 def crea_lista_lavanderie(request):
     # Extract any needed data from the request, if relevant
