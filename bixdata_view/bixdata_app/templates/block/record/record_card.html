@@ -131,6 +131,70 @@
             }
         });
     });
+
+    $('#submitGasolioFormEml').on('click', function() {
+        // Raccogli i dati dal form
+        var checkLetture = $('#checkLetture').val();
+        var meseLettura = $('#meseLettura').val();
+
+     
+
+        // Mostra un indicatore di invio (opzionale)
+        swal({
+            title: "Attendere prego",
+            text: "Attendere prego.",
+            icon: "info",
+            buttons: false,
+            closeOnClickOutside: false,
+            closeOnEsc: false,
+        });
+
+        
+        $.ajax({
+            type: "POST",
+            url: "{% url 'generate_eml_gasolio' %}",
+            data: {
+                'recordid': '{{ recordid }}',
+                'tableid': '{{ tableid }}',
+                'checkLetture': checkLetture,
+                'meseLettura': meseLettura,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            xhrFields: {
+                responseType: 'blob' // Vogliamo un Blob come risposta
+            },
+            success: function(blob, status, xhr) {
+                swal.close()
+                // 1. Crea un URL Blob dal file eml ricevuto
+                const url = window.URL.createObjectURL(blob);
+
+                // 2. Crea un link "invisibile" per il download
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'email_con_allegato.eml'; // Nome del file scaricato
+
+                // 3. Simula un click sul link per avviare il download
+                document.body.appendChild(link);
+                link.click();
+
+                // 4. Pulisci l'albero DOM
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+                // Mostra una notifica di successo
+                swal({
+                    text: "File generato e scaricato correttamente.",
+                    icon: "success",
+                    timer: 2000,
+                    buttons: false,
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Errore durante la generazione del file EML', error);
+            }
+        });
+
+
+    });
 </script>
 
 
@@ -805,6 +869,40 @@
         $.ajax({
             type: "POST",
             url: "{% url 'generate_eml_lavanderia' %}",
+            data: {
+                'recordid': '{{ recordid }}',
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            xhrFields: {
+                responseType: 'blob' // Vogliamo un Blob come risposta
+            },
+            success: function(blob, status, xhr) {
+                // 1. Crea un URL Blob dal file eml ricevuto
+                const url = window.URL.createObjectURL(blob);
+
+                // 2. Crea un link "invisibile" per il download
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'email_con_allegato.eml'; // Nome del file scaricato
+
+                // 3. Simula un click sul link per avviare il download
+                document.body.appendChild(link);
+                link.click();
+
+                // 4. Pulisci l'albero DOM
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            },
+            error: function (xhr, status, error) {
+                console.error('Errore durante la generazione del file EML', error);
+            }
+        });
+    }
+
+    function generate_eml_gasolio() {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'generate_eml_gasolio' %}",
             data: {
                 'recordid': '{{ recordid }}',
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
@@ -1529,6 +1627,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
           <button type="button" class="btn btn-primary" id="submitGasolioForm">Stampa</button>
+          <button type="button" class="btn btn-primary" id="submitGasolioFormEml">Invia</button>
         </div>
       </div>
     </div>

@@ -36,6 +36,10 @@
                     searchReport()
                 })
             }
+            if ($(this).attr("id") == 'custom-tab') {
+                $(this)[0].addEventListener('shown.bs.tab', function (event) {
+                })
+            }
         })
 
 
@@ -240,10 +244,7 @@
 
 
     function refresh(fieldid = '') {
-
         var activeTab = document.querySelector("#myTabContent .tab-pane.show.active");
-
-
         var serialized_data = [];
         console.info('referesh:');
         console.info($('#records_filters_form').serializeArray())
@@ -297,6 +298,9 @@
         } else if (activeTab.id == 'report-tab-pane') {
             container = '#report-tab-pane'
             funcname = 'block_records_table_report'
+        }   else if (activeTab.id == 'custom-tab-pane') {
+            container = '#custom-tab-pane'
+            funcname = 'block_records_custom'
         }
 
         //serialized_data=$('#filters').serializeArray()
@@ -692,6 +696,17 @@
                                         </button>
                                     </li>
                                 {% endif %}
+                                {% if tableid == 'rendicontolavanderia' %}
+                                    <li id="nav-calendar" class="nav-item" role="presentation">
+                                        <button class="nav-link"
+                                                id="custom-tab" data-bs-toggle="tab"
+                                                data-bs-target="#custom-tab-pane"
+                                                type="button" role="tab" aria-controls="custom-tab-pane"
+                                                href="#custom"
+                                                aria-selected="false">Custom
+                                        </button>
+                                    </li>
+                                {% endif %}
 
                                 {% if tableid == 'deal' or tableid == 'task' %}
 
@@ -775,6 +790,9 @@
                             {% endif %}
                             <div class="tab-pane fade" id="report-tab-pane" style="height: 100%; width: 100%"
                                  role="tabpanel" aria-labelledby="report-tab" tabindex="0">
+                            </div>
+                            <div class="tab-pane fade" id="custom-tab-pane" style="height: 100%; width: 100%"
+                                 role="tabpanel" aria-labelledby="custom-tab" tabindex="0">
                             </div>
                             <div class="tab-pane fade " id="chart-tab-pane" role="tabpanel" aria-labelledby="chart-tab"
                                  tabindex="0" style="overflow: hidden">

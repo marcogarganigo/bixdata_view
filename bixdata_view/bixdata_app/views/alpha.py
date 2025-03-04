@@ -23,6 +23,8 @@ import datetime
 from django.contrib.auth.decorators import login_required
 import time
 from datetime import timedelta
+from django.core.mail import EmailMultiAlternatives
+from email.mime.image import MIMEImage
 
 import pdfkit
 
@@ -820,6 +822,16 @@ def get_block_records_calendar(request):
 
     return render(request, 'block/records/records_calendar.html',
                   {'events': events_bixdata, 'select_fields': result, 'tableid': tableid})
+
+@login_required(login_url='/login/')
+def get_block_records_custom(request):
+    tableid = request.POST.get('tableid')
+    data={}
+    block = render_to_string('block/records/records_custom.html', data, request=request)
+    return HttpResponse(block)
+
+
+    
 
 
 # Questa funzione non viene usata penso, quella nuova è in bixdata_view
@@ -2744,7 +2756,7 @@ def stampa_servicecontract(request):
 def get_stampa_gasolio_info(request):
     return HttpResponse('ok')
 
-def stampa_gasolio(request):
+def genera_stampa_gasolio(request):
     data={}
     filename=''
     
@@ -2761,21 +2773,21 @@ def stampa_gasolio(request):
     record_stabile=Record('stabile',recordid_stabile)
     data['stabile']=record_stabile.fields
     sql=f"""
-SELECT t.recordid_,t.anno,t.mese,t.datalettura,t.lettura, i.riferimento, i.livellominimo, i.capienzacisterna
-FROM user_letturagasolio t
-INNER JOIN (
-    SELECT recordidinformazionigasolio_, MAX(datalettura) AS max_datalettura
-    FROM user_letturagasolio
-    WHERE anno='{anno}' AND mese like '%{mese}%' AND deleted_='N' AND recordidstabile_ = '{recordid_stabile}'
-    GROUP BY recordidinformazionigasolio_
-    
-) subquery
-ON t.recordidinformazionigasolio_ = subquery.recordidinformazionigasolio_ 
-   AND t.datalettura = subquery.max_datalettura
-INNER JOIN user_informazionigasolio i
-ON t.recordidinformazionigasolio_ = i.recordid_
-WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N' 
-        """
+    SELECT t.recordid_,t.anno,t.mese,t.datalettura,t.lettura, i.riferimento, i.livellominimo, i.capienzacisterna
+    FROM user_letturagasolio t
+    INNER JOIN (
+        SELECT recordidinformazionigasolio_, MAX(datalettura) AS max_datalettura
+        FROM user_letturagasolio
+        WHERE anno='{anno}' AND mese like '%{mese}%' AND deleted_='N' AND recordidstabile_ = '{recordid_stabile}'
+        GROUP BY recordidinformazionigasolio_
+        
+    ) subquery
+    ON t.recordidinformazionigasolio_ = subquery.recordidinformazionigasolio_ 
+    AND t.datalettura = subquery.max_datalettura
+    INNER JOIN user_informazionigasolio i
+    ON t.recordidinformazionigasolio_ = i.recordid_
+    WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N' 
+            """
     ultimeletturegasolio = Helperdb.sql_query(sql)
     data['ultimeletturegasolio']=ultimeletturegasolio
     content = render_to_string('pdf/gasolio.html', data)
@@ -2786,6 +2798,18 @@ WHERE t.recordidstabile_ = '{recordid_stabile}' AND t.deleted_ = 'N'
     filename_with_path = filename_with_path + '\\static\\pdf\\' + filename
     pdfkit.from_string(content, filename_with_path, configuration=config, options={"enable-local-file-access": ""})
 
+    return filename_with_path
+
+
+def stampa_gasolio(request):
+    recordid_stabile = request.POST.get('recordid')
+    checkLetture=request.POST.get('checkLetture')
+    meseLettura=request.POST.get('meseLettura')
+    anno, mese = meseLettura.split('-')
+    record_stabile=Record('stabile',recordid_stabile)
+    filename=record_stabile.fields['riferimento']+' '+meseLettura+'.pdf'
+
+    filename_with_path=genera_stampa_gasolio(request)
     #return HttpResponse(content)
 
     try:
@@ -5994,16 +6018,63 @@ def generate_eml_lavanderia(request):
                 <br/>
                 <br/>
                 <br/>
-                Lorenza S.<br/>
         """,
         from_email="contabilita@pitservice.ch",
         to=[contatto_emai],
+        cc=["segreteria@pitservice.ch"]
     )
 
     email.content_subtype = "html"
 
     # 3. Allegare il PDF già esistente
     email.attach_file(pdf_path)
+
+    # 4. Converti l’oggetto Django in un email.message.Message standard
+    msg = email.message()  # Restituisce l'oggetto standard Python
+
+    # 5. Convertilo in bytes (file .eml)
+    eml_content = msg.as_bytes()
+
+    # 6. Restituisci la risposta HTTP (download file .eml)
+    response = HttpResponse(eml_content, content_type="message/rfc822")
+    response["Content-Disposition"] = 'attachment; filename="email_con_allegato.eml"'
+    return response
+
+def generate_eml_gasolio(request):
+    """Genera un file .eml con un PDF allegato e lo invia all'utente per il download"""
+    stabile_recordid=request.POST.get('recordid')
+    stabile_record=Record('stabile',stabile_recordid)
+    meseLettura=request.POST.get('meseLettura')
+    anno, mese = meseLettura.split('-')
+    filename_with_path=genera_stampa_gasolio(request)
+    # Definisci il nome e il percorso del file PDF sul server
+    
+ 
+    # 2. Crea l’EmailMessage di Django
+    email = EmailMessage(
+        subject=f"Livello Gasolio - {mese} {anno} - {stabile_record.fields['riferimento']}",
+        body=f"""
+                Egregi Signori,<br/>
+                <br/>
+                <br/>
+                <br/>
+                con la presente in allegato trasmettiamo la lettura gasolio dello stabile in {stabile_record.fields['indirizzo']}<br/>
+                <br/>
+                <br/>
+                <br/>
+                Restiamo volentieri a disposizione e porgiamo cordiali saluti.<br/>
+                <br/>
+                <br/>
+                <br/>
+        """,
+        from_email="segreteria@pitservice.ch",
+        to=[''],
+    )
+
+    email.content_subtype = "html"
+
+    # 3. Allegare il PDF già esistente
+    email.attach_file(filename_with_path)
 
     # 4. Converti l’oggetto Django in un email.message.Message standard
     msg = email.message()  # Restituisce l'oggetto standard Python
