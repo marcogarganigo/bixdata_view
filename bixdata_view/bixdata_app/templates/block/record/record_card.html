@@ -652,6 +652,31 @@
         });
     }
 
+
+    function pitservice_chiudticket(recordid) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'pitservice_chiudticket' %}",
+            data: {
+                recordid: recordid,
+            },
+            success: function (response, status, xhr) {
+               console.info('fatto');
+              
+            },
+            error: function (response) {
+                swal({
+                    title: "Errore nella generazione del file",
+                    text: "segnalalo ad un tecnico del software al più presto",
+                    icon: "error",
+                    button: "Ok",
+                    dangerMode: true,
+                });
+            }
+        });
+
+    }
+
     function serializeForm(formElements) {
         var formData = [];
         //var formElements = document.getElementById("myForm").elements;
@@ -1388,6 +1413,19 @@
                             type="button"
                             onclick="$('#input-{{ recordid }}-completed').val('Si'); change_checkbox_view(); $('#save-button-{{ recordid }}').click()">
                         Chiudi task
+                    </button>
+                {% endif %}
+
+                {% if tableid == 'pitticket' %}
+                    <button id="close-task-button-{{ recordid }}" class="btn btn-danger"
+                            type="button"
+                            onclick="pitservice_chiudticket('{{ recordid }}'); $('#save-button-{{ recordid }}').click()">
+                        Sollecita
+                    </button>
+                    <button id="close-task-button-{{ recordid }}" class="btn btn-success"
+                            type="button"
+                            onclick="pitservice_chiudticket('{{ recordid }}'); $('#save-button-{{ recordid }}').click()">
+                        Chiudi Ticket
                     </button>
                 {% endif %}
 

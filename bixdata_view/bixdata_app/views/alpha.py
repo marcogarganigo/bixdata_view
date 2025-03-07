@@ -6019,8 +6019,8 @@ def generate_eml_lavanderia(request):
                 <br/>
                 <br/>
         """,
-        from_email="contabilita@pitservice.ch",
-        to=[contatto_emai],
+        from_email=contatto_emai,
+        to=[""],
         cc=["segreteria@pitservice.ch"]
     )
 
@@ -6086,6 +6086,15 @@ def generate_eml_gasolio(request):
     response = HttpResponse(eml_content, content_type="message/rfc822")
     response["Content-Disposition"] = 'attachment; filename="email_con_allegato.eml"'
     return response
+
+def pitservice_chiudticket(request):
+    recordid=request.POST.get('recordid')
+    return JsonResponse({
+        'success': True,
+    }) 
+
+
+
 
 def crea_lista_lavanderie(request):
     # Extract any needed data from the request, if relevant
