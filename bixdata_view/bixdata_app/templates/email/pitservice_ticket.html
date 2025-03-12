@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifica Ticket Assegnato</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            background-color: white;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+        }
+        .footer {
+            background-color: #f1f1f1;
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-radius: 0 0 5px 5px;
+            border: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            width: 35%;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .alert {
+            padding: 12px;
+            background-color: #ffe6e6;
+            color: #cc0000;
+            margin-top: 20px;
+            border-left: 4px solid #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Nuovo Ticket Assegnato</h1>
+        </div>
+        <div class="content">
+            <p><strong>{{assegnatoa}}</strong>,</p>
+            <p>Ti è stato assegnato un nuovo ticket che richiede la tua attenzione.</p>
+            
+            <table>
+                <tr>
+                    <th>Numero Ticket:</th>
+                    <td>{{id}}</td>
+                </tr>
+                <tr>
+                    <th>Creato da:</th>
+                    <td>{{creatoda}}</td>
+                </tr>
+                <tr>
+                    <th>Nome Stabile:</th>
+                    <td>{{titolo_stabile}}</td>
+                </tr>
+                <tr>
+                    <th>Persona di Riferimento:</th>
+                    <td>{{nomeriferimento}}</td>
+                </tr>
+                <tr>
+                    <th>Richiesta:</th>
+                    <td>{{titolorichiesta}}</td>
+                </tr>
+                <tr>
+                    <th>Data di Scadenza:</th>
+                    <td><strong>{{datascadenza}}</strong></td>
+                </tr>
+            </table>
+            
+            <div class="alert">
+                <p><strong>Attenzione:</strong> Questo ticket deve essere completato entro la data di scadenza indicata.</p>
+            </div>
+            
+            <center>
+                <a href="#" class="btn"></a>
+            </center>
+        </div>
+        <div class="footer">
+            <p>Questa è una notifica automatica. Si prega di non rispondere a questa email.</p>
+            <p>© 2025 Sistema di Gestione Ticket. Tutti i diritti riservati.</p>
+        </div>
+    </div>
+</body>
+</html>

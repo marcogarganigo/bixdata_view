@@ -21,6 +21,7 @@ from django_user_agents.utils import get_user_agent
 from .alpha import *
 from django import template
 from bs4 import BeautifulSoup
+from .businesslogic.models.record import *
 
 
 def user_agent(request, page, mobilepage, context={}):
@@ -140,15 +141,16 @@ def get_user_table_settings(bixid, tableid):
 def send_email(request=None, emails=None, subject=None, message=None, html_message=None, cc=None, bcc=None):
     bcc = ['']
     cc = ['']
-    email_fields = dict()
-    email_fields['subject'] = subject
-    email_fields['mailbody'] = message
-    email_fields['date'] = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
-    email_fields['timestamp'] = datetime.datetime.now().strftime('%H:%M:%S')
-    email_fields['recipients'] = ';'.join(emails)
-    email_fields['cc'] = cc
-    email_fields['bcc'] = bcc
-    recordid = set_record('user_email', email_fields)
+    record_email= Record('email')
+    record_email.fields['subject'] = subject
+    record_email.fields['mailbody'] = message
+    record_email.fields['date'] = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S')
+    record_email.fields['sent_timestamp'] = datetime.datetime.now().strftime('%H:%M:%S')
+    record_email.fields['recipients'] = ';'.join(emails)
+    record_email.fields['cc'] = cc
+    record_email.fields['ccn'] = bcc
+    record_email.save()
+    
 
     try:
         email = EmailMessage(
@@ -162,14 +164,15 @@ def send_email(request=None, emails=None, subject=None, message=None, html_messa
         email.content_subtype = "html"
         send_return = email.send(fail_silently=False)
 
-        with connections['default'].cursor() as cursor:
-            cursor.execute("UPDATE user_email SET status = 'Inviata' WHERE recordid_ = %s", [recordid])
+        record_email.fields['status']='Inviata'
+        record_email.fields['note']=send_return
+        record_email.save()
 
     except Exception as e:
         error = str(e)
-        with connections['default'].cursor() as cursor:
-            cursor.execute("UPDATE user_email SET status = 'Errore', note = %s WHERE recordid_ = %s",
-                           [error, recordid])
+        record_email.fields['status']='Errore'
+        record_email.fields['note']=error
+        record_email.save()
         return False
 
     return True

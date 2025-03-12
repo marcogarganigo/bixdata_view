@@ -2105,6 +2105,48 @@ def custom_save_record(request, tableid, recordid):
         bollettino_record.fields['recordidcliente_']=cliente_recordid
         bollettino_record.save()
 
+    # ---PITTICKET---
+    if tableid == 'pitticket':
+        data=dict()
+        ticket_record = Record('pitticket', recordid)
+        if (ticket_record.fields['notificato'] is None ) or (ticket_record.fields['notificato']=='No'):
+            stabile_recordid=ticket_record.fields['recordidstabile_']
+            stabile_record=Record('stabile',stabile_recordid)
+            cliente_recordid=ticket_record.fields['recordidcliente_']
+            cliente_record=Record('cliente',cliente_recordid)
+            creatoda_id=ticket_record.fields['assegnatoda']
+            creatoda_record=Helperdb.sql_query_row("SELECT * FROM sys_user WHERE id="+str(creatoda_id))
+            assegnatoa_id=ticket_record.fields['assegnatoa']
+            assegnatoa_record=Helperdb.sql_query_row("SELECT * FROM sys_user WHERE id="+str(creatoda_id))
+            
+            data['id']=ticket_record.fields['id']
+            data['creatoda']=creatoda_record['firstname']
+            data['assegnatoa']=assegnatoa_record['firstname']
+            if stabile_record.recordid != 'None':
+                data['titolo_stabile']=stabile_record.fields['titolo_stabile']
+                soggetto_stabile=f"per {stabile_record.fields['titolo_stabile']}"
+            else:
+                data['titolo_stabile']=""
+                soggetto_stabile="" 
+            data['personariferimento']=ticket_record.fields['personariferimento']
+            data['titolorichiesta']=ticket_record.fields['titolorichiesta']
+            if ticket_record.fields['datascadenza']:
+                data['datascadenza']= ticket_record.fields['datascadenza'].strftime("%d/%m/%Y")
+            else:
+                data['datascadenza']=""
+
+            email=assegnatoa_record['email']
+        
+
+            subject=f"Ticket assegnato da {creatoda_record['firstname']} {soggetto_stabile} "
+            
+            html_message=render_to_string('email/pitservice_ticket.html', data)
+            
+            send_email(emails=[email],subject=subject,html_message=html_message)
+            ticket_record.fields['notificato']='Si'
+            ticket_record.save()
+        
+
      # ---UTENTE---TELEFONO AMICO
     if tableid == 'utenti':
         utente_record = Record('utenti', recordid)
@@ -6089,6 +6131,9 @@ def generate_eml_gasolio(request):
 
 def pitservice_chiudticket(request):
     recordid=request.POST.get('recordid')
+    record=Record('pitticket',recordid)
+    record.fields['stato']='Chiuso'    
+    record.save()
     return JsonResponse({
         'success': True,
     }) 

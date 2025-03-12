@@ -653,7 +653,7 @@
     }
 
 
-    function pitservice_chiudticket(recordid) {
+    function pitservice_chiudticket(el,recordid) {
         $.ajax({
             type: "POST",
             url: "{% url 'pitservice_chiudticket' %}",
@@ -662,6 +662,15 @@
             },
             success: function (response, status, xhr) {
                console.info('fatto');
+               swal({
+                        title: "Ticket chiuso",
+                        text: " ",
+                        icon: "info",
+                        timer: 1200,
+                        buttons: false,
+                    })
+                    $(el).closest(".modal").modal("hide");
+                    refresh();
               
             },
             error: function (response) {
@@ -1417,14 +1426,10 @@
                 {% endif %}
 
                 {% if tableid == 'pitticket' %}
-                    <button id="close-task-button-{{ recordid }}" class="btn btn-danger"
-                            type="button"
-                            onclick="pitservice_chiudticket('{{ recordid }}'); $('#save-button-{{ recordid }}').click()">
-                        Sollecita
-                    </button>
+                    
                     <button id="close-task-button-{{ recordid }}" class="btn btn-success"
                             type="button"
-                            onclick="pitservice_chiudticket('{{ recordid }}'); $('#save-button-{{ recordid }}').click()">
+                            onclick="pitservice_chiudticket(this,'{{ recordid }}'); ">
                         Chiudi Ticket
                     </button>
                 {% endif %}
