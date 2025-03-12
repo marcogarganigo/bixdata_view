@@ -2117,7 +2117,7 @@ def custom_save_record(request, tableid, recordid):
             creatoda_id=ticket_record.fields['assegnatoda']
             creatoda_record=Helperdb.sql_query_row("SELECT * FROM sys_user WHERE id="+str(creatoda_id))
             assegnatoa_id=ticket_record.fields['assegnatoa']
-            assegnatoa_record=Helperdb.sql_query_row("SELECT * FROM sys_user WHERE id="+str(creatoda_id))
+            assegnatoa_record=Helperdb.sql_query_row("SELECT * FROM sys_user WHERE id="+str(assegnatoa_id))
             
             data['id']=ticket_record.fields['id']
             data['creatoda']=creatoda_record['firstname']
