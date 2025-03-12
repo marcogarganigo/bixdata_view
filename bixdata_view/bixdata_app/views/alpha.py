@@ -2109,7 +2109,15 @@ def custom_save_record(request, tableid, recordid):
     if tableid == 'pitticket':
         data=dict()
         ticket_record = Record('pitticket', recordid)
+        sendmail=False
+        subject=""
         if (ticket_record.fields['notificato'] is None ) or (ticket_record.fields['notificato']=='No'):
+            sendmail=True
+            subject="Ticket assegnato "
+            if ticket_record.fields['stato']   == 'Chiuso': 
+                subject="Ticket chiuso "
+
+        if sendmail:
             stabile_recordid=ticket_record.fields['recordidstabile_']
             stabile_record=Record('stabile',stabile_recordid)
             cliente_recordid=ticket_record.fields['recordidcliente_']
@@ -2138,7 +2146,7 @@ def custom_save_record(request, tableid, recordid):
             email=assegnatoa_record['email']
         
 
-            subject=f"Ticket assegnato da {creatoda_record['firstname']} {soggetto_stabile} "
+            subject=subject+f" da {creatoda_record['firstname']} {soggetto_stabile} "
             
             html_message=render_to_string('email/pitservice_ticket.html', data)
             
@@ -6132,8 +6140,20 @@ def generate_eml_gasolio(request):
 def pitservice_chiudticket(request):
     recordid=request.POST.get('recordid')
     record=Record('pitticket',recordid)
-    record.fields['stato']='Chiuso'    
+    record.fields['stato']='Chiuso'   
+    record.fields['notificato']='No' 
     record.save()
+    custom_save_record(request,'pitticket',recordid)
+    return JsonResponse({
+        'success': True,
+    }) 
+
+def pitservice_sollecitaticket(request):
+    recordid=request.POST.get('recordid')
+    record=Record('pitticket',recordid)
+    record.fields['notificato']='No' 
+    record.save()
+    custom_save_record(request,'pitticket',recordid)
     return JsonResponse({
         'success': True,
     }) 

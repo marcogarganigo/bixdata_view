@@ -236,6 +236,8 @@ urlpatterns = [
     path('stampa_bollettini/', alpha.stampa_bollettini, name='stampa_bollettini'),
     path('download_file/<str:filename>/', alpha.download_file, name='download_file'),
     path('crea_lista_lavanderie/', alpha.crea_lista_lavanderie, name='crea_lista_lavanderie'),
-    path('pitservice_chiudticket/', alpha.pitservice_chiudticket, name='pitservice_chiudticket')
+    path('pitservice_chiudticket/', alpha.pitservice_chiudticket, name='pitservice_chiudticket'),
+    path('pitservice_sollecitaticket/', alpha.pitservice_sollecitaticket, name='pitservice_sollecitaticket')
+    
 
 ]

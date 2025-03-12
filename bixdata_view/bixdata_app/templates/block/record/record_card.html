@@ -686,6 +686,39 @@
 
     }
 
+    function pitservice_sollecitaticket(el,recordid) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'pitservice_sollecitaticket' %}",
+            data: {
+                recordid: recordid,
+            },
+            success: function (response, status, xhr) {
+               console.info('fatto');
+               swal({
+                        title: "Ticket sollecitato",
+                        text: " ",
+                        icon: "info",
+                        timer: 1200,
+                        buttons: false,
+                    })
+                    $(el).closest(".modal").modal("hide");
+                    refresh();
+              
+            },
+            error: function (response) {
+                swal({
+                    title: "Errore nella generazione del file",
+                    text: "segnalalo ad un tecnico del software al più presto",
+                    icon: "error",
+                    button: "Ok",
+                    dangerMode: true,
+                });
+            }
+        });
+
+    }
+
     function serializeForm(formElements) {
         var formData = [];
         //var formElements = document.getElementById("myForm").elements;
@@ -1426,7 +1459,11 @@
                 {% endif %}
 
                 {% if tableid == 'pitticket' %}
-                    
+                    <button id="close-task-button-{{ recordid }}" class="btn btn-danger"
+                            type="button"
+                            onclick="pitservice_sollecitaticket(this,'{{ recordid }}'); ">
+                        Sollecita
+                    </button>
                     <button id="close-task-button-{{ recordid }}" class="btn btn-success"
                             type="button"
                             onclick="pitservice_chiudticket(this,'{{ recordid }}'); ">
