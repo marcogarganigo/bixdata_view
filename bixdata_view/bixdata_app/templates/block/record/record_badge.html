@@ -1,6 +1,7 @@
 <div id="block_record_badge" class="card shadow-shadow-sm" style="height: 100%; width: 100%;  background-color: #074048">
     <div class="card-body">
         <div class="row row-cols-3 row-cols-md-2 row-cols-sm-1">
+            
             {% for key, field in fields.items %}
                 {% if field.fieldid != 'recordid_jdoc' %}
                     <div class="col">

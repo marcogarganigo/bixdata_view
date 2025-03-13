@@ -971,7 +971,15 @@ def get_block_record_badge(tableid, recordid):
     context_fields = dict()
     for field in fields:
         fieldid = field['fieldid']
-        field['value'] = values[fieldid]
+        if values[fieldid]:
+            field['value'] = values[fieldid]
+            if field['fieldtypeid'] == 'Utente':
+                sql=f"SELECT firstname FROM sys_user WHERE id={field['value']}"
+                field['value'] = Helperdb.sql_query_row(sql)['firstname']
+        else:   
+            field['value'] = ''
+            
+        
         context_fields[fieldid] = field
 
     context['fields'] = context_fields
@@ -6140,7 +6148,9 @@ def generate_eml_gasolio(request):
 def pitservice_chiudticket(request):
     recordid=request.POST.get('recordid')
     record=Record('pitticket',recordid)
-    record.fields['stato']='Chiuso'   
+    record.fields['stato']='Chiuso'  
+    record.fields['datachiusura']=datetime.datetime.now().strftime("%Y-%m-%d")  
+    record.fields['chiusoda']=get_userid(request.user.id)
     record.fields['notificato']='No' 
     record.save()
     custom_save_record(request,'pitticket',recordid)
