@@ -1486,6 +1486,12 @@ def custom_save_record(request, tableid, recordid):
                 productivity = 'Ricavo indiretto'
                 timesheet_record.fields['print_hourprice'] = 'Compreso nel progetto'
                 timesheet_record.fields['print_travel'] = 'Inclusa'
+            if invoiceoption == 'Monte ore':
+                timesheet_record.fields['print_type'] = ''
+                invoicestatus = ''
+                productivity = ''
+                timesheet_record.fields['print_hourprice'] = ''
+                timesheet_record.fields['print_travel'] = ''
 
 
         # valutazione flat service contract
