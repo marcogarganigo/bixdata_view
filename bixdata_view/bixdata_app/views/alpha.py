@@ -1488,7 +1488,7 @@ def custom_save_record(request, tableid, recordid):
                 timesheet_record.fields['print_travel'] = 'Inclusa'
             if invoiceoption == 'Monte ore':
                 timesheet_record.fields['print_type'] = ''
-                invoicestatus = ''
+                invoicestatus = 'To Process'
                 productivity = ''
                 timesheet_record.fields['print_hourprice'] = ''
                 timesheet_record.fields['print_travel'] = ''
