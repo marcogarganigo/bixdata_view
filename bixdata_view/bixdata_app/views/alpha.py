@@ -1522,9 +1522,15 @@ def custom_save_record(request, tableid, recordid):
                     timesheet_record.fields['print_type'] = 'Contratto di servizio'
                     timesheet_record.fields['print_hourprice'] = 'Compreso nel contratto di servizio'
                     timesheet_record.fields['print_travel'] = 'Compresa nel contratto di servizio'
+                if invoiceoption == 'Monte ore':
+                    timesheet_record.fields['recordidservicecontract_'] = ''
+                    invoicestatus = 'To Process'
+                    productivity = ''
+                    timesheet_record.fields['print_type'] = ''
+                    timesheet_record.fields['print_hourprice'] = ''
+                    timesheet_record.fields['print_travel'] = ''
         # valutazione monte ore pbx
-        if ((
-                invoicestatus == 'To Process' or invoicestatus == 'Under Warranty' or invoicestatus == 'Commercial support') and invoiceoption != 'Out of contract' and travel_time_decimal == 0):
+        if ((invoicestatus == 'To Process' or invoicestatus == 'Under Warranty' or invoicestatus == 'Commercial support') and invoiceoption != 'Out of contract' and travel_time_decimal == 0):
             service_contracts = servicecontract_table.get_records(
                 conditions_list=[f"recordidcompany_='{timesheet_record.fields['recordidcompany_']}'",
                                  "type='Monte Ore Remoto PBX'", "status='In Progress'"])
