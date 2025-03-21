@@ -34,7 +34,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost','192.168.10.10','192.168.10.11','81.62.161.14','tabellone.swissbix.com','10.30.6.69','pc-pitgestional']
 
 # SMTP settings for sending email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
