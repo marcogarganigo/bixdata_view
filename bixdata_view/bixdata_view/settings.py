@@ -107,7 +107,7 @@ CORS_ALLOW_CREDENTIALS = True
 # Imposta le origini autorizzate
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-    'http://pit-gestional:8022',  # Origine del tuo frontend React
+    'http://pit-gestional:8021',  # Origine del tuo frontend React
 ]
 
 # Se utilizzi anche il dominio localhost:8000 per scopi diversi, puoi includerlo
@@ -115,7 +115,7 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
-    'http://pit-gestional:8022',
+    'http://pit-gestional:8021',
 ]
 
 AUTHENTICATION_BACKENDS = [
